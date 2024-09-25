@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+   android:orientation="vertical"
+   >
+    <TextView
+        android:layout_marginLeft="120px"
+        android:id="@+id/frameLayoutId"
+        android:orientation="vertical"
+        android:layout_marginBottom="-10px"
+       android:text="测试弹框"
+        android:background="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+</LinearLayout>

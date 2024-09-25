@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary_day">#3F51B5</color>
+    <color name="colorPrimaryDark_day">#303F9F</color>
+    <color name="colorAccent_day">#FF4081</color>
+    <color name="avm_bg_day">#DADCDF</color>
+
+    <color name="setting_view_bg_day">#ffffff</color>
+    <color name="setting_view_title_color_day">#0A1532</color>
+    <color name="setting_tab_color_day">#ffffff</color>
+    <color name="setting_view_content_color_day">#B30A1532</color>
+    <color name="setting_view_info_bg_color_day">#FF4081</color>
+    <color name="setting_view_btn_bg_color_day">#CCCDD1</color>
+    <color name="rearview_view_btn_bg_color_day">#f1f1f3</color>
+    <color name="toast_bg_color_day">#FF4081</color>
+    <color name="toast_bg_color_1_day">#FF4081</color>
+    <color name="test_color_day">#000000</color>
+    <color name="test_color_D9">#D9ffffff</color>
+
+</resources>

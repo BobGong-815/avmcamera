@@ -1,7 +1,7 @@
-# avmcamera
+# AVMCamera
 
 #### Description
-avm app
+广汽avm&rvc代码仓库
 
 #### Software Architecture
 Software architecture description

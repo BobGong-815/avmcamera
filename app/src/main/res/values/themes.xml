@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="common_window">
+        <item name="android:windowEnterAnimation">@anim/common_window_enter</item>
+        <item name="android:windowExitAnimation">@anim/common_window_exit</item>
+    </style>
+    <style name="common_window2">
+        <item name="android:windowEnterAnimation">@anim/common_window_enter2</item>
+    </style>
+</resources>

@@ -1,0 +1,122 @@
+import java.text.SimpleDateFormat
+
+apply plugin: 'com.android.application'
+
+
+static def releaseTime() {
+    TimeZone timeZone = TimeZone.getTimeZone("Asia/Shanghai")
+    // 创建一个SimpleDateFormat实例，并将其时区设置为北京
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd")
+    dateFormat.setTimeZone(timeZone)
+    // 获取当前时间并格式化为北京时间
+    return dateFormat.format(new Date())
+}
+
+static def tempTime() {
+    TimeZone timeZone = TimeZone.getTimeZone("Asia/Shanghai")
+    // 创建一个SimpleDateFormat实例，并将其时区设置为北京
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmm")
+    dateFormat.setTimeZone(timeZone)
+    // 获取当前时间并格式化为北京时间
+    return dateFormat.format(new Date())
+}
+
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    defaultConfig {
+        applicationId rootProject.ext.android.applicationId
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+    }
+
+
+    signingConfigs {
+        release {
+            File strFile = new File("./keystore/A02_platform.jks")
+            storeFile file(strFile)
+            keyAlias 'androidplatform'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+        debug {
+            File strFile = new File("./keystore/A02_platform.jks")
+            storeFile file(strFile)
+            keyAlias 'androidplatform'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                def outputFile = output.outputFile
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    if (variant.buildType.name.equals('release')) {
+                        outputFileName = "AVMCamera_" + defaultConfig.versionName + "_"+releaseTime()+".apk"
+                    } else if (variant.buildType.name.equals('debug')) {
+                        outputFileName = "AVMCamera_Temp_" + defaultConfig.versionName + "_"+tempTime()+".apk"
+                    }
+                }
+            }
+        }
+    }
+    dataBinding {
+        enabled true
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    sourceSets{
+        main{
+            res.srcDirs = [
+                    'src/main/res',
+                    'src/main/res-day'
+            ]
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    //support
+    implementation rootProject.ext.support["design"]
+    //core
+    implementation 'androidx.core:core:1.5.0-alpha05'
+
+    //MVVM架构及基础功能或类模块
+    implementation project(':mvvmhabit')
+    //avm公共功能module
+    implementation project(path: ':avmframwork')
+    //avm接口
+    implementation files('libs\\bvavm.jar')
+
+    //数据埋点
+    implementation files('libs\\dataminingclient.jar')
+
+    implementation files('libs\\Car-Framework-2.0-2.0.29-20240429.021058-1.jar')
+
+}

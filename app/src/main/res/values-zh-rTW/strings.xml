@@ -1,0 +1,135 @@
+<resources>
+<string name="app_name" translatable="false">AVMCamera</string>
+    <string name="setting_p_exit">P擋退出</string>
+    <string name="setting_p_exit_content">掛入P擋，全景立刻退出或\n延遲30秒退出全景</string>
+    <string name="setting_at_once">立刻</string>
+    <string name="setting_30_seconds">30秒後</string>
+    <string name="setting_transparent_chassis">透明底盤</string>
+    <string name="setting_close">關</string>
+    <string name="setting_low">低</string>
+    <string name="setting_centre">中</string>
+    <string name="setting_high">高</string>
+    <string name="setting_radar_activated_panorama">雷達啟用全景</string>
+    <string name="setting_radar_activated_panorama_content">當車速&amp;#06012km/h且前雷達報警時進入全景</string>
+    <string name="setting_path_line">軌跡線</string>
+    <string name="setting_path_line_content">同時開啟/關閉B區和C區的車道軌跡線，默認開啟軌跡線；</string>
+    <string name="setting_signal_activates_panorama">轉向燈啟用全景</string>
+    <string name="setting_signal_activates_panorama_content">打轉向燈進入全景\n車速>30km/h自動退出</string>
+    <string name="setting_transparent_chassis_infobook_title">透明底盤</string>
+    <string name="setting_transparent_chassis_infobook_content">開啟可觀察車底路况</string>
+    <string name="setting_transparent_chassis_infobook_ok">好的</string>
+    <string name="setting_rearview_mirror">後視鏡調節</string>
+    <string name="setting_fold">折疊</string>
+    <string name="setting_expand">展開</string>
+    <string name="setting_rearview_mirror_down">後視鏡下翻</string>
+    <string name="setting_rearview_mirror_down_open">後視鏡下翻已開啟</string>
+    <string name="setting_rearview_mirror_down_close">後視鏡下翻已關閉</string>
+    <string name="camera_2d">2D</string>
+    <string name="camera_3d">3D</string>
+    <string name="camera_wide_angle">廣角</string>
+    <string name="desc_rearview_mirror_fold">後視鏡已折疊</string>
+    <string name="desc_rearview_mirror_expand">後視鏡已展開</string>
+    <string name="desc_rearview_mirror_down_open">外後視鏡自動下翻已開啟</string>
+    <string name="desc_rearview_mirror_down_close">外後視鏡自動下翻已關閉</string>
+    <string name="calibration">標定</string>
+    <string name="manual_calibration">手動標定</string>
+    <string name="manual_calibration_success">手動標定成功</string>
+    <string name="automatic_calibration">自動標定</string>
+    <string name="translate_left">左視角</string>
+    <string name="translate_right">右視角</string>
+    <string name="translate_left_right">左右視角</string>
+    <string name="translate_front">前視角</string>
+    <string name="translate_rear">後視角</string>
+    <string name="translate_left_front">左前視角</string>
+    <string name="translate_right_front">右前視角</string>
+    <string name="translate_left_rear">左後視角</string>
+    <string name="translate_right_rear">右後視角</string>
+    <string name="automatic_calibration_success">自動標定成功</string>
+    <string name="front_wide_angle">前廣角</string>
+    <string name="back_wide_angle">後廣角</string>
+    <string name="before">前車輪</string>
+    <string name="rear_wheel">後車輪</string>
+    <string name="radar_sound_open">雷達提示音已開啟</string>
+    <string name="radar_sound_close">雷達提示音已關閉</string>
+    <string name="parking_assist_system_down">駐車輔助系統出現故障，請檢查！</string>
+    <string name="emergency_braking">緊急制動已觸發</string>
+
+    <string name="init_failure_string">初始化失敗</string>
+    <string name="init_failure_reason">硬體故障或資源不足</string>
+    <string name="init_failure_detail">硬體故障或資源不足</string>
+    <string name="init_failure_describe">軟件未正常運行</string>
+    <string name="unkonwn">未知</string>
+
+    <string name="stream_open_failure_string">檔案打開失敗</string>
+    <string name="stream_open_failure_reason">檔案打開失敗或檔案不存在</string>
+    <string name="stream_open_failure_detail">@string/unkonwn</string>
+
+    <string name="stream_start_failure_string">檔案讀寫失敗</string>
+    <string name="stream_start_failure_reason">讀寫通訊故障或檔案內容不匹配</string>
+    <string name="stream_start_failure_detail">@string/unkonwn</string>
+
+    <string name="algorithm_failure_string">數據計算异常</string>
+    <string name="algorithm_failure_reason">加載异常</string>
+    <string name="algorithm_failure_detail">@string/unkonwn</string>
+
+    <string name="render_failure_string">渲染失敗</string>
+    <string name="render_failure_reason">車模或軌跡線加載失敗</string>
+    <string name="render_failure_detail">@string/unkonwn</string>
+
+    <string name="stream_stop_failure_string">檔案讀寫失敗</string>
+    <string name="stream_stop_failure_reason">讀寫通訊故障或檔案內容不匹配</string>
+    <string name="stream_stop_failure_detail">@string/unkonwn</string>
+
+    <string name="stream_close_failure_string">檔案關閉失敗</string>
+    <string name="stream_close_failure_reason">檔案被損壞或資源不足</string>
+    <string name="stream_close_failure_detail">@string/unkonwn</string>
+
+    <string name="data_success_string">視圖參數更新成功</string>
+    <string name="data_success_reason">視圖內外參數更新成功</string>
+    <string name="data_success_detail">@string/unkonwn</string>
+    <string name="data_failure_string">視圖參數更新失敗</string>
+    <string name="data_failure_reason">視圖內外參數更新失敗</string>
+    <string name="data_failure_detail">@string/unkonwn</string>
+
+    <string name="calibration_failure_string">標定失敗</string>
+    <string name="calibration_failure_reason">找點成功以及視圖參數更新失敗</string>
+    <string name="calibration_failure_detail">@string/unkonwn</string>
+    <string name="calibration_success_string">標定成功</string>
+    <string name="calibration_success_reason">找點成功以及視圖參數更新成功</string>
+    <string name="calibration_success_detail">@string/unkonwn</string>
+
+    <string name="stream_open_success_string">檔案打開成功</string>
+    <string name="stream_open_success_reason">檔案加載成功</string>
+    <string name="stream_open_success_detail">@string/unkonwn</string>
+
+    <string name="stream_start_success_string">檔案讀寫成功</string>
+    <string name="stream_start_success_reason">檔案許可權獲取成功</string>
+    <string name="stream_start_success_detail">@string/unkonwn</string>
+
+    <string name="algorithm_failure_retry_string">數據計算正常</string>
+    <string name="algorithm_failure_retry_reason">OpenGL加載正常</string>
+    <string name="algorithm_failure_retry_detail">@string/unkonwn</string>
+
+    <string name="stream_stop_success_string">檔案讀寫成功</string>
+    <string name="stream_stop_success_reason">檔案改寫完成</string>
+    <string name="stream_stop_success_detail">@string/unkonwn</string>
+
+    <string name="stream_close_success_string">檔案關閉成功</string>
+    <string name="stream_close_success_reason">文件處理結束</string>
+    <string name="stream_close_success_detail">@string/unkonwn</string>
+
+    <string name="render_failure_retry_string">渲染成功</string>
+    <string name="render_failure_retry_reason">車模或軌跡線加載成功</string>
+    <string name="render_failure_retry_detail">@string/unkonwn</string>
+
+    <string name="camera_error_1">前攝像頭失敗</string>
+    <string name="camera_error_2">後攝像頭失敗</string>
+    <string name="camera_error_3">左攝像頭失敗</string>
+    <string name="camera_error_4">右攝像頭失敗</string>
+    <string name="camera_error_5">前後攝像頭失敗</string>
+    <string name="camera_error_6">前後左右攝像頭失敗</string>
+    <string name="camera_success">標定成功</string>
+    <string name="camera_breakdown">攝像頭故障</string>
+
+
+</resources>

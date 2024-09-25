@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.autochips.avm"
+    android:sharedUserId="android.uid.system">
+
+    <uses-permission android:name="android.permission.ACCESS_CAR_PROPERTIES" />
+    <uses-permission android:name="android.permission.MODIFY_CAR_PROPERTY" />
+    <uses-permission android:name="android.car.permission.CAR_VENDOR_EXTENSION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <uses-feature
+        android:glEsVersion="0x00030000"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <application
+        android:name=".app.AvmApp"
+        android:allowBackup="true"
+        android:defaultToDeviceProtectedStorage="true"
+        android:directBootAware="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:persistent="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Transparent" />
+        <!-- 启动mockactivity的adb指令 -->
+        <!-- adb shell am start -n com.autochips.avm/.ui.activity.MockActivity -->
+
+        <activity
+            android:name=".ui.activity.MockActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".service.AvmService"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.avm.action.AvmStart" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".service.BootReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:binding="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.autochips.avm.viewmode.SettingViewModel" />
+
+
+        <variable
+            name="passedText"
+            type="String" />
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/setting_view"
+        android:layout_width="601px"
+        android:layout_height="870px"
+        android:background="@drawable/shape_bg_nor"
+        android:layout_marginTop="84px"
+        android:layout_marginLeft="546px"
+        binding:onClickCommand="@{viewModel.pSettingClick}"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27px"
+            android:layout_marginLeft="36px"
+            android:layout_marginBottom="15px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_setting_p_exit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:text="@string/setting_p_exit"
+                android:textColor="@color/setting_view_title_color"
+                android:textSize="@dimen/text_size_23px" />
+
+            <ImageView
+                android:id="@+id/p_exit_info"
+                android:layout_width="40px"
+                android:layout_height="40px"
+                android:src="@mipmap/info_default_56_day"
+                android:gravity="center_vertical"
+                android:layout_marginStart="15px"
+                binding:onClickCommand="@{viewModel.pInfoClick}"/>
+        </LinearLayout>
+
+
+        <Switch
+            style="@style/SwitchStyle"
+            android:layout_marginLeft="36px"
+            android:visibility="gone"/>
+
+        <com.autochips.avm.ui.view.SegmentTabLayout
+            android:id="@+id/segment_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="60px"
+            app:tl_indicator_anim_enable="true"
+            app:tl_textSelectColor="@color/setting_view_title_color"
+            app:tl_textUnClickColor="@color/setting_view_content_color"
+            app:tl_textUnselectColor="@color/setting_view_content_color"
+            app:tl_textUnableColor="@color/setting_view_content_color"
+            app:tl_textsize="@dimen/text_size_24px"
+            app:tl_thumb_drawable="@drawable/tab_selector_thumb"
+            app:tl_thumb_drawable_2="@drawable/tab_selector_thumb_old"
+            app:tl_thumb_drawable_3="@drawable/tab_selector_thumb"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="57px"
+            android:layout_marginLeft="36px"
+            android:layout_marginBottom="15px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/transparentChassis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="透明底盘::parkimage_set_transparentChassis"
+                android:text="@string/setting_transparent_chassis"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:textColor="@color/setting_view_title_color"
+                android:textSize="@dimen/text_size_23px" />
+
+
+            <ImageView
+                android:id="@+id/transparentChassis_info"
+                android:layout_width="40px"
+                android:layout_height="40px"
+                android:src="@mipmap/info_default_56_day"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:layout_marginStart="10px"
+                binding:onClickCommand="@{viewModel.transparentChassisInfoClick}"/>
+        </LinearLayout>
+
+
+        <Switch
+            style="@style/SwitchStyle"
+            android:layout_marginLeft="36px"
+            android:visibility="gone"/>
+
+
+
+        <com.autochips.avm.ui.view.SegmentTabLayout
+            android:id="@+id/transparent_chassis_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="60px"
+            app:tl_indicator_anim_enable="true"
+            app:tl_textSelectColor="@color/setting_view_title_color"
+            app:tl_textUnClickColor="@color/setting_view_content_color"
+            app:tl_textUnselectColor="@color/setting_view_content_color"
+            app:tl_textUnableColor="@color/setting_view_content_color"
+            app:tl_textsize="@dimen/text_size_24px"
+            app:tl_thumb_drawable="@drawable/tab_selector_thumb"
+            app:tl_thumb_drawable_2="@drawable/tab_selector_thumb_old"
+            app:tl_thumb_drawable_3="@drawable/tab_selector_thumb"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="57px"
+            android:orientation="horizontal"
+            android:layout_marginLeft="36px"
+            android:visibility="gone">
+
+            <Switch
+                android:id="@+id/sw_ctivatedPanorama"
+                style="@style/SwitchStyle"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="雷达激活全景影像::parkimage_set_radarActivated360"
+                android:onCheckedChanged="@{viewModel::switchActivatedPanorama}"/>
+
+            <TextView
+                android:id="@+id/activatedPanorama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18px"
+                android:text="@string/setting_radar_activated_panorama"
+                android:textColor="@color/setting_view_title_color"
+                android:textSize="@dimen/text_size_23px"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical" />
+
+            <ImageView
+                android:id="@+id/activatedPanoramaInfo"
+                android:layout_width="27px"
+                android:layout_height="27px"
+                android:src="@mipmap/info_default_56_day"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:layout_marginStart="16.5px"
+                android:layout_marginTop="3px"
+                binding:onClickCommand="@{viewModel.activatedPanoramaInfoClick}"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="57px"
+            android:orientation="horizontal"
+            android:layout_marginLeft="36px">
+
+            <Switch
+                android:id="@+id/sw_setting_path_line"
+                style="@style/SwitchStyle"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="轨迹线::parkimage_set_trajectories"
+                android:onCheckedChanged="@{viewModel::switchPanorama}"
+                android:checked="true"/>
+
+            <TextView
+                android:id="@+id/pathLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18px"
+                android:layout_gravity="center"
+                android:text="@string/setting_path_line"
+                android:textColor="@color/setting_view_title_color"
+                android:textSize="@dimen/text_size_23px"
+                android:gravity="center_vertical" />
+
+            <ImageView
+                android:id="@+id/pathLineInfo"
+                android:layout_width="27px"
+                android:layout_height="27px"
+                android:src="@mipmap/info_default_56_day"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:layout_marginStart="16.5px"
+                android:layout_marginTop="3px"
+                binding:onClickCommand="@{viewModel.pathLineInfoClick}"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="57px"
+            android:orientation="horizontal"
+            android:layout_marginLeft="36px">
+
+            <Switch
+                android:id="@+id/switchSignalActivates"
+                style="@style/SwitchStyle"
+                android:layout_gravity="center_vertical"
+                android:onCheckedChanged="@{viewModel::switchSignalActivates}"
+                android:contentDescription="转向灯激活全景影像::parkimage_set_turnLampActivated360"
+                android:checked="true"/>
+
+            <TextView
+                android:id="@+id/tv_activatesPanorama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18px"
+                android:layout_gravity="center"
+                android:text="@string/setting_signal_activates_panorama"
+                android:textColor="@color/setting_view_title_color"
+                android:textSize="@dimen/text_size_23px"
+                android:gravity="center_vertical" />
+
+            <ImageView
+                android:id="@+id/activatesPanoramaInfo"
+                android:layout_width="40px"
+                android:layout_height="40px"
+                android:src="@mipmap/info_default_56_day"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:layout_marginStart="16.5px"
+                binding:onClickCommand="@{viewModel.activatesPanoramaInfoClick}"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>

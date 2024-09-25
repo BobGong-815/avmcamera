@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="com.autochips.avm.viewmode.MockViewModel" />
+
+        <variable
+            name="viewModel"
+            type="com.autochips.avm.viewmode.MockViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:binding="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="全局异常捕获"
+            android:visibility="gone"
+            binding:onClickCommand="@{viewModel.exceptionClick}" />
+
+        <Button
+            android:id="@+id/bt_avm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="打开AVM首页"
+            android:textColor="@color/test_color"
+            binding:onClickCommand="@{viewModel.openAvmClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="打开设置"
+            android:visibility="gone"
+            binding:onClickCommand="@{viewModel.settingClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="打开外后视镜"
+            android:visibility="gone"
+            binding:onClickCommand="@{viewModel.exceptionClick}" />
+    </LinearLayout>
+</layout>

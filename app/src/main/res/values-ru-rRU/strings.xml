@@ -1,0 +1,135 @@
+<resources>
+<string name="app_name" translatable="false">AVMCamera</string>
+    <string name="setting_p_exit">Переключение с передачи P</string>
+    <string name="setting_p_exit_content">Переместите рычаг управления а положение Р. Выход из интерфейса панорамного вида произойдет немедленно или через 30 секунд</string>
+    <string name="setting_at_once">Немедленно</string>
+    <string name="setting_30_seconds">Через 30 секунд</string>
+    <string name="setting_transparent_chassis">Прозрачное шасси</string>
+    <string name="setting_close">Закр</string>
+    <string name="setting_low">Низк</string>
+    <string name="setting_centre">Срдн</string>
+    <string name="setting_high">Выс</string>
+    <string name="setting_radar_activated_panorama">Панорамный вид активируется при включении радара</string>
+    <string name="setting_radar_activated_panorama_content">Войти в интерфейс панорамного вида при скорости автомобиля &amp;#06012 км/ч и при оповещении от переднего радара</string>
+    <string name="setting_path_line">Линия движения</string>
+    <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
+    <string name="setting_signal_activates_panorama">Панорамный вид активируется при включении поворотного сигнала</string>
+    <string name="setting_signal_activates_panorama_content">Включить сигнал поворота и войти в интерфейс панорамного вида. Автоматический выход при скорости автомобиля > 30 км/ч</string>
+    <string name="setting_transparent_chassis_infobook_title">Прозрачное шасси</string>
+    <string name="setting_transparent_chassis_infobook_content">Включить для наблюдения за дорожными условиями</string>
+    <string name="setting_transparent_chassis_infobook_ok">Хорошо</string>
+    <string name="setting_rearview_mirror">后视镜调节</string>
+    <string name="setting_fold">折叠</string>
+    <string name="setting_expand">展开</string>
+    <string name="setting_rearview_mirror_down">Зеркало заднего вида откидывается вниз</string>
+    <string name="setting_rearview_mirror_down_open">Откидывание вниз зеркала заднего вида включено</string>
+    <string name="setting_rearview_mirror_down_close">Откидывание вниз зеркала заднего вида отключено</string>
+    <string name="camera_2d">2D</string>
+    <string name="camera_3d">3D</string>
+    <string name="camera_wide_angle">Широкий угол обзора</string>
+    <string name="desc_rearview_mirror_fold">Зеркало заднего вида уже сложено</string>
+    <string name="desc_rearview_mirror_expand">后视镜已展开</string>
+    <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
+    <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
+    <string name="calibration">标定</string>
+    <string name="manual_calibration">手动标定</string>
+    <string name="manual_calibration_success">手动标定成功</string>
+    <string name="automatic_calibration">自动标定</string>
+    <string name="translate_left">左视角</string>
+    <string name="translate_right">右视角</string>
+    <string name="translate_left_right">左右视角</string>
+    <string name="translate_front">前视角</string>
+    <string name="translate_rear">后视角</string>
+    <string name="translate_left_front">左前视角</string>
+    <string name="translate_right_front">右前视角</string>
+    <string name="translate_left_rear">左后视角</string>
+    <string name="translate_right_rear">右后视角</string>
+    <string name="automatic_calibration_success">自动标定成功</string>
+    <string name="front_wide_angle">Широкий угол обзора спереди</string>
+    <string name="back_wide_angle">Широкий угол обзора сзади</string>
+    <string name="before">Передние колеса</string>
+    <string name="rear_wheel">Задние колеса</string>
+    <string name="radar_sound_open">Звуковой сигнал подсказки радара включен</string>
+    <string name="radar_sound_close">Звуковой сигнал подсказки радара выключен</string>
+    <string name="parking_assist_system_down">Ошибка системы помощи при парковке, пожалуйста, проверьте!</string>
+    <string name="emergency_braking">Сработало экстренное торможение</string>
+
+    <string name="init_failure_string">初始化失败</string>
+    <string name="init_failure_reason">硬件故障或资源不足</string>
+    <string name="init_failure_detail">硬件故障或资源不足</string>
+    <string name="init_failure_describe">软件未正常运行</string>
+    <string name="unkonwn">未知</string>
+
+    <string name="stream_open_failure_string">文件打开失败</string>
+    <string name="stream_open_failure_reason">文件打开失败或文件不存在</string>
+    <string name="stream_open_failure_detail">@string/unkonwn</string>
+
+    <string name="stream_start_failure_string">文件读写失败</string>
+    <string name="stream_start_failure_reason">读写通讯故障或文件内容不匹配</string>
+    <string name="stream_start_failure_detail">@string/unkonwn</string>
+
+    <string name="algorithm_failure_string">数据计算异常</string>
+    <string name="algorithm_failure_reason">加载异常</string>
+    <string name="algorithm_failure_detail">@string/unkonwn</string>
+
+    <string name="render_failure_string">渲染失败</string>
+    <string name="render_failure_reason">车模或轨迹线加载失败</string>
+    <string name="render_failure_detail">@string/unkonwn</string>
+
+    <string name="stream_stop_failure_string">文件读写失败</string>
+    <string name="stream_stop_failure_reason">读写通讯故障或文件内容不匹配</string>
+    <string name="stream_stop_failure_detail">@string/unkonwn</string>
+
+    <string name="stream_close_failure_string">文件关闭失败</string>
+    <string name="stream_close_failure_reason">文件被损坏或资源不足</string>
+    <string name="stream_close_failure_detail">@string/unkonwn</string>
+
+    <string name="data_success_string">视图参数更新成功</string>
+    <string name="data_success_reason">视图内外参数更新成功</string>
+    <string name="data_success_detail">@string/unkonwn</string>
+    <string name="data_failure_string">视图参数更新失败</string>
+    <string name="data_failure_reason">视图内外参数更新失败</string>
+    <string name="data_failure_detail">@string/unkonwn</string>
+
+    <string name="calibration_failure_string">标定失败</string>
+    <string name="calibration_failure_reason">找点成功以及视图参数更新失败</string>
+    <string name="calibration_failure_detail">@string/unkonwn</string>
+    <string name="calibration_success_string">标定成功</string>
+    <string name="calibration_success_reason">找点成功以及视图参数更新成功</string>
+    <string name="calibration_success_detail">@string/unkonwn</string>
+
+    <string name="stream_open_success_string">文件打开成功</string>
+    <string name="stream_open_success_reason">文件加载成功</string>
+    <string name="stream_open_success_detail">@string/unkonwn</string>
+
+    <string name="stream_start_success_string">文件读写成功</string>
+    <string name="stream_start_success_reason">文件权限获取成功</string>
+    <string name="stream_start_success_detail">@string/unkonwn</string>
+
+    <string name="algorithm_failure_retry_string">数据计算正常</string>
+    <string name="algorithm_failure_retry_reason">OpenGL加载正常</string>
+    <string name="algorithm_failure_retry_detail">@string/unkonwn</string>
+
+    <string name="stream_stop_success_string">文件读写成功</string>
+    <string name="stream_stop_success_reason">文件改写完成</string>
+    <string name="stream_stop_success_detail">@string/unkonwn</string>
+
+    <string name="stream_close_success_string">文件关闭成功</string>
+    <string name="stream_close_success_reason">文件处理结束</string>
+    <string name="stream_close_success_detail">@string/unkonwn</string>
+
+    <string name="render_failure_retry_string">渲染成功</string>
+    <string name="render_failure_retry_reason">车模或轨迹线加载成功</string>
+    <string name="render_failure_retry_detail">@string/unkonwn</string>
+
+    <string name="camera_error_1">前摄像头失败</string>
+    <string name="camera_error_2">后摄像头失败</string>
+    <string name="camera_error_3">左摄像头失败</string>
+    <string name="camera_error_4">右摄像头失败</string>
+    <string name="camera_error_5">前后摄像头失败</string>
+    <string name="camera_error_6">前后左右摄像头失败</string>
+    <string name="camera_success">标定成功</string>
+    <string name="camera_breakdown">Неисправность камеры</string>
+
+
+</resources>
