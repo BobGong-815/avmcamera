@@ -182,27 +182,33 @@ public class CameraViewModelHelper {
      * @param speedValue
      */
     private boolean isTransparent = false;
-
+    private int mLastSetPosition = -1;//记录已设置的车底透视位置
     public void setTransparentIndexTab() {
         if (!CameraView.isShowing) {
             return;
         }
         int position = SystemProperties.getInt("settingRadarActivatedPanorama", 0);
 //        KLog.i("车速speedVakye ............ " + speedValue);
-        if (!isTransparent) {
-            position = speedValue > 1 ? position : 0;
+//        if (!isTransparent) {
+//            position = speedValue > 1 ? position : 0;
+//        }
+//        if (speedValue > 1) {
+//            isTransparent = true;
+//        } else {
+//            if (valGear == 4) {
+//                isTransparent = false;
+//            }
+//            if (speedValue==0){
+//                isTransparent = false;
+//            }
+//        }
+        if (speedValue <= 0.3 && position != 0) {
+            return;
         }
-        if (speedValue > 1) {
-            isTransparent = true;
-        } else {
-            if (valGear == 4) {
-                isTransparent = false;
-            }
-            if (speedValue==0){
-                isTransparent = false;
-            }
+        //        KLog.i("position .... " + position);
+        if(position == mLastSetPosition){
+            return;
         }
-//        KLog.i("position .... " + position);
 
         if (position == 0) {
             bvavmJNI.bwSetCarBottomStatus((byte) 0);
@@ -217,6 +223,7 @@ public class CameraViewModelHelper {
             bvavmJNI.bwSetCarBottomStatus((byte) 1);
             bvavmJNI.bwSetCarTransparency(0.05f);
         }
+        mLastSetPosition = position;
     }
 
     /**
