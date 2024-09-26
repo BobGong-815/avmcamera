@@ -153,9 +153,9 @@ public class BvAvmJNIHelper {
 //        KLog.d("avmRender2：" + sCameraDirection);
         if (!isActive)
             return 0;
-        if (isCalibration) {
-            return bvavmJNI.avmRender(sCameraDirection);
-        }
+//        if (isCalibration) {
+//            return bvavmJNI.avmRender(sCameraDirection);
+//        }
         return bvavmJNI.avmRender2(sCameraDirection);
     }
 

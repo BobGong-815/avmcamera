@@ -213,7 +213,7 @@
                     android:layout_marginBottom="20px"
                     android:background="@drawable/selector_radar_bg"
                     android:gravity="center"
-                    android:visibility="@{TextUtils.isEmpty(viewModel.info.radarDistance)?View.GONE:View.VISIBLE}"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">

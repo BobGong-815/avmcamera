@@ -131,8 +131,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private boolean isFirstEnter = true;
     private AvmManager mAvmManager;
 
-    public AvmService() {
-    }
+    public AvmService() { }
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -331,19 +330,23 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             break;
                     }
                 } else if (msg.what == MSG_CR_CAMERA) {
-                    if (JNI_IN_THREAD_FLAG) {
-                        AvmApp.getInstance().getCameraView().getViewModel().createCamera();
-                    } else {
-                        if (!BvAvmJNIHelper.isAvmDeInit) {
-                            BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
-                        }
+                    if (!BvAvmJNIHelper.isAvmDeInit) {
+                        BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
                     }
+//                    if (JNI_IN_THREAD_FLAG) {
+//                        AvmApp.getInstance().getCameraView().getViewModel().createCamera();
+//                    } else {
+//                        if (!BvAvmJNIHelper.isAvmDeInit) {
+//                            BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
+//                        }
+//                    }
                 } else if (msg.what == MSG_DEL_CAMERA) {
-                    if (JNI_IN_THREAD_FLAG) {
-                        AvmApp.getInstance().getCameraView().getViewModel().deleteCamera();
-                    } else {
-                        BvAvmJNIHelper.getInstance().bwDeleteCamera();
-                    }
+                    BvAvmJNIHelper.getInstance().bwDeleteCamera();
+//                    if (JNI_IN_THREAD_FLAG) {
+//                        AvmApp.getInstance().getCameraView().getViewModel().deleteCamera();
+//                    } else {
+//                        BvAvmJNIHelper.getInstance().bwDeleteCamera();
+//                    }
                 }
             }
         };
@@ -679,7 +682,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 AvmApp.getInstance().getCameraView().showRadarSoundView(status);
                 break;
             case AVM_RADAR_ALARM_ACOUSTIC_SWITCH:// 雷达故障报警
-                AvmApp.getInstance().getCameraView().showParkingAssistView(status);
+                //AvmApp.getInstance().getCameraView().showParkingAssistView(status);
                 break;
             case AVM_RR_MIDSNS_ERR_FLAG:   //     后右中
             case AVM_RL_MIDSNS_ERR_FLAG:    //     后左中
@@ -729,6 +732,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     if (arr.length != 4) {
                         return;
                     }
+
+                    CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+                    AvmRuntime.self().artificialEnter();
+
                     getCalStatus(vehicleId, "DIAG_31_3801_AVM_ENTER_CALIBRATION_REQ");
                     isInt3801 = true;
 //                    CameraViewModelHelper.getInstance().showView(true);
@@ -801,7 +808,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     if (arr.length != 4) {
                         return;
                     }
-                    AvmApp.getInstance().getCameraView().calibrationBack();
+
+                    /*if (AvmService.JNI_IN_THREAD_FLAG) {
+                        AvmApp.getInstance().getCameraView().getViewModel().callCalibrateResp();
+                    } else */{
+                        AvmApp.getInstance().getCameraView().calibrationBack();
+                    }
                     break;
                 case DIAG_31_3806_AVM_CALIBRATION_CHECK_REQ://下线标定检查
 

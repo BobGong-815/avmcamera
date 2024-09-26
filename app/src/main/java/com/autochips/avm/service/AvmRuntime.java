@@ -1161,6 +1161,8 @@ public class AvmRuntime {
         intentFilter.addAction(TestDefine.EVT_RADAR_ACTIVE);
         intentFilter.addAction(TestDefine.EVT_CALIBRATION_START);
         intentFilter.addAction(TestDefine.SIM_WHEEL_SPEED);
+        intentFilter.addAction(TestDefine.TEST_CALIBRATE);
+        intentFilter.addAction(TestDefine.TEST_CALIBRATE_RESP);
         mContext.registerReceiver(broadcastReceiver, intentFilter);
     }
 
@@ -1390,6 +1392,10 @@ public class AvmRuntime {
             AvmApp.getInstance().getCameraView().getViewModel().setManualCalibration1();
         } else if (intent.getAction().equals(TestDefine.SIM_WHEEL_SPEED)) {
             AvmApp.getInstance().getCameraView().getViewModel().simWheelSpeed();
+        } else if (intent.getAction().equals(TestDefine.TEST_CALIBRATE)) {
+            AvmApp.getInstance().getCameraView().getViewModel().setStartCalibration();
+        } else if (intent.getAction().equals(TestDefine.TEST_CALIBRATE_RESP)) {
+            AvmApp.getInstance().getCameraView().getViewModel().callCalibrateResp();
         }
     }
 

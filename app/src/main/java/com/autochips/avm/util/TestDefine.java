@@ -27,6 +27,8 @@ public class TestDefine {
     public final static String MEM_MODE = "com.avm.define.MEM_MODE";
     public final static String CURR_SPEED = "com.avm.define.SPEED";
     public final static String SIM_WHEEL_SPEED = "com.avm.define.SIM_WHEEL_SPEED";
+    public final static String TEST_CALIBRATE = "com.avm.test_calibrate";
+    public final static String TEST_CALIBRATE_RESP = "com.avm.test_calibrate_resp";
 
     public final static String EVT_TURN_LAMP_STS = "com.avm.define.EVT_TURN_LAMP_STS";
     public final static String EVT_TURN_LAMP_ACTIVE = "com.avm.define.EVT_TURN_LAMP_ACTIVE";

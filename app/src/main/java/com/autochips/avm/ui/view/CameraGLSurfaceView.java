@@ -35,7 +35,7 @@ import me.goldze.mvvmhabit.utils.KLog;
  */
 public class CameraGLSurfaceView extends GLSurfaceView {
 
-    public static boolean doCalibrateFlag = false;
+    public static int doCalibrateNum = 0;
     public static volatile int lastCeameraDirection = bvavmJNI.BW_VIEW_POWER_OFF;
     private static volatile int sCameraDirection = bvavmJNI.BW_VIEW_POWER_OFF;
 
@@ -130,10 +130,14 @@ public class CameraGLSurfaceView extends GLSurfaceView {
              */
 
             try {
-                if (doCalibrateFlag) {
-                    BvAvmJNIHelper.getInstance().avmRender2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
-                    AvmApp.getInstance().getCameraView().getViewModel().callCalibrate(1);
-                    doCalibrateFlag = false;
+                if (doCalibrateNum > 0) {
+                    KLog.d("doCalibrateNum = " + doCalibrateNum);
+                    if (doCalibrateNum == 1) {
+                        BvAvmJNIHelper.getInstance().avmRender2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+                        AvmApp.getInstance().getCameraView().getViewModel().callCalibrate(1);
+                    }
+
+                    doCalibrateNum--;
                 } else {
                     if (CameraView.isIsShowing() && sCameraDirection != bvavmJNI.BW_VIEW_POWER_OFF) {
                         BvAvmJNIHelper.getInstance().avmRender2(sCameraDirection);
@@ -157,17 +161,21 @@ public class CameraGLSurfaceView extends GLSurfaceView {
             BvAvmJNIHelper.getInstance().avmInit(getContext());
             KLog.d("ActivityLifecycleCallbacks onSurfaceCreated 创建画布结束");
             int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
-//            bvavmJNI.bwSetTrajLineStatus((byte) settingPathLine);
+            bvavmJNI.bwSetTrajLineStatus((byte) settingPathLine);
 //            setIndexTab();
 //            bvavmJNI.bwNotifyRVC(0);
             KLog.d(" valGear 结束RVC-1 resRvc  handler：了");
 //          handler.postDelayed(()->  bvavmJNI.bwNotifyRVC(0),2000);
             // CameraViewModelHelper.getInstance().setTransparentIndexTab();
-            if (!AvmService.JNI_IN_THREAD_FLAG) {
-                if (BvAvmJNIHelper.getInstance().isCamera2Device()) {
-                    BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
-                    isOpenCamera = true;
-                }
+//            if (!AvmService.JNI_IN_THREAD_FLAG) {
+//                if (BvAvmJNIHelper.getInstance().isCamera2Device()) {
+//                    BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
+//                    isOpenCamera = true;
+//                }
+//            }
+            if (BvAvmJNIHelper.getInstance().isCamera2Device()) {
+                BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
+                isOpenCamera = true;
             }
 
         }

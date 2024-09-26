@@ -79,7 +79,9 @@ public class CameraViewModel extends BaseCameraViewModel {
     private final int MSG_RADAR_EXIT = 12;
     private final int MSG_TRAJ_LINE_STS = 13;
     private final int MSG_SET_UNDISTORT_LEVEL = 14;
+    private final int MSG_CALIBRATE_RESP = 15;
     private final int MSG_SIM_WHEEL_SPEED = 20;
+
 
     public CameraViewModel() {
         liveDataCamera2DTopUI = new MutableLiveData<>();
@@ -109,6 +111,8 @@ public class CameraViewModel extends BaseCameraViewModel {
                     // 2 后视图标定失败
                     // 4 左视图标定失败
                     // 8 右视图标定失败
+                } else if (msg.what == MSG_CALIBRATE_RESP) {
+                    AvmApp.getInstance().getCameraView().calibrationBack();
                 } else if (msg.what == MSG_CREATE_CAMERA) {
                     BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
                 } else if (msg.what == MSG_DELETE_CAMERA) {
@@ -427,12 +431,12 @@ public class CameraViewModel extends BaseCameraViewModel {
         byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
         CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESP, 0, arrBack);
 
-        if (AvmService.JNI_IN_THREAD_FLAG) {
-            BvAvmJNIHelper.getInstance().setCalibration(true);
-            CameraGLSurfaceView.doCalibrateFlag = true;
+        /*if (AvmService.JNI_IN_THREAD_FLAG) {
+//            BvAvmJNIHelper.getInstance().setCalibration(true);
+            CameraGLSurfaceView.doCalibrateNum = 12;
             AvmRuntime.self().artificialEnter();
 //            callCalibrate(1);
-        } else {
+        } else*/ {
             isCaliStatus = bvavmJNI.bwStartCalibrate(1);
             KLog.d("标定 DIAG_31 app bwStartCalibrate 结束-标定完成。  " + isCaliStatus);
         }
@@ -441,6 +445,7 @@ public class CameraViewModel extends BaseCameraViewModel {
 
     //收到请求，看是否标定成功
     public void calibrationBack() {
+        Log.d("AVM", Log.getStackTraceString(new Throwable()));
         /*if (!BvAvmJNIHelper.getInstance().isActive()){
             return;
         }*/
@@ -754,6 +759,12 @@ public class CameraViewModel extends BaseCameraViewModel {
         message.what = MSG_CALIBRATE;
         message.arg1 = value;
         threadHandler.sendMessage(message);
+    }
+
+    public void callCalibrateResp() {
+        Message message = Message.obtain();
+        message.what = MSG_CALIBRATE_RESP;
+        threadHandler.sendMessageDelayed(message, 6000);
     }
 
     public void simWheelSpeed() {
