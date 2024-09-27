@@ -34,10 +34,9 @@ public class BvAvmJNIHelper {
 
     private static BvAvmJNIHelper instance;
     private boolean isActive = false; // 是否激活 或打开AVM
-    public int avmInit = -1;
 
     private long bwInitValue = -1;
-
+    private byte[] syncObj = new byte[0];
     private boolean isCalibration = false;
 
     public static boolean isAvmDeInit = false;
@@ -151,12 +150,16 @@ public class BvAvmJNIHelper {
 
     public int avmRender2(int sCameraDirection) {
 //        KLog.d("avmRender2：" + sCameraDirection);
-        if (!isActive)
-            return 0;
+        synchronized (syncObj) {
+            if (!isActive)
+                return 0;
 //        if (isCalibration) {
 //            return bvavmJNI.avmRender(sCameraDirection);
 //        }
-        return bvavmJNI.avmRender2(sCameraDirection);
+            if (bwInitValue != -1 && bwInitValue != 0) return bvavmJNI.avmRender2(sCameraDirection);
+
+            return 0;
+        }
     }
 
     public boolean isActive() {
@@ -164,34 +167,44 @@ public class BvAvmJNIHelper {
     }
 
     public long bwCreateCamera(String path, String met) {
-        if (!isActive) return 0;
-        if (bwInitValue != -1 && bwInitValue != 0) return bwInitValue;
-        KLog.d("创建 bwCreateCamera：" + bwInitValue);
-        if (Build.BOARD.equals("rk30sdk"))
-            cameraType = bvavmJNI.PROJ_AY5_ID;
-        bvavmJNI.bwSetProjID(cameraType);
-        return bwInitValue = bvavmJNI.bwCreateCamera(path, met);
+        synchronized (syncObj) {
+            if (!isActive) return 0;
+            if (bwInitValue != -1 && bwInitValue != 0) return bwInitValue;
+            KLog.d("创建 bwCreateCamera：" + bwInitValue);
+            if (Build.BOARD.equals("rk30sdk"))
+                cameraType = bvavmJNI.PROJ_AY5_ID;
+
+            bvavmJNI.bwSetProjID(cameraType);
+            return bwInitValue = bvavmJNI.bwCreateCamera(path, met);
+        }
     }
 
     public long bwCreateCameraShow(String path, String met) {
-        KLog.d("bwCreateCamera bwInitValue :" + bwInitValue);
-        if (bwInitValue != -1 && bwInitValue != 0) {
-            return bwInitValue;
+        synchronized (syncObj) {
+            KLog.d("bwCreateCamera bwInitValue :" + bwInitValue);
+            if (bwInitValue != -1 && bwInitValue != 0) {
+                return bwInitValue;
+            }
+            KLog.d("bwCreateCamera create");
+
+            return bwInitValue = bvavmJNI.bwCreateCamera(path, met);
         }
-        KLog.d("bwCreateCamera create");
-        return bwInitValue = bvavmJNI.bwCreateCamera(path, met);
     }
 
     public void bwDeleteCamera() {
-        KLog.d(bwInitValue + " bwDeleteCamera释放：" + bwInitValue);
-        if (bwInitValue == -1 || bwInitValue == 0) {
+        synchronized (syncObj) {
+            KLog.d(bwInitValue + " bwDeleteCamera释放：" + bwInitValue);
+            if (bwInitValue == -1 || bwInitValue == 0) {
+                return;
+            }
+            isAvmDeInit = false;
+
+            bvavmJNI.bwDeleteCamera(bwInitValue);
+            bwInitValue = 0;
+
+            KLog.d("释放摄像头完成：");
             return;
         }
-        isAvmDeInit = false;
-        bvavmJNI.bwDeleteCamera(bwInitValue);
-        bwInitValue = 0;
-        KLog.d("释放摄像头完成：");
-        return;
     }
 
     public long camreaStatus() {
