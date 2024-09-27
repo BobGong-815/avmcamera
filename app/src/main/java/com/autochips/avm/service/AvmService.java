@@ -141,7 +141,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         KLog.d("AVM服务 [onCreate]");
 
         Log.d("AVM", "Board : " + Build.BOARD);
-
+        initDefault();
         AvmRuntime.self().init(this);
         AvmRuntime.self().registerBroadcast(this);
         AvmRuntime.self().registerActionListener(this);
@@ -456,6 +456,17 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 AvmApp.getInstance().getCameraView().viewShowStatus();
             }
         });
+    }
+
+    // 设置默认配置
+    private void initDefault() {
+        int avmInstalled = SystemProperties.getInt("avm_installed", 0);
+        KLog.d("avmInstalled = " + avmInstalled);
+        if (avmInstalled == 0) {
+            SystemProperties.set("avm_installed", "1");
+
+            SystemProperties.set("signalActivates","1");
+        }
     }
 
     private final CanManager.onSignalValueChangedListener mOnSignalValueChangedListener = (vehicleId, value) -> {
