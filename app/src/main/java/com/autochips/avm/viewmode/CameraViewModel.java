@@ -6,15 +6,19 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_030C_AVM_LEFT_CAMERA_PARA_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_030D_AVM_RIGHT_CAMERA_PARA_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.NFS_SYNC;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.NFS_SYNC_STATUS;
 import static com.android.bvavm.bvavmJNI.SCANCODE_IR_POINT1;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESP;
 
 import android.app.AlarmManager;
+import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.hardware.automotive.vehicle.V2_0.VehicleProperty;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -80,6 +84,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     private final int MSG_TRAJ_LINE_STS = 13;
     private final int MSG_SET_UNDISTORT_LEVEL = 14;
     private final int MSG_CALIBRATE_RESP = 15;
+    private final int MSG_CALIBRATING = 18;
     private final int MSG_SIM_WHEEL_SPEED = 20;
 
 
@@ -101,17 +106,32 @@ public class CameraViewModel extends BaseCameraViewModel {
             public void handleMessage(Message msg) {
                 KLog.d("handleMessage : " + msg.what + " , " + msg.arg1 + " , " + msg.arg2);
                 if (msg.what == MSG_CALIBRATE) {
+                    KLog.d("标定 handle MSG_CALIBRATE.");
+                    threadHandler.sendEmptyMessage(MSG_CALIBRATING);
                     BvAvmJNIHelper.getInstance().setCalibration(true);
                     isCaliStatus = -1;
                     isCaliStatus = bvavmJNI.bwStartCalibrate(msg.arg1);
-                    KLog.d("bwStartCalibrate ret is " + isCaliStatus);
+                    KLog.d("标定 bwStartCalibrate ret is " + isCaliStatus);
                     BvAvmJNIHelper.getInstance().setCalibration(false);
                     // isCaliStatus 返回值
                     // 0 成功
                     // 2 后视图标定失败
                     // 4 左视图标定失败
                     // 8 右视图标定失败
+
+                    if (isCaliStatus == 0) {
+                        try {
+                            Thread.sleep(5000);
+                            CanManager.getInstance().setIntProperty(NFS_SYNC,  0, 1);
+                            int nfs_sts = CanManager.getInstance().getIntStatus(NFS_SYNC_STATUS, 0);
+                            KLog.d("标定 Read NFS STATUS is " + nfs_sts);
+                        } catch (InterruptedException exception) {
+                            KLog.e(exception.toString());
+                        }
+                    }
+                    threadHandler.removeMessages(MSG_CALIBRATING);
                 } else if (msg.what == MSG_CALIBRATE_RESP) {
+                    KLog.d("标定 handle MSG_CALIBRATE_RESP.");
                     AvmApp.getInstance().getCameraView().calibrationBack();
                 } else if (msg.what == MSG_CREATE_CAMERA) {
                     BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
@@ -431,16 +451,19 @@ public class CameraViewModel extends BaseCameraViewModel {
         byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
         CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESP, 0, arrBack);
 
-        /*if (AvmService.JNI_IN_THREAD_FLAG) {
-//            BvAvmJNIHelper.getInstance().setCalibration(true);
-            CameraGLSurfaceView.doCalibrateNum = 12;
-            AvmRuntime.self().artificialEnter();
-//            callCalibrate(1);
-        } else*/ {
-            isCaliStatus = bvavmJNI.bwStartCalibrate(1);
-            KLog.d("标定 DIAG_31 app bwStartCalibrate 结束-标定完成。  " + isCaliStatus);
-        }
+        isCaliStatus = bvavmJNI.bwStartCalibrate(1);
+        KLog.d("标定 DIAG_31 000 app bwStartCalibrate 结束-标定完成。  " + isCaliStatus);
+        if (isCaliStatus == 0) {
+            try {
+                Thread.sleep(2000);
+                CanManager.getInstance().setIntProperty(NFS_SYNC,  0, 1);
+                int nfs_sts = CanManager.getInstance().getIntStatus(NFS_SYNC_STATUS, 0);
+                KLog.d("Read NFS STATUS is " + nfs_sts);
+            } catch (InterruptedException exception) {
+                KLog.e(exception.toString());
+            }
 
+        }
     }
 
     //收到请求，看是否标定成功
@@ -734,7 +757,6 @@ public class CameraViewModel extends BaseCameraViewModel {
         setCalibrateRunning(false);
     }
 
-
     /**
      * 重启app
      */
@@ -755,16 +777,22 @@ public class CameraViewModel extends BaseCameraViewModel {
     }
 
     public void callCalibrate(int value) {
-        Message message = Message.obtain();
-        message.what = MSG_CALIBRATE;
-        message.arg1 = value;
-        threadHandler.sendMessage(message);
+        KLog.d("标定 callCalibrate().");
+        if (threadHandler.hasMessages(MSG_CALIBRATING)) {
+            KLog.e("标定 now is in calibrating.");
+        } else {
+            Message message = Message.obtain();
+            message.what = MSG_CALIBRATE;
+            message.arg1 = value;
+            threadHandler.sendMessage(message);
+        }
     }
 
     public void callCalibrateResp() {
+        KLog.d("标定 callCalibrateResp().");
         Message message = Message.obtain();
         message.what = MSG_CALIBRATE_RESP;
-        threadHandler.sendMessageDelayed(message, 6000);
+        threadHandler.sendMessage(message);
     }
 
     public void simWheelSpeed() {

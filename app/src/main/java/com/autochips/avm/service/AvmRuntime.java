@@ -78,7 +78,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.GEAR_P},
                 new int[]{DataDefine.SENSOR_NONE},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
-                new int[]{DataDefine.EVT_TURN_LAMP_ACTIVE},
+                new int[]{DataDefine.EVT_TURN_LAMP_ACTIVE, DataDefine.EVT_RADAR_ACTIVE, DataDefine.EVT_RADAR_TURN_LAMP_ACTIVE},
                 new int[]{DataDefine.ACT_LEFT_CARD, DataDefine.ACT_AERIAL_VIEW}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-1-2
                 new int[]{DataDefine.GEAR_P},
@@ -1066,6 +1066,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_N, DataDefine.EVT_SHIFT_D},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
+
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,
                 new int[]{DataDefine.GEAR_R},
                 new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_NONE},
@@ -1667,13 +1668,13 @@ public class AvmRuntime {
         long turnLampResetTime;
         int actEnterAngleView;
 
-        int[] fvSts;
-        int[] gears;
-        int[] sensors;
-        List<Integer> events;
+        int[] fvSts; // 全景状态
+        int[] gears; // 档位
+        int[] sensors; // 雷达 转向灯
+        List<Integer> events; // 挂挡、雷达切换、转向灯切换
         List<Integer> extEvents;
-        int memory;
-        int[] actions;
+        int memory; // 记忆模式
+        int[] actions; // 切换全景状态 切换视角
 
         DataSts() {
             radarAlive = false;

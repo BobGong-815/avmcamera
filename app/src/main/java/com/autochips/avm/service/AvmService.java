@@ -61,6 +61,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_RESULT_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_RESULT_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESULT_REQ;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_380D_AVM_READ_FAIL_REASON_REQ;
@@ -805,12 +806,17 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                    CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, new byte[] {0x00, 0x00, 0x00, 0x00});
 //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
 
-
                     if (arr.length != 8) {
                         return;
                     }
 
-                    AvmApp.getInstance().getCameraView().startCalibration();
+                    if (AvmService.JNI_IN_THREAD_FLAG) {
+                        // 向上位机回复已开始标定
+                        CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESP, 0, new byte[] {0x00, 0x00, 0x00, 0x00});
+                        AvmApp.getInstance().getCameraView().getViewModel().callCalibrate(1);
+                    } else {
+                        AvmApp.getInstance().getCameraView().startCalibration();
+                    }
                     break;
                 case DIAG_31_3803_AVM_START_CALIBRATION_RESULT_REQ://开始标定结果请求
                     KLog.i("步骤 6 标定-开始标定结果请求:DIAG_31_3803_AVM_START_CALIBRATION_RESULT_REQ:" + Arrays.toString(arr));
@@ -820,9 +826,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         return;
                     }
 
-                    /*if (AvmService.JNI_IN_THREAD_FLAG) {
+                    if (AvmService.JNI_IN_THREAD_FLAG) {
                         AvmApp.getInstance().getCameraView().getViewModel().callCalibrateResp();
-                    } else */{
+                    } else {
                         AvmApp.getInstance().getCameraView().calibrationBack();
                     }
                     break;
