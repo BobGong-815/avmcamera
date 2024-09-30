@@ -978,13 +978,13 @@ public class AvmRuntime {
                 new int[]{DataDefine.EVT_SWITCH_2_2D},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 4-2-26
-                new int[]{DataDefine.GEAR_P},
+                new int[]{DataDefine.GEAR_P, DataDefine.GEAR_N, DataDefine.GEAR_D},
                 new int[]{DataDefine.SENSOR_TURN_LAMP_RIGHT},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_3D},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_3D_RIGHT_REAR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 4-2-26
-                new int[]{DataDefine.GEAR_P},
+                new int[]{DataDefine.GEAR_P, DataDefine.GEAR_N, DataDefine.GEAR_D},
                 new int[]{DataDefine.SENSOR_TURN_LAMP_LEFT},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_3D},
