@@ -859,7 +859,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     public void setTrajLineStatus(int value) {
         Message message = Message.obtain();
         message.what = MSG_TRAJ_LINE_STS;
-        message.arg2 = value;
+        message.arg1 = value;
         threadHandler.sendMessage(message);
     }
 
