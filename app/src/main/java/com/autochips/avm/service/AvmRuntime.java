@@ -1124,6 +1124,44 @@ public class AvmRuntime {
                 new int[]{DataDefine.EVT_SHIFT_N, DataDefine.EVT_SHIFT_D},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
 
+        // -----  如果设置了P档30s延时退出，会走到这里来
+        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,
+                new int[]{DataDefine.GEAR_R},
+                new int[]{DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.MEM_MODE_2D},
+                new int[]{DataDefine.EVT_SHIFT_P},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
+
+        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,
+                new int[]{DataDefine.GEAR_R},
+                new int[]{DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.MEM_MODE_3D},
+                new int[]{DataDefine.EVT_SHIFT_P},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_FRONT_VIEW}));
+
+        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,
+                new int[]{DataDefine.GEAR_R},
+                new int[]{DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.MEM_MODE_3D},
+                new int[]{DataDefine.EVT_SHIFT_P},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
+        // ---- 如果设置了P档30s延时退出，会走到这里来 --- //
+
+        // ----- P档30s后退出 -- //
+        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,
+                new int[]{DataDefine.GEAR_P},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_WIDE_ANGLE},
+                new int[]{DataDefine.EVT_SHIFT_P_30S},
+                new int[]{DataDefine.ACT_EXIT}));
+
+        configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,
+                new int[]{DataDefine.GEAR_P},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_WIDE_ANGLE},
+                new int[]{DataDefine.EVT_SHIFT_P_30S},
+                new int[]{DataDefine.ACT_EXIT}));
+
         KLog.d("configTable.size is " + configTable.size());
 
         thread = new Thread(new Runnable() {
@@ -1314,7 +1352,7 @@ public class AvmRuntime {
 
     public void onViewAngleChanged(int viewAngle) {
         KLog.d(" onViewAngleChanged for " + viewAngle);
-        Log.d("AvmRuntime", Log.getStackTraceString(new Throwable()));
+//        Log.d("AvmRuntime", Log.getStackTraceString(new Throwable()));
     }
 
     public boolean isShift2R() {
@@ -1470,13 +1508,13 @@ public class AvmRuntime {
     }
 
     private void handleEvent() {
-        KLog.d("DataSts is " + dataSts.toString());
         if ((System.currentTimeMillis() - dataSts.lastChangeTime) > 30000) {
             if (dataSts.gears[0] == DataDefine.GEAR_P) {
                 dataSts.events.add(DataDefine.EVT_SHIFT_P_30S);
             }
             dataSts.events.add(DataDefine.EVT_KEEP_30S);
         }
+        KLog.d("DataSts is " + dataSts.toString());
 
         dataSts.extEvents.clear();
         dataSts.extEvents.addAll(dataSts.events);
@@ -1485,9 +1523,9 @@ public class AvmRuntime {
             int[] actions = cfgItem.matchAction(dataSts);
             if (actions != null) {
                 if (dataSts.events.contains(DataDefine.EVT_SHIFT_P)) {
-                    if (SystemProperties.get("pExit").equals("1")) {
+                    if (SystemProperties.get("pExit").equals("1") && actions[0] == DataDefine.ACT_EXIT) {
                         KLog.w("break for shift P delay 30s exit.");
-                        break;
+                        continue;
                     }
                 }
                 if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_ACTIVE)) {
