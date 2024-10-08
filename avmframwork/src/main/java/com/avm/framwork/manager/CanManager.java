@@ -11,6 +11,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AV
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_Distance;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_STOP_ON_BRK_REMIND_SIGNAL;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_WARNING_SOUND;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.ASSIST_DRIVE_PAS_BUTTON_PRESS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AUDIO_WARNING_SOURCE;
@@ -291,6 +292,7 @@ public class CanManager implements Handler.Callback {
         mRegisterId.add(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE);    //   后视镜下翻
 
         //标定
+        mRegisterId.add(DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ);
         mRegisterId.add(DIAG_31_3801_AVM_ENTER_CALIBRATION_REQ);//进入下线标定请求
         mRegisterId.add(DIAG_31_3801_AVM_ENTER_CALIBRATION_RESULT_REQ);//进入下线标定结果请求
         mRegisterId.add(DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_REQ);//标定预检查请求

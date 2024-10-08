@@ -46,6 +46,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CL
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_REAR_FOG_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_RIGHT_TURN_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_VCU_GEAR_LVL_DISP;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.MIRROR_FOLD_UNFOLD_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.POWER_PARKING_LAMP;
@@ -70,6 +71,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_380D_AVM_READ_FAIL_REASON_RESULT_REQ;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -139,9 +141,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public void onCreate() {
         super.onCreate();
         isExitAction = false;
-        KLog.d("AVM服务 [onCreate]");
+        KLog.d("AVM服务 [onCreate]  版本号： " + ServiceUtils.getVersionName() + " , Board : " + Build.BOARD);
 
-        Log.d("AVM", "Board : " + Build.BOARD);
         initDefault();
         AvmRuntime.self().init(this);
         AvmRuntime.self().registerBroadcast(this);
@@ -732,6 +733,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         if (value instanceof byte[]) {
             byte[] arr = (byte[]) value;// [0x00 ]
             KLog.i(arr.length + "  length 标定-byte----vehicleId: " + vehicleId + "  value   " + Arrays.toString(arr) + "  版本号： " + ServiceUtils.getVersionName());
+
+            if (vehicleId == DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ) {
+                KLog.i("步骤 0  标定-信息请求:DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ:" + Arrays.toString(arr));
+                CanManager.getInstance().setByteArray(DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_RESP, 0, new byte[] {1});
+                return;
+            }
 
             byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
             if (arr.length < 2) {
