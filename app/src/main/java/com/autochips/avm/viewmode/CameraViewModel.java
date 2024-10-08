@@ -12,13 +12,11 @@ import static com.android.bvavm.bvavmJNI.SCANCODE_IR_POINT1;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESP;
 
 import android.app.AlarmManager;
-import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.hardware.automotive.vehicle.V2_0.VehicleProperty;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -39,7 +37,6 @@ import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.activity.MockActivity;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
-import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
 import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.helper.ThreadPoolUtil;
@@ -81,12 +78,12 @@ public class CameraViewModel extends BaseCameraViewModel {
     private final int MSG_LIGHT_MODEL = 10;
     private final int MSG_RADAR_ACTIVE = 11;
     private final int MSG_RADAR_EXIT = 12;
-    private final int MSG_TRAJ_LINE_STS = 13;
+    private final int MSG_UPDATE_TRAJ_LINE_STS = 13;
     private final int MSG_SET_UNDISTORT_LEVEL = 14;
     private final int MSG_CALIBRATE_RESP = 15;
     private final int MSG_CALIBRATING = 18;
     private final int MSG_SIM_WHEEL_SPEED = 20;
-
+    private final int MSG_SET_TRAJLINE_ENABLE = 21;
 
     public CameraViewModel() {
         liveDataCamera2DTopUI = new MutableLiveData<>();
@@ -153,8 +150,10 @@ public class CameraViewModel extends BaseCameraViewModel {
                     CameraViewModelHelper.getInstance().radarActive(msg.arg1);
                 } else if (msg.what == MSG_RADAR_EXIT) {
                     CameraViewModelHelper.getInstance().radarExit(msg.arg1);
-                } else if (msg.what == MSG_TRAJ_LINE_STS) {
-                    BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(msg.arg1);
+                } else if (msg.what == MSG_UPDATE_TRAJ_LINE_STS) {
+                    BvAvmJNIHelper.getInstance().updateTrajLineStatus(msg.arg1);
+                } else if (msg.what == MSG_SET_TRAJLINE_ENABLE) {
+                    BvAvmJNIHelper.getInstance().bwSetTrajLineStatus((byte) msg.arg1);
                 } else if (msg.what == MSG_SET_UNDISTORT_LEVEL) {
                     bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
                 } else if (msg.what == MSG_SIM_WHEEL_SPEED) {
@@ -849,6 +848,13 @@ public class CameraViewModel extends BaseCameraViewModel {
         threadHandler.sendMessage(message);
     }
 
+    public void setTrajLineEnable(byte value) {
+        Message message = Message.obtain();
+        message.what = MSG_SET_TRAJLINE_ENABLE;
+        message.arg1 = value;
+        threadHandler.sendMessage(message);
+    }
+
     public void setRadarExit(int value) {
         Message message = Message.obtain();
         message.what = MSG_RADAR_EXIT;
@@ -856,9 +862,9 @@ public class CameraViewModel extends BaseCameraViewModel {
         threadHandler.sendMessage(message);
     }
 
-    public void setTrajLineStatus(int value) {
+    public void updateTrajLineStatus(int value) {
         Message message = Message.obtain();
-        message.what = MSG_TRAJ_LINE_STS;
+        message.what = MSG_UPDATE_TRAJ_LINE_STS;
         message.arg1 = value;
         threadHandler.sendMessage(message);
     }

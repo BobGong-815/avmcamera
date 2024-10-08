@@ -15,6 +15,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.android.bvavm.bvavmJNI;
+import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.util.SystemProperties;
@@ -129,7 +130,8 @@ public class MyGLSurface extends GLSurfaceView {
             BvAvmJNIHelper.getInstance().avmInit(getContext());
             KLog.d("ActivityLifecycleCallbacks onSurfaceCreated 创建画布结束");
             int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
-            bvavmJNI.bwSetTrajLineStatus((byte) settingPathLine);
+            if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineEnable((byte) settingPathLine);
+//            bvavmJNI.bwSetTrajLineStatus((byte) settingPathLine);
 //            setIndexTab();
 //            bvavmJNI.bwNotifyRVC(0);
             KLog.d(" valGear 结束RVC-1 resRvc  handler：了");

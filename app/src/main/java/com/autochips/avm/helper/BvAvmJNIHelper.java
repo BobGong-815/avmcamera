@@ -8,7 +8,6 @@ import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 
 import com.android.bvavm.bvavmJNI;
@@ -30,7 +29,7 @@ import java.util.Arrays;
  */
 public class BvAvmJNIHelper {
 
-    private int cameraType = bvavmJNI.PROJ_AY5_G_ID;// 车型选配，分不同的车型进行打包
+    private int cameraType = bvavmJNI.PROJ_AY5_T_ID;// 车型选配，分不同的车型进行打包
 
     private static BvAvmJNIHelper instance;
     private boolean isActive = false; // 是否激活 或打开AVM
@@ -77,42 +76,46 @@ public class BvAvmJNIHelper {
 
     public void bwSetProjectID(int type){
         KLog.i("setProjectID ...............  " + type);
-        cameraType = type;
-        bvavmJNI.bwSetProjID(cameraType);
+        synchronized (syncObj) {
+            cameraType = type;
+            bvavmJNI.bwSetProjID(cameraType);
+        }
     }
 
     public int avmInit(Context context) {
-        if (isActive) return 0;
-        bvavmJNI.bwSetProjID(cameraType);
-        isActive = true;
-        int res = bvavmJNI.avmInit();
-        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
-        int uiMode = uiModeManager.getNightMode();
-        switch (uiMode) {
-            case UiModeManager.MODE_NIGHT_YES:
-                KLog.e("黑夜模式");
-                bvavmJNI.bwSetIsDay(0);
-                break;
-            case UiModeManager.MODE_NIGHT_NO:
-                KLog.e("白天模式");
-                bvavmJNI.bwSetIsDay(1);
-                break;
-        }
+        synchronized (syncObj) {
+            if (isActive) return 0;
+            bvavmJNI.bwSetProjID(cameraType);
+            isActive = true;
+            int res = bvavmJNI.avmInit();
+            UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+            int uiMode = uiModeManager.getNightMode();
+            switch (uiMode) {
+                case UiModeManager.MODE_NIGHT_YES:
+                    KLog.e("黑夜模式");
+                    bvavmJNI.bwSetIsDay(0);
+                    break;
+                case UiModeManager.MODE_NIGHT_NO:
+                    KLog.e("白天模式");
+                    bvavmJNI.bwSetIsDay(1);
+                    break;
+            }
 
-        int gear = CanManager.getInstance().getIntStatus(CLUSTER_VCU_GEAR_LVL_DISP, 0);
+            int gear = CanManager.getInstance().getIntStatus(CLUSTER_VCU_GEAR_LVL_DISP, 0);
 
 //        int vcuGearValue = CanManager.getInstance().getIntStatus(CLUSTER_VCU_GEAR_LVL_DISP, 0);//挡位
-        int doorValue = CanManager.getInstance().getIntStatus(CLUSTER_LCK_DRIVERDOORAJARST, 0);//车门
-        int lightValue = CanManager.getInstance().getIntStatus(BCM_HIGH_BEAM_STATUS, 0);//灯光
+            int doorValue = CanManager.getInstance().getIntStatus(CLUSTER_LCK_DRIVERDOORAJARST, 0);//车门
+            int lightValue = CanManager.getInstance().getIntStatus(BCM_HIGH_BEAM_STATUS, 0);//灯光
 
 //        CameraViewModelHelper.getInstance().reverse(vcuGearValue);
-        CameraViewModelHelper.getInstance().doorStatus(-1, (Integer) doorValue);
-        CameraViewModelHelper.getInstance().showLight3DModel(BCM_HIGH_BEAM_STATUS, (Integer) lightValue);
-        bwSetTrajLineStatus(gear);
-        setIndexTab();
+            CameraViewModelHelper.getInstance().doorStatus(-1, (Integer) doorValue);
+            CameraViewModelHelper.getInstance().showLight3DModel(BCM_HIGH_BEAM_STATUS, (Integer) lightValue);
+            updateTrajLineStatus(gear);
+            setIndexTab();
 //        bvavmJNI.bwNotifyRVC(0);
-        isAvmDeInit = true;
-        return res;
+            isAvmDeInit = true;
+            return res;
+        }
     }
 
     private void setIndexTab() {
@@ -135,13 +138,14 @@ public class BvAvmJNIHelper {
     }
 
     public void avmDeInit() {
-        isActive = false;
-        mHandler.postDelayed(() -> {
-            int res = bvavmJNI.avmDeInit();
-            KLog.d("释放摄像头 avmDeInit res=" + res);
-            bwDeleteCamera();
-        }, 500);
-
+        synchronized (syncObj) {
+            isActive = false;
+            mHandler.postDelayed(() -> {
+                int res = bvavmJNI.avmDeInit();
+                KLog.d("释放摄像头 avmDeInit res=" + res);
+                bwDeleteCamera();
+            }, 500);
+        }
     }
 
     public void setCalibration(boolean calibration) {
@@ -211,12 +215,22 @@ public class BvAvmJNIHelper {
         return bwInitValue;
     }
 
+    public int bwNotifyRVC(int value) {
+        synchronized (syncObj) {
+            return bvavmJNI.bwNotifyRVC(value);
+        }
+    }
+
     public void bwSet3DfreeFlag(int stat) {
-        bvavmJNI.bwSet3DfreeFlag(stat);
+        synchronized (syncObj) {
+            bvavmJNI.bwSet3DfreeFlag(stat);
+        }
     }
 
     public int bwSetCarDoorStatus(int[] doors) {
-        return bvavmJNI.bwSetCarDoorStatus(doors);
+        synchronized (syncObj) {
+            return bvavmJNI.bwSetCarDoorStatus(doors);
+        }
     }
 
 
@@ -226,14 +240,26 @@ public class BvAvmJNIHelper {
 //    public static native int bwSetTrajLineStatus(byte flag);
 //    /*3 设置车辆是否处于倒车状态，1为倒车，0为静止或者前进*/
 //    public static native int bwSetCarIsBack(byte flag);
-    public void bwSetTrajLineStatus(int gear) {
+    public void updateTrajLineStatus(int gear) {
         // 轨迹线需要 bwSetTrajLineStatus(byte flag); 开启
-        if (gear == 3) {// R档
-            bvavmJNI.bwSetCarIsDgear(0);
-            bvavmJNI.bwSetCarIsBack((byte) 1);
-        } else {
-            bvavmJNI.bwSetCarIsDgear(1);
-            bvavmJNI.bwSetCarIsBack((byte) 0);
+        synchronized (syncObj) {
+            if (gear == 3) {// R档
+                bvavmJNI.bwSetCarIsDgear(0);
+                bvavmJNI.bwSetCarIsBack((byte) 1);
+            } else {
+                bvavmJNI.bwSetCarIsDgear(1);
+                bvavmJNI.bwSetCarIsBack((byte) 0);
+            }
+        }
+    }
+
+    private byte trajLineEnable = -1;
+    public void bwSetTrajLineStatus(byte value) {
+        synchronized (syncObj) {
+            if (value != trajLineEnable) {
+                trajLineEnable = value;
+                bvavmJNI.bwSetTrajLineStatus(value);
+            }
         }
     }
 

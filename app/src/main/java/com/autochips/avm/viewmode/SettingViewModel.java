@@ -13,6 +13,8 @@ import android.widget.CompoundButton;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.bvavm.bvavmJNI;
+import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.util.SystemProperties;
 
@@ -137,10 +139,12 @@ public class SettingViewModel extends BaseCameraViewModel {
         startTimer();
         if(isChecked){
             SystemProperties.set("settingPathLine","1");
-            bvavmJNI.bwSetTrajLineStatus((byte)1);
+//            bvavmJNI.bwSetTrajLineStatus((byte)1);
+            if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineEnable((byte) 1);
         }else{
             SystemProperties.set("settingPathLine","0");
-            bvavmJNI.bwSetTrajLineStatus((byte)0);
+//            bvavmJNI.bwSetTrajLineStatus((byte)0);
+            if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineEnable((byte) 0);
         }
 
     }

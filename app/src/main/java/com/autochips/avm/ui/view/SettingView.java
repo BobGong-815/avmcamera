@@ -29,7 +29,9 @@ import androidx.lifecycle.Observer;
 
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
+import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.databinding.ViewSettingBinding;
+import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.listener.OnTabSelectListener;
 import com.autochips.avm.util.SystemProperties;
@@ -98,8 +100,10 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         int signalActivates = SystemProperties.getInt("signalActivates", -1);//转向灯激活 倒车影像
         settingBinding.swSettingPathLine.setChecked(settingPathLine == 1);
         settingBinding.switchSignalActivates.setChecked(signalActivates == 1);
-        if (settingPathLine == 1)
-          bvavmJNI.bwSetTrajLineStatus((byte) 1);
+        if (settingPathLine == 1) {
+//            bvavmJNI.bwSetTrajLineStatus((byte) 1);
+            if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineEnable((byte) 1);
+        }
       CameraViewModelHelper.getInstance().setTransparentIndexTab();
 
     }

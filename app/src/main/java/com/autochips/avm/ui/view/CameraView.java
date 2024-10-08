@@ -70,7 +70,6 @@ import com.autochips.avm.viewmode.CameraViewModel;
 import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.manager.CanManager;
 import com.avm.framwork.manager.ViewSwitchManager;
-import com.gxa.service.camera.AvmManager;
 
 import java.util.List;
 import java.util.Locale;
@@ -493,22 +492,23 @@ public class CameraView extends View implements LifecycleOwner {
 //       KLog.d(hisModel + "  valGear viewShowStatus 模式：" + model + " 记忆模式: " + viewPosition);
         int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
         if (settingPathLine == 1) {
-            bvavmJNI.bwSetTrajLineStatus((byte) 1);
+//            bvavmJNI.bwSetTrajLineStatus((byte) 1);
+            if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineEnable((byte) 1);
         }
 //        hisModel = model;
 //        viewModel.setmHisModel(hisModel);
         BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
         if (AvmRuntime.self().isRearGearSts()) {
             if (AvmService.JNI_IN_THREAD_FLAG) {
-                AvmApp.getInstance().getCameraView().getViewModel().setTrajLineStatus(3);
+                AvmApp.getInstance().getCameraView().getViewModel().updateTrajLineStatus(3);
             } else {
-                BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(3);
+                BvAvmJNIHelper.getInstance().updateTrajLineStatus(3);
             }
         } else {
             if (AvmService.JNI_IN_THREAD_FLAG) {
-                AvmApp.getInstance().getCameraView().getViewModel().setTrajLineStatus(0);
+                AvmApp.getInstance().getCameraView().getViewModel().updateTrajLineStatus(0);
             } else {
-                BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(0);
+                BvAvmJNIHelper.getInstance().updateTrajLineStatus(0);
             }
         }
         if (!isShowing) {
@@ -1035,9 +1035,10 @@ public class CameraView extends View implements LifecycleOwner {
             KLog.d("设置车辅线:" + settingPathLine);
             if (settingPathLine == 1) {
                 if (AvmService.JNI_IN_THREAD_FLAG) {
-                    if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineStatus(1);
+                    if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().updateTrajLineStatus(1);
                 } else {
-                    bvavmJNI.bwSetTrajLineStatus((byte) 1);
+//                    bvavmJNI.bwSetTrajLineStatus((byte) 1);
+                    if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineEnable((byte) 1);
                 }
                 //bvavmJNI.bwSetCarIsDgear((byte) 1);//2D前视
                 //bvavmJNI.bwSetCarIsBack((byte) 0);//2D后视
@@ -1263,7 +1264,8 @@ public class CameraView extends View implements LifecycleOwner {
             AvmApp.mAvmRvcState = 0;
             //此时表示正在显示
             mMainHandler.postDelayed(() -> {
-                int resRvc = bvavmJNI.bwNotifyRVC(0);
+//                int resRvc = bvavmJNI.bwNotifyRVC(0);
+                int resRvc = BvAvmJNIHelper.getInstance().bwNotifyRVC(0);
                 KLog.d("关闭resRvc  = " + resRvc);
             }, 2000);
         }
@@ -1286,9 +1288,9 @@ public class CameraView extends View implements LifecycleOwner {
                 }
 
                 if (AvmService.JNI_IN_THREAD_FLAG) {
-                    AvmApp.getInstance().getCameraView().getViewModel().setTrajLineStatus(3);
+                    AvmApp.getInstance().getCameraView().getViewModel().updateTrajLineStatus(3);
                 } else {
-                    BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(3);
+                    BvAvmJNIHelper.getInstance().updateTrajLineStatus(3);
                 }
 
                 isDismissView = false;

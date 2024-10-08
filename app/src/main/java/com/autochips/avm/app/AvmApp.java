@@ -74,7 +74,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         mAvmRvcState = rvcStatus[0];
         KLog.d("[onCreate] mAvmRvcState:" + mAvmRvcState);
         if (mAvmRvcState != 1 && mAvmRvcState != -1) {
-            bvavmJNI.bwNotifyRVC(0);
+//            bvavmJNI.bwNotifyRVC(0);
+            BvAvmJNIHelper.getInstance().bwNotifyRVC(0);
         }
         //数据埋点
         //DataManager.init(this);

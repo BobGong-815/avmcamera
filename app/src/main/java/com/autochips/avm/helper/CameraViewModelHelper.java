@@ -22,7 +22,6 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.BC
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.BCM_LOW_BEAM_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CABIN_DOOR_OPEN_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_VCU_GEAR_LVL_DISP;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.MIRROR_FOLD_UNFOLD_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.POWER_PARKING_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
@@ -35,7 +34,6 @@ import android.util.Log;
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
-import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
@@ -319,7 +317,7 @@ public class CameraViewModelHelper {
         if (valGear == 3) {
 //             AvmApp.getInstance().getViewBottom().updateWind0();
             isReverseInByTurn = true;
-            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(3);
+            BvAvmJNIHelper.getInstance().updateTrajLineStatus(3);
             if (isReverse) {
                 KLog.d(" valGear倒车档位： 我进来了啊");
                 setViewModel();
@@ -349,7 +347,8 @@ public class CameraViewModelHelper {
             //如了R档，其他挡位都退出RVC
             KLog.d(" 第一次启动P档  resRvc  = " + index);
             mHandler.postDelayed(() -> {
-                int resRvc = bvavmJNI.bwNotifyRVC(0);
+//                int resRvc = bvavmJNI.bwNotifyRVC(0);
+                int resRvc = BvAvmJNIHelper.getInstance().bwNotifyRVC(0);
                 KLog.d(" 第一次启动P档  关闭resRvc  = " + resRvc);
             }, 1000);
             index++;
