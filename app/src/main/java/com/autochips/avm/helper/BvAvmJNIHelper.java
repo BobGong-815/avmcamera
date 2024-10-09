@@ -85,7 +85,6 @@ public class BvAvmJNIHelper {
     public int avmInit(Context context) {
         synchronized (syncObj) {
             if (isActive) return 0;
-            bvavmJNI.bwSetProjID(cameraType);
             isActive = true;
             int res = bvavmJNI.avmInit();
             UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
@@ -175,10 +174,6 @@ public class BvAvmJNIHelper {
             if (!isActive) return 0;
             if (bwInitValue != -1 && bwInitValue != 0) return bwInitValue;
             KLog.d("创建 bwCreateCamera：" + bwInitValue);
-            if (Build.BOARD.equals("rk30sdk"))
-                cameraType = bvavmJNI.PROJ_AY5_ID;
-
-            bvavmJNI.bwSetProjID(cameraType);
             return bwInitValue = bvavmJNI.bwCreateCamera(path, met);
         }
     }
@@ -233,7 +228,15 @@ public class BvAvmJNIHelper {
         }
     }
 
-
+    private float wheelAngle = -1.f;
+    public void bwSetWheelAngle(float angle) {
+        if (wheelAngle != angle) {
+            wheelAngle = angle;
+            synchronized (syncObj) {
+                bvavmJNI.bwSetWheelAngle(angle);
+            }
+        }
+    }
     /*1 设置是否处于D档状态，1为是，0为否*/
 //    public static native int bwSetCarIsDgear(int flag);
 //    /*2 设置轨迹线开关，0是关闭，1是打开*/

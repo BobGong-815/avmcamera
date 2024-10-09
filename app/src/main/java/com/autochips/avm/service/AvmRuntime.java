@@ -1314,6 +1314,7 @@ public class AvmRuntime {
                 dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
                 dataSts.events.add(DataDefine.EVT_SHIFT_P);
             }
+            dataSts.gearChanged = true;
             dataSts.lastChangeTime = System.currentTimeMillis();
             AvmApp.getInstance().getCameraView().setCurrentGear(gear);
             syncObj.notify();
@@ -1509,7 +1510,9 @@ public class AvmRuntime {
 
     private void handleEvent() {
         if ((System.currentTimeMillis() - dataSts.lastChangeTime) > 30000) {
-            if (dataSts.gears[0] == DataDefine.GEAR_P) {
+            if (dataSts.gearChanged && dataSts.gears[0] == DataDefine.GEAR_P && SystemProperties.get("pExit").equals("1")) {
+                dataSts.gearChanged = false;
+                KLog.d("--------------------- EVT_SHIFT_P_30S. ");
                 dataSts.events.add(DataDefine.EVT_SHIFT_P_30S);
             }
             dataSts.events.add(DataDefine.EVT_KEEP_30S);
@@ -1704,7 +1707,7 @@ public class AvmRuntime {
         boolean overSpeedSts; //超速状态
         long lastChangeTime; //上次变更时间
         long turnLampResetTime;
-        int actEnterAngleView;
+        boolean gearChanged;
 
         int[] fvSts; // 全景状态
         int[] gears; // 档位
@@ -1717,6 +1720,7 @@ public class AvmRuntime {
         DataSts() {
             radarAlive = false;
             turnLampAlive = false;
+            gearChanged = false;
 
             fvSts = new int[2];
             fvSts[0] = DataDefine.FV_STATE_NON;
