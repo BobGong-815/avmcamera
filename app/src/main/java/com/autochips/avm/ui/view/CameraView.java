@@ -596,6 +596,7 @@ public class CameraView extends View implements LifecycleOwner {
             radarSoundIv = mViewCameraBinding.radarSoundIv;
             radarErrImgId1 = mViewCameraBinding.radarErrImgId1;
             radarErrImgId2 = mViewCameraBinding.radarErrImgId2;
+            radarErrImgId3 = mViewCameraBinding.radarErrImgId3;
             radarErrImgId4 = mViewCameraBinding.radarErrImgId4;
             cameraIv = mViewCameraBinding.cameraIv;
             llBackMirror = mViewCameraBinding.llBackMirror;
