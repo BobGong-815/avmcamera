@@ -18,9 +18,9 @@
     <string name="setting_transparent_chassis_infobook_title">شاسيه شفاف</string>
     <string name="setting_transparent_chassis_infobook_content">تفعيل ملاحظة حالة الطريق للسيارة</string>
     <string name="setting_transparent_chassis_infobook_ok">حسنًا</string>
-    <string name="setting_rearview_mirror">后视镜调节</string>
-    <string name="setting_fold">折叠</string>
-    <string name="setting_expand">展开</string>
+    <string name="setting_rearview_mirror">تعديل مرآة الرؤية الخلفية</string>
+    <string name="setting_fold">طوي</string>
+    <string name="setting_expand">توسيع</string>
     <string name="setting_rearview_mirror_down">مرآة الرؤية الخلفية تنقلب للأسفل</string>
     <string name="setting_rearview_mirror_down_open">تفعيل انقلاب مرآة الرؤية الخلفية</string>
     <string name="setting_rearview_mirror_down_close">تعطيل انقلاب مرآة الرؤية الخلفية</string>
@@ -28,7 +28,7 @@
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">زاوية واسعة</string>
     <string name="desc_rearview_mirror_fold">مرآة الرؤية الخلفية مطوية بالفعل</string>
-    <string name="desc_rearview_mirror_expand">后视镜已展开</string>
+    <string name="desc_rearview_mirror_expand">فتح مرآة الرؤية الخلفية</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
     <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
     <string name="calibration">标定</string>
@@ -130,6 +130,7 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">هناك عطل في الكاميرا</string>
-
+    <string name="camera_radar_error">عطل في الرادار يُرجى التحقق!</string>
+    <string name="camera_please_park">اركن سيارتك!</string>
 
 </resources>

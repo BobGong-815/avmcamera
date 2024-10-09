@@ -1,7 +1,7 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">(P) Gang raus</string>
-    <string name="setting_p_exit_content">Beim Umschalten in den P-Gang wird Panorama sofort oder mit einer Verzögerung von 30 Sekunden beendet.</string>
+    <string name="setting_p_exit_content">En P, sortie panorama immédiate ou après 30 s</string>
     <string name="setting_at_once">Sofort</string>
     <string name="setting_30_seconds">Nach 30 Jahren</string>
     <string name="setting_transparent_chassis">Transparentes Gehäuse</string>
@@ -10,17 +10,17 @@
     <string name="setting_centre">Mittel</string>
     <string name="setting_high">Hoch</string>
     <string name="setting_radar_activated_panorama">Panoramablick, wenn das Radar aktiviert ist</string>
-    <string name="setting_radar_activated_panorama_content">Panorama bei einer Geschwindigkeit von weniger als 12 km/h und bei Alarm des Frontradars aufrufen</string>
+    <string name="setting_radar_activated_panorama_content">Panoramablick bei unter 12 km/h und bei Frontradar-Alarm</string>
     <string name="setting_path_line">Fahrtstreck</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Panoramablick bei eingeschaltetem Blinklicht</string>
-    <string name="setting_signal_activates_panorama_content">Verwenden Sie den Blinker, um das Panorama aufzurufen. Es wird bei einer Geschwindigkeit von über 30 km/h automatisch beendet.</string>
+    <string name="setting_signal_activates_panorama">Blinklicht ein: Panoramablick</string>
+    <string name="setting_signal_activates_panorama_content">Für Panorama: blinken. Wird ab 30 km/h beendet.</string>
     <string name="setting_transparent_chassis_infobook_title">Transparentes Gehäuse</string>
-    <string name="setting_transparent_chassis_infobook_content">Nach der Aktivierung kann der Straßenzustand unter dem Fahrzeug beobachtet werden.</string>
+    <string name="setting_transparent_chassis_infobook_content">Wenn aktiv: Straßenzustand unter dem Fahrzeug wird beobachtet.</string>
     <string name="setting_transparent_chassis_infobook_ok">OK</string>
-    <string name="setting_rearview_mirror">后视镜调节</string>
-    <string name="setting_fold">折叠</string>
-    <string name="setting_expand">展开</string>
+    <string name="setting_rearview_mirror">Einstellung des Rückspiegels</string>
+    <string name="setting_fold">Falten</string>
+    <string name="setting_expand">Erweitern Sie</string>
     <string name="setting_rearview_mirror_down">Rückspiegel nach unten</string>
     <string name="setting_rearview_mirror_down_open">Rückspiegel unten ist eingeschaltet.</string>
     <string name="setting_rearview_mirror_down_close">Radar-Warnton ist ausgeschaltet</string>
@@ -28,7 +28,7 @@
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">Weitwinklig</string>
     <string name="desc_rearview_mirror_fold">Rückspiegel ist bereits eingeklappt</string>
-    <string name="desc_rearview_mirror_expand">后视镜已展开</string>
+    <string name="desc_rearview_mirror_expand">Rückspiegel ausgeklappt</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
     <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
     <string name="calibration">标定</string>
@@ -46,7 +46,7 @@
     <string name="translate_right_rear">右后视角</string>
     <string name="automatic_calibration_success">自动标定成功</string>
     <string name="front_wide_angle">Front-Weitwinkel</string>
-    <string name="back_wide_angle">Rückwärtiger Weitwinkel</string>
+    <string name="back_wide_angle">Rück-Weitwinkel</string>
     <string name="before">Vorderräder</string>
     <string name="rear_wheel">Hinterräder</string>
     <string name="radar_sound_open">Radar-Warnton ist eingeschaltet</string>
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Fehlfunktion der Kamera</string>
-
-
+    <string name="camera_radar_error">Kein Ultraschallradar Bitte prüfen!</string>
+    <string name="camera_please_park">Anhalten!</string>
 </resources>

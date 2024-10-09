@@ -1,7 +1,7 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">Saída de marcha (P)</string>
-    <string name="setting_p_exit_content">Ao engatar a marcha P, o panorama sairá imediatamente ou com um atraso de 30s</string>
+    <string name="setting_p_exit_content">Ao engatar a marcha P, o panorama sairáimediatamente ou com um atraso de 30s</string>
     <string name="setting_at_once">Imediatamente</string>
     <string name="setting_30_seconds">Após 30s</string>
     <string name="setting_transparent_chassis">Chassi transparente</string>
@@ -9,18 +9,18 @@
     <string name="setting_low">Baixo</string>
     <string name="setting_centre">Médio</string>
     <string name="setting_high">Alto</string>
-    <string name="setting_radar_activated_panorama">Visão panorâmica quando o radar está ativado</string>
-    <string name="setting_radar_activated_panorama_content">Entra no panorama quando a velocidade for menor que 12 km/h e o radar frontal emitir um alarme</string>
+    <string name="setting_radar_activated_panorama">Ativação de panoramapor radar</string>
+    <string name="setting_radar_activated_panorama_content">O panorama é ativado com um aviso sonoro em velocidade >12 km/h</string>
     <string name="setting_path_line">Linha de trilha</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Visão panorâmica quando a luz do sinal de pisca está acesa</string>
-    <string name="setting_signal_activates_panorama_content">Utiliza o sinal de pisca para entrar no panorama; sai automaticamente quando a velocidade for superior a 30 km/h</string>
+    <string name="setting_signal_activates_panorama">Visão panorâmica quando a luzdo sinal de pisca está acesa</string>
+    <string name="setting_signal_activates_panorama_content">Utiliza o pisca para entrar no panorama; sai quando a vel for superior a 30 km/h</string>
     <string name="setting_transparent_chassis_infobook_title">Chassi transparente</string>
-    <string name="setting_transparent_chassis_infobook_content">Após ativar, a condição da via sob o veículo pode ser observada.</string>
+    <string name="setting_transparent_chassis_infobook_content">Após ativar, a condição davia sob o veículo pode ser observada</string>
     <string name="setting_transparent_chassis_infobook_ok">OK</string>
-    <string name="setting_rearview_mirror">后视镜调节</string>
-    <string name="setting_fold">折叠</string>
-    <string name="setting_expand">展开</string>
+    <string name="setting_rearview_mirror">Ajuste do Retrovisor</string>
+    <string name="setting_fold">Dobrar</string>
+    <string name="setting_expand">Expandir</string>
     <string name="setting_rearview_mirror_down">Espelho retrovisor abaixado</string>
     <string name="setting_rearview_mirror_down_open">O abaixamento do espelho retrovisor está ligado</string>
     <string name="setting_rearview_mirror_down_close">O abaixamento do espelho retrovisor está desligado</string>
@@ -28,7 +28,7 @@
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">Grande angular</string>
     <string name="desc_rearview_mirror_fold">Espelho retrovisor já dobrado</string>
-    <string name="desc_rearview_mirror_expand">后视镜已展开</string>
+    <string name="desc_rearview_mirror_expand">Espelho retrovisor desdobrado</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
     <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
     <string name="calibration">标定</string>
@@ -45,10 +45,10 @@
     <string name="translate_left_rear">左后视角</string>
     <string name="translate_right_rear">右后视角</string>
     <string name="automatic_calibration_success">自动标定成功</string>
-    <string name="front_wide_angle">Grande angular dianteira</string>
-    <string name="back_wide_angle">Grande angular traseira</string>
-    <string name="before">Rodas dianteiras</string>
-    <string name="rear_wheel">Rodas traseiras</string>
+    <string name="front_wide_angle">Grande diant</string>
+    <string name="back_wide_angle">Grande tras</string>
+    <string name="before">Rodas diant</string>
+    <string name="rear_wheel">Rodas tras</string>
     <string name="radar_sound_open">O tom de alerta do radar está ligado</string>
     <string name="radar_sound_close">O tom de alerta do radar está desligado</string>
     <string name="parking_assist_system_down">Avaria do sistema de assistência ao estacionamento, por favor, verifique!</string>
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Avaria da câmara</string>
-
-
+    <string name="camera_radar_error">Falha no radar. Por favor verifique!</string>
+    <string name="camera_please_park">Pare!</string>
 </resources>

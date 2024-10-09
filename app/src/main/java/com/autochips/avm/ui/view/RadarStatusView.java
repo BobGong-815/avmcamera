@@ -1,10 +1,5 @@
 package com.autochips.avm.ui.view;
 
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RLDistance;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RLMidDistance;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRMidDistance;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRDistance;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,13 +9,18 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
-import androidx.annotation.Nullable;
-
 import com.autochips.avm.R;
+import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.viewmode.CameraViewModel;
 
+import androidx.annotation.Nullable;
 import me.goldze.mvvmhabit.utils.KLog;
+
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RLDistance;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RLMidDistance;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRDistance;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRMidDistance;
 
 /**
  * 雷达状态显示
@@ -185,7 +185,7 @@ public class RadarStatusView extends View {
         if (radLen>30 && radLen <= 90){
             viewModel.getInfo().setRadarDistance(radLen+"cm");
         }else if(radLen > 0 && radLen <= 30){
-            viewModel.getInfo().setRadarDistance("请停车");
+            viewModel.getInfo().setRadarDistance(AvmApp.getInstance().getString(R.string.camera_please_park));
         }else {
             viewModel.getInfo().setRadarDistance("");
         }

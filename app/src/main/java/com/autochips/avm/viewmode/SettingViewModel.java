@@ -154,12 +154,10 @@ public class SettingViewModel extends BaseCameraViewModel {
         setRunning(true);
         startTimer();
         if(isChecked){
-
             SystemProperties.set("activatedPanorama","1");
         }else{
             SystemProperties.set("activatedPanorama","2");
         }
-
     }
     //转向灯激活全景开关
     public void switchSignalActivates(CompoundButton button, boolean isChecked) {
@@ -173,6 +171,7 @@ public class SettingViewModel extends BaseCameraViewModel {
         }
 
     }
+
     /**
      * 是否在操作
      *

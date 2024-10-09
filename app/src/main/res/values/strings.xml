@@ -130,7 +130,7 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">摄像头故障</string>
-
-
+    <string name="camera_radar_error">超声波雷达出现故障，请检查！</string>
+    <string name="camera_please_park">请停车!</string>
 </resources>
 

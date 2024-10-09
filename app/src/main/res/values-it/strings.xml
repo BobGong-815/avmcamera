@@ -1,7 +1,7 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">Uscita marcia (P)</string>
-    <string name="setting_p_exit_content">Quando si inserisce la marcia P, il panorama uscirà immediatamente o con un ritardo di 30 secondi</string>
+    <string name="setting_p_exit_content">In marcia P, panorama uscirà o ritardo 30sec</string>
     <string name="setting_at_once">Subito</string>
     <string name="setting_30_seconds">Dopo 30s</string>
     <string name="setting_transparent_chassis">Telaio trasparente</string>
@@ -9,26 +9,26 @@
     <string name="setting_low">Basso</string>
     <string name="setting_centre">Media</string>
     <string name="setting_high">Alto</string>
-    <string name="setting_radar_activated_panorama">Vista panoramica quando il radar è attivato</string>
-    <string name="setting_radar_activated_panorama_content">Entra nel panorama quando la velocità è inferiore a 12 km/h e l\'allarme radar anteriore</string>
+    <string name="setting_radar_activated_panorama">Vista panoramica quandoil radar è attivato</string>
+    <string name="setting_radar_activated_panorama_content">Entra panorama se velocità meno 12 km/h e radar anteriore allarma</string>
     <string name="setting_path_line">Linea di traiettoria</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Vista panoramica quando la luce degli indicatori di direzione è accesa</string>
-    <string name="setting_signal_activates_panorama_content">Utilizzare l\'indicatore di direzione per entrare nel panorama; esce automaticamente quando la velocità è superiore a 30 km/h</string>
+    <string name="setting_signal_activates_panorama">Vista panoramica quando la lucedegli indicatori di direzione è accesa</string>
+    <string name="setting_signal_activates_panorama_content">Usa indicatore direzione per panorama; esce auto quando velocità superiore 30 km/h</string>
     <string name="setting_transparent_chassis_infobook_title">Telaio trasparente</string>
-    <string name="setting_transparent_chassis_infobook_content">Dopo l\'abilitazione, è possibile osservare le condizioni della strada sotto il veicolo</string>
+    <string name="setting_transparent_chassis_infobook_content">Abilita l\'osservazione dellecondizioni stradali del veicolo</string>
     <string name="setting_transparent_chassis_infobook_ok">OK</string>
-    <string name="setting_rearview_mirror">后视镜调节</string>
-    <string name="setting_fold">折叠</string>
-    <string name="setting_expand">展开</string>
+    <string name="setting_rearview_mirror">Regolazione specchietto retrovisore</string>
+    <string name="setting_fold">Chiudi</string>
+    <string name="setting_expand">Espandere</string>
     <string name="setting_rearview_mirror_down">Specchio retrovisore abbassato</string>
-    <string name="setting_rearview_mirror_down_open">Specchietto retrovisore abbassato attivato</string>
-    <string name="setting_rearview_mirror_down_close">Specchietto retrovisore abbassato disattivato</string>
+    <string name="setting_rearview_mirror_down_open">Specchietto retrovisore giù on</string>
+    <string name="setting_rearview_mirror_down_close">Specchietto retrovisore giù off</string>
     <string name="camera_2d">2D</string>
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">Grandangolo</string>
-    <string name="desc_rearview_mirror_fold">Specchietto retrovisore già ripiegato</string>
-    <string name="desc_rearview_mirror_expand">后视镜已展开</string>
+    <string name="desc_rearview_mirror_fold">Specchietto retrovisore ripiegato</string>
+    <string name="desc_rearview_mirror_expand">Specchietto retrovisore aperto</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
     <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
     <string name="calibration">标定</string>
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Malfunzionamento della telecamera</string>
-
-
+    <string name="camera_radar_error">Guasto radar ultrasuoni. Controlla!</string>
+    <string name="camera_please_park">Fermati!</string>
 </resources>

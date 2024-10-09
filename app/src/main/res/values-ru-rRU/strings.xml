@@ -1,7 +1,7 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">Переключение с передачи P</string>
-    <string name="setting_p_exit_content">Переместите рычаг управления а положение Р. Выход из интерфейса панорамного вида произойдет немедленно или через 30 секунд</string>
+    <string name="setting_p_exit_content">Сдвиньте рычаг в положение Р. Выход из панорамного вида произойдет немедленно или через 30с</string>
     <string name="setting_at_once">Немедленно</string>
     <string name="setting_30_seconds">Через 30 секунд</string>
     <string name="setting_transparent_chassis">Прозрачное шасси</string>
@@ -9,26 +9,26 @@
     <string name="setting_low">Низк</string>
     <string name="setting_centre">Срдн</string>
     <string name="setting_high">Выс</string>
-    <string name="setting_radar_activated_panorama">Панорамный вид активируется при включении радара</string>
-    <string name="setting_radar_activated_panorama_content">Войти в интерфейс панорамного вида при скорости автомобиля &amp;#06012 км/ч и при оповещении от переднего радара</string>
+    <string name="setting_radar_activated_panorama">Панорамный вид активируется\nпри включении радара</string>
+    <string name="setting_radar_activated_panorama_content">Войти в панорамный вид при скорости &amp;#06012км/ч и при оповещении от переднего радара</string>
     <string name="setting_path_line">Линия движения</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Панорамный вид активируется при включении поворотного сигнала</string>
-    <string name="setting_signal_activates_panorama_content">Включить сигнал поворота и войти в интерфейс панорамного вида. Автоматический выход при скорости автомобиля > 30 км/ч</string>
+    <string name="setting_signal_activates_panorama">Панорамный вид активируется\nпри включении сигнала поворота</string>
+    <string name="setting_signal_activates_panorama_content">Включить сигнал поворота и панорамный вид. Авто выход при скорости > 30км/ч</string>
     <string name="setting_transparent_chassis_infobook_title">Прозрачное шасси</string>
-    <string name="setting_transparent_chassis_infobook_content">Включить для наблюдения за дорожными условиями</string>
+    <string name="setting_transparent_chassis_infobook_content">Включить для наблюдения\nза дорожными условиями</string>
     <string name="setting_transparent_chassis_infobook_ok">Хорошо</string>
-    <string name="setting_rearview_mirror">后视镜调节</string>
-    <string name="setting_fold">折叠</string>
-    <string name="setting_expand">展开</string>
-    <string name="setting_rearview_mirror_down">Зеркало заднего вида откидывается вниз</string>
-    <string name="setting_rearview_mirror_down_open">Откидывание вниз зеркала заднего вида включено</string>
-    <string name="setting_rearview_mirror_down_close">Откидывание вниз зеркала заднего вида отключено</string>
+    <string name="setting_rearview_mirror">Регулировка зеркала заднего вида</string>
+    <string name="setting_fold">Сложить</string>
+    <string name="setting_expand">Выдвинуть</string>
+    <string name="setting_rearview_mirror_down">Зеркало задн. вида откид. вниз</string>
+    <string name="setting_rearview_mirror_down_open">Откид-е вниз зеркала задн. вида ON</string>
+    <string name="setting_rearview_mirror_down_close">Откид-е вниз зеркала задн. вида OFF</string>
     <string name="camera_2d">2D</string>
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">Широкий угол обзора</string>
-    <string name="desc_rearview_mirror_fold">Зеркало заднего вида уже сложено</string>
-    <string name="desc_rearview_mirror_expand">后视镜已展开</string>
+    <string name="desc_rearview_mirror_fold">Зеркало задн. вида уже сложено</string>
+    <string name="desc_rearview_mirror_expand">Зеркало заднего вида разложено</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
     <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
     <string name="calibration">标定</string>
@@ -45,10 +45,10 @@
     <string name="translate_left_rear">左后视角</string>
     <string name="translate_right_rear">右后视角</string>
     <string name="automatic_calibration_success">自动标定成功</string>
-    <string name="front_wide_angle">Широкий угол обзора спереди</string>
-    <string name="back_wide_angle">Широкий угол обзора сзади</string>
-    <string name="before">Передние колеса</string>
-    <string name="rear_wheel">Задние колеса</string>
+    <string name="front_wide_angle">Широкий угол спереди</string>
+    <string name="back_wide_angle">Широкий угол сзади</string>
+    <string name="before">Пер. колеса</string>
+    <string name="rear_wheel">Задн. Колеса</string>
     <string name="radar_sound_open">Звуковой сигнал подсказки радара включен</string>
     <string name="radar_sound_close">Звуковой сигнал подсказки радара выключен</string>
     <string name="parking_assist_system_down">Ошибка системы помощи при парковке, пожалуйста, проверьте!</string>
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Неисправность камеры</string>
-
-
+    <string name="camera_radar_error">Ультразв. радар неисправен, проверьте!</string>
+    <string name="camera_please_park">Припаркуйте авто!</string>
 </resources>

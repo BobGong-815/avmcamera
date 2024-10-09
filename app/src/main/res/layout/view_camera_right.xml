@@ -70,33 +70,42 @@
                 android:id="@+id/radarErrImgId1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35px"
+                android:layout_marginEnd="35px"
                 android:layout_marginTop="75px"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_1"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/radarErrImgId2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
+                android:layout_marginEnd="35px"
                 android:layout_marginTop="72px"
-                android:rotation="-7.5"
                 android:src="@mipmap/radar_fault_2"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/radarErrImgId3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="35px"
+                android:layout_marginTop="72px"
+                android:src="@mipmap/radar_fault_3"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/radarErrImgId4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35px"
+                android:layout_marginEnd="35px"
                 android:layout_marginTop="75px"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_4"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -184,10 +193,19 @@
 
             <!--雷达警示图-->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="590px"
+                android:layout_width="570px"
                 android:layout_height="850px"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <com.autochips.avm.ui.view.RadarStatusFrontView
+                    android:id="@+id/rearRadarFrontViewId"
+                    android:layout_width="366px"
+                    android:layout_height="174px"
+                    android:layout_marginTop="60px"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <LinearLayout
                     android:layout_width="84px"
@@ -535,10 +553,10 @@
                 android:id="@+id/camera_3d_bg"
                 android:layout_width="186px"
                 android:layout_height="355px"
-                android:layout_marginStart="191px"
+                android:layout_marginEnd="191px"
                 android:layout_marginTop="255px"
                 android:background="@color/transparent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!--雷达提示音-->
@@ -546,10 +564,10 @@
                 android:id="@+id/radar_sound_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="247.5px"
+                android:layout_marginEnd="247.5px"
                 android:layout_marginTop="400px"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -1093,7 +1111,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="80px"
             android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageButton

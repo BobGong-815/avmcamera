@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Camera gặp trục trặc</string>
-
-
+    <string name="camera_radar_error">Rađa siêu âm bị lỗi, hãy kiểm tra!</string>
+    <string name="camera_please_park">Hãy đỗ xe!</string>
 </resources>

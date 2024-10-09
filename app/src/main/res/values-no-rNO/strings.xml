@@ -1,7 +1,7 @@
 <resources>
-<string name="app_name" translatable="false">AVMCamera</string>
+    <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">(P) gir utgang</string>
-    <string name="setting_p_exit_content">Når du setter i P-gir, avsluttes panoramaet umiddelbart eller med en forsinkelse på 30 sekunder</string>
+    <string name="setting_p_exit_content">Når girspaken er i P-gir, avsluttes panoramavisningen umiddelbart, senest etter 30 sekunder</string>
     <string name="setting_at_once">Med en gang</string>
     <string name="setting_30_seconds">Etter 30-årene</string>
     <string name="setting_transparent_chassis">Gjennomsiktig chassis</string>
@@ -9,18 +9,18 @@
     <string name="setting_low">Lav</string>
     <string name="setting_centre">Middels</string>
     <string name="setting_high">Høy</string>
-    <string name="setting_radar_activated_panorama">Panoramavisning aktivert når radaren er på</string>
-    <string name="setting_radar_activated_panorama_content">Gå inn i panoramaet når hastigheten er mindre enn 12 km/t og den fremre radaren alarmerer</string>
+    <string name="setting_radar_activated_panorama">Panoramavisning aktivertnår radaren er på</string>
+    <string name="setting_radar_activated_panorama_content">Panoramavisning aktiveres i hastigheter under 12 km/t og når den fremre alarmen piper</string>
     <string name="setting_path_line">Sporlinje</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Panoramautsikt aktiveres når blinklyset er på</string>
-    <string name="setting_signal_activates_panorama_content">Bruk blinklyset for å gå inn i panoramaet; Går ut automatisk når hastigheten er høyere enn 30 km/t</string>
+    <string name="setting_signal_activates_panorama">Panoramautsikt aktiveresnår blinklyset er på</string>
+    <string name="setting_signal_activates_panorama_content">Bruk blinklyset for å gå inn i panoramaet; Går ut automatisk ved hastighet over 30 km/t</string>
     <string name="setting_transparent_chassis_infobook_title">Gjennomsiktig chassis</string>
-    <string name="setting_transparent_chassis_infobook_content">Etter at den er aktivert, kan veiforholdene under kjøretøyet observeres</string>
+    <string name="setting_transparent_chassis_infobook_content">Etter at den er aktivertkan veiforholdene under kjøretøyet observeres</string>
     <string name="setting_transparent_chassis_infobook_ok">OK</string>
-    <string name="setting_rearview_mirror">后视镜调节</string>
-    <string name="setting_fold">折叠</string>
-    <string name="setting_expand">展开</string>
+    <string name="setting_rearview_mirror">Justering av bakspeil</string>
+    <string name="setting_fold">Brette</string>
+    <string name="setting_expand">Utvide</string>
     <string name="setting_rearview_mirror_down">Bakspeil vipper ned</string>
     <string name="setting_rearview_mirror_down_open">Bakspeilet nede er på</string>
     <string name="setting_rearview_mirror_down_close">Bakspeilet ned er av</string>
@@ -28,7 +28,7 @@
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">Bred vinkel</string>
     <string name="desc_rearview_mirror_fold">Bakspeil allerede foldet</string>
-    <string name="desc_rearview_mirror_expand">后视镜已展开</string>
+    <string name="desc_rearview_mirror_expand">Bakspeil utfoldet</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
     <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
     <string name="calibration">标定</string>
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Kamerafeil</string>
-
-
+    <string name="camera_radar_error">Ultrasonisk radarfeil. Vennligst sjekk!</string>
+    <string name="camera_please_park">Parker bilen!</string>
 </resources>

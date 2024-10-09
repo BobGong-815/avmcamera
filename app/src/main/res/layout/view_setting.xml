@@ -133,8 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="57px"
             android:orientation="horizontal"
-            android:layout_marginLeft="36px"
-            android:visibility="gone">
+            android:layout_marginLeft="36px">
 
             <Switch
                 android:id="@+id/sw_ctivatedPanorama"
@@ -156,8 +155,8 @@
 
             <ImageView
                 android:id="@+id/activatedPanoramaInfo"
-                android:layout_width="27px"
-                android:layout_height="27px"
+                android:layout_width="40px"
+                android:layout_height="40px"
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"

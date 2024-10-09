@@ -1,7 +1,7 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">(P) växelutgång</string>
-    <string name="setting_p_exit_content">När du lägger i P-växeln kommer panorama att avslutas omedelbart eller med en fördröjning på 30s</string>
+    <string name="setting_p_exit_content">När du lägger i P-växeln avslutas panorama omedelbart eller med en fördröjning på 30s</string>
     <string name="setting_at_once">Omedelbart</string>
     <string name="setting_30_seconds">Efter 30s</string>
     <string name="setting_transparent_chassis">Transparent chassi</string>
@@ -10,17 +10,17 @@
     <string name="setting_centre">Medium</string>
     <string name="setting_high">Hög</string>
     <string name="setting_radar_activated_panorama">Panoramavy när radarn är aktiverad</string>
-    <string name="setting_radar_activated_panorama_content">Gå in i panorama när hastigheten är lägre än 12 km/h och främre radarn larmar</string>
+    <string name="setting_radar_activated_panorama_content">Gå till panorama när hastigheten är 12 km/h och främre radarn larmar</string>
     <string name="setting_path_line">Spårlinje</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Panoramavy när blinkerslampan är på</string>
-    <string name="setting_signal_activates_panorama_content">Använd blinkersen för att komma in i panoramabilden; Avsluta automatiskt när hastigheten är högre än 30 km/h</string>
+    <string name="setting_signal_activates_panorama_content">Använd blinkersen för att komma in i panorama; Avsluta auto när hastigheten är högre än 30 km/h</string>
     <string name="setting_transparent_chassis_infobook_title">Transparent chassi</string>
-    <string name="setting_transparent_chassis_infobook_content">Efter aktiverad kan väglaget under fordonet observeras</string>
+    <string name="setting_transparent_chassis_infobook_content">Efter aktiverad kan väglagetunder fordonet observeras</string>
     <string name="setting_transparent_chassis_infobook_ok">OK</string>
-    <string name="setting_rearview_mirror">后视镜调节</string>
-    <string name="setting_fold">折叠</string>
-    <string name="setting_expand">展开</string>
+    <string name="setting_rearview_mirror">Justering av backspegel</string>
+    <string name="setting_fold">Vika</string>
+    <string name="setting_expand">Eexpandera</string>
     <string name="setting_rearview_mirror_down">Backspegel ner</string>
     <string name="setting_rearview_mirror_down_open">Backspegel nedåt är på</string>
     <string name="setting_rearview_mirror_down_close">Backspegeln nedåt är av</string>
@@ -28,7 +28,7 @@
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">Vidvinkel</string>
     <string name="desc_rearview_mirror_fold">Backspegel redan infälld</string>
-    <string name="desc_rearview_mirror_expand">后视镜已展开</string>
+    <string name="desc_rearview_mirror_expand">Backspegel utfälld</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
     <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
     <string name="calibration">标定</string>
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Kamera fel</string>
-
-
+    <string name="camera_radar_error">超声波雷达出现故障，请检查！</string>
+    <string name="camera_please_park">Please park!</string>
 </resources>

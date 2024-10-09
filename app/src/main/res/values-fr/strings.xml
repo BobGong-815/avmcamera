@@ -1,7 +1,7 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">Sortie de la vitesse (P)</string>
-    <string name="setting_p_exit_content">Lors du passage en vitesse P, le panorama sort immédiatement ou avec un délai de 30 secondes.</string>
+    <string name="setting_p_exit_content">En P, sortie panorama immédiate ou après 30 s</string>
     <string name="setting_at_once">Immédiatement</string>
     <string name="setting_30_seconds">Après 30 s</string>
     <string name="setting_transparent_chassis">Châssis transparent</string>
@@ -10,17 +10,17 @@
     <string name="setting_centre">Médium</string>
     <string name="setting_high">Haut</string>
     <string name="setting_radar_activated_panorama">Vue panoramique quand le radar est activé</string>
-    <string name="setting_radar_activated_panorama_content">Entrez dans le panorama lorsque la vitesse est inférieure à 12 km/h et que le radar avant émet une alarme</string>
+    <string name="setting_radar_activated_panorama_content">Accédez au panorama à moins de 12 km/h lorsque le radar avant émet une alarme.</string>
     <string name="setting_path_line">Ligne de trajectoire</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Vue panoramique quand les clignotants sont allumés</string>
-    <string name="setting_signal_activates_panorama_content">Utilisez le clignotant pour entrer dans le panorama ; Sortie automatique lorsque la vitesse est supérieure à 30 km/h</string>
+    <string name="setting_signal_activates_panorama_content">Clignotant pour entrer dans panorama ; sortie auto si >30 km/h</string>
     <string name="setting_transparent_chassis_infobook_title">Châssis transparent</string>
-    <string name="setting_transparent_chassis_infobook_content">Une fois activé, les conditions de la route sous le véhicule peuvent être observées.</string>
+    <string name="setting_transparent_chassis_infobook_content">Une fois activé, les conditions de la routesous le véhicule peuvent être observées.</string>
     <string name="setting_transparent_chassis_infobook_ok">OK</string>
-    <string name="setting_rearview_mirror">后视镜调节</string>
-    <string name="setting_fold">折叠</string>
-    <string name="setting_expand">展开</string>
+    <string name="setting_rearview_mirror">Réglage du rétroviseur</string>
+    <string name="setting_fold">Rabattre</string>
+    <string name="setting_expand">Développer</string>
     <string name="setting_rearview_mirror_down">Rétroviseur abaissé</string>
     <string name="setting_rearview_mirror_down_open">Rétroviseur abaissé activé.</string>
     <string name="setting_rearview_mirror_down_close">Rétroviseur abaissé désactivé.</string>
@@ -28,7 +28,7 @@
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">Grand angle</string>
     <string name="desc_rearview_mirror_fold">Rétroviseur déjà replié.</string>
-    <string name="desc_rearview_mirror_expand">后视镜已展开</string>
+    <string name="desc_rearview_mirror_expand">Rétroviseur déployé</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
     <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
     <string name="calibration">标定</string>
@@ -45,8 +45,8 @@
     <string name="translate_left_rear">左后视角</string>
     <string name="translate_right_rear">右后视角</string>
     <string name="automatic_calibration_success">自动标定成功</string>
-    <string name="front_wide_angle">Grand angle avant</string>
-    <string name="back_wide_angle">Grand angle arrière</string>
+    <string name="front_wide_angle">Grd angle avt</string>
+    <string name="back_wide_angle">Grd angle arr</string>
     <string name="before">Roues avant</string>
     <string name="rear_wheel">Roues arrière</string>
     <string name="radar_sound_open">Le son de l\'alerte radar est activé.</string>
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Dysfonctionnement de l\'appareil photo</string>
-
-
+    <string name="camera_radar_error">Échec du radar ultrasoniq. Vérifiez !</string>
+    <string name="camera_please_park">Arrêtez-vous !</string>
 </resources>

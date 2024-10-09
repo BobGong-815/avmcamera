@@ -98,8 +98,10 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
     public void checkButton(){
         int settingPathLine = SystemProperties.getInt("settingPathLine", -1);//引导线开关
         int signalActivates = SystemProperties.getInt("signalActivates", -1);//转向灯激活 倒车影像
+        int activatedPanorama = SystemProperties.getInt("activatedPanorama", 2);
         settingBinding.swSettingPathLine.setChecked(settingPathLine == 1);
         settingBinding.switchSignalActivates.setChecked(signalActivates == 1);
+        settingBinding.swCtivatedPanorama.setChecked(activatedPanorama == 1);
         if (settingPathLine == 1) {
 //            bvavmJNI.bwSetTrajLineStatus((byte) 1);
             if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineEnable((byte) 1);
@@ -332,9 +334,15 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 settingBinding.transparentChassisTab.setTextSelectColor(R.color.setting_view_title_color,0);
                 settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_view_content_color);
 
-                settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track);
-                settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track);
-                settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_track);
+                if (AvmApp.ISAY5T) {
+                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_t_track);
+                    settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_t_track);
+                    settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_t_track);
+                }else {
+                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track);
+                    settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track);
+                    settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_track);
+                }
 
 
 
@@ -366,10 +374,15 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 settingBinding.transparentChassisTab.setTextSelectColor(R.color.setting_tab_color_day,0);
                 settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_view_content_color_day);
 
-
-                settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track_day);
-                settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track_day);
-                settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_track_day);
+                if (AvmApp.ISAY5T) {
+                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_t_track_day);
+                    settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_t_track_day);
+                    settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_t_track_day);
+                }else {
+                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track_day);
+                    settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track_day);
+                    settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_track_day);
+                }
 
 
                 settingBinding.pExitInfo.setImageDrawable(context.getDrawable(R.mipmap.info_default_56_day));

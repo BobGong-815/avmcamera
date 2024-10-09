@@ -1,6 +1,7 @@
 package com.autochips.avm.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,13 +17,15 @@ import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
 
+import java.util.Random;
+
 import gxa.car.engineModeSdk.ConfigManager;
 import me.goldze.mvvmhabit.base.BaseApplication;
 import me.goldze.mvvmhabit.crash.CaocConfig;
 import me.goldze.mvvmhabit.utils.KLog;
 
 public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionHandler {
-    private CameraView mCameraView;//左陀车
+    private CameraView mCameraView;
     public static int mAvmRvcState;//0隐藏 ，1、显示,-1、异常
     private static AvmApp mAvmApp;
     //    private CameraViewBottom viewBottom;
@@ -31,12 +34,12 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     private int IS_AY5T = 103;
     private int IS_AY5G = 112; //左陀
     private int IS_AY5G_R = 112; //右陀 已经获取的值 112
-    private boolean ISAY5T = false;
+    public static boolean ISAY5T = false;
     private boolean ISAY5G = false;
     private boolean ISAY5G_R = false;
     private boolean IsOutsidebackmirrorautofoldswitch = true; //后视镜倒车下翻开关是否存在
 
-    public volatile boolean isRight = false; // 右陀
+    public volatile boolean isRight = false; // 默认非右陀
 
     public static AvmApp getInstance() {
         return mAvmApp;
@@ -48,8 +51,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
 
     @Override
     public void onCreate() {
-
         super.onCreate();
+        initConfig(this);
         KLog.d("AVM app 启动 ActivityLifecycleCallbacks onCreate");
         mAvmApp = this;
         //是否开启打印日志
@@ -58,7 +61,6 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
 //        viewBottom = new CameraViewBottom(this);
 //        viewBottom.showInit();
         KLog.d("[onCreate]");
-        mCameraView = new CameraView(this);
         //连接信号服务
         SystemProperties.setGlobal("avm_state", 0);
         //获取车型
@@ -81,6 +83,32 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         //DataManager.init(this);
         Thread.setDefaultUncaughtExceptionHandler(this);
         ServiceUtils.startCaptureService(this, AvmService.class);
+//        mHandler.postDelayed(()->{
+//            closeAndShowAvm();
+//        },10000);
+    }
+
+    private boolean isFirstOpen = true;
+    private void closeAndShowAvm(){
+        KLog.i("closeAndShowAvm isFirstOpen:" + isFirstOpen);
+        Intent intent = new Intent();
+        if(isFirstOpen){
+            intent.setAction("action.syncore.FOPEN.mode");
+        }else {
+            if (mCameraView.isShowing) {
+                intent.setAction("action.syncore.CLOSE.mode");
+            } else {
+                intent.setAction("action.syncore.OPEN.mode");
+            }
+        }
+        sendBroadcast(intent);
+        Random random = new Random();
+        int randSecond = random.nextInt(2700)+300;
+        KLog.d("AvmApp randSecond:"+randSecond);
+        mHandler.postDelayed(() -> {
+            isFirstOpen = false;
+            closeAndShowAvm();
+        }, isFirstOpen ? 10000 : randSecond);
     }
 
     private void initConfig(Context context) {
@@ -93,19 +121,23 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 if (vehicalplatform == IS_AY5T) {
                     ISAY5T = true;
                     BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
-                } else if (vehicalplatform == IS_AY5G) {
-                    ISAY5G = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
-                } else if (vehicalplatform == IS_AY5G_R) {
+                }else if (vehicalplatform == IS_AY5G_R) {
                     ISAY5G_R = true;
+                    isRight = true;
+                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+                } else {
+                    ISAY5G = true;
                     BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
                 }
                 //后视镜倒车下翻开关
-                boolean IsOutsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch() == 1; //0 无 1 有
+               boolean IsOutsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch() == 1; //0 无 1 有
                 KLog.i("Avmapp ...... 后视镜倒车下翻开关....  " + IsOutsidebackmirrorautofoldswitch);
                 if (!IsOutsidebackmirrorautofoldswitch){
                     getCameraView().hidenMirrowView();
                 }
+                mHandler.post(()->mCameraView = new CameraView(this));
+            }else {
+                KLog.i("Avmapp....还未连接成功 ...");
             }
         });
     }

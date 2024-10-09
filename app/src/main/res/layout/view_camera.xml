@@ -90,10 +90,19 @@
                 android:id="@+id/radarErrImgId2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
+                android:layout_marginLeft="35px"
                 android:layout_marginTop="72px"
-                android:rotation="-7.5"
                 android:src="@mipmap/radar_fault_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/radarErrImgId3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35px"
+                android:layout_marginTop="72px"
+                android:src="@mipmap/radar_fault_3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Kesalahan kamera</string>
-
-
+    <string name="camera_radar_error">Radar ultrasonik bermasalah, harap periksa!</string>
+    <string name="camera_please_park">Hentikan kendaraan!</string>
 </resources>

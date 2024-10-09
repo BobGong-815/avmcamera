@@ -31,6 +31,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CL
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_LCK_PassengerDoorAjarSt;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_LEFT_TURN_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_Distance;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_FRONT_DISTANCE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_FLMidDistance;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_FRMidDistance;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_FSLSideDistance;
@@ -72,6 +73,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_380D_AVM_READ_FAIL_REASON_RESULT_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ;
+import static com.avm.framwork.constant.CameraContracts.ROW_1_LEFT;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -95,6 +97,7 @@ import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.ui.activity.MainActivity;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
+import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.DataDefine;
 import com.autochips.avm.util.ServiceUtils;
@@ -125,6 +128,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static int MSG_DEL_CAMERA = 4;
 
     private String exit_action = "action.syncore.EOL.mode";
+    private String open_act = "action.syncore.OPEN.mode";
+    private String close_act = "action.syncore.CLOSE.mode";
+    private String first_open_act = "action.syncore.FOPEN.mode";
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     private Handler mHandler;
     private boolean ENABLE_SIGNAL_UPDATE = true;
@@ -141,8 +147,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public void onCreate() {
         super.onCreate();
         isExitAction = false;
-        KLog.d("AVM服务 [onCreate]  版本号： " + ServiceUtils.getVersionName() + " , Board : " + Build.BOARD);
+        KLog.d("AVM服务 [onCreate]");
 
+        Log.d("AVM", "Board : " + Build.BOARD);
         initDefault();
         AvmRuntime.self().init(this);
         AvmRuntime.self().registerBroadcast(this);
@@ -155,6 +162,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         IntentFilter filter = new IntentFilter();
         filter.addAction(exit_action);
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        filter.addAction(open_act);
+        filter.addAction(close_act);
+        filter.addAction(first_open_act);
         registerReceiver(broadcastReceiver, filter);
 
         CarPowerManager mCarPowerManager = CarPowerManager.getInstance(this, new CarPowerEventListener() {
@@ -208,6 +218,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 // 处理收到的消息
                 KLog.i("Msg.what ............ " + msg.what + " ... msg.arg1 ......." + msg.arg1);
                 Intent intent = null;
+                if(AvmApp.getInstance().getCameraView() == null){
+                    KLog.d("AvmApp", "初始化还未获取到配置码 avm is null ");
+                    return;
+                }
                 if (msg.what == MSG_ACTION_ENTER) {
                     switch (msg.arg1) {
                         case DataDefine.ACT_AERIAL_VIEW:
@@ -354,8 +368,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         };
 
         //快速启动
+        if(AvmApp.getInstance().getCameraView()!=null)
         AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
         mHandler.postDelayed(() -> {
+            if(AvmApp.getInstance().getCameraView()!=null)
             AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
             CanManager.getInstance().startConnect((v -> {
                 KLog.d("注册完成----fishTh ");
@@ -386,6 +402,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         KLog.d(flags + "[onStartCommand]" + startId);
         //adb指令模拟启动service带参数调试功能
         KLog.d("XXX", "Build.BOARD : " + Build.BOARD);
+        if(AvmApp.getInstance().getCameraView() == null){
+            KLog.d("AvmApp", "avm is null ");
+            return START_STICKY;
+        }
         //adb shell am start-service -n com.autochips.avm/.service.AvmService --ei avm_onclick 1
         if (intent != null) {
             int avm_onclick = intent.getIntExtra("avm_start", -1);
@@ -472,6 +492,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     }
 
     private final CanManager.onSignalValueChangedListener mOnSignalValueChangedListener = (vehicleId, value) -> {
+        if(AvmApp.getInstance().getCameraView() == null){
+            KLog.d("AvmApp", "avm is null ");
+            return;
+        }
         if (vehicleId == AVM_UINM_TURN_LIGHT_SW_ST) { //转向激活
             KLog.d(" 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
@@ -604,21 +628,64 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private boolean isRadarFront60 = false;
     private boolean isRadarFront110 = false;
 
+    private boolean isCallRRadarSound = false;//后雷达音是否在播报
+    private boolean isCallFRadarSound = false;//前雷达音是否在播报
     private void setRadar(int vehicleId, Object object) {
 
-        if (vehicleId == CLUSTER_PAS_Distance && object instanceof Integer[]) {
+        if ((vehicleId == CLUSTER_PAS_Distance || vehicleId == CLUSTER_PAS_FRONT_DISTANCE)  && object instanceof Integer[]) {
+            //后雷达信号
             Integer[] arr = (Integer[]) object;// [0x00 ]
             if (arr.length == 0) {
                 KLog.e("Radar param length is 0.");
                 return;
             }
             KLog.i(arr.length + "  length 雷达检测距离CLUSTER_PAS_Distance ： " + vehicleId + "  value   " + Arrays.toString(arr));
-            int right = arr[2];
-            int mil = arr[1];
-            int left = arr[3];
-            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLDistance, left);
-            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLMidDistance, mil);
-            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RRDistance, right);
+            if(vehicleId == CLUSTER_PAS_Distance) {
+                //后雷达
+                int rMir = arr[0];//后右中
+                int rMil = arr[1];//后左中
+                int rRight = arr[2];//后右
+                int rLeft = arr[3];//后左
+                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLDistance, rLeft);
+                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLMidDistance, rMil);
+                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RRMidDistance, rMir);
+                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RRDistance, rRight);
+                isCallRRadarSound = rRight <= 60 || rLeft <= 60 || rMil <= 90 || rMir <= 90;
+            }
+            if(vehicleId == CLUSTER_PAS_FRONT_DISTANCE) {
+                //前雷达
+                int fMir = arr[0];//前右中
+                int fMil = arr[1];//前左中
+                int fRight = arr[2];//前右
+                int fLeft = arr[3];//前左
+                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_PAS_FLDistance, fLeft);
+                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_FLMidDistance, fMil);
+                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_FRMidDistance, fMir);
+                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_PAS_FRDistance, fRight);
+                //雷达激活
+                int signalActivates = SystemProperties.getInt("radarActivates", 0);
+                if(signalActivates == 1) {
+                    if (fLeft <= 60 || fRight <= 60 || fMil <= 110 || fMir <= 110) {
+                        if (!CameraView.isShowing) {
+                            CameraViewModelHelper.getInstance().radarActive(1);
+                        }
+                    } else if (fLeft >= 60 && fRight >= 60 && fMil >= 110 && fMir >= 110) {
+                        if (CameraView.isShowing && AvmApp.getInstance().getCameraView().isSmartWin
+                                && CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT) == 0) {
+                            //已展示小窗口，当前没有转向
+                            CameraViewModelHelper.getInstance().radarExit(0);
+                        }
+                    }
+                }
+                isCallFRadarSound = fMir <= 90 || fMil <= 90 || fRight <= 60 || fLeft <=60;
+            }
+
+            if(isCallRRadarSound || isCallFRadarSound){
+                //此时表示警报声音会响起
+                AvmApp.getInstance().getCameraView().showRadarSoundView(1);
+            }else {
+                AvmApp.getInstance().getCameraView().showRadarSoundView(0);
+            }
             return;
         }
 
@@ -697,9 +764,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case AVM_RADAR_ALARM_ACOUSTIC_SWITCH:// 雷达故障报警
                 //AvmApp.getInstance().getCameraView().showParkingAssistView(status);
                 break;
-            case AVM_RR_MIDSNS_ERR_FLAG:   //     后右中
             case AVM_RL_MIDSNS_ERR_FLAG:    //     后左中
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(2, status);
+                break;
+            case AVM_RR_MIDSNS_ERR_FLAG:   //     后右中
+                AvmApp.getInstance().getCameraView().setRadarFailStatus(3, status);
                 break;
             case AVM_RR_SNS_ERR_FLAG: //       后右
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(4, status);
@@ -714,6 +783,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case AVM_PAS_SYSTEMTYPE:    //       雷达系统故障，没有找到相关UI
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(1, status);
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(2, status);
+                AvmApp.getInstance().getCameraView().setRadarFailStatus(3, status);
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(4, status);
                 break;
         }
@@ -733,12 +803,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         if (value instanceof byte[]) {
             byte[] arr = (byte[]) value;// [0x00 ]
             KLog.i(arr.length + "  length 标定-byte----vehicleId: " + vehicleId + "  value   " + Arrays.toString(arr) + "  版本号： " + ServiceUtils.getVersionName());
-
-            if (vehicleId == DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ) {
-                KLog.i("步骤 0  标定-信息请求:DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ:" + Arrays.toString(arr));
-                CanManager.getInstance().setByteArray(DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_RESP, 0, new byte[] {1});
-                return;
-            }
 
             byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
             if (arr.length < 2) {
@@ -919,6 +983,31 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             } else if (action.equals(Intent.ACTION_LOCALE_CHANGED)) {
                 KLog.i("语言切换 。。。。。。。。:" + action);
                 System.exit(0);
+            } else if(action.equals(open_act)){
+                KLog.i("AvmApp","open avm ");
+                AvmApp.getInstance().getCameraView().showFullWin();
+                SystemProperties.setGlobal("avm_state", 1);
+                mAvmManager.sendAvmState(1);
+                if (DELETE_CAMERA_FLAG) {
+                    mHandler.removeMessages(MSG_DEL_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                }
+            }else if(action.equals(close_act)){
+                KLog.i("AvmApp","close avm ");
+                AvmApp.getInstance().getCameraView().dismissView(null);
+                SystemProperties.setGlobal("avm_state", 0);
+                mAvmManager.sendAvmState(0);
+                if (DELETE_CAMERA_FLAG) {
+                    mHandler.removeMessages(MSG_CR_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
+                }
+            }else if(action.equals(first_open_act)){
+                KLog.i("首次打开avm");
+                AvmRuntime.self().artificialEnter();
+                if (isFirstEnter) { //avm首次被占用摄像头被释放，onCreate bwDele;后 点击进行创建
+                    mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                    isFirstEnter = false;
+                }
             }
         }
     }

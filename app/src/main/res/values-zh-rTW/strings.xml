@@ -18,8 +18,8 @@
     <string name="setting_transparent_chassis_infobook_title">透明底盤</string>
     <string name="setting_transparent_chassis_infobook_content">開啟可觀察車底路况</string>
     <string name="setting_transparent_chassis_infobook_ok">好的</string>
-    <string name="setting_rearview_mirror">後視鏡調節</string>
-    <string name="setting_fold">折疊</string>
+    <string name="setting_rearview_mirror">後視鏡調校</string>
+    <string name="setting_fold">摺疊</string>
     <string name="setting_expand">展開</string>
     <string name="setting_rearview_mirror_down">後視鏡下翻</string>
     <string name="setting_rearview_mirror_down_open">後視鏡下翻已開啟</string>
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前後左右攝像頭失敗</string>
     <string name="camera_success">標定成功</string>
     <string name="camera_breakdown">攝像頭故障</string>
-
-
+    <string name="camera_radar_error">超聲波雷達出現故障，請檢查！</string>
+    <string name="camera_please_park">請停車！</string>
 </resources>

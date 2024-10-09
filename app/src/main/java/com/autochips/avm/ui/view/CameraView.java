@@ -3,6 +3,10 @@ package com.autochips.avm.ui.view;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.ASSIST_DRIVE_PAS_BUTTON_PRESS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_UINM_TURN_LIGHT_SW_ST;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_CHIME_PAS_WARNTONE;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RLDistance;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RLMidDistance;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRDistance;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRMidDistance;
 import static com.avm.framwork.constant.CameraContracts.ROW_1_LEFT;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_2_D;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_2_D_BOTTOM;
@@ -39,10 +43,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Group;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
@@ -53,6 +66,7 @@ import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.databinding.ViewBottomBinding;
 import com.autochips.avm.databinding.ViewCameraBinding;
+import com.autochips.avm.databinding.ViewCameraRightBinding;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.helper.LongPressGestureListener;
@@ -70,6 +84,8 @@ import com.autochips.avm.viewmode.CameraViewModel;
 import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.manager.CanManager;
 import com.avm.framwork.manager.ViewSwitchManager;
+import com.gxa.lib.car.HalPropertyIds;
+import com.gxa.service.camera.AvmManager;
 
 import java.util.List;
 import java.util.Locale;
@@ -89,10 +105,10 @@ public class CameraView extends View implements LifecycleOwner {
         @Override
         public void setup(int msg, int param1, int param2) {
             KLog.d("CallBackInterface  msg " + msg + "   param1  " + param1 + "   param2: " + param2);
-            if (mViewCameraBinding == null) {
+            if ( mViewCameraBinding == null && mViewCameraRightBinding == null) {
                 return;
             }
-//            setAVMBreakdown(msg, param1, param2);
+            //            setAVMBreakdown(msg, param1, param2);
         }
     };
 
@@ -119,6 +135,7 @@ public class CameraView extends View implements LifecycleOwner {
     //    protected WindowManager.LayoutParams mWindowLpsBottom;//window的属性
 //    protected WindowManager.LayoutParams mFullWindowLps;//全面的窗口参数
     protected ViewCameraBinding mViewCameraBinding;//总windowManager界面
+    protected ViewCameraRightBinding mViewCameraRightBinding;//总windowManager界面
     private ViewBottomBinding cameraBinding;
     protected CameraViewModel viewModel;
     private SettingView settingView;
@@ -135,6 +152,35 @@ public class CameraView extends View implements LifecycleOwner {
 
     private LongPressGestureListener longPressGestureListener;
     private boolean isRightView = false;
+
+    //view
+    protected ConstraintLayout calibration;
+    protected RadarStatusView rearRadarViewId;
+    protected RadarStatusFrontView rearRadarFrontViewId;
+    protected ConstraintLayout layout3dTouchId;
+    protected FrameLayout viewFrame;
+    protected ConstraintLayout layout2d;
+    protected ConstraintLayout layout3d;
+    protected View liftBg;
+    protected LinearLayout layoutSettingId;
+    protected RelativeLayout infobook;
+    protected View infoBg;
+    protected SegmentTabLayout segmentWideAngle;
+    protected View rootView,camera2dBg,camera3dBg;
+    protected SegmentTabLayout segmentTab;
+    protected Group viewShow2dGroupId;
+    protected Group viewShow3dGroupId,smartGroupId;
+    protected ImageView radarSoundIv,radarErrImgId1,radarErrImgId2,radarErrImgId3,radarErrImgId4,cameraIv
+            ,cameraLeftFront,cameraRightFront,cameraLeftRear,cameraRightRear,cameraRight
+            ,cameraTop,cameraBottom,cameraLift,ivBreakdown,ivSetting,ivBackMirror,cameraIvLift;
+    protected LinearLayout llBackMirror,llSetting,cameraBreakdown,toastBg,layoutShowFull2d,layoutCalibrateId;
+    protected ConstraintLayout layoutWideAngle,cameraImageLayout,radarSoundLayout
+            ,parkingAssistLayout,mainAvmViewRootId,cameraImageLayoutLift;
+    protected TextView tvBreakdown,manualCalibration,automaticCalibration,infoTitle,infoContent,rearRadarImgId;
+    protected AppCompatButton infoOk;
+    protected View red2dTop,red2dLift,red2dRight,red2dBottom,red3dleftFront,red3dleftFront1,red3drightFront,red3drightFront1,
+            red3dleftRear,red3dleftRear1,red3drightRear,red3drightRear1;
+
 
     public CameraView(Context context) {
         super(context);
@@ -182,9 +228,9 @@ public class CameraView extends View implements LifecycleOwner {
             public void setCalibrationSelect(boolean btnCalibrationSelect) {
                 Log.d("Cal", "setCalibrationSelect : " + btnCalibrationSelect);
                 if (btnCalibrationSelect) {
-                    mViewCameraBinding.calibration.setVisibility(VISIBLE);
+                    calibration.setVisibility(VISIBLE);
                 } else {
-                    mViewCameraBinding.calibration.setVisibility(GONE);
+                    calibration.setVisibility(GONE);
                 }
             }
         });
@@ -193,40 +239,40 @@ public class CameraView extends View implements LifecycleOwner {
             public void onChanged(String type) {
                 KLog.i("onChanged .... " + type);
                 hidViewButtonTimer.start(0);
-                KLog.d(" layout2d getLiveDataCamera2DTopUI " + mViewCameraBinding.segmentTab.getCurrentTab());
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 0) {
-                    mViewCameraBinding.layout2d.setVisibility(VISIBLE);
+                KLog.d(" layout2d getLiveDataCamera2DTopUI " + segmentTab.getCurrentTab());
+                if (segmentTab.getCurrentTab() == 0) {
+                    layout2d.setVisibility(VISIBLE);
                 }
                 showFullWin();
                 chick2DView(type);
             }
         });
 
-        mViewCameraBinding.camera2dBg.setOnClickListener(new OnClickListener() {
+        camera2dBg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.viewShow2dGroupId.getVisibility() == View.VISIBLE) {
-                    mViewCameraBinding.viewShow2dGroupId.postDelayed(new Runnable() {
+                if (viewShow2dGroupId.getVisibility() == View.VISIBLE) {
+                    viewShow2dGroupId.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mViewCameraBinding.viewShow2dGroupId.setVisibility(GONE);
+                            viewShow2dGroupId.setVisibility(GONE);
                         }
                     }, 500);
                 } else {
                     KLog.d(" layout2d camera2dBg ");
-                    mViewCameraBinding.viewShow2dGroupId.setVisibility(VISIBLE);
+                    viewShow2dGroupId.setVisibility(VISIBLE);
                     hidViewButtonTimer.start(0);
                 }
             }
         });
 
-        mViewCameraBinding.camera3dBg.setOnClickListener(new OnClickListener() {
+        camera3dBg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.viewShow3dGroupId.getVisibility() == View.VISIBLE) {
-                    mViewCameraBinding.viewShow3dGroupId.setVisibility(GONE);
+                if (viewShow3dGroupId.getVisibility() == View.VISIBLE) {
+                    viewShow3dGroupId.setVisibility(GONE);
                 } else {
-                    mViewCameraBinding.viewShow3dGroupId.setVisibility(VISIBLE);
+                    viewShow3dGroupId.setVisibility(VISIBLE);
                     hidViewButtonTimer.start(1);
                 }
             }
@@ -238,11 +284,11 @@ public class CameraView extends View implements LifecycleOwner {
                 int status = CanManager.getInstance().getIntStatus(ASSIST_DRIVE_PAS_BUTTON_PRESS, 0);
                 KLog.d("雷达 点击status " + status);
                 if (status == 1) {
-                    mViewCameraBinding.radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
+                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
                     CameraViewModelHelper.getInstance().radarSoundStatus((Integer) 0, status);
                     KLog.d("雷达 关闭提示音 ");
                 } else {
-                    mViewCameraBinding.radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_sel));
+                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_sel));
                     CameraViewModelHelper.getInstance().radarSoundStatus((Integer) 1, status);
                     KLog.d("雷达 打开提示音 ");
                 }
@@ -253,14 +299,14 @@ public class CameraView extends View implements LifecycleOwner {
         viewModel.getLiveDataCamera3DTopUI().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String type) {
-                mViewCameraBinding.layout3d.setVisibility(VISIBLE);
+                layout3d.setVisibility(VISIBLE);
                 hidViewButtonTimer.start(1);
                 showFullWin();
                 chick3DView(type);
             }
         });
-        mViewCameraBinding.layoutShowFull2d.setOnTouchListener(this::showFull2DByOnTouch);
-        mViewCameraBinding.camera3dBg.setOnTouchListener(new OnTouchListener() {// 长按 60s 显示标定图标
+        layoutShowFull2d.setOnTouchListener(this::showFull2DByOnTouch);
+        camera3dBg.setOnTouchListener(new OnTouchListener() {// 长按 60s 显示标定图标
             private long resTime;
 
             @Override
@@ -367,7 +413,7 @@ public class CameraView extends View implements LifecycleOwner {
             if (isSmartWin) mWindowLps.format = PixelFormat.TRANSLUCENT;
             else mWindowLps.format = PixelFormat.UNKNOWN;
             KLog.d(isSmartWin + " isSmartWin bottom_view-isFullWin=" + isFullWin + " mWindowLpsBottom=" + mWindowLps);
-            mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
+            mWindowManager.updateViewLayout(rootView, mWindowLps);
             if (SHOW_OVERLAY_LAYER)
                 mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
             if (SHOW_OVERLAY_LAYER) cameraBinding.frameLayoutId.setVisibility(VISIBLE);
@@ -377,7 +423,7 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowLps.format = PixelFormat.TRANSLUCENT;
             mWindowLps.width = 0;
             mWindowLps.height = 0;
-            mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
+            mWindowManager.updateViewLayout(rootView, mWindowLps);
             if (SHOW_OVERLAY_LAYER)
                 mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
 
@@ -390,22 +436,27 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     //初始化view
-    private void initView() {
+    protected void initView() {
         CallBackHelper.getInstance().setCallBackInterface(callBackInterface);
         registry.setCurrentState(Lifecycle.State.CREATED);
-        mViewCameraBinding = ViewCameraBinding.inflate(LayoutInflater.from(mContext), null, false);
+        if(AvmApp.getInstance().isRight){
+            mViewCameraRightBinding = ViewCameraRightBinding.inflate(LayoutInflater.from(mContext), null, false);
+        }else {
+            mViewCameraBinding = ViewCameraBinding.inflate(LayoutInflater.from(mContext), null, false);
+        }
         //mViewCameraBinding.cameraTextureView.setSurfaceTextureListener(new SurfaceTextureHelper
         // ());
-
         viewModel = new CameraViewModel();
-        mViewCameraBinding.setViewModel(viewModel);
-        mViewCameraBinding.rearRadarViewId.setViewModel(viewModel);
-
-        settingView = mViewCameraBinding.settingView;
-        settingView.setInfoBookView(mViewCameraBinding.infobook, mViewCameraBinding.infoBg, mViewCameraBinding.segmentWideAngle);
-        rearviewMirrorView = mViewCameraBinding.rearviewMirrorView;
-        mViewCameraBinding.layout3dTouchId.setOnTouchListener(this::onTouch);
-        mViewCameraBinding.viewFrame.setOnTouchListener(this::onTouchView);
+        if(AvmApp.getInstance().isRight){
+            mViewCameraRightBinding.setViewModel(viewModel);
+        }else {
+            mViewCameraBinding.setViewModel(viewModel);
+        }
+        findViewById();
+        rearRadarViewId.setViewModel(viewModel);
+        settingView.setInfoBookView(infobook, infoBg, segmentWideAngle);
+        layout3dTouchId.setOnTouchListener(this::onTouch);
+        viewFrame.setOnTouchListener(this::onTouchView);
         rearviewMirrorView.setOnClickListener((v) -> {
         });
 
@@ -416,28 +467,28 @@ public class CameraView extends View implements LifecycleOwner {
             //越南
             ViewGroup.LayoutParams layoutParams = mViewCameraBinding.infobook.getLayoutParams();
             layoutParams.height = 260;
-            mViewCameraBinding.infobook.setLayoutParams(layoutParams);
+            infobook.setLayoutParams(layoutParams);
         }
 
         settingView.setOnClickListener((v) -> {
         });
-        mViewCameraBinding.layout2d.setOnClickListener((view) -> {
+        layout2d.setOnClickListener((view) -> {
             KLog.d(" layout2d setOnClickListener ");
-            mViewCameraBinding.viewShow2dGroupId.setVisibility(VISIBLE);
+            viewShow2dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(0);
         });
-        mViewCameraBinding.layout3d.setOnClickListener((view) -> {
+        layout3d.setOnClickListener((view) -> {
             KLog.d(" layout3d setOnClickListener ");
-            mViewCameraBinding.viewShow3dGroupId.setVisibility(VISIBLE);
+            viewShow3dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(1);
         });
-        mViewCameraBinding.liftBg.setOnClickListener(new OnClickListener() {
+        liftBg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 setViewDialog();
             }
         });
-        mViewCameraBinding.layoutSettingId.setOnClickListener(new OnClickListener() {
+        layoutSettingId.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 setViewDialog();
@@ -449,12 +500,160 @@ public class CameraView extends View implements LifecycleOwner {
 
     }
 
+    //初始化控件id
+    private void findViewById() {
+        if(AvmApp.getInstance().isRight){
+            rearRadarViewId = mViewCameraRightBinding.rearRadarViewId;
+            rearRadarFrontViewId = mViewCameraRightBinding.rearRadarFrontViewId;
+            calibration = mViewCameraRightBinding.calibration;
+            settingView = mViewCameraRightBinding.settingView;
+            infobook = mViewCameraRightBinding.infobook;
+            infoBg = mViewCameraRightBinding.infoBg;
+            segmentWideAngle = mViewCameraRightBinding.segmentWideAngle;
+            rearviewMirrorView = mViewCameraRightBinding.rearviewMirrorView;
+            layout3dTouchId = mViewCameraRightBinding.layout3dTouchId;
+            viewFrame = mViewCameraRightBinding.viewFrame;
+            layout2d = mViewCameraRightBinding.layout2d;
+            layout3d = mViewCameraRightBinding.layout3d;
+            liftBg = mViewCameraRightBinding.liftBg;
+            layoutSettingId = mViewCameraRightBinding.layoutSettingId;
+            rootView = mViewCameraRightBinding.getRoot();
+            segmentTab = mViewCameraRightBinding.segmentTab;
+            viewShow2dGroupId = mViewCameraRightBinding.viewShow2dGroupId;
+            viewShow3dGroupId = mViewCameraRightBinding.viewShow3dGroupId;
+            radarSoundIv = mViewCameraRightBinding.radarSoundIv;
+            radarErrImgId1 = mViewCameraRightBinding.radarErrImgId1;
+            radarErrImgId2 = mViewCameraRightBinding.radarErrImgId2;
+            radarErrImgId3 = mViewCameraRightBinding.radarErrImgId3;
+            radarErrImgId4 = mViewCameraRightBinding.radarErrImgId4;
+            cameraIv = mViewCameraRightBinding.cameraIv;
+            llBackMirror = mViewCameraRightBinding.llBackMirror;
+            llSetting = mViewCameraRightBinding.llSetting;
+            layoutWideAngle = mViewCameraRightBinding.layoutWideAngle;
+            camera2dBg = mViewCameraRightBinding.camera2dBg;
+            camera3dBg = mViewCameraRightBinding.camera3dBg;
+            cameraImageLayout = mViewCameraRightBinding.cameraImageLayout;
+            cameraBreakdown = mViewCameraRightBinding.cameraBreakdown;
+            toastBg = mViewCameraRightBinding.toastBg;
+            cameraLeftFront = mViewCameraRightBinding.cameraLeftFront;
+            cameraRightFront = mViewCameraRightBinding.cameraRightFront;
+            cameraLeftRear = mViewCameraRightBinding.cameraLeftRear;
+            cameraRightRear = mViewCameraRightBinding.cameraRightRear;
+            smartGroupId = mViewCameraRightBinding.smartGroupId;
+            layoutShowFull2d = mViewCameraRightBinding.layoutShowFull2d;
+            cameraRight = mViewCameraRightBinding.cameraRight;
+            radarSoundLayout = mViewCameraRightBinding.radarSoundLayout;
+            parkingAssistLayout = mViewCameraRightBinding.parkingAssistLayout;
+            cameraTop = mViewCameraRightBinding.cameraTop;
+            cameraBottom = mViewCameraRightBinding.cameraBottom;
+            cameraLift = mViewCameraRightBinding.cameraLift;
+            layoutCalibrateId = mViewCameraRightBinding.layoutCalibrateId;
+            mainAvmViewRootId = mViewCameraRightBinding.mainAvmViewRootId;
+            ivBreakdown = mViewCameraRightBinding.ivBreakdown;
+            tvBreakdown = mViewCameraRightBinding.tvBreakdown;
+            ivSetting = mViewCameraRightBinding.ivSetting;
+            ivBackMirror = mViewCameraRightBinding.ivBackMirror;
+            manualCalibration = mViewCameraRightBinding.manualCalibration;
+            automaticCalibration = mViewCameraRightBinding.automaticCalibration;
+            infoTitle = mViewCameraRightBinding.infoTitle;
+            infoContent = mViewCameraRightBinding.infoContent;
+            infoOk = mViewCameraRightBinding.infoOk;
+            rearRadarImgId = mViewCameraRightBinding.rearRadarImgId;
+            //热区
+            red2dTop = mViewCameraRightBinding.red2dTop;
+            red2dLift = mViewCameraRightBinding.red2dLift;
+            red2dRight = mViewCameraRightBinding.red2dRight;
+            red2dBottom = mViewCameraRightBinding.red2dBottom;
+            red3dleftFront = mViewCameraRightBinding.red3dleftFront;
+            red3dleftFront1 = mViewCameraRightBinding.red3dleftFront1;
+            red3drightFront = mViewCameraRightBinding.red3drightFront;
+            red3drightFront1 = mViewCameraRightBinding.red3drightFront1;
+            red3dleftRear = mViewCameraRightBinding.red3dleftRear;
+            red3dleftRear1 = mViewCameraRightBinding.red3dleftRear1;
+            red3drightRear = mViewCameraRightBinding.red3drightRear;
+            red3drightRear1 = mViewCameraRightBinding.red3drightRear1;
+            cameraImageLayoutLift = mViewCameraRightBinding.cameraImageLayoutLift;
+            cameraIvLift = mViewCameraRightBinding.cameraIvLift;
+        }else {
+            rearRadarViewId = mViewCameraBinding.rearRadarViewId;
+            rearRadarFrontViewId = mViewCameraBinding.rearRadarFrontViewId;
+            calibration = mViewCameraBinding.calibration;
+            settingView = mViewCameraBinding.settingView;
+            infobook = mViewCameraBinding.infobook;
+            infoBg = mViewCameraBinding.infoBg;
+            segmentWideAngle = mViewCameraBinding.segmentWideAngle;
+            rearviewMirrorView = mViewCameraBinding.rearviewMirrorView;
+            layout3dTouchId = mViewCameraBinding.layout3dTouchId;
+            viewFrame = mViewCameraBinding.viewFrame;
+            layout2d = mViewCameraBinding.layout2d;
+            layout3d = mViewCameraBinding.layout3d;
+            liftBg = mViewCameraBinding.liftBg;
+            layoutSettingId = mViewCameraBinding.layoutSettingId;
+            rootView = mViewCameraBinding.getRoot();
+            segmentTab = mViewCameraBinding.segmentTab;
+            viewShow2dGroupId = mViewCameraBinding.viewShow2dGroupId;
+            viewShow3dGroupId = mViewCameraBinding.viewShow3dGroupId;
+            radarSoundIv = mViewCameraBinding.radarSoundIv;
+            radarErrImgId1 = mViewCameraBinding.radarErrImgId1;
+            radarErrImgId2 = mViewCameraBinding.radarErrImgId2;
+            radarErrImgId4 = mViewCameraBinding.radarErrImgId4;
+            cameraIv = mViewCameraBinding.cameraIv;
+            llBackMirror = mViewCameraBinding.llBackMirror;
+            llSetting = mViewCameraBinding.llSetting;
+            layoutWideAngle = mViewCameraBinding.layoutWideAngle;
+            camera2dBg = mViewCameraBinding.camera2dBg;
+            camera3dBg = mViewCameraBinding.camera3dBg;
+            cameraImageLayout = mViewCameraBinding.cameraImageLayout;
+            cameraBreakdown = mViewCameraBinding.cameraBreakdown;
+            toastBg = mViewCameraBinding.toastBg;
+            cameraLeftFront = mViewCameraBinding.cameraLeftFront;
+            cameraRightFront = mViewCameraBinding.cameraRightFront;
+            cameraLeftRear = mViewCameraBinding.cameraLeftRear;
+            cameraRightRear = mViewCameraBinding.cameraRightRear;
+            smartGroupId = mViewCameraBinding.smartGroupId;
+            layoutShowFull2d = mViewCameraBinding.layoutShowFull2d;
+            cameraRight = mViewCameraBinding.cameraRight;
+            radarSoundLayout = mViewCameraBinding.radarSoundLayout;
+            parkingAssistLayout = mViewCameraBinding.parkingAssistLayout;
+            cameraTop = mViewCameraBinding.cameraTop;
+            cameraBottom = mViewCameraBinding.cameraBottom;
+            cameraLift = mViewCameraBinding.cameraLift;
+            layoutCalibrateId = mViewCameraBinding.layoutCalibrateId;
+            mainAvmViewRootId = mViewCameraBinding.mainAvmViewRootId;
+            ivBreakdown = mViewCameraBinding.ivBreakdown;
+            tvBreakdown = mViewCameraBinding.tvBreakdown;
+            ivSetting = mViewCameraBinding.ivSetting;
+            ivBackMirror = mViewCameraBinding.ivBackMirror;
+            manualCalibration = mViewCameraBinding.manualCalibration;
+            automaticCalibration = mViewCameraBinding.automaticCalibration;
+            infoTitle = mViewCameraBinding.infoTitle;
+            infoContent = mViewCameraBinding.infoContent;
+            infoOk = mViewCameraBinding.infoOk;
+            rearRadarImgId = mViewCameraBinding.rearRadarImgId;
+            //热区
+            red2dTop = mViewCameraBinding.red2dTop;
+            red2dLift = mViewCameraBinding.red2dLift;
+            red2dRight = mViewCameraBinding.red2dRight;
+            red2dBottom = mViewCameraBinding.red2dBottom;
+            red3dleftFront = mViewCameraBinding.red3dleftFront;
+            red3dleftFront1 = mViewCameraBinding.red3dleftFront1;
+            red3drightFront = mViewCameraBinding.red3drightFront;
+            red3drightFront1 = mViewCameraBinding.red3drightFront1;
+            red3dleftRear = mViewCameraBinding.red3dleftRear;
+            red3dleftRear1 = mViewCameraBinding.red3dleftRear1;
+            red3drightRear = mViewCameraBinding.red3drightRear;
+            red3drightRear1 = mViewCameraBinding.red3drightRear1;
+            cameraImageLayoutLift = mViewCameraBinding.cameraImageLayoutLift;
+            cameraIvLift = mViewCameraBinding.cameraIvLift;
+        }
+    }
+
     public void hidenMirrowView(){
         mViewCameraBinding.rearviewMirrorView.hidenMirrowView();
     }
 
     public void viewRearStatus(int status) {
-        mViewCameraBinding.rearviewMirrorView.reverseLight(status);
+        rearviewMirrorView.reverseLight(status);
     }
 
     public CameraViewModel getViewModel() {
@@ -462,9 +661,9 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     public void setCurrentGear(int gear) {
-        if (mViewCameraBinding.rearviewMirrorView.getVisibility() == View.VISIBLE){
+        if (rearviewMirrorView.getVisibility() == View.VISIBLE){
             if (AvmRuntime.self().isRearGearSts()) {
-                mViewCameraBinding.rearviewMirrorView.gearInfo(1);
+                rearviewMirrorView.gearInfo(1);
             }
         }
     }
@@ -487,8 +686,8 @@ public class CameraView extends View implements LifecycleOwner {
 //        isChangeGear = true;
         KLog.d("viewShowStatus()");
         isDismissView = false;
-        mViewCameraBinding.radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
-        mViewCameraBinding.rearviewMirrorView.gearInfo(0);
+        radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
+        rearviewMirrorView.gearInfo(0);
 //       KLog.d(hisModel + "  valGear viewShowStatus 模式：" + model + " 记忆模式: " + viewPosition);
         int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
         if (settingPathLine == 1) {
@@ -517,9 +716,9 @@ public class CameraView extends View implements LifecycleOwner {
         }
 
         int outsideTabIndex = getOutsideTabIndex();
-        if (outsideTabIndex != -1) mViewCameraBinding.segmentTab.setSelectTab(outsideTabIndex);
+        if (outsideTabIndex != -1) segmentTab.setSelectTab(outsideTabIndex);
 //        if (hisPosition > 0) {
-//            mViewCameraBinding.segmentTab.setSelectTab(hisPosition);
+//            segmentTab.setSelectTab(hisPosition);
 //            hisPosition = -1;
 //        }
         if (isSmartWin) {
@@ -531,14 +730,14 @@ public class CameraView extends View implements LifecycleOwner {
         List<Integer> events = AvmRuntime.self().getEvents();
         if (events.contains(DataDefine.EVT_SHIFT_D) || events.contains(DataDefine.EVT_SHIFT_N) || events.contains(DataDefine.EVT_SHIFT_R) || events.contains(DataDefine.EVT_SHIFT_P)) {//档位有变
             if (AvmRuntime.self().isRearGearSts()) {
-                mViewCameraBinding.rearviewMirrorView.gearInfo(1); // 后视镜下翻按钮可操作
+                rearviewMirrorView.gearInfo(1); // 后视镜下翻按钮可操作
                 viewModelReverseIn();
                 int status = CanManager.getInstance().getIntStatus(CLUSTER_CHIME_PAS_WARNTONE, 0);
                 KLog.d("雷达报警图标状态:" + status);
                 if (0 < status && status < 6) {
-                    mViewCameraBinding.radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_sel));
+                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_sel));
                 } else {
-                    mViewCameraBinding.radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
+                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
                 }
             } else {
                 viewModelByActive("gear_P_D_N");
@@ -567,7 +766,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     private void setWindowType() {
         KLog.d("setWindowType()");
-        boolean bl = mViewCameraBinding.getRoot().isAttachedToWindow();
+        boolean bl = rootView.isAttachedToWindow();
         mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
         if (AvmRuntime.self().isRearGearSts()) {
             mWindowLps.height = 1080;
@@ -575,7 +774,7 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.d("刷新--setWindowType-bl ：" + bl);
 //        CameraGLSurfaceView.glStatus ;
         if (bl && CameraGLSurfaceView.glStatus == 1 && isShowing) {
-            mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
+            mWindowManager.updateViewLayout(rootView, mWindowLps);
             mWindowLps.format = PixelFormat.UNKNOWN;
             if (SHOW_OVERLAY_LAYER)
                 mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
@@ -593,24 +792,24 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     public void setRadarFailStatus(int flag, int value) {
-        if (mViewCameraBinding == null) return;
+        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return;
 
         switch (flag) {
             case 1:
-                mViewCameraBinding.radarErrImgId1.setVisibility(value == 0 ? GONE : VISIBLE);
+                radarErrImgId1.setVisibility(value == 0 ? GONE : VISIBLE);
                 break;
             case 2:
-                mViewCameraBinding.radarErrImgId2.setVisibility(value == 0 ? GONE : VISIBLE);
+                radarErrImgId2.setVisibility(value == 0 ? GONE : VISIBLE);
                 break;
-//            case  3:
-//                mViewCameraBinding.radarErrImgId3.setVisibility(value == 0 ? GONE :VISIBLE);
-//                break;
+            case  3:
+                radarErrImgId3.setVisibility(value == 0 ? GONE :VISIBLE);
+                break;
             case 4:
-                mViewCameraBinding.radarErrImgId4.setVisibility(value == 0 ? GONE : VISIBLE);
+                radarErrImgId4.setVisibility(value == 0 ? GONE : VISIBLE);
                 break;
         }
         if (value > 0) {
-            RearviewToast.getInstance().showToast("超声波雷达出现故障，请检查！");
+            RearviewToast.getInstance().showToast(AvmApp.getInstance().getString(R.string.camera_radar_error));
         }
 
     }
@@ -627,12 +826,12 @@ public class CameraView extends View implements LifecycleOwner {
         if (viewPosition == 0) {
             status = bvavmJNI.BW_LEFT_RIGHT_FRONT;
             chick2DView(CAMERA_2_D_LIFT_RIGHT);
-            mViewCameraBinding.viewShow2dGroupId.setVisibility(VISIBLE);
+            viewShow2dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(viewPosition);
         } else if (viewPosition == 1) {
             status = bvavmJNI.BW_LEFT_REAR_3D;
             chick3DView(CAMERA_3_D_LEFT_REAR);
-            mViewCameraBinding.viewShow3dGroupId.setVisibility(VISIBLE);
+            viewShow3dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(viewPosition);
         }
         CameraGLSurfaceView.setAngleOfView(status);
@@ -649,13 +848,13 @@ public class CameraView extends View implements LifecycleOwner {
         if (viewPosition == 0) {
             status = bvavmJNI.BW_LEFT_RIGHT_FRONT;
             chick2DView(CAMERA_2_D_LIFT_RIGHT);
-            mViewCameraBinding.viewShow2dGroupId.setVisibility(VISIBLE);
+            viewShow2dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(viewPosition);
         } else if (viewPosition == 1) {
             bvavmJNI.bwSet3DfreeFlag(0);//复位3D
             status = bvavmJNI.BW_RIGHT_REAR_3D;
             chick3DView(CAMERA_3_D_RIGHT_REAR);
-            mViewCameraBinding.viewShow3dGroupId.setVisibility(VISIBLE);
+            viewShow3dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(viewPosition);
         }
         CameraGLSurfaceView.setAngleOfView(status);
@@ -695,7 +894,7 @@ public class CameraView extends View implements LifecycleOwner {
             } else if (viewPosition == 1) {
                 status = bvavmJNI.BW_FRONT_3D;
                 chick3DView(CAMERA_3_D);
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
             } else if (viewPosition == 2) {
 //                status = bvavmJNI.BW_2D_REAR_120;
                 if (AvmRuntime.self().isRearGearSts()) {
@@ -723,12 +922,12 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.d(hisPosition + " hisPosition R档视角切换:" + viewPosition);
         chick2DView(CAMERA_2_D_BOTTOM);
         chick3DView(CAMERA_3_D);
-//        int status = 0;
+        //        int status = 0;
         int outsideTabIndex = getOutsideTabIndex();
         Log.d("AvmRuntime", "viewModelReverseIn() outsideTabIndex = " + outsideTabIndex);
         if (outsideTabIndex == 0) {
-//            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
-//            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+            //            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
+            //            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
             chick2DView(CAMERA_2_D_BOTTOM);
         } else if (outsideTabIndex == 1) {
 //            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
@@ -736,15 +935,15 @@ public class CameraView extends View implements LifecycleOwner {
 //            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
             mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
         } else if (outsideTabIndex == 2) {
-//            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
-//            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+            //            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
+            //            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
             setAngleStatus(bvavmJNI.BW_2D_REAR);
         }
-//        CameraGLSurfaceView.setAngleOfView(status);
+        //        CameraGLSurfaceView.setAngleOfView(status);
         //这里注释是为了改这个BUG，在记忆3D/广角模式下，R档激活，手动切换改变记忆3D/广角，没有被记忆
         hisPosition = viewPosition;
 
-//        updateTabViewIndex();
+        //        updateTabViewIndex();
     }
 
 
@@ -754,9 +953,9 @@ public class CameraView extends View implements LifecycleOwner {
             return;
         }
         KLog.d(viewPosition + "  viewPosition viewModelByActive 显示位置:" + position);
-//        KLog.d(viewPosition + "  当前转向:" + CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT));
-//        KLog.d(viewPosition + "  当前档位:" + hisModel);
-//        int status = 0;
+        //        KLog.d(viewPosition + "  当前转向:" + CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT));
+        //        KLog.d(viewPosition + "  当前档位:" + hisModel);
+        //        int status = 0;
         if (viewPosition == 0) {
             //如果进来转向灯还在，不在R档的情况下，显示左右视图
             if (CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT) == 1 || CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT) == 2 && !AvmRuntime.self().isRearGearSts()) {
@@ -769,7 +968,7 @@ public class CameraView extends View implements LifecycleOwner {
                 chick2DView(CAMERA_2_D_TOP);
             }
 
-            mViewCameraBinding.viewShow2dGroupId.setVisibility(VISIBLE);
+            viewShow2dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(viewPosition);
         } else if (viewPosition == 1) {
             //如果进来转向灯还在，不在R档的情况下，显示左右轉向試圖
@@ -784,7 +983,7 @@ public class CameraView extends View implements LifecycleOwner {
 //                status = bvavmJNI.BW_REAR_3D;
                 chick3DView(CAMERA_3_D);
             }
-            mViewCameraBinding.viewShow3dGroupId.setVisibility(VISIBLE);
+            viewShow3dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(viewPosition);
         } else if (viewPosition == 2) {
             if (position.equals("gear_turn_exit")) {
@@ -837,8 +1036,8 @@ public class CameraView extends View implements LifecycleOwner {
             KLog.d(viewPosition + "tabSelectListener onTabSelect = " + position + " isChangeGear：" + isChangeGear);
             viewModel.setRunning(true);
             if (!isChangeGear) {// 换挡的时候，不给取消高亮
-                mViewCameraBinding.llBackMirror.setSelected(false);
-                mViewCameraBinding.llSetting.setSelected(false);
+                llBackMirror.setSelected(false);
+                llSetting.setSelected(false);
             }
 
             if (viewPosition == position) {
@@ -853,33 +1052,33 @@ public class CameraView extends View implements LifecycleOwner {
             hidViewButtonTimer.start(position);
 //            bvavmJNI.bwSet3DfreeFlag(0);//复位3D
             if (position == 0) {
-                mViewCameraBinding.layout2d.setEnabled(true);
-                mViewCameraBinding.layout3d.setEnabled(false);
+                layout2d.setEnabled(true);
+                layout3d.setEnabled(false);
                 KLog.d(" layout2d tab ");
-                mViewCameraBinding.layout2d.setVisibility(View.VISIBLE);
-                mViewCameraBinding.layout3d.setVisibility(View.GONE);
-                mViewCameraBinding.layoutWideAngle.setVisibility(GONE);
-                mViewCameraBinding.camera2dBg.setVisibility(View.VISIBLE);
-                mViewCameraBinding.camera3dBg.setVisibility(View.GONE);
+                layout2d.setVisibility(View.VISIBLE);
+                layout3d.setVisibility(View.GONE);
+                layoutWideAngle.setVisibility(GONE);
+                camera2dBg.setVisibility(View.VISIBLE);
+                camera3dBg.setVisibility(View.GONE);
                 if (!isSmartWin) {
-                    mViewCameraBinding.cameraImageLayout.setVisibility(VISIBLE);
+                    cameraImageLayout.setVisibility(VISIBLE);
                 } else {
-                    mViewCameraBinding.cameraImageLayout.setVisibility(GONE);
+                    cameraImageLayout.setVisibility(GONE);
                 }
 //                camera3DDirection = bvavmJNI.BW_2D_FRONT;
                 chick2DView(ViewSwitchManager.CAMERA_2_D_TOP);
             } else if (position == 1) {
-                mViewCameraBinding.layout3d.setEnabled(true);
-                mViewCameraBinding.layout2d.setEnabled(false);
-                mViewCameraBinding.layout2d.setVisibility(View.GONE);
-                mViewCameraBinding.layout3d.setVisibility(View.VISIBLE);
-                mViewCameraBinding.layoutWideAngle.setVisibility(GONE);
-                mViewCameraBinding.camera2dBg.setVisibility(View.GONE);
-                mViewCameraBinding.camera3dBg.setVisibility(View.VISIBLE);
+                layout3d.setEnabled(true);
+                layout2d.setEnabled(false);
+                layout2d.setVisibility(View.GONE);
+                layout3d.setVisibility(View.VISIBLE);
+                layoutWideAngle.setVisibility(GONE);
+                camera2dBg.setVisibility(View.GONE);
+                camera3dBg.setVisibility(View.VISIBLE);
                 if (!isSmartWin) {
-                    mViewCameraBinding.cameraImageLayout.setVisibility(VISIBLE);
+                    cameraImageLayout.setVisibility(VISIBLE);
                 } else {
-                    mViewCameraBinding.cameraImageLayout.setVisibility(GONE);
+                    cameraImageLayout.setVisibility(GONE);
                 }
 //                camera3DDirection = bvavmJNI.BW_LEFT_FRONT_3D;
                 KLog.d("转向3d前FRONT_3D 3");
@@ -889,16 +1088,16 @@ public class CameraView extends View implements LifecycleOwner {
                 //setAngleStatus();
                 KLog.d("tabSelectListener isSmartWin = " + isSmartWin);
                 if (!isSmartWin) {//三分之一屏不显示
-                    mViewCameraBinding.layoutWideAngle.setVisibility(VISIBLE);
+                    layoutWideAngle.setVisibility(VISIBLE);
                 } else {
-                    mViewCameraBinding.layoutWideAngle.setVisibility(GONE);
+                    layoutWideAngle.setVisibility(GONE);
                 }
-                mViewCameraBinding.cameraImageLayout.setVisibility(View.GONE);
-                //mViewCameraBinding.layoutWideAngle.setVisibility(VISIBLE);
-                mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
-                mViewCameraBinding.camera2dBg.setVisibility(View.GONE);
-                mViewCameraBinding.camera3dBg.setVisibility(View.GONE);
-                mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                cameraImageLayout.setVisibility(View.GONE);
+                //layoutWideAngle.setVisibility(VISIBLE);
+                cameraImageLayoutLift.setVisibility(GONE);
+                camera2dBg.setVisibility(View.GONE);
+                camera3dBg.setVisibility(View.GONE);
+                cameraBreakdown.setVisibility(View.GONE);
             }
             SystemProperties.set("tabSelect", String.valueOf(position));
 
@@ -910,16 +1109,16 @@ public class CameraView extends View implements LifecycleOwner {
             KLog.d("tabSelectListener settingView = " + isChangeGear);
             if (settingView.getVisibility() == View.VISIBLE) {
                 settingView.setVisibility(GONE);
-                mViewCameraBinding.liftBg.setVisibility(GONE);
+                liftBg.setVisibility(GONE);
             }
-            if (mViewCameraBinding.infobook.getVisibility() == VISIBLE) {
-                mViewCameraBinding.infobook.setVisibility(GONE);
-                mViewCameraBinding.infoBg.setVisibility(GONE);
-                mViewCameraBinding.liftBg.setVisibility(GONE);
+            if (infobook.getVisibility() == VISIBLE) {
+                infobook.setVisibility(GONE);
+                infoBg.setVisibility(GONE);
+                liftBg.setVisibility(GONE);
             }
             if (rearviewMirrorView.getVisibility() == VISIBLE) {
                 rearviewMirrorView.setVisibility(View.GONE);
-                mViewCameraBinding.liftBg.setVisibility(GONE);
+                liftBg.setVisibility(GONE);
             }
         }
 
@@ -940,22 +1139,22 @@ public class CameraView extends View implements LifecycleOwner {
             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
             return;
         }
-        mViewCameraBinding.segmentWideAngle.setVisibility(VISIBLE);
+        segmentWideAngle.setVisibility(VISIBLE);
         KLog.d("setTabSelect 广角切换 = " + type);
         if (type == bvavmJNI.BW_2D_FRONT_120) {
-            if (tabIndex != -1) mViewCameraBinding.segmentWideAngle.setSelectTab(tabIndex);
+            if (tabIndex != -1) segmentWideAngle.setSelectTab(tabIndex);
         } else if (type == bvavmJNI.BW_2D_REAR_120 || type == bvavmJNI.BW_2D_REAR_UNDISTORT) {
-            if (tabIndex != -1) mViewCameraBinding.segmentWideAngle.setSelectTab(tabIndex);
+            if (tabIndex != -1) segmentWideAngle.setSelectTab(tabIndex);
         } else if (type == bvavmJNI.BW_LEFT_RIGHT_FRONT) {
-            if (tabIndex != -1) mViewCameraBinding.segmentWideAngle.setSelectTab(tabIndex);
+            if (tabIndex != -1) segmentWideAngle.setSelectTab(tabIndex);
         } else {
-            if (tabIndex != -1) mViewCameraBinding.segmentWideAngle.setSelectTab(tabIndex);
+            if (tabIndex != -1) segmentWideAngle.setSelectTab(tabIndex);
         }
 
-        mViewCameraBinding.viewShow2dGroupId.setVisibility(GONE);
-        mViewCameraBinding.viewShow3dGroupId.setVisibility(GONE);
-        mViewCameraBinding.layout2d.setEnabled(false);
-        mViewCameraBinding.layout3d.setEnabled(false);
+        viewShow2dGroupId.setVisibility(GONE);
+        viewShow3dGroupId.setVisibility(GONE);
+        layout2d.setEnabled(false);
+        layout3d.setEnabled(false);
     }
 
     private OnTabSelectListener onTabSelectListener = new OnTabSelectListener() {
@@ -965,25 +1164,25 @@ public class CameraView extends View implements LifecycleOwner {
             AvmRuntime.self().userTap();
             viewModel.setRunning(true);
             if (position == 0) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 2) {
+                if (segmentTab.getCurrentTab() == 2) {
                     CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_120);
                     SystemProperties.set("tabSelectWideAngle", "0");
-//                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.front_wide_angle));
+                    //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.front_wide_angle));
                 }
             } else if (position == 1) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 2) {
+                if (segmentTab.getCurrentTab() == 2) {
                     CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_REAR_120);
                     SystemProperties.set("tabSelectWideAngle", "1");
-//                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.back_wide_angle));
+                    //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.back_wide_angle));
                 }
             } else if (position == 2) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 2) {
+                if (segmentTab.getCurrentTab() == 2) {
                     CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_RIGHT_FRONT);
                     SystemProperties.set("tabSelectWideAngle", "2");
 //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.before));
                 }
             } else if (position == 3) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 2) {
+                if (segmentTab.getCurrentTab() == 2) {
                     CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_RIGHT_BACK);
                     SystemProperties.set("tabSelectWideAngle", "3");
 //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.rear_wheel));
@@ -999,22 +1198,22 @@ public class CameraView extends View implements LifecycleOwner {
     };
 
     private void tabViewInit() {
-        RearviewToast.getInstance().init(mViewCameraBinding.toastBg);
-        mViewCameraBinding.segmentTab.setOnTabSelectListener(tabSelectListener);
-        mViewCameraBinding.segmentWideAngle.setOnTabSelectListener(onTabSelectListener);
-        mViewCameraBinding.cameraIv.setOnClickListener(this::onCameraIv);
+        RearviewToast.getInstance().init(toastBg);
+        segmentTab.setOnTabSelectListener(tabSelectListener);
+        segmentWideAngle.setOnTabSelectListener(onTabSelectListener);
+        cameraIv.setOnClickListener(this::onCameraIv);
     }
 
 
     @SuppressLint("NewApi")
     private void tabView() {
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(mViewCameraBinding.segmentTab.getLayoutParams());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(segmentTab.getLayoutParams());
         //layoutParams.width = (304*getDescValueArray().length);
         layoutParams.leftMargin = 18;
-        mViewCameraBinding.segmentTab.setTabWidth(134.5f);
-        mViewCameraBinding.segmentTab.setBackground(mContext.getResources().getDrawable(R.drawable.tab_selector_thumb));
-        mViewCameraBinding.segmentTab.setLayoutParams(layoutParams);
-        mViewCameraBinding.segmentTab.setTabData(getDescValueArray());
+        segmentTab.setTabWidth(134.5f);
+        segmentTab.setBackground(mContext.getResources().getDrawable(R.drawable.tab_selector_thumb));
+        segmentTab.setLayoutParams(layoutParams);
+        segmentTab.setTabData(getDescValueArray());
 
         int outsideTabIndex = getOutsideTabIndex();
         Log.d("AvmRuntime", "tabView() outsideTabIndex = " + outsideTabIndex);
@@ -1056,59 +1255,59 @@ public class CameraView extends View implements LifecycleOwner {
                     chick2DView(CAMERA_2_D_TOP);
                     KLog.d(" layout2d tabview .......top  ");
                 }
-                mViewCameraBinding.layout2d.setVisibility(View.VISIBLE);
-                mViewCameraBinding.layout3d.setVisibility(View.GONE);
-                mViewCameraBinding.layoutWideAngle.setVisibility(GONE);
-                mViewCameraBinding.cameraImageLayout.setVisibility(VISIBLE);
+                layout2d.setVisibility(View.VISIBLE);
+                layout3d.setVisibility(View.GONE);
+                layoutWideAngle.setVisibility(GONE);
+                cameraImageLayout.setVisibility(VISIBLE);
             } else {
-                mViewCameraBinding.cameraImageLayout.setVisibility(GONE);
+                cameraImageLayout.setVisibility(GONE);
             }
-            mViewCameraBinding.camera2dBg.setVisibility(View.VISIBLE);
-            mViewCameraBinding.camera3dBg.setVisibility(View.GONE);
+            camera2dBg.setVisibility(View.VISIBLE);
+            camera3dBg.setVisibility(View.GONE);
 
         } else if (outsideTabIndex == 1) {
             KLog.d("转向3d前FRONT_3D 2");
 
             if (!isSmartWin) {
-//                camera3DDirection = bvavmJNI.BW_LEFT_FRONT_3D;
-//                CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_FRONT_3D);
-                mViewCameraBinding.layout2d.setVisibility(View.GONE);
-                mViewCameraBinding.layout3d.setVisibility(View.VISIBLE);
-                mViewCameraBinding.layoutWideAngle.setVisibility(GONE);
-                chick3DView(ViewSwitchManager.CAMERA_3_D);
-                mViewCameraBinding.cameraImageLayout.setVisibility(VISIBLE);
+                //                camera3DDirection = bvavmJNI.BW_LEFT_FRONT_3D;
+                //                CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_FRONT_3D);
+                layout2d.setVisibility(View.GONE);
+                layout3d.setVisibility(View.VISIBLE);
+                layoutWideAngle.setVisibility(GONE);
+                chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
+                cameraImageLayout.setVisibility(VISIBLE);
             } else {
-                mViewCameraBinding.cameraImageLayout.setVisibility(GONE);
+                cameraImageLayout.setVisibility(GONE);
             }
             KLog.d("3D+++++ = ");
-            mViewCameraBinding.camera2dBg.setVisibility(View.GONE);
-            mViewCameraBinding.camera3dBg.setVisibility(View.VISIBLE);
+            camera2dBg.setVisibility(View.GONE);
+            camera3dBg.setVisibility(View.VISIBLE);
         } else {
             if (!isSmartWin) {//三分之一屏不显示
-//                camera3DDirection = bvavmJNI.BW_2D_FRONT_120;
-//                CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_120);
-                mViewCameraBinding.layout2d.setVisibility(View.GONE);
-                mViewCameraBinding.layout3d.setVisibility(View.GONE);
-                mViewCameraBinding.cameraImageLayout.setVisibility(View.GONE);
-                mViewCameraBinding.layoutWideAngle.setVisibility(VISIBLE);
+                //                camera3DDirection = bvavmJNI.BW_2D_FRONT_120;
+                //                CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_120);
+                layout2d.setVisibility(View.GONE);
+                layout3d.setVisibility(View.GONE);
+                cameraImageLayout.setVisibility(View.GONE);
+                layoutWideAngle.setVisibility(VISIBLE);
             } else {
-                mViewCameraBinding.layoutWideAngle.setVisibility(GONE);
+                layoutWideAngle.setVisibility(GONE);
             }
-            mViewCameraBinding.camera2dBg.setVisibility(View.GONE);
-            mViewCameraBinding.camera3dBg.setVisibility(View.GONE);
-            mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+            camera2dBg.setVisibility(View.GONE);
+            camera3dBg.setVisibility(View.GONE);
+            cameraBreakdown.setVisibility(View.GONE);
             KLog.d("广角++++ = ");
         }
         // LinearLayout.LayoutParams layoutParamsAg =
-        // new LinearLayout.LayoutParams(mViewCameraBinding.segmentWideAngle.getLayoutParams());
-        mViewCameraBinding.segmentWideAngle.setTabWidth(207);
-        mViewCameraBinding.segmentWideAngle.setBackground(mContext.getResources().getDrawable(R.mipmap.gj_bg));
+        // new LinearLayout.LayoutParams(segmentWideAngle.getLayoutParams());
+        segmentWideAngle.setTabWidth(207);
+        segmentWideAngle.setBackground(mContext.getResources().getDrawable(R.mipmap.gj_bg));
         //layoutParamsAg.width = 720;
         //layoutParamsAg.height = 84;
-        //mViewCameraBinding.segmentWideAngle.setLayoutParams(layoutParamsAg);
-        mViewCameraBinding.segmentWideAngle.setTabData(getWideAngleValueArray());
-        mViewCameraBinding.segmentWideAngle.setTextSelectColor(R.color.setting_view_title_color, 5);
-//        mViewCameraBinding.segmentWideAngle.setSelectTab(0);
+        //segmentWideAngle.setLayoutParams(layoutParamsAg);
+        segmentWideAngle.setTabData(getWideAngleValueArray());
+        segmentWideAngle.setTextSelectColor(R.color.setting_view_title_color, 5);
+        //        segmentWideAngle.setSelectTab(0);
 
         if (isFullWin) updateTabViewIndex();
 
@@ -1143,7 +1342,9 @@ public class CameraView extends View implements LifecycleOwner {
         if (mWindowLps == null) return;
 
         mWindowLps.y = 0;
-        if (isRightView) mWindowLps.x = 1360;
+        if (AvmApp.getInstance().isRight) {
+            mWindowLps.x = 1360;
+        }
         isSmartWin = true;
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width_smart) + 142;
         mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
@@ -1154,18 +1355,18 @@ public class CameraView extends View implements LifecycleOwner {
         clearFocus();
 
         showView();
-        mViewCameraBinding.getRoot().setVisibility(View.VISIBLE);
+        rootView.setVisibility(View.VISIBLE);
 
-        mViewCameraBinding.smartGroupId.setVisibility(GONE);
-        mViewCameraBinding.layoutWideAngle.setVisibility(GONE);
-        mViewCameraBinding.layout2d.setVisibility(GONE);
-        mViewCameraBinding.viewShow2dGroupId.setVisibility(GONE);
-        mViewCameraBinding.cameraImageLayout.setVisibility(GONE);
-        mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
-        mViewCameraBinding.layoutShowFull2d.setVisibility(VISIBLE);
-        mViewCameraBinding.cameraRight.setVisibility(GONE);
-        mViewCameraBinding.cameraLeftFront.setVisibility(GONE);
-        mViewCameraBinding.viewShow3dGroupId.setVisibility(GONE);
+        smartGroupId.setVisibility(GONE);
+        layoutWideAngle.setVisibility(GONE);
+        layout2d.setVisibility(GONE);
+        viewShow2dGroupId.setVisibility(GONE);
+        cameraImageLayout.setVisibility(GONE);
+        cameraImageLayoutLift.setVisibility(GONE);
+        layoutShowFull2d.setVisibility(VISIBLE);
+        cameraRight.setVisibility(GONE);
+        cameraLeftFront.setVisibility(GONE);
+        viewShow3dGroupId.setVisibility(GONE);
         KLog.d("设置：1");
         //viewModel.startTestTimer();
         CameraGLSurfaceView.glStatus = 0;
@@ -1194,19 +1395,19 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
         }
 
-        mViewCameraBinding.smartGroupId.setVisibility(VISIBLE);
+        smartGroupId.setVisibility(VISIBLE);
         mWindowLps.format = PixelFormat.UNKNOWN;
 
         isSmartWin = false;
         isFullWin = true;
         mWindowLps.x = 0;
         mWindowLps.y = 0;
-        mViewCameraBinding.getRoot().setVisibility(View.VISIBLE); // 设置了mWindow。flags之后 修复隐藏状态栏
+        rootView.setVisibility(View.VISIBLE); // 设置了mWindow。flags之后 修复隐藏状态栏
 
         showComm();
         mMainHandler.postDelayed(() -> {
             // 延时隐藏，防止事件冲突
-            mViewCameraBinding.layoutShowFull2d.setVisibility(GONE);
+            layoutShowFull2d.setVisibility(GONE);
             showBottomView();
         }, 200);
     }
@@ -1228,7 +1429,7 @@ public class CameraView extends View implements LifecycleOwner {
 
         isShowing = true;
         hidViewButtonTimer.start(viewPosition);
-        mViewCameraBinding.smartGroupId.setVisibility(VISIBLE);
+        smartGroupId.setVisibility(VISIBLE);
 
         tabView();
         skinView();
@@ -1239,7 +1440,7 @@ public class CameraView extends View implements LifecycleOwner {
 //        AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
         int calibrateBtn = Settings.System.getInt(getContext().getContentResolver(), "avm.calibrate", 0);
         if (calibrateBtn > 0) {
-            mViewCameraBinding.layoutCalibrateId.setVisibility(VISIBLE);
+            layoutCalibrateId.setVisibility(VISIBLE);
         }
         inputViewModel();
         isDismissView = false;
@@ -1248,17 +1449,17 @@ public class CameraView extends View implements LifecycleOwner {
         }
         if (isFullWin) {// R档关闭avm，手动进来不需要记忆视角，需要回到2d后视角
             if (hisPosition > 0) {
-                mViewCameraBinding.segmentTab.setSelectTab(hisPosition);
+                segmentTab.setSelectTab(hisPosition);
                 hisPosition = -1;// R挡的时候需要记忆，广角或3d模式
             }
-            mViewCameraBinding.settingView.checkButton();
+            settingView.checkButton();
         }
 
         rearviewMirrorView.setListener(onVisibilityListener);
         settingView.setListener(onVisibilityListenerSettingView);
         Log.i(TAG, isFullWin + "  isFullWin 显示AVM 结束 showComm isSmartWin： " + isSmartWin);
-        mViewCameraBinding.llSetting.setSelected(false);
-        mViewCameraBinding.llBackMirror.setSelected(false);
+        llSetting.setSelected(false);
+        llBackMirror.setSelected(false);
         if (AvmApp.mAvmRvcState == 1) {
             KLog.d("rvc isShow");
             AvmApp.mAvmRvcState = 0;
@@ -1304,10 +1505,10 @@ public class CameraView extends View implements LifecycleOwner {
         @Override
         public void Visibility(boolean isVisibility) {// 取消按钮高亮
             if (settingView.getVisibility() == GONE) {
-                mViewCameraBinding.llSetting.setSelected(false);
+                llSetting.setSelected(false);
             }
             if (rearviewMirrorView.getVisibility() == GONE) {
-                mViewCameraBinding.llBackMirror.setSelected(false);
+                llBackMirror.setSelected(false);
             }
         }
     };
@@ -1315,33 +1516,33 @@ public class CameraView extends View implements LifecycleOwner {
         @Override
         public void Visibility(boolean isVisibility) {// 取消按钮高亮
             if (settingView.getVisibility() == GONE) {
-                mViewCameraBinding.llSetting.setSelected(false);
+                llSetting.setSelected(false);
             }
             if (rearviewMirrorView.getVisibility() == GONE) {
-                mViewCameraBinding.llBackMirror.setSelected(false);
+                llBackMirror.setSelected(false);
             }
         }
     };
 
     private void setCameraViewLayer() {
-        int left = mViewCameraBinding.mainAvmViewRootId.getPaddingLeft();
-        int right = mViewCameraBinding.mainAvmViewRootId.getPaddingRight();
+        int left = mainAvmViewRootId.getPaddingLeft();
+        int right = mainAvmViewRootId.getPaddingRight();
         int bottom = 0;
-        int top = mViewCameraBinding.mainAvmViewRootId.getPaddingTop();
+        int top = mainAvmViewRootId.getPaddingTop();
         KLog.i("mWindowLps.height....... " + mWindowLps.height + "mWindowLps.wight...  " + mWindowLps.width);
         KLog.i("mWindowLps.height.......isSmartWin " + isSmartWin);
         if (mWindowLps.height == 1080) {
-            mViewCameraBinding.viewFrame.setPadding(0, 0, 0, 0);
+            viewFrame.setPadding(0, 0, 0, 0);
             bottom = 90;
         } else {
             if (isSmartWin) {
-                mViewCameraBinding.viewFrame.setPadding(40, 0, 105, 40);
+                viewFrame.setPadding(40, 0, 105, 40);
             } else if (isFullWin) {
-                mViewCameraBinding.viewFrame.setPadding(0, 0, 0, 0);
+                viewFrame.setPadding(0, 0, 0, 0);
             }
         }
         KLog.i("mWindowLps.height ....1.... left top right bottom : " + left + ", " + top + ", " + right + ", " + bottom);
-        mViewCameraBinding.mainAvmViewRootId.setPadding(left, top, right, bottom);
+        mainAvmViewRootId.setPadding(left, top, right, bottom);
     }
 
 
@@ -1350,33 +1551,33 @@ public class CameraView extends View implements LifecycleOwner {
      */
     @SuppressLint("WrongConstant")
     private void updateWind() {
-        boolean attachedToWindow = mViewCameraBinding.getRoot().isAttachedToWindow();
+        boolean attachedToWindow = rootView.isAttachedToWindow();
         mWindowLps.alpha = 0.0f;
-//      KLog.d("窗口层级 mWindowLpsBottom："+mWindowLpsBottom);
+        //      KLog.d("窗口层级 mWindowLpsBottom："+mWindowLpsBottom);
 
         cameraBinding.frameLayoutId.setVisibility(GONE);
-        if (mViewCameraBinding.getRoot().getParent() == null && !attachedToWindow) {
+        if (rootView.getParent() == null && !attachedToWindow) {
             if (SHOW_OVERLAY_LAYER) mWindowManager.addView(cameraBinding.getRoot(), mWindowLps);
-            mWindowManager.addView(mViewCameraBinding.getRoot(), mWindowLps);
+            mWindowManager.addView(rootView, mWindowLps);
             return;
         }
-        mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
+        mWindowManager.updateViewLayout(rootView, mWindowLps);
         if (SHOW_OVERLAY_LAYER)
             mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
     }
 
     public View getRootView() {
-        if (mViewCameraBinding == null) return null;
+        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return null;
 
-        return mViewCameraBinding.getRoot();
+        return rootView;
     }
 
     //R档时如果是2D状态，默认显示倒车视角及显示2D切换图标
     public void show2DView() {
-        if (mViewCameraBinding.segmentTab.getCurrentTab() == 0) {
+        if (segmentTab.getCurrentTab() == 0) {
             KLog.d(" layout2d show2DView ");
-            mViewCameraBinding.layout2d.setVisibility(View.VISIBLE);
-            mViewCameraBinding.layout3d.setVisibility(View.GONE);
+            layout2d.setVisibility(View.VISIBLE);
+            layout3d.setVisibility(View.GONE);
             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_REAR_UNDISTORT);
             bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
             viewModel.setLiveDataCamera2DTopUI(ViewSwitchManager.CAMERA_2_D_BOTTOM);
@@ -1386,24 +1587,31 @@ public class CameraView extends View implements LifecycleOwner {
     //雷达提示音显隐
     public void showRadarSoundView(int isVisible) {
         KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible);
-        if (mViewCameraBinding == null) return;
-
-        if (0 < isVisible && isVisible < 6) {
-            //隐藏掉雷达提示音
-            //mViewCameraBinding.radarSoundLayout.setVisibility(VISIBLE);
-            mViewCameraBinding.radarSoundLayout.setVisibility(GONE);
-            mViewCameraBinding.radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_sel));
-        } else {
-            mViewCameraBinding.radarSoundLayout.setVisibility(GONE);
+        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return;
+        if ((radarSoundLayout.getVisibility() == VISIBLE && isVisible == 1) ||
+                (radarSoundLayout.getVisibility() == GONE && isVisible != 1)) {
+            KLog.d("雷达提示音 is show or hide ");
+            return;
         }
+        KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible);
+        if (isVisible==1) {
+            //隐藏掉雷达提示音
+            radarSoundLayout.setVisibility(VISIBLE);
+        } else {
+            radarSoundLayout.setVisibility(GONE);
+        }
+        //获取当前雷达音开关状态
+        int status = CanManager.getInstance().getIntStatus(ASSIST_DRIVE_PAS_BUTTON_PRESS, 0);
+        radarSoundIv.setImageDrawable(mContext.getDrawable(status == 1 ? R.mipmap.ic_radar_sound_sel
+                : R.mipmap.ic_radar_sound_nor));
     }
 
     //雷达故障提示显隐
     public void showParkingAssistView(int isVisible) {
         if (isVisible == 0) {
-            mViewCameraBinding.parkingAssistLayout.setVisibility(GONE);
+            parkingAssistLayout.setVisibility(GONE);
         } else {
-            mViewCameraBinding.parkingAssistLayout.setVisibility(VISIBLE);
+            parkingAssistLayout.setVisibility(VISIBLE);
         }
     }
 
@@ -1424,7 +1632,7 @@ public class CameraView extends View implements LifecycleOwner {
         isSmartWin = false;
         isShowing = false;
         isDismissView = true;
-        boolean attachedToWindow = mViewCameraBinding.getRoot().isAttachedToWindow();
+        boolean attachedToWindow = rootView.isAttachedToWindow();
         boolean attachedToWindowcameraBinding = cameraBinding.getRoot().isAttachedToWindow();
         KLog.d(attachedToWindowcameraBinding + " attachedToWindowcameraBinding dismissView attached = " + attachedToWindow);
         mWindowLps.alpha = 0.0f;
@@ -1439,10 +1647,10 @@ public class CameraView extends View implements LifecycleOwner {
             if (SHOW_OVERLAY_LAYER)
                 mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
         }
-        Log.d("AvmRuntime", "dismissView() mViewCameraBinding.getRoot().getParent() is " + mViewCameraBinding.getRoot().getParent());
-        if (mViewCameraBinding.getRoot().getParent() != null) {
-            mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
-            mViewCameraBinding.getRoot().setVisibility(View.GONE);
+        Log.d("AvmRuntime", "dismissView() rootView.getParent() is " + rootView.getParent());
+        if (rootView.getParent() != null) {
+            mWindowManager.updateViewLayout(rootView, mWindowLps);
+            rootView.setVisibility(View.GONE);
         }
 
         //释放摄像头画面数据
@@ -1451,73 +1659,73 @@ public class CameraView extends View implements LifecycleOwner {
 //        AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(0);
         if (settingView.getVisibility() == View.VISIBLE) {
             settingView.setVisibility(GONE);
-            mViewCameraBinding.liftBg.setVisibility(GONE);
+            liftBg.setVisibility(GONE);
         }
-        if (mViewCameraBinding.infobook.getVisibility() == VISIBLE) {
-            mViewCameraBinding.infobook.setVisibility(GONE);
-            mViewCameraBinding.infoBg.setVisibility(GONE);
-            mViewCameraBinding.liftBg.setVisibility(GONE);
+        if (infobook.getVisibility() == VISIBLE) {
+            infobook.setVisibility(GONE);
+            infoBg.setVisibility(GONE);
+            liftBg.setVisibility(GONE);
         }
         if (rearviewMirrorView.getVisibility() == VISIBLE) {
             rearviewMirrorView.setVisibility(View.GONE);
-            mViewCameraBinding.liftBg.setVisibility(GONE);
+            liftBg.setVisibility(GONE);
         }
         CameraGLSurfaceView.glStatus = 0;
     }
 
     public void removeView() {
-        if (mViewCameraBinding == null) return;
-        boolean attachedToWindow = mViewCameraBinding.getRoot().isAttachedToWindow();
+        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return;
+        boolean attachedToWindow = rootView.isAttachedToWindow();
         if (attachedToWindow) {
-            mWindowManager.removeView(mViewCameraBinding.getRoot());
+            mWindowManager.removeView(rootView);
             if (SHOW_OVERLAY_LAYER) mWindowManager.removeView(cameraBinding.getRoot());
         }
     }
 
     public void setBtnSettingSelectView(boolean btnSettingSelect) {
         this.btnSettingSelect = btnSettingSelect;
-        mViewCameraBinding.llBackMirror.setSelected(false);
+        llBackMirror.setSelected(false);
         if (settingView.getVisibility() == View.VISIBLE) {
             settingView.closeUI(true);
-            mViewCameraBinding.infobook.setVisibility(GONE);
+            infobook.setVisibility(GONE);
             settingView.setVisibility(GONE);
-            mViewCameraBinding.liftBg.setVisibility(GONE);
-            mViewCameraBinding.llSetting.setSelected(false);
-            mViewCameraBinding.infoBg.setVisibility(GONE);
+            liftBg.setVisibility(GONE);
+            llSetting.setSelected(false);
+            infoBg.setVisibility(GONE);
 
         } else {
             settingView.setVisibility(View.VISIBLE);
-            mViewCameraBinding.liftBg.setVisibility(VISIBLE);
-            mViewCameraBinding.llSetting.setSelected(true);
+            liftBg.setVisibility(VISIBLE);
+            llSetting.setSelected(true);
         }
         rearviewMirrorView.setVisibility(GONE);
-//        startCalibration();
+        //        startCalibration();
         KLog.d("btnSettingSelect = " + btnSettingSelect);
 
     }
 
     public void setBtnRearSelectView(boolean btnRearSelect) {
         this.btnRearSelect = btnRearSelect;
-        mViewCameraBinding.llSetting.setSelected(false);
+        llSetting.setSelected(false);
         settingView.setVisibility(GONE);
-        if (mViewCameraBinding.infobook.getVisibility() == VISIBLE) {
-            mViewCameraBinding.infobook.setVisibility(GONE);
-            mViewCameraBinding.infoBg.setVisibility(GONE);
-            mViewCameraBinding.liftBg.setVisibility(GONE);
+        if (infobook.getVisibility() == VISIBLE) {
+            infobook.setVisibility(GONE);
+            infoBg.setVisibility(GONE);
+            liftBg.setVisibility(GONE);
         }
         if (rearviewMirrorView.getVisibility() == VISIBLE) {
             rearviewMirrorView.setVisibility(View.GONE);
-            mViewCameraBinding.llBackMirror.setSelected(false);
-            mViewCameraBinding.liftBg.setVisibility(GONE);
+            llBackMirror.setSelected(false);
+            liftBg.setVisibility(GONE);
         } else {
-            mViewCameraBinding.llBackMirror.setSelected(true);
+            llBackMirror.setSelected(true);
             rearviewMirrorView.setVisibility(View.VISIBLE);
-//            rearviewMirrorView.skinView();
-            mViewCameraBinding.liftBg.setVisibility(VISIBLE);
+            //            rearviewMirrorView.skinView();
+            liftBg.setVisibility(VISIBLE);
         }
         KLog.d("setBtnRearSelectView = " + btnRearSelect);
         if (AvmRuntime.self().isRearGearSts()) {
-            mViewCameraBinding.rearviewMirrorView.setRearviewMirrorDownViewStatus(1);
+            rearviewMirrorView.setRearviewMirrorDownViewStatus(1);
         }
     }
 
@@ -1547,9 +1755,9 @@ public class CameraView extends View implements LifecycleOwner {
     public boolean onTouch(View v, MotionEvent event) {
         viewModel.setRunning(true);
 
-        if (mViewCameraBinding.infobook.getVisibility() != VISIBLE)
-            mViewCameraBinding.llSetting.setSelected(false);
-        mViewCameraBinding.llBackMirror.setSelected(false);
+        if (infobook.getVisibility() != VISIBLE)
+            llSetting.setSelected(false);
+        llBackMirror.setSelected(false);
         KLog.i("onTouch: viewPosition=" + viewPosition);
         //去掉这个判断，避免2D跟广角无法点击屏幕消失设置跟后视镜
         /*if (viewPosition != 1) {
@@ -1565,9 +1773,9 @@ public class CameraView extends View implements LifecycleOwner {
                 if (rearviewMirrorView.getVisibility() == View.VISIBLE) {
                     rearviewMirrorView.setVisibility(GONE);
                 }
-                if (settingView.getVisibility() == VISIBLE && mViewCameraBinding.infobook.getVisibility() != VISIBLE) {
+                if (settingView.getVisibility() == VISIBLE && infobook.getVisibility() != VISIBLE) {
                     settingView.setVisibility(GONE);
-                    mViewCameraBinding.liftBg.setVisibility(GONE);
+                    liftBg.setVisibility(GONE);
                 }
                 // 按下时，为开始坐标
                 touch_x = (int) event.getRawX();
@@ -1588,7 +1796,7 @@ public class CameraView extends View implements LifecycleOwner {
                 int endY = (int) event.getRawY();
                 //蒙版存在的时候不可以拖动
                 // 先不做计算处理
-                if (viewPosition == 1 && mViewCameraBinding.infoBg.getVisibility() != VISIBLE) {
+                if (viewPosition == 1 && infoBg.getVisibility() != VISIBLE) {
                     //3D的时候拖动车模
                     KLog.i(endX + " startX开始拖动车模bwSetTouchScreenPos " + endY);
                     int finalTouch_x = endX;
@@ -1599,19 +1807,19 @@ public class CameraView extends View implements LifecycleOwner {
                             KLog.i("滑动车模角度touchPos  " + touchPos);
                             if (touchIndex != touchPos) {
                                 if (touchPos == 1) {
-                                    mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftfront));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftfront));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
                                 } else if (touchPos == 2) {
-                                    mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftback));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftback));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_REAR);
                                 } else if (touchPos == 3) {
-                                    mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_RIGHT_FRONT);
                                 } else if (touchPos == 4) {
-                                    mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightback));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightback));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_RIGHT_REAR);
                                 }
@@ -1633,19 +1841,19 @@ public class CameraView extends View implements LifecycleOwner {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                mViewCameraBinding.llBackMirror.setSelected(false);
-                mViewCameraBinding.llSetting.setSelected(false);
+                llBackMirror.setSelected(false);
+                llSetting.setSelected(false);
                 if (rearviewMirrorView.getVisibility() == View.VISIBLE) {
                     rearviewMirrorView.setVisibility(GONE);
                 }
                 if (settingView.getVisibility() == VISIBLE) {
                     settingView.setVisibility(GONE);
-                    mViewCameraBinding.liftBg.setVisibility(GONE);
+                    liftBg.setVisibility(GONE);
                 }
-                if (mViewCameraBinding.infobook.getVisibility() == VISIBLE) {
-                    mViewCameraBinding.infobook.setVisibility(GONE);
-                    mViewCameraBinding.infoBg.setVisibility(GONE);
-                    mViewCameraBinding.liftBg.setVisibility(GONE);
+                if (infobook.getVisibility() == VISIBLE) {
+                    infobook.setVisibility(GONE);
+                    infoBg.setVisibility(GONE);
+                    liftBg.setVisibility(GONE);
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -1674,7 +1882,7 @@ public class CameraView extends View implements LifecycleOwner {
             switch (what) {
                 case CALIBRATION_SHOW_WINDOW:
                     KLog.w("CALIBRATION_SHOW_WINDOW");
-                    mViewCameraBinding.calibration.setVisibility(VISIBLE);
+                    calibration.setVisibility(VISIBLE);
                     viewModel.startTimer();
                     break;
             }
@@ -1692,14 +1900,14 @@ public class CameraView extends View implements LifecycleOwner {
         public void start(int type) {
             this.type = type;
             if (type == 0) {
-                KLog.d(" layout2d start " + mViewCameraBinding.segmentTab.getCurrentTab());
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 0) {
-                    mViewCameraBinding.viewShow2dGroupId.setVisibility(VISIBLE);
+                KLog.d(" layout2d start " + segmentTab.getCurrentTab());
+                if (segmentTab.getCurrentTab() == 0) {
+                    viewShow2dGroupId.setVisibility(VISIBLE);
                 }
 
             } else {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {
-                    mViewCameraBinding.viewShow3dGroupId.setVisibility(VISIBLE);
+                if (segmentTab.getCurrentTab() == 1) {
+                    viewShow3dGroupId.setVisibility(VISIBLE);
                 }
 //                mViewCameraBinding.cameraRightRear.setVisibility(VISIBLE);
             }
@@ -1719,10 +1927,10 @@ public class CameraView extends View implements LifecycleOwner {
         public void onFinish() {
 
             if (type == 0) {
-                mViewCameraBinding.viewShow2dGroupId.setVisibility(GONE);
+                viewShow2dGroupId.setVisibility(GONE);
             } else {
-                mViewCameraBinding.viewShow3dGroupId.setVisibility(GONE);
-//                mViewCameraBinding.cameraRightRear.setVisibility(GONE);
+                viewShow3dGroupId.setVisibility(GONE);
+                //                cameraRightRear.setVisibility(GONE);
             }
         }
     }
@@ -1749,8 +1957,12 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     public void setRadar(int model, int len) {
-
-//        mViewCameraBinding.rearRadarViewId.status(model, len);
+        if(model == CLUSTER_PAS_RLDistance || model == CLUSTER_PAS_RLMidDistance
+                || model == CLUSTER_PAS_RRDistance || model == CLUSTER_PAS_RRMidDistance) {
+            rearRadarViewId.status(model, len);
+        } else {
+            rearRadarFrontViewId.status(model, len);
+        }
     }
 
 
@@ -1786,42 +1998,42 @@ public class CameraView extends View implements LifecycleOwner {
         }
 
         if (msg == bvavmJNI.BWAVM_MSG_CAMERA2_STATUS) {
-            if (mViewCameraBinding.segmentTab.getCurrentTab() == 0) {//2D
+            if (segmentTab.getCurrentTab() == 0) {//2D
                 switch (param1) {
                     case bvavmJNI.BWAVM_FRONT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            mViewCameraBinding.cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraTop.setRotation(0);
+                            cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraTop.setRotation(0);
                             SystemProperties.set("BWAVM_FRONT_CAM_ID", String.valueOf(0));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                                cameraBreakdown.setVisibility(View.GONE);
                             }, 200);
                         } else {
                             cameraStatus = true;
-                            mViewCameraBinding.cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraTop.setRotation(0);
+                            cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraTop.setRotation(0);
                             SystemProperties.set("BWAVM_FRONT_CAM_ID", String.valueOf(1));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                                cameraBreakdown.setVisibility(View.VISIBLE);
                             }, 200);
                         }
                     }
                     break;
                     case bvavmJNI.BWAVM_REAR_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            mViewCameraBinding.cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraBottom.setRotation(180);
+                            cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraBottom.setRotation(180);
                             SystemProperties.set("BWAVM_REAR_CAM_ID", String.valueOf(0));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                                cameraBreakdown.setVisibility(View.GONE);
                             }, 200);
                         } else {
                             cameraStatus = true;
-                            mViewCameraBinding.cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraBottom.setRotation(180);
+                            cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraBottom.setRotation(180);
                             SystemProperties.set("BWAVM_REAR_CAM_ID", String.valueOf(1));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                                cameraBreakdown.setVisibility(View.VISIBLE);
                             }, 200);
                         }
 
@@ -1829,38 +2041,38 @@ public class CameraView extends View implements LifecycleOwner {
                     break;
                     case bvavmJNI.BWAVM_LEFT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            mViewCameraBinding.cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraLift.setRotation(270);
+                            cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraLift.setRotation(270);
                             SystemProperties.set("BWAVM_LEFT_CAM_ID", String.valueOf(0));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                                cameraBreakdown.setVisibility(View.GONE);
                             }, 200);
                         } else {
                             cameraStatus = true;
-                            mViewCameraBinding.cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraLift.setRotation(270);
+                            cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraLift.setRotation(270);
                             SystemProperties.set("BWAVM_LEFT_CAM_ID", String.valueOf(1));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                                cameraBreakdown.setVisibility(View.VISIBLE);
                             }, 200);
                         }
                     }
                     break;
                     case bvavmJNI.BWAVM_RIGHT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            mViewCameraBinding.cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraRight.setRotation(90);
+                            cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraRight.setRotation(90);
                             SystemProperties.set("BWAVM_RIGHT_CAM_ID", String.valueOf(0));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                                cameraBreakdown.setVisibility(View.GONE);
                             }, 200);
                         } else {
                             cameraStatus = true;
-                            mViewCameraBinding.cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraRight.setRotation(90);
+                            cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraRight.setRotation(90);
                             SystemProperties.set("BWAVM_RIGHT_CAM_ID", String.valueOf(1));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                                cameraBreakdown.setVisibility(View.VISIBLE);
                             }, 200);
                         }
                     }
@@ -1869,52 +2081,52 @@ public class CameraView extends View implements LifecycleOwner {
                         break;
                 }
 
-            } else if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {//3D
+            } else if (segmentTab.getCurrentTab() == 1) {//3D
                 switch (param1) {
                     case bvavmJNI.BWAVM_FRONT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            mViewCameraBinding.cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraLeftFront.setRotation(150);
+                            cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraLeftFront.setRotation(150);
 
-                            mViewCameraBinding.cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraRightFront.setRotation(210);
+                            cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraRightFront.setRotation(210);
                             SystemProperties.set("BWAVM_FRONT_CAM_ID_1", String.valueOf(0));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                                cameraBreakdown.setVisibility(View.GONE);
                             }, 200);
                         } else {
-                            mViewCameraBinding.cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraLeftFront.setRotation(150);
+                            cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraLeftFront.setRotation(150);
 
-                            mViewCameraBinding.cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraRightFront.setRotation(210);
+                            cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraRightFront.setRotation(210);
                             SystemProperties.set("BWAVM_FRONT_CAM_ID_1", String.valueOf(1));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                                cameraBreakdown.setVisibility(View.VISIBLE);
                             }, 200);
                         }
                     }
                     break;
                     case bvavmJNI.BWAVM_REAR_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            mViewCameraBinding.cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraRightRear.setRotation(320);
+                            cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraRightRear.setRotation(320);
 
-                            mViewCameraBinding.cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraLeftRear.setRotation(30);
+                            cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraLeftRear.setRotation(30);
                             SystemProperties.set("BWAVM_REAR_CAM_ID_1", String.valueOf(0));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                                cameraBreakdown.setVisibility(View.GONE);
                             }, 200);
                         } else {
-                            mViewCameraBinding.cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraRightRear.setRotation(320);
+                            cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraRightRear.setRotation(320);
 
-                            mViewCameraBinding.cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraLeftRear.setRotation(30);
+                            cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraLeftRear.setRotation(30);
                             SystemProperties.set("BWAVM_REAR_CAM_ID_1", String.valueOf(1));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                                cameraBreakdown.setVisibility(View.VISIBLE);
                             }, 200);
                         }
 
@@ -1922,24 +2134,24 @@ public class CameraView extends View implements LifecycleOwner {
                     break;
                     case bvavmJNI.BWAVM_LEFT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            mViewCameraBinding.cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraLeftFront.setRotation(150);
+                            cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraLeftFront.setRotation(150);
 
-                            mViewCameraBinding.cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraLeftRear.setRotation(30);
+                            cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraLeftRear.setRotation(30);
                             SystemProperties.set("BWAVM_LEFT_CAM_ID_1", String.valueOf(0));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                                cameraBreakdown.setVisibility(View.GONE);
                             }, 200);
                         } else {
-                            mViewCameraBinding.cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraLeftFront.setRotation(150);
+                            cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraLeftFront.setRotation(150);
 
-                            mViewCameraBinding.cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraLeftRear.setRotation(30);
+                            cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraLeftRear.setRotation(30);
                             SystemProperties.set("BWAVM_LEFT_CAM_ID_1", String.valueOf(1));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                                cameraBreakdown.setVisibility(View.VISIBLE);
                             }, 200);
                         }
 
@@ -1947,24 +2159,24 @@ public class CameraView extends View implements LifecycleOwner {
                     break;
                     case bvavmJNI.BWAVM_RIGHT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            mViewCameraBinding.cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraRightFront.setRotation(210);
+                            cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraRightFront.setRotation(210);
 
-                            mViewCameraBinding.cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            mViewCameraBinding.cameraRightRear.setRotation(320);
+                            cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraRightRear.setRotation(320);
                             SystemProperties.set("BWAVM_RIGHT_CAM_ID_1", String.valueOf(0));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                                cameraBreakdown.setVisibility(View.GONE);
                             }, 200);
                         } else {
-                            mViewCameraBinding.cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraRightFront.setRotation(210);
+                            cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraRightFront.setRotation(210);
 
-                            mViewCameraBinding.cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            mViewCameraBinding.cameraRightRear.setRotation(320);
+                            cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraRightRear.setRotation(320);
                             SystemProperties.set("BWAVM_RIGHT_CAM_ID_1", String.valueOf(1));
                             mMainHandler.postDelayed(() -> {
-                                mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                                cameraBreakdown.setVisibility(View.VISIBLE);
                             }, 200);
                         }
                     }
@@ -1982,12 +2194,12 @@ public class CameraView extends View implements LifecycleOwner {
         UiModeManager uiModeManager = (UiModeManager) mContext.getSystemService(Context.UI_MODE_SERVICE);
         int uiMode = uiModeManager.getNightMode();
         KLog.e("skinView: isSmartWin " + isSmartWin);
-        if (mViewCameraBinding == null) {
+        if (mViewCameraBinding == null && mViewCameraRightBinding == null) {
             return;
         }
         if (isSmartWin) {
-            mViewCameraBinding.mainAvmViewRootId.setBackgroundColor(Color.TRANSPARENT);
-            mViewCameraBinding.mainAvmViewRootId.invalidate();
+            mainAvmViewRootId.setBackgroundColor(Color.TRANSPARENT);
+            mainAvmViewRootId.invalidate();
             return;
         }
         settingView.skinView(uiMode);
@@ -2000,34 +2212,34 @@ public class CameraView extends View implements LifecycleOwner {
                 bvavmJNI.bwSetIsDay(0);
                 if (SHOW_OVERLAY_LAYER)
                     cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg));
-                mViewCameraBinding.mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg));
-                mViewCameraBinding.cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg);
-                mViewCameraBinding.ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_default_56));
-                mViewCameraBinding.tvBreakdown.setTextColor(mContext.getResources().getColor(R.color.test_color_D9));
-                mViewCameraBinding.llSetting.setBackgroundResource(R.drawable.button_select);
-                mViewCameraBinding.llBackMirror.setBackgroundResource(R.drawable.button_select);
-                mViewCameraBinding.ivSetting.setImageDrawable(mContext.getDrawable(R.drawable.button_select_iv_setting));
-                mViewCameraBinding.ivBackMirror.setImageDrawable(mContext.getDrawable(R.drawable.button_select_iv_mirror));
-                mViewCameraBinding.segmentTab.setThumbDrawable(R.drawable.tab_selector_thumb);
-                mViewCameraBinding.segmentTab.setThumbDrawable3(R.drawable.tab_selector_thumb);
-                mViewCameraBinding.segmentTab.setThumbDrawable2(R.drawable.tan_selector_camera_thumb);
-                mViewCameraBinding.segmentTab.setBackground(mContext.getResources().getDrawable(R.drawable.tab_selector_thumb));
-                mViewCameraBinding.segmentTab.setTextSelectColor(R.color.setting_view_title_color, 1);
-                mViewCameraBinding.segmentTab.setTextUnselectColor(R.color.setting_view_content_color);
-                mViewCameraBinding.manualCalibration.setTextColor(mContext.getResources().getColor(R.color.setting_view_bg));
-                mViewCameraBinding.automaticCalibration.setTextColor(mContext.getResources().getColor(R.color.setting_view_bg));
-                mViewCameraBinding.infobook.setBackgroundResource(R.drawable.shape_bg_nor);
-                mViewCameraBinding.infoTitle.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color));
-                mViewCameraBinding.infoContent.setTextColor(mContext.getResources().getColor(R.color.setting_view_content_color));
-                mViewCameraBinding.infoOk.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color));
-                mViewCameraBinding.infoOk.setBackgroundResource(R.drawable.shape_text_bg_nor);
-//                mViewCameraBinding.rearRadarImgId.setBackgroundResource(R.mipmap.rada_distance_30);
+                mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg));
+                cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg);
+                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_default_56));
+                tvBreakdown.setTextColor(mContext.getResources().getColor(R.color.test_color_D9));
+                llSetting.setBackgroundResource(R.drawable.button_select);
+                llBackMirror.setBackgroundResource(R.drawable.button_select);
+                ivSetting.setImageDrawable(mContext.getDrawable(R.drawable.button_select_iv_setting));
+                ivBackMirror.setImageDrawable(mContext.getDrawable(R.drawable.button_select_iv_mirror));
+                segmentTab.setThumbDrawable(R.drawable.tab_selector_thumb);
+                segmentTab.setThumbDrawable3(R.drawable.tab_selector_thumb);
+                segmentTab.setThumbDrawable2(R.drawable.tan_selector_camera_thumb);
+                segmentTab.setBackground(mContext.getResources().getDrawable(R.drawable.tab_selector_thumb));
+                segmentTab.setTextSelectColor(R.color.setting_view_title_color, 1);
+                segmentTab.setTextUnselectColor(R.color.setting_view_content_color);
+                manualCalibration.setTextColor(mContext.getResources().getColor(R.color.setting_view_bg));
+                automaticCalibration.setTextColor(mContext.getResources().getColor(R.color.setting_view_bg));
+                infobook.setBackgroundResource(R.drawable.shape_bg_nor);
+                infoTitle.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color));
+                infoContent.setTextColor(mContext.getResources().getColor(R.color.setting_view_content_color));
+                infoOk.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color));
+                infoOk.setBackgroundResource(R.drawable.shape_text_bg_nor);
+                rearRadarImgId.setBackgroundResource(R.mipmap.rada_distance_30);
 
-                if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID) {
-                    mViewCameraBinding.segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle);
-                    mViewCameraBinding.segmentWideAngle.setBackground(mContext.getResources().getDrawable(R.mipmap.gj_bg));
-                    mViewCameraBinding.segmentWideAngle.setTextSelectColor(R.color.setting_view_title_color, 5);
-                    mViewCameraBinding.segmentWideAngle.setTextUnselectColor(R.color.setting_view_content_color);
+                if (AvmApp.ISAY5T) {
+                    segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle);
+                    segmentWideAngle.setBackground(mContext.getResources().getDrawable(R.mipmap.gj_bg));
+                    segmentWideAngle.setTextSelectColor(R.color.setting_view_title_color, 5);
+                    segmentWideAngle.setTextUnselectColor(R.color.setting_view_content_color);
                 }
                 break;
             case UiModeManager.MODE_NIGHT_NO:
@@ -2037,36 +2249,36 @@ public class CameraView extends View implements LifecycleOwner {
                 bvavmJNI.bwSetIsDay(1);
                 if (SHOW_OVERLAY_LAYER)
                     cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
-                mViewCameraBinding.mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
-                mViewCameraBinding.cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg_day);
-                mViewCameraBinding.ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_default_56_day));
-                mViewCameraBinding.tvBreakdown.setTextColor(mContext.getResources().getColor(R.color.test_color_0A1532));
-                mViewCameraBinding.llSetting.setBackgroundResource(R.drawable.button_select_day);
-                mViewCameraBinding.llBackMirror.setBackgroundResource(R.drawable.button_select_day);
-                mViewCameraBinding.ivSetting.setImageDrawable(mContext.getDrawable(R.drawable.button_select_iv_setting_day));
-                mViewCameraBinding.ivBackMirror.setImageDrawable(mContext.getDrawable(R.drawable.button_select_iv_mirror_day));
-                mViewCameraBinding.segmentTab.setThumbDrawable(R.drawable.tab_selector_thumb_day);
-                mViewCameraBinding.segmentTab.setThumbDrawable3(R.drawable.tab_selector_thumb_day);
-                mViewCameraBinding.segmentTab.setThumbDrawable2(R.drawable.tan_selector_camera_thumb_day);
-                mViewCameraBinding.segmentTab.setBackground(mContext.getResources().getDrawable(R.drawable.tab_selector_thumb_day));
-                mViewCameraBinding.segmentTab.setTextSelectColor(R.color.setting_view_title_color_day, 1);
-                mViewCameraBinding.segmentTab.setTextUnselectColor(R.color.setting_view_content_color_day);
-                mViewCameraBinding.manualCalibration.setTextColor(mContext.getResources().getColor(R.color.white));
-                mViewCameraBinding.automaticCalibration.setTextColor(mContext.getResources().getColor(R.color.white));
+                mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
+                cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg_day);
+                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_default_56_day));
+                tvBreakdown.setTextColor(mContext.getResources().getColor(R.color.test_color_0A1532));
+                llSetting.setBackgroundResource(R.drawable.button_select_day);
+                llBackMirror.setBackgroundResource(R.drawable.button_select_day);
+                ivSetting.setImageDrawable(mContext.getDrawable(R.drawable.button_select_iv_setting_day));
+                ivBackMirror.setImageDrawable(mContext.getDrawable(R.drawable.button_select_iv_mirror_day));
+                segmentTab.setThumbDrawable(R.drawable.tab_selector_thumb_day);
+                segmentTab.setThumbDrawable3(R.drawable.tab_selector_thumb_day);
+                segmentTab.setThumbDrawable2(R.drawable.tan_selector_camera_thumb_day);
+                segmentTab.setBackground(mContext.getResources().getDrawable(R.drawable.tab_selector_thumb_day));
+                segmentTab.setTextSelectColor(R.color.setting_view_title_color_day, 1);
+                segmentTab.setTextUnselectColor(R.color.setting_view_content_color_day);
+                manualCalibration.setTextColor(mContext.getResources().getColor(R.color.white));
+                automaticCalibration.setTextColor(mContext.getResources().getColor(R.color.white));
 
-                mViewCameraBinding.infobook.setBackgroundResource(R.drawable.shape_bg_nor_day);
-                mViewCameraBinding.infoTitle.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color_day));
-                mViewCameraBinding.infoContent.setTextColor(mContext.getResources().getColor(R.color.setting_view_content_color_day));
-                mViewCameraBinding.infoOk.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color_day));
-                mViewCameraBinding.infoOk.setBackgroundResource(R.drawable.shape_text_bg_nor_day);
-                //mViewCameraBinding.rearRadarImgId.setImageDrawable(mContext.getDrawable(R.mipmap.rada_distance_30_day));
+                infobook.setBackgroundResource(R.drawable.shape_bg_nor_day);
+                infoTitle.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color_day));
+                infoContent.setTextColor(mContext.getResources().getColor(R.color.setting_view_content_color_day));
+                infoOk.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color_day));
+                infoOk.setBackgroundResource(R.drawable.shape_text_bg_nor_day);
+                //rearRadarImgId.setImageDrawable(mContext.getDrawable(R.mipmap.rada_distance_30_day));
 
 
-                if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID) {
-                    mViewCameraBinding.segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle_day);
-                    mViewCameraBinding.segmentWideAngle.setBackground(mContext.getResources().getDrawable(R.mipmap.gj_bg_day));
-                    mViewCameraBinding.segmentWideAngle.setTextSelectColor(R.color.setting_view_title_color_day, 5);
-                    mViewCameraBinding.segmentWideAngle.setTextUnselectColor(R.color.setting_view_content_color_day);
+                if (AvmApp.ISAY5T) {
+                    segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle_day);
+                    segmentWideAngle.setBackground(mContext.getResources().getDrawable(R.mipmap.gj_bg_day));
+                    segmentWideAngle.setTextSelectColor(R.color.setting_view_title_color_day, 5);
+                    segmentWideAngle.setTextUnselectColor(R.color.setting_view_content_color_day);
                 }
                 break;
         }
@@ -2084,153 +2296,153 @@ public class CameraView extends View implements LifecycleOwner {
         boolean isAy5T = BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID ? true : false;
         switch (type) {
             case CAMERA_2_D:
-                mViewCameraBinding.cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraTop.setRotation(0);
-                mViewCameraBinding.cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLift.setRotation(270);
-                mViewCameraBinding.cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraBottom.setRotation(180);
-                mViewCameraBinding.cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRight.setRotation(90);
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
-                mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
+                cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraTop.setRotation(0);
+                cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLift.setRotation(270);
+                cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraBottom.setRotation(180);
+                cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRight.setRotation(90);
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                cameraImageLayoutLift.setVisibility(GONE);
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_FRONT_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
             case CAMERA_2_D_TOP:
-                mViewCameraBinding.cameraTop.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraTop.setRotation(0);
+                cameraTop.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraTop.setRotation(0);
 
-                mViewCameraBinding.cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLift.setRotation(270);
+                cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLift.setRotation(270);
 
-                mViewCameraBinding.cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraBottom.setRotation(180);
+                cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraBottom.setRotation(180);
 
-                mViewCameraBinding.cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRight.setRotation(90);
+                cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRight.setRotation(90);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_front));
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
-                mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
+                cameraImageLayoutLift.setVisibility(GONE);
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_FRONT_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
             case CAMERA_2_D_LIFT:
-                mViewCameraBinding.cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraTop.setRotation(0);
+                cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraTop.setRotation(0);
 
-                mViewCameraBinding.cameraLift.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraLift.setRotation(270);
+                cameraLift.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraLift.setRotation(270);
 
-                mViewCameraBinding.cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraBottom.setRotation(180);
+                cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraBottom.setRotation(180);
 
-                mViewCameraBinding.cameraRight.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraRight.setRotation(90);
+                cameraRight.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraRight.setRotation(90);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left));
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
                 if (!isSmartWin) {
-                    mViewCameraBinding.cameraImageLayoutLift.setVisibility(VISIBLE);
+                    cameraImageLayoutLift.setVisibility(VISIBLE);
                 } else {
-                    mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
+                    cameraImageLayoutLift.setVisibility(GONE);
                 }
 
-                mViewCameraBinding.cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
+                cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_LEFT_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
             case CAMERA_2_D_BOTTOM:
-                mViewCameraBinding.cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraTop.setRotation(0);
+                cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraTop.setRotation(0);
 
-                mViewCameraBinding.cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLift.setRotation(270);
+                cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLift.setRotation(270);
 
-                mViewCameraBinding.cameraBottom.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraBottom.setRotation(180);
+                cameraBottom.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraBottom.setRotation(180);
 
-                mViewCameraBinding.cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRight.setRotation(90);
+                cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRight.setRotation(90);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_rear));
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
-                mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                cameraImageLayoutLift.setVisibility(GONE);
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_REAR_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
             case CAMERA_2_D_RIGHT:
-                mViewCameraBinding.cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraTop.setRotation(0);
+                cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraTop.setRotation(0);
 
-                mViewCameraBinding.cameraLift.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraLift.setRotation(270);
+                cameraLift.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraLift.setRotation(270);
 
-                mViewCameraBinding.cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraBottom.setRotation(180);
+                cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraBottom.setRotation(180);
 
-                mViewCameraBinding.cameraRight.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraRight.setRotation(90);
+                cameraRight.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraRight.setRotation(90);
                 // CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_right));
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
                 if (!isSmartWin) {
-                    mViewCameraBinding.cameraImageLayoutLift.setVisibility(VISIBLE);
+                    cameraImageLayoutLift.setVisibility(VISIBLE);
                 } else {
-                    mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
+                    cameraImageLayoutLift.setVisibility(GONE);
                 }
-                mViewCameraBinding.cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
+                cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_RIGHT_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
             case CAMERA_2_D_LIFT_RIGHT:
-                mViewCameraBinding.cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraTop.setRotation(0);
+                cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraTop.setRotation(0);
 
-                mViewCameraBinding.cameraLift.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraLift.setRotation(270);
+                cameraLift.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraLift.setRotation(270);
 
-                mViewCameraBinding.cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraBottom.setRotation(180);
+                cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraBottom.setRotation(180);
 
-                mViewCameraBinding.cameraRight.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraRight.setRotation(90);
+                cameraRight.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraRight.setRotation(90);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left_right));
 
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
                 if (!isSmartWin) {
-                    mViewCameraBinding.cameraImageLayoutLift.setVisibility(VISIBLE);
+                    cameraImageLayoutLift.setVisibility(VISIBLE);
                 } else {
-                    mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
+                    cameraImageLayoutLift.setVisibility(GONE);
                 }
-                mViewCameraBinding.cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
+                cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_RIGHT_CAM_ID == 0 && BWAVM_LEFT_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
@@ -2239,7 +2451,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     private void chick3DView(String type) {
         AvmRuntime.self().userTap();
-        mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
+        cameraImageLayoutLift.setVisibility(GONE);
         int BWAVM_FRONT_CAM_ID = SystemProperties.getInt("BWAVM_FRONT_CAM_ID_1", 0);
         int BWAVM_REAR_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID_1", 0);
         int BWAVM_LEFT_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID_1", 0);
@@ -2247,112 +2459,112 @@ public class CameraView extends View implements LifecycleOwner {
         boolean isAy5T = BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID ? true : false;
         switch (type) {
             case CAMERA_3_D:
-                mViewCameraBinding.cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLeftFront.setRotation(150);
-                mViewCameraBinding.cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRightFront.setRotation(210);
-                mViewCameraBinding.cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLeftRear.setRotation(30);
-                mViewCameraBinding.cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRightRear.setRotation(320);
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
+                cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLeftFront.setRotation(150);
+                cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRightFront.setRotation(210);
+                cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLeftRear.setRotation(30);
+                cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRightRear.setRotation(320);
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_FRONT_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
             case CAMERA_3_D_LEFT_FRONT:
-                mViewCameraBinding.cameraLeftFront.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraLeftFront.setRotation(150);
+                cameraLeftFront.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraLeftFront.setRotation(150);
 
-                mViewCameraBinding.cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRightFront.setRotation(210);
+                cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRightFront.setRotation(210);
 
-                mViewCameraBinding.cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLeftRear.setRotation(30);
+                cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLeftRear.setRotation(30);
 
-                mViewCameraBinding.cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRightRear.setRotation(320);
+                cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRightRear.setRotation(320);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left_front));
 
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftfront));
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftfront));
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_FRONT_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
             case CAMERA_3_D_RIGHT_FRONT:
-                mViewCameraBinding.cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLeftFront.setRotation(150);
+                cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLeftFront.setRotation(150);
 
-                mViewCameraBinding.cameraRightFront.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraRightFront.setRotation(210);
+                cameraRightFront.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraRightFront.setRotation(210);
 
-                mViewCameraBinding.cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLeftRear.setRotation(30);
+                cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLeftRear.setRotation(30);
 
-                mViewCameraBinding.cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRightRear.setRotation(320);
+                cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRightRear.setRotation(320);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_right_front));
 
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_REAR_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
             case CAMERA_3_D_LEFT_REAR:
-                mViewCameraBinding.cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLeftFront.setRotation(150);
+                cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLeftFront.setRotation(150);
 
-                mViewCameraBinding.cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRightFront.setRotation(210);
+                cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRightFront.setRotation(210);
 
-                mViewCameraBinding.cameraLeftRear.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraLeftRear.setRotation(30);
+                cameraLeftRear.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraLeftRear.setRotation(30);
 
-                mViewCameraBinding.cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRightRear.setRotation(320);
+                cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRightRear.setRotation(320);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left_rear));
 
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftback));
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftback));
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_LEFT_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
             case CAMERA_3_D_RIGHT_REAR:
-                mViewCameraBinding.cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLeftFront.setRotation(150);
+                cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLeftFront.setRotation(150);
 
-                mViewCameraBinding.cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraRightFront.setRotation(210);
+                cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraRightFront.setRotation(210);
 
-                mViewCameraBinding.cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                mViewCameraBinding.cameraLeftRear.setRotation(30);
+                cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                cameraLeftRear.setRotation(30);
 
-                mViewCameraBinding.cameraRightRear.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                mViewCameraBinding.cameraRightRear.setRotation(320);
+                cameraRightRear.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
+                cameraRightRear.setRotation(320);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_right_rear));
 
-                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightback));
+                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightback));
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_RIGHT_CAM_ID == 0) {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
+                        cameraBreakdown.setVisibility(View.GONE);
                     } else {
-                        mViewCameraBinding.cameraBreakdown.setVisibility(View.VISIBLE);
+                        cameraBreakdown.setVisibility(View.VISIBLE);
                     }
                 }, 200);
                 break;
@@ -2363,109 +2575,109 @@ public class CameraView extends View implements LifecycleOwner {
      * 热区点击
      */
     private void viewRedChick() {
-        mViewCameraBinding.red2dTop.setOnClickListener(new OnClickListener() {
+        red2dTop.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 0) {
+                if (segmentTab.getCurrentTab() == 0) {
                     AvmRuntime.self().userTap();
                     viewModel.camera2dTop();
                 }
             }
         });
-        mViewCameraBinding.red2dLift.setOnClickListener(new OnClickListener() {
+        red2dLift.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 0) {
+                if (segmentTab.getCurrentTab() == 0) {
                     AvmRuntime.self().userTap();
                     viewModel.camera2dLift();
                 }
             }
         });
-        mViewCameraBinding.red2dRight.setOnClickListener(new OnClickListener() {
+        red2dRight.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 0) {
+                if (segmentTab.getCurrentTab() == 0) {
                     AvmRuntime.self().userTap();
                     viewModel.camera2dRight();
                 }
             }
         });
-        mViewCameraBinding.red2dBottom.setOnClickListener(new OnClickListener() {
+        red2dBottom.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 0) {
+                if (segmentTab.getCurrentTab() == 0) {
                     AvmRuntime.self().userTap();
                     viewModel.camera2dBottom();
                 }
             }
         });
-        mViewCameraBinding.red3dleftFront.setOnClickListener(new OnClickListener() {
+        red3dleftFront.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {
+                if (segmentTab.getCurrentTab() == 1) {
                     AvmRuntime.self().userTap();
                     viewModel.camera3dLeftFront();
                 }
             }
         });
-        mViewCameraBinding.red3dleftFront1.setOnClickListener(new OnClickListener() {
+        red3dleftFront1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {
+                if (segmentTab.getCurrentTab() == 1) {
                     AvmRuntime.self().userTap();
                     viewModel.camera3dLeftFront();
                 }
             }
         });
-        mViewCameraBinding.red3drightFront.setOnClickListener(new OnClickListener() {
+        red3drightFront.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {
+                if (segmentTab.getCurrentTab() == 1) {
                     AvmRuntime.self().userTap();
                     viewModel.camera3dRightFront();
                 }
             }
         });
-        mViewCameraBinding.red3drightFront1.setOnClickListener(new OnClickListener() {
+        red3drightFront1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {
+                if (segmentTab.getCurrentTab() == 1) {
                     AvmRuntime.self().userTap();
                     viewModel.camera3dRightFront();
                 }
             }
         });
-        mViewCameraBinding.red3dleftRear.setOnClickListener(new OnClickListener() {
+        red3dleftRear.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {
+                if (segmentTab.getCurrentTab() == 1) {
                     AvmRuntime.self().userTap();
                     viewModel.camera3dLeftRear();
                 }
             }
         });
-        mViewCameraBinding.red3dleftRear1.setOnClickListener(new OnClickListener() {
+        red3dleftRear1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {
+                if (segmentTab.getCurrentTab() == 1) {
                     AvmRuntime.self().userTap();
                     viewModel.camera3dLeftRear();
                 }
             }
         });
-        mViewCameraBinding.red3drightRear.setOnClickListener(new OnClickListener() {
+        red3drightRear.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {
+                if (segmentTab.getCurrentTab() == 1) {
                     AvmRuntime.self().userTap();
                     viewModel.camera3dRightRear();
                 }
             }
         });
-        mViewCameraBinding.red3drightRear1.setOnClickListener(new OnClickListener() {
+        red3drightRear1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mViewCameraBinding.segmentTab.getCurrentTab() == 1) {
+                if (segmentTab.getCurrentTab() == 1) {
                     AvmRuntime.self().userTap();
                     viewModel.camera3dRightRear();
                 }
@@ -2505,24 +2717,24 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     private void setViewDialog() {
-        mViewCameraBinding.liftBg.setVisibility(GONE);
+        liftBg.setVisibility(GONE);
         if (rearviewMirrorView.getVisibility() == View.VISIBLE) {
             rearviewMirrorView.setVisibility(GONE);
-            mViewCameraBinding.llBackMirror.setSelected(false);
+            llBackMirror.setSelected(false);
         }
         if (settingView.getVisibility() == VISIBLE) {
             settingView.setVisibility(GONE);
-            mViewCameraBinding.llSetting.setSelected(false);
+            llSetting.setSelected(false);
         }
-        if (mViewCameraBinding.infobook.getVisibility() == VISIBLE) {
-            mViewCameraBinding.infobook.setVisibility(GONE);
-            mViewCameraBinding.infoBg.setVisibility(GONE);
+        if (infobook.getVisibility() == VISIBLE) {
+            infobook.setVisibility(GONE);
+            infoBg.setVisibility(GONE);
         }
     }
 
     private void updateTabViewIndex() {
         int outsideTabIndex = getOutsideTabIndex();
-        if (outsideTabIndex != -1) mViewCameraBinding.segmentTab.setSelectTab(outsideTabIndex);
+        if (outsideTabIndex != -1) segmentTab.setSelectTab(outsideTabIndex);
         KLog.d("AvmRuntime updateTabViewIndex() outsideTabIndex = " + outsideTabIndex);
         if (outsideTabIndex == 0) {
             if (CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_2D_FRONT_UNDISTORT) {
@@ -2537,9 +2749,9 @@ public class CameraView extends View implements LifecycleOwner {
             int wideAngleTabIndex = getWideAngleTabIndex();
             KLog.d("AvmRuntime updateTabViewIndex() wideAngleTabIndex = " + wideAngleTabIndex);
             if (wideAngleTabIndex != -1) {
-                mViewCameraBinding.segmentWideAngle.setSelectTab(wideAngleTabIndex);
+                segmentWideAngle.setSelectTab(wideAngleTabIndex);
             } else {
-                mViewCameraBinding.segmentWideAngle.setSelectTab(0);
+                segmentWideAngle.setSelectTab(0);
             }
         }
     }

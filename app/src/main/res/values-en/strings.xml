@@ -9,14 +9,14 @@
     <string name="setting_low">Low</string>
     <string name="setting_centre">Medium</string>
     <string name="setting_high">High</string>
-    <string name="setting_radar_activated_panorama">Panoramic view activated when radar on</string>
-    <string name="setting_radar_activated_panorama_content">Enter the panoramic view at vehicle speed &amp;#06012km/h and when the front radar alarms</string>
+    <string name="setting_radar_activated_panorama">Panoramic view activated\nwhen radar on</string>
+    <string name="setting_radar_activated_panorama_content">Enter the AVM when speed &amp;#06012km/h and front radar alarms</string>
     <string name="setting_path_line">Track line</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Panoramic view activated\nwhen turn signal light on</string>
     <string name="setting_signal_activates_panorama_content">Toggle turn signal for AVM;Auto-exit at>30km/h</string>
     <string name="setting_transparent_chassis_infobook_title">Transparent chassis</string>
-    <string name="setting_transparent_chassis_infobook_content">Enable to observe the vehicle road condition</string>
+    <string name="setting_transparent_chassis_infobook_content">Enable to\nobserve the vehicle road condition</string>
     <string name="setting_transparent_chassis_infobook_ok">OK</string>
     <string name="setting_rearview_mirror">Rearview mirror adjustment</string>
     <string name="setting_fold">Fold</string>
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Camera malfunction</string>
-
-
+    <string name="camera_radar_error">Ultrasonic radar fault, please check!</string>
+    <string name="camera_please_park">Please park!</string>
 </resources>
