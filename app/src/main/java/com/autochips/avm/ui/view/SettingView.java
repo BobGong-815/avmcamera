@@ -375,9 +375,9 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_view_content_color_day);
 
                 if (AvmApp.ISAY5T) {
-                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_t_track_day);
-                    settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_t_track_day);
-                    settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_t_track_day);
+                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track_t_day);
+                    settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track_t_day);
+                    settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_track_t_day);
                 }else {
                     settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track_day);
                     settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track_day);
