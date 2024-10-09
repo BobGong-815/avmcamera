@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -38,6 +39,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     private boolean ISAY5G = false;
     private boolean ISAY5G_R = false;
     private boolean IsOutsidebackmirrorautofoldswitch = true; //后视镜倒车下翻开关是否存在
+    public static int OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = 1;//0、无配置后视镜下翻 ，1、有配置后视镜下翻
+    public static int OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = 1;//0、无配置后视镜折叠 ，1、有配置后视镜折叠
 
     public volatile boolean isRight = false; // 默认非右陀
 
@@ -117,6 +120,12 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
             if (isConnect) {
                 int vehicalplatform = configManager.getVehicleplatform();
                 KLog.i("Avmapp....注册完成 ... " + vehicalplatform);
+                int outsidebackmirrorbackupdownswitch = configManager.getOutsidebackmirrorbackupdownswitch();
+                int outsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch();
+                Log.i("AvmApp","注册完成---- outsidebackmirrorbackupdownswitch:"+outsidebackmirrorbackupdownswitch);
+                Log.i("AvmApp","注册完成---- outsidebackmirrorautofoldswitch:"+outsidebackmirrorautofoldswitch);
+                OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
+                OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
                 //AY5T AY5G左陀  AY5右陀
                 if (vehicalplatform == IS_AY5T) {
                     ISAY5T = true;
@@ -128,12 +137,6 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 } else {
                     ISAY5G = true;
                     BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
-                }
-                //后视镜倒车下翻开关
-               boolean IsOutsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch() == 1; //0 无 1 有
-                KLog.i("Avmapp ...... 后视镜倒车下翻开关....  " + IsOutsidebackmirrorautofoldswitch);
-                if (!IsOutsidebackmirrorautofoldswitch){
-                    getCameraView().hidenMirrowView();
                 }
                 mHandler.post(()->mCameraView = new CameraView(this));
             }else {

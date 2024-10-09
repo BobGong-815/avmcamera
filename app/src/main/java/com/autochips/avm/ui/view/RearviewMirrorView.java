@@ -23,6 +23,7 @@ import androidx.lifecycle.LifecycleRegistry;
 
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
+import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.databinding.ViewRearviewMirrorBinding;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.service.AvmRuntime;
@@ -234,7 +235,8 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         super.setVisibility(visibility);
         if (visibility == VISIBLE)
             rearviewMirrorModel.startTimer();
-
+        rearviewMirrorBinding.llSettingRearviewMirrorDown.setVisibility(AvmApp.OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH==1?VISIBLE:GONE);
+        rearviewMirrorBinding.llFold.setVisibility(AvmApp.OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH==1?VISIBLE:GONE);
     }
 
     private void setRearviewMirrorStatus(int reverseLightSts) {
@@ -279,7 +281,8 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         switch (uiMode) {
             case UiModeManager.MODE_NIGHT_YES:
                 KLog.e("黑夜模式");
-                rearviewMirrorBinding.llRearviewMirror.setBackgroundResource(R.drawable.shape_bg_nor);
+                rearviewMirrorBinding.llRearviewMirror.setBackgroundResource((AvmApp.OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH==1 && AvmApp.OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH == 1)?
+                        R.mipmap.rearview_setting_bg : R.mipmap.rearview_setting_short_bg);
                 rearviewMirrorBinding.llSettingFold.setBackgroundResource(R.drawable.button_select);
                 rearviewMirrorBinding.llSettingExpand.setBackgroundResource(R.drawable.button_select);
                 rearviewMirrorBinding.llSettingRearviewMirrorDown.setBackgroundResource(R.drawable.button_select);
@@ -292,7 +295,8 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 break;
             case UiModeManager.MODE_NIGHT_NO:
                 KLog.e("白天模式");
-                rearviewMirrorBinding.llRearviewMirror.setBackgroundResource(R.drawable.shape_bg_nor_day);
+                rearviewMirrorBinding.llRearviewMirror.setBackgroundResource((AvmApp.OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH==1 && AvmApp.OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH ==1)?
+                        R.mipmap.rearview_setting_bg_day : R.mipmap.rearview_setting_short_bg_day);
                 rearviewMirrorBinding.llSettingFold.setBackgroundResource(R.drawable.button_rearview_select_day);
                 rearviewMirrorBinding.llSettingExpand.setBackgroundResource(R.drawable.button_rearview_select_day);
                 rearviewMirrorBinding.llSettingRearviewMirrorDown.setBackgroundResource(R.drawable.button_rearview_select_day);

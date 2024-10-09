@@ -5678,6 +5678,7 @@ com.android.bvavm.bvavmJNI:
     public static final int CAMERA2_ERR_delete_FAIL
     public static final int CAMERA2_ERR_registerAvailabilityCallback_FAIL
     public static final int PROJ_AY3_ID
+    public static final int PROJ_AY5_GR_ID
     public static final int PROJ_AY5_G_ID
     public static final int PROJ_AY5_ID
     public static final int PROJ_AY5_T_ID

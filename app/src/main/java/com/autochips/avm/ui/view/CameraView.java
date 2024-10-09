@@ -1408,6 +1408,7 @@ public class CameraView extends View implements LifecycleOwner {
         mMainHandler.postDelayed(() -> {
             // 延时隐藏，防止事件冲突
             layoutShowFull2d.setVisibility(GONE);
+            llBackMirror.setVisibility(AvmApp.OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH==0 && AvmApp.OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH ==0 ? GONE :VISIBLE);
             showBottomView();
         }, 200);
     }
