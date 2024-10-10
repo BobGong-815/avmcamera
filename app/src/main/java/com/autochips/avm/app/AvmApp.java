@@ -42,7 +42,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static int OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = 1;//0、无配置后视镜下翻 ，1、有配置后视镜下翻
     public static int OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = 1;//0、无配置后视镜折叠 ，1、有配置后视镜折叠
 
-    public volatile boolean isRight = false; // 默认非右陀,打包时根据修改该配置传入是否传入左右舵车型id
+    public volatile boolean isRight = true; // 默认非右陀,打包时根据修改该配置传入是否传入左右舵车型id
 
     public static AvmApp getInstance() {
         return mAvmApp;

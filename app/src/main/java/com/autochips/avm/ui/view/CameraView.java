@@ -2295,7 +2295,7 @@ public class CameraView extends View implements LifecycleOwner {
         int BWAVM_REAR_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID", 0);
         int BWAVM_LEFT_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID", 0);
         int BWAVM_RIGHT_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID", 0);
-        boolean isAy5T = BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID ? true : false;
+        boolean isAy5T = AvmApp.ISAY5T;
         switch (type) {
             case CAMERA_2_D:
                 cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
@@ -2458,7 +2458,7 @@ public class CameraView extends View implements LifecycleOwner {
         int BWAVM_REAR_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID_1", 0);
         int BWAVM_LEFT_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID_1", 0);
         int BWAVM_RIGHT_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID_1", 0);
-        boolean isAy5T = BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID ? true : false;
+        boolean isAy5T = AvmApp.ISAY5T;
         switch (type) {
             case CAMERA_3_D:
                 cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
