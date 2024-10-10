@@ -107,18 +107,18 @@ public class BvAvmJNIHelper {
             CameraViewModelHelper.getInstance().doorStatus(-1, (Integer) doorValue);
             CameraViewModelHelper.getInstance().showLight3DModel(BCM_HIGH_BEAM_STATUS, (Integer) lightValue);
             updateTrajLineStatus(gear);
-            updateTransparentChassis(false);
+            updateTransparentChassis();
 //        bvavmJNI.bwNotifyRVC(0);
             isAvmDeInit = true;
             return res;
         }
     }
 
-    public void updateTransparentChassis(boolean close) {
+    public void updateTransparentChassis() {
         int position = SystemProperties.getInt("settingRadarActivatedPanorama", -1);
         KLog.e(position + " setIndexTab 设置透明底盘-初始化后调用: " + position);
         if (position == -1) return;
-        if (close || position == 0) {
+        if (position == 0) {
 //            bvavmJNI.bwSetCarBottomStatus((byte) 0);
 //            bvavmJNI.bwSetCarTransparency(1f);
             bwSetCarBottomStatus((byte) 0);
@@ -187,6 +187,12 @@ public class BvAvmJNIHelper {
             synchronized (syncObj) {
                 bvavmJNI.bwSetCarTransparency(transparencyValue);
             }
+        }
+    }
+
+    public void bwClearCarBottomImage() {
+        synchronized (syncObj) {
+            bvavmJNI.bwClearCarBottomImage();
         }
     }
 

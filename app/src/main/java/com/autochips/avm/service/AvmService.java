@@ -267,7 +267,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().dismissView(null);
                             SystemProperties.setGlobal("avm_state", 0);
                             mAvmManager.sendAvmState(0);
-                            BvAvmJNIHelper.getInstance().updateTransparentChassis(true);
+                            BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_CR_CAMERA);
                                 mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 500);
@@ -282,7 +282,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().showSmartWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
-                            BvAvmJNIHelper.getInstance().updateTransparentChassis(false);
 //                            intent = new Intent(AvmService.this, MainActivity.class);
 //                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                            startActivity(intent);
@@ -296,7 +295,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().showFullWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
-                            BvAvmJNIHelper.getInstance().updateTransparentChassis(false);
                             if (isActAndWindowMode) {
                                 if (!AvmRuntime.self().isRearGearSts()) {
                                     intent = new Intent(AvmService.this, MainActivity.class);
@@ -310,7 +308,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().showFullWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
-                            BvAvmJNIHelper.getInstance().updateTransparentChassis(false);
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
@@ -550,7 +547,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     bvavmJNI.bwSetCarIsBack((byte) 0);
                 }
                 if (gear == 4) {
-                    BvAvmJNIHelper.getInstance().updateTransparentChassis(true);
+                    BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                 }
             }
         }
