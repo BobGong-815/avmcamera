@@ -1347,7 +1347,7 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowLps.x = 1360;
         }
         isSmartWin = true;
-        mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width_smart) + 142;
+        mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width_smart) + (AvmApp.getInstance().isRight ?  74 :142);
         mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
 
         mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
