@@ -178,26 +178,6 @@ public class CameraGLSurfaceView extends GLSurfaceView {
         }
     }
 
-    private void setIndexTab() {
-        int position = SystemProperties.getInt("settingRadarActivatedPanorama", -1);
-        KLog.e(position + " setIndexTab 设置透明底盘-初始化后调用: " + position);
-        if (position == -1) return;
-        if (position == 0) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 0);
-            bvavmJNI.bwSetCarTransparency(1f);
-        } else if (position == 1) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.3f);
-        } else if (position == 2) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.15f);
-        } else {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.05f);
-        }
-    }
-
-
     public class MyConfigChooser implements EGLConfigChooser {
 
         @Override

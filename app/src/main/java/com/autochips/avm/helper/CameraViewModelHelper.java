@@ -209,17 +209,25 @@ public class CameraViewModelHelper {
         }
 
         if (position == 0) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 0);
-            bvavmJNI.bwSetCarTransparency(1f);
+//            bvavmJNI.bwSetCarBottomStatus((byte) 0);
+//            bvavmJNI.bwSetCarTransparency(1f);
+            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 0);
+            BvAvmJNIHelper.getInstance().bwSetCarTransparency(1.f);
         } else if (position == 1) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.3f);
+//            bvavmJNI.bwSetCarBottomStatus((byte) 1);
+//            bvavmJNI.bwSetCarTransparency(0.3f);
+            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 1);
+            BvAvmJNIHelper.getInstance().bwSetCarTransparency(0.3f);
         } else if (position == 2) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.15f);
+//            bvavmJNI.bwSetCarBottomStatus((byte) 1);
+//            bvavmJNI.bwSetCarTransparency(0.15f);
+            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 1);
+            BvAvmJNIHelper.getInstance().bwSetCarTransparency(0.15f);
         } else {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.05f);
+//            bvavmJNI.bwSetCarBottomStatus((byte) 1);
+//            bvavmJNI.bwSetCarTransparency(0.05f);
+            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 1);
+            BvAvmJNIHelper.getInstance().bwSetCarTransparency(0.05f);
         }
         mLastSetPosition = position;
     }

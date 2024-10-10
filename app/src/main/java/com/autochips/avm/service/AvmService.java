@@ -268,6 +268,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().dismissView(null);
                             SystemProperties.setGlobal("avm_state", 0);
                             mAvmManager.sendAvmState(0);
+                            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 0);
+                            BvAvmJNIHelper.getInstance().bwSetCarTransparency(1.f);
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_CR_CAMERA);
                                 mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 500);
@@ -545,6 +547,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 } else {
                     bvavmJNI.bwSetCarIsDgear(0);
                     bvavmJNI.bwSetCarIsBack((byte) 0);
+                }
+                if (gear == 4) {
+                    BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 0);
+                    BvAvmJNIHelper.getInstance().bwSetCarTransparency(1.f);
                 }
             }
         }
