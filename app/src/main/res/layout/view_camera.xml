@@ -90,8 +90,9 @@
                 android:id="@+id/radarErrImgId2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35px"
+                android:layout_marginLeft="30px"
                 android:layout_marginTop="72px"
+                android:rotation="-7.5"
                 android:src="@mipmap/radar_fault_2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -102,6 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35px"
                 android:layout_marginTop="72px"
+                android:visibility="gone"
                 android:src="@mipmap/radar_fault_3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -207,15 +209,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.autochips.avm.ui.view.RadarStatusFrontView
-                    android:id="@+id/rearRadarFrontViewId"
-                    android:layout_width="366px"
-                    android:layout_height="174px"
-                    android:layout_marginTop="60px"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
                 <LinearLayout
                     android:layout_width="84px"
                     android:layout_height="30px"
@@ -241,13 +234,12 @@
 
                 <com.autochips.avm.ui.view.RadarStatusView
                     android:id="@+id/rearRadarViewId"
-                    android:layout_width="366px"
-                    android:layout_height="174px"
-                    android:layout_marginBottom="40px"
+                    android:layout_width="290px"
+                    android:layout_height="200px"
+                    android:layout_marginBottom="13px"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

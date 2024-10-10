@@ -10,8 +10,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.autochips.avm.R;
-import com.autochips.avm.app.AvmApp;
-import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.viewmode.CameraViewModel;
 
 import androidx.annotation.Nullable;
@@ -20,7 +18,6 @@ import me.goldze.mvvmhabit.utils.KLog;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RLDistance;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RLMidDistance;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRDistance;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRMidDistance;
 
 /**
  * 雷达状态显示
@@ -31,23 +28,18 @@ public class RadarStatusView extends View {
     private Bitmap bmRadar1_red_1;
     private Bitmap bmRadar1_red_2;
     private Bitmap bmRadar1_red_3;
-    private Bitmap bmRadar1_red_4;
 
     private Bitmap bmRadar2_orange_1;
     private Bitmap bmRadar2_orange_2;
     private Bitmap bmRadar2_orange_3;
-    private Bitmap bmRadar2_orange_4;
 
     private Bitmap bmRadar3_yellow_1;
     private Bitmap bmRadar3_yellow_2;
     private Bitmap bmRadar3_yellow_3;
-    private Bitmap bmRadar3_yellow_4;
 
     private Bitmap bmRadar4_green_1;
     private Bitmap bmRadar4_green_2;
     private Bitmap bmRadar4_green_3;
-    private Bitmap bmRadar4_green_4;
-
     private Paint paint = new Paint();
 
     private boolean isShowRed1 = false;
@@ -67,12 +59,8 @@ public class RadarStatusView extends View {
     private boolean isShowYellow3 = false;
     private boolean isShowGreen3 = false;
 
-    private boolean isShowRed4 = false;
-    private boolean isShowOrange4 = false;
-    private boolean isShowYellow4 = false;
-    private boolean isShowGreen4 = false;
-
     private CameraViewModel viewModel;
+    private  int  mGear;
 
     public void setViewModel(CameraViewModel viewModel) {
         this.viewModel = viewModel;
@@ -83,9 +71,9 @@ public class RadarStatusView extends View {
 
     private  int rRRLen = 180;
     private  int mildLen = 180;
-    private  int mirdLen = 180;
     private  int rRLLen = 180;
-    public void status(int vehicleId, int len ) {
+    public void status(int vehicleId, int len ,int gear) {
+        this.mGear = gear;
         switch (vehicleId) {
 
             case CLUSTER_PAS_RLMidDistance:// 后左中
@@ -97,8 +85,8 @@ public class RadarStatusView extends View {
                 showRadarBtn();
                 invalidate();
                 break;
-            case CLUSTER_PAS_RRMidDistance:// 后右中
-                mirdLen = len;
+            case CLUSTER_PAS_RRDistance:// 后右
+                rRRLen = len;
                 isShowRed3 = isShowBitmap30(len);
                 isShowOrange3 = isShowBitmap60(len);
                 isShowYellow3 = isShowBitmap90(len);
@@ -106,17 +94,12 @@ public class RadarStatusView extends View {
                 showRadarBtn();
                 invalidate();
                 break;
-            case CLUSTER_PAS_RRDistance:// 后右
-                rRRLen = len;
-                isShowRed4 = isShowBitmap30(len);
-                isShowOrange4 = isShowBitmap60(len);
-                showRadarBtn();
-                invalidate();
-                break;
             case CLUSTER_PAS_RLDistance://后左
                 rRLLen = len;
                 isShowRed1 = isShowBitmap30(len);
                 isShowOrange1 = isShowBitmap60(len);
+                isShowYellow1 = isShowBitmap90(len);
+                isShowGreen1 = isShowBitmap150(len);
                 showRadarBtn();
                 invalidate();
                 break;
@@ -130,7 +113,7 @@ public class RadarStatusView extends View {
         //if (bl)
             //ToastUtils.showLong("请停车 30CM");
             //viewModel.getInfo().setRadarDistance("请停车");
-        return bl && AvmRuntime.self().isRearGearSts();
+        return bl;
 
     }
 
@@ -139,14 +122,16 @@ public class RadarStatusView extends View {
 
     }
 
-    //后中
     private boolean isShowBitmap90(int len) {
         boolean bl = len > 60 && len <= 90;
-        return bl  && AvmRuntime.self().isRearGearSts();
+
+        return bl;
+
+
     }
 
     private boolean isShowBitmap150(int len) {
-        return len > 90 && len <= 150  && AvmRuntime.self().isRearGearSts();
+        return len > 90 && len <= 150  && mGear == 3;
     }
 
     /**
@@ -167,11 +152,12 @@ public class RadarStatusView extends View {
 
     }
 
+
     // 修复雷达距离最小显示
     private  void showRadarBtn(){
         int radLen = 150 ;
         if (viewModel == null )return;
-        if ( !AvmRuntime.self().isRearGearSts() ){
+        if ( mGear != 3 ){
             viewModel.getInfo().setRadarDistance("");
             viewModel.getInfo().setShowRadarBtn(false);
             return;
@@ -179,13 +165,12 @@ public class RadarStatusView extends View {
         radLen= Math.min(radLen,rRLLen);
         radLen= Math.min(radLen,rRRLen);
         radLen= Math.min(radLen,mildLen);
-        radLen= Math.min(radLen,mirdLen);
         KLog.d(radLen+" 雷达距离最小："+radLen );
         viewModel.getInfo().setShowRadarBtn(radLen <= 90);// 是否显示雷达距离
         if (radLen>30 && radLen <= 90){
             viewModel.getInfo().setRadarDistance(radLen+"cm");
         }else if(radLen > 0 && radLen <= 30){
-            viewModel.getInfo().setRadarDistance(AvmApp.getInstance().getString(R.string.camera_please_park));
+            viewModel.getInfo().setRadarDistance("请停车");
         }else {
             viewModel.getInfo().setRadarDistance("");
         }
@@ -213,22 +198,18 @@ public class RadarStatusView extends View {
         bmRadar1_red_1 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar1_red_1);
         bmRadar1_red_2 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar1_red_2);
         bmRadar1_red_3 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar1_red_3);
-        bmRadar1_red_4 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar1_red_4);
 
         bmRadar2_orange_1 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar2_orange_1);
         bmRadar2_orange_2 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar2_orange_2);
         bmRadar2_orange_3 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar2_orange_3);
-        bmRadar2_orange_4 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar2_orange_4);
 
         bmRadar3_yellow_1 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar3_yellow_1);
         bmRadar3_yellow_2 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar3_yellow_2);
         bmRadar3_yellow_3 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar3_yellow_3);
-        bmRadar3_yellow_4 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar3_yellow_4);
 
         bmRadar4_green_1 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar4_green_1);
         bmRadar4_green_2 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar4_green_2);
         bmRadar4_green_3 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar4_green_3);
-        bmRadar4_green_4 = BitmapFactory.decodeResource(getResources(), R.mipmap.radar4_green_4);
     }
 
 
@@ -265,10 +246,7 @@ public class RadarStatusView extends View {
             canvasBitmap(canvas, isShowYellow3, bmRadar3_yellow_3);
             canvasBitmap(canvas, isShowGreen3, bmRadar4_green_3);
 
-            canvasBitmap(canvas, isShowRed4, bmRadar1_red_4);
-            canvasBitmap(canvas, isShowOrange4, bmRadar2_orange_4);
-            canvasBitmap(canvas, isShowYellow4, bmRadar3_yellow_4);
-            canvasBitmap(canvas, isShowGreen4, bmRadar4_green_4);
+
         }
     }
 

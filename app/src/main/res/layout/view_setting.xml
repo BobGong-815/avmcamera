@@ -113,26 +113,26 @@
             android:visibility="gone"/>
 
 
-
         <com.autochips.avm.ui.view.SegmentTabLayout
             android:id="@+id/transparent_chassis_tab"
             android:layout_width="wrap_content"
-            android:layout_height="60px"
+            android:layout_height="25dp"
             app:tl_indicator_anim_enable="true"
             app:tl_textSelectColor="@color/setting_view_title_color"
             app:tl_textUnClickColor="@color/setting_view_content_color"
-            app:tl_textUnselectColor="@color/setting_view_content_color"
             app:tl_textUnableColor="@color/setting_view_content_color"
+            app:tl_textUnselectColor="@color/setting_view_content_color"
             app:tl_textsize="@dimen/text_size_24px"
             app:tl_thumb_drawable="@drawable/tab_selector_thumb"
             app:tl_thumb_drawable_2="@drawable/tab_selector_thumb_old"
-            app:tl_thumb_drawable_3="@drawable/tab_selector_thumb"/>
+            app:tl_thumb_drawable_3="@drawable/tab_selector_thumb" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="57px"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:layout_marginLeft="36px">
 
             <Switch

@@ -101,7 +101,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         int activatedPanorama = SystemProperties.getInt("activatedPanorama", 2);
         settingBinding.swSettingPathLine.setChecked(settingPathLine == 1);
         settingBinding.switchSignalActivates.setChecked(signalActivates == 1);
-        settingBinding.swCtivatedPanorama.setChecked(activatedPanorama == 1);
+        //settingBinding.swCtivatedPanorama.setChecked(activatedPanorama == 1);
         if (settingPathLine == 1) {
 //            bvavmJNI.bwSetTrajLineStatus((byte) 1);
             if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineEnable((byte) 1);
@@ -335,11 +335,11 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_view_content_color);
 
                 if (AvmApp.ISAY5T) {
-                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_t_track);
+                    //settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_t_track);
                     settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_t_track);
                     settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_t_track);
                 }else {
-                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track);
+                    //swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track);
                     settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track);
                     settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_track);
                 }
@@ -375,11 +375,11 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_view_content_color_day);
 
                 if (AvmApp.ISAY5T) {
-                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track_t_day);
+                    //settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track_t_day);
                     settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track_t_day);
                     settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_track_t_day);
                 }else {
-                    settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track_day);
+                    //settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track_day);
                     settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track_day);
                     settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_track_day);
                 }

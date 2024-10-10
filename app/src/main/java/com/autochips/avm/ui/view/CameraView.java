@@ -66,7 +66,6 @@ import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.databinding.ViewBottomBinding;
 import com.autochips.avm.databinding.ViewCameraBinding;
-import com.autochips.avm.databinding.ViewCameraRightBinding;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.helper.LongPressGestureListener;
@@ -105,7 +104,7 @@ public class CameraView extends View implements LifecycleOwner {
         @Override
         public void setup(int msg, int param1, int param2) {
             KLog.d("CallBackInterface  msg " + msg + "   param1  " + param1 + "   param2: " + param2);
-            if ( mViewCameraBinding == null && mViewCameraRightBinding == null) {
+            if ( mViewCameraBinding == null) {
                 return;
             }
             //            setAVMBreakdown(msg, param1, param2);
@@ -135,7 +134,6 @@ public class CameraView extends View implements LifecycleOwner {
     //    protected WindowManager.LayoutParams mWindowLpsBottom;//window的属性
 //    protected WindowManager.LayoutParams mFullWindowLps;//全面的窗口参数
     protected ViewCameraBinding mViewCameraBinding;//总windowManager界面
-    protected ViewCameraRightBinding mViewCameraRightBinding;//总windowManager界面
     private ViewBottomBinding cameraBinding;
     protected CameraViewModel viewModel;
     private SettingView settingView;
@@ -156,7 +154,6 @@ public class CameraView extends View implements LifecycleOwner {
     //view
     protected ConstraintLayout calibration;
     protected RadarStatusView rearRadarViewId;
-    protected RadarStatusFrontView rearRadarFrontViewId;
     protected ConstraintLayout layout3dTouchId;
     protected FrameLayout viewFrame;
     protected ConstraintLayout layout2d;
@@ -170,7 +167,7 @@ public class CameraView extends View implements LifecycleOwner {
     protected SegmentTabLayout segmentTab;
     protected Group viewShow2dGroupId;
     protected Group viewShow3dGroupId,smartGroupId;
-    protected ImageView radarSoundIv,radarErrImgId1,radarErrImgId2,radarErrImgId3,radarErrImgId4,cameraIv
+    protected ImageView radarSoundIv,radarErrImgId1,radarErrImgId2,radarErrImgId4,cameraIv
             ,cameraLeftFront,cameraRightFront,cameraLeftRear,cameraRightRear,cameraRight
             ,cameraTop,cameraBottom,cameraLift,ivBreakdown,ivSetting,ivBackMirror,cameraIvLift;
     protected LinearLayout llBackMirror,llSetting,cameraBreakdown,toastBg,layoutShowFull2d,layoutCalibrateId;
@@ -439,19 +436,11 @@ public class CameraView extends View implements LifecycleOwner {
     protected void initView() {
         CallBackHelper.getInstance().setCallBackInterface(callBackInterface);
         registry.setCurrentState(Lifecycle.State.CREATED);
-        if(AvmApp.getInstance().isRight){
-            mViewCameraRightBinding = ViewCameraRightBinding.inflate(LayoutInflater.from(mContext), null, false);
-        }else {
-            mViewCameraBinding = ViewCameraBinding.inflate(LayoutInflater.from(mContext), null, false);
-        }
+        mViewCameraBinding = ViewCameraBinding.inflate(LayoutInflater.from(mContext), null, false);
         //mViewCameraBinding.cameraTextureView.setSurfaceTextureListener(new SurfaceTextureHelper
         // ());
         viewModel = new CameraViewModel();
-        if(AvmApp.getInstance().isRight){
-            mViewCameraRightBinding.setViewModel(viewModel);
-        }else {
-            mViewCameraBinding.setViewModel(viewModel);
-        }
+        mViewCameraBinding.setViewModel(viewModel);
         findViewById();
         rearRadarViewId.setViewModel(viewModel);
         settingView.setInfoBookView(infobook, infoBg, segmentWideAngle);
@@ -502,81 +491,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     //初始化控件id
     private void findViewById() {
-        if(AvmApp.getInstance().isRight){
-            rearRadarViewId = mViewCameraRightBinding.rearRadarViewId;
-            rearRadarFrontViewId = mViewCameraRightBinding.rearRadarFrontViewId;
-            calibration = mViewCameraRightBinding.calibration;
-            settingView = mViewCameraRightBinding.settingView;
-            infobook = mViewCameraRightBinding.infobook;
-            infoBg = mViewCameraRightBinding.infoBg;
-            segmentWideAngle = mViewCameraRightBinding.segmentWideAngle;
-            rearviewMirrorView = mViewCameraRightBinding.rearviewMirrorView;
-            layout3dTouchId = mViewCameraRightBinding.layout3dTouchId;
-            viewFrame = mViewCameraRightBinding.viewFrame;
-            layout2d = mViewCameraRightBinding.layout2d;
-            layout3d = mViewCameraRightBinding.layout3d;
-            liftBg = mViewCameraRightBinding.liftBg;
-            layoutSettingId = mViewCameraRightBinding.layoutSettingId;
-            rootView = mViewCameraRightBinding.getRoot();
-            segmentTab = mViewCameraRightBinding.segmentTab;
-            viewShow2dGroupId = mViewCameraRightBinding.viewShow2dGroupId;
-            viewShow3dGroupId = mViewCameraRightBinding.viewShow3dGroupId;
-            radarSoundIv = mViewCameraRightBinding.radarSoundIv;
-            radarErrImgId1 = mViewCameraRightBinding.radarErrImgId1;
-            radarErrImgId2 = mViewCameraRightBinding.radarErrImgId2;
-            radarErrImgId3 = mViewCameraRightBinding.radarErrImgId3;
-            radarErrImgId4 = mViewCameraRightBinding.radarErrImgId4;
-            cameraIv = mViewCameraRightBinding.cameraIv;
-            llBackMirror = mViewCameraRightBinding.llBackMirror;
-            llSetting = mViewCameraRightBinding.llSetting;
-            layoutWideAngle = mViewCameraRightBinding.layoutWideAngle;
-            camera2dBg = mViewCameraRightBinding.camera2dBg;
-            camera3dBg = mViewCameraRightBinding.camera3dBg;
-            cameraImageLayout = mViewCameraRightBinding.cameraImageLayout;
-            cameraBreakdown = mViewCameraRightBinding.cameraBreakdown;
-            toastBg = mViewCameraRightBinding.toastBg;
-            cameraLeftFront = mViewCameraRightBinding.cameraLeftFront;
-            cameraRightFront = mViewCameraRightBinding.cameraRightFront;
-            cameraLeftRear = mViewCameraRightBinding.cameraLeftRear;
-            cameraRightRear = mViewCameraRightBinding.cameraRightRear;
-            smartGroupId = mViewCameraRightBinding.smartGroupId;
-            layoutShowFull2d = mViewCameraRightBinding.layoutShowFull2d;
-            cameraRight = mViewCameraRightBinding.cameraRight;
-            radarSoundLayout = mViewCameraRightBinding.radarSoundLayout;
-            parkingAssistLayout = mViewCameraRightBinding.parkingAssistLayout;
-            cameraTop = mViewCameraRightBinding.cameraTop;
-            cameraBottom = mViewCameraRightBinding.cameraBottom;
-            cameraLift = mViewCameraRightBinding.cameraLift;
-            layoutCalibrateId = mViewCameraRightBinding.layoutCalibrateId;
-            mainAvmViewRootId = mViewCameraRightBinding.mainAvmViewRootId;
-            ivBreakdown = mViewCameraRightBinding.ivBreakdown;
-            tvBreakdown = mViewCameraRightBinding.tvBreakdown;
-            ivSetting = mViewCameraRightBinding.ivSetting;
-            ivBackMirror = mViewCameraRightBinding.ivBackMirror;
-            manualCalibration = mViewCameraRightBinding.manualCalibration;
-            automaticCalibration = mViewCameraRightBinding.automaticCalibration;
-            infoTitle = mViewCameraRightBinding.infoTitle;
-            infoContent = mViewCameraRightBinding.infoContent;
-            infoOk = mViewCameraRightBinding.infoOk;
-            rearRadarImgId = mViewCameraRightBinding.rearRadarImgId;
-            //热区
-            red2dTop = mViewCameraRightBinding.red2dTop;
-            red2dLift = mViewCameraRightBinding.red2dLift;
-            red2dRight = mViewCameraRightBinding.red2dRight;
-            red2dBottom = mViewCameraRightBinding.red2dBottom;
-            red3dleftFront = mViewCameraRightBinding.red3dleftFront;
-            red3dleftFront1 = mViewCameraRightBinding.red3dleftFront1;
-            red3drightFront = mViewCameraRightBinding.red3drightFront;
-            red3drightFront1 = mViewCameraRightBinding.red3drightFront1;
-            red3dleftRear = mViewCameraRightBinding.red3dleftRear;
-            red3dleftRear1 = mViewCameraRightBinding.red3dleftRear1;
-            red3drightRear = mViewCameraRightBinding.red3drightRear;
-            red3drightRear1 = mViewCameraRightBinding.red3drightRear1;
-            cameraImageLayoutLift = mViewCameraRightBinding.cameraImageLayoutLift;
-            cameraIvLift = mViewCameraRightBinding.cameraIvLift;
-        }else {
             rearRadarViewId = mViewCameraBinding.rearRadarViewId;
-            rearRadarFrontViewId = mViewCameraBinding.rearRadarFrontViewId;
             calibration = mViewCameraBinding.calibration;
             settingView = mViewCameraBinding.settingView;
             infobook = mViewCameraBinding.infobook;
@@ -596,7 +511,6 @@ public class CameraView extends View implements LifecycleOwner {
             radarSoundIv = mViewCameraBinding.radarSoundIv;
             radarErrImgId1 = mViewCameraBinding.radarErrImgId1;
             radarErrImgId2 = mViewCameraBinding.radarErrImgId2;
-            radarErrImgId3 = mViewCameraBinding.radarErrImgId3;
             radarErrImgId4 = mViewCameraBinding.radarErrImgId4;
             cameraIv = mViewCameraBinding.cameraIv;
             llBackMirror = mViewCameraBinding.llBackMirror;
@@ -646,7 +560,6 @@ public class CameraView extends View implements LifecycleOwner {
             red3drightRear1 = mViewCameraBinding.red3drightRear1;
             cameraImageLayoutLift = mViewCameraBinding.cameraImageLayoutLift;
             cameraIvLift = mViewCameraBinding.cameraIvLift;
-        }
     }
 
     public void hidenMirrowView(){
@@ -793,7 +706,7 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     public void setRadarFailStatus(int flag, int value) {
-        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return;
+        if (mViewCameraBinding == null) return;
 
         switch (flag) {
             case 1:
@@ -803,7 +716,7 @@ public class CameraView extends View implements LifecycleOwner {
                 radarErrImgId2.setVisibility(value == 0 ? GONE : VISIBLE);
                 break;
             case  3:
-                radarErrImgId3.setVisibility(value == 0 ? GONE :VISIBLE);
+                //radarErrImgId3.setVisibility(value == 0 ? GONE :VISIBLE);
                 break;
             case 4:
                 radarErrImgId4.setVisibility(value == 0 ? GONE : VISIBLE);
@@ -1569,7 +1482,7 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     public View getRootView() {
-        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return null;
+        if (mViewCameraBinding == null) return null;
 
         return rootView;
     }
@@ -1589,7 +1502,7 @@ public class CameraView extends View implements LifecycleOwner {
     //雷达提示音显隐
     public void showRadarSoundView(int isVisible) {
         KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible);
-        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return;
+        if (mViewCameraBinding == null) return;
         if ((radarSoundLayout.getVisibility() == VISIBLE && isVisible == 1) ||
                 (radarSoundLayout.getVisibility() == GONE && isVisible != 1)) {
             KLog.d("雷达提示音 is show or hide ");
@@ -1676,7 +1589,7 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     public void removeView() {
-        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return;
+        if (mViewCameraBinding == null) return;
         boolean attachedToWindow = rootView.isAttachedToWindow();
         if (attachedToWindow) {
             mWindowManager.removeView(rootView);
@@ -1958,13 +1871,8 @@ public class CameraView extends View implements LifecycleOwner {
         CallBackHelper.getInstance().setup(msg, param1, param2);
     }
 
-    public void setRadar(int model, int len) {
-        if(model == CLUSTER_PAS_RLDistance || model == CLUSTER_PAS_RLMidDistance
-                || model == CLUSTER_PAS_RRDistance || model == CLUSTER_PAS_RRMidDistance) {
-            rearRadarViewId.status(model, len);
-        } else {
-            rearRadarFrontViewId.status(model, len);
-        }
+    public void setRadar(int model, int len,int gear) {
+        rearRadarViewId.status(model, len,gear);
     }
 
 
@@ -2196,7 +2104,7 @@ public class CameraView extends View implements LifecycleOwner {
         UiModeManager uiModeManager = (UiModeManager) mContext.getSystemService(Context.UI_MODE_SERVICE);
         int uiMode = uiModeManager.getNightMode();
         KLog.e("skinView: isSmartWin " + isSmartWin);
-        if (mViewCameraBinding == null && mViewCameraRightBinding == null) {
+        if (mViewCameraBinding == null) {
             return;
         }
         if (isSmartWin) {

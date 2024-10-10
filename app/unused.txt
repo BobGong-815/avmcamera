@@ -5708,7 +5708,6 @@ com.autochips.avm.DataBinderMapperImpl:
     private static final int LAYOUT_ACTIVITYCAMERA
     private static final int LAYOUT_ACTIVITYMOCK
     private static final int LAYOUT_VIEWCAMERA
-    private static final int LAYOUT_VIEWCAMERARIGHT
     private static final int LAYOUT_VIEWREARVIEWMIRROR
     private static final int LAYOUT_VIEWSETTING
 com.autochips.avm.DataBindingTriggerClass
@@ -5734,8 +5733,6 @@ com.autochips.avm.helper.LongPressGestureListener
 com.autochips.avm.helper.SurfaceTextureHelper
 com.autochips.avm.helper.ViewPageHelper$1
 com.autochips.avm.helper.ViewPageHelper
-com.autochips.avm.service.AvmRuntime$DataSts:
-    int actEnterAngleView
 com.autochips.avm.service.AvmService:
     public static final boolean DELETE_CAMERA_FLAG
     public static final boolean JNI_IN_THREAD_FLAG

@@ -633,7 +633,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private boolean isCallFRadarSound = false;//前雷达音是否在播报
     private void setRadar(int vehicleId, Object object) {
 
-        if ((vehicleId == CLUSTER_PAS_Distance || vehicleId == CLUSTER_PAS_FRONT_DISTANCE)  && object instanceof Integer[]) {
+        if (vehicleId == CLUSTER_PAS_Distance  && object instanceof Integer[]) {
             //后雷达信号
             Integer[] arr = (Integer[]) object;// [0x00 ]
             if (arr.length == 0) {
@@ -641,52 +641,14 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 return;
             }
             KLog.i(arr.length + "  length 雷达检测距离CLUSTER_PAS_Distance ： " + vehicleId + "  value   " + Arrays.toString(arr));
-            if(vehicleId == CLUSTER_PAS_Distance) {
-                //后雷达
-                int rMir = arr[0];//后右中
-                int rMil = arr[1];//后左中
-                int rRight = arr[2];//后右
-                int rLeft = arr[3];//后左
-                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLDistance, rLeft);
-                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLMidDistance, rMil);
-                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RRMidDistance, rMir);
-                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RRDistance, rRight);
-                isCallRRadarSound = rRight <= 60 || rLeft <= 60 || rMil <= 90 || rMir <= 90;
-            }
-            if(vehicleId == CLUSTER_PAS_FRONT_DISTANCE) {
-                //前雷达
-                int fMir = arr[0];//前右中
-                int fMil = arr[1];//前左中
-                int fRight = arr[2];//前右
-                int fLeft = arr[3];//前左
-                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_PAS_FLDistance, fLeft);
-                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_FLMidDistance, fMil);
-                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_FRMidDistance, fMir);
-                AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_PAS_FRDistance, fRight);
-                //雷达激活
-                int signalActivates = SystemProperties.getInt("radarActivates", 0);
-                if(signalActivates == 1) {
-                    if (fLeft <= 60 || fRight <= 60 || fMil <= 110 || fMir <= 110) {
-                        if (!CameraView.isShowing) {
-                            CameraViewModelHelper.getInstance().radarActive(1);
-                        }
-                    } else if (fLeft >= 60 && fRight >= 60 && fMil >= 110 && fMir >= 110) {
-                        if (CameraView.isShowing && AvmApp.getInstance().getCameraView().isSmartWin
-                                && CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT) == 0) {
-                            //已展示小窗口，当前没有转向
-                            CameraViewModelHelper.getInstance().radarExit(0);
-                        }
-                    }
-                }
-                isCallFRadarSound = fMir <= 90 || fMil <= 90 || fRight <= 60 || fLeft <=60;
-            }
-
-            if(isCallRRadarSound || isCallFRadarSound){
-                //此时表示警报声音会响起
-                AvmApp.getInstance().getCameraView().showRadarSoundView(1);
-            }else {
-                AvmApp.getInstance().getCameraView().showRadarSoundView(0);
-            }
+            int gearValue = CanManager.getInstance().getIntStatus(CLUSTER_VCU_GEAR_LVL_DISP, 0);
+            //后雷达
+            int mil = arr[1];
+            int right = arr[2];
+            int left = arr[3];
+            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLDistance, left, gearValue);
+            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLMidDistance, mil, gearValue);
+            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RRDistance, right, gearValue);
             return;
         }
 
@@ -705,7 +667,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case CLUSTER_PAS_PAS_RSRSideDistance:// 后侧右
                 KLog.d("信号监听 vehicleId = " + vehicleId + "  ,value = " + status);
                 if (status < 1) return;
-                AvmApp.getInstance().getCameraView().setRadar(vehicleId, status);
                 if (status <= 60 && (AvmRuntime.self().isDriveGearSts() || AvmRuntime.self().isNullGearSts())) {
                     isRadarFront60 = true;
 
@@ -730,7 +691,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case CLUSTER_PAS_FRMidDistance://（前右中）
             case CLUSTER_PAS_FLMidDistance://（前左中）
                 if (status < 1) return;
-                AvmApp.getInstance().getCameraView().setRadar(vehicleId, status);
 
                 if (status <= 110 && (AvmRuntime.self().isDriveGearSts() || AvmRuntime.self().isNullGearSts())) {
                     isRadarFront110 = true;
@@ -756,7 +716,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case CLUSTER_PAS_RRMidDistance:// 后中
             case CLUSTER_PAS_RRDistance:// 后右
             case CLUSTER_PAS_RLDistance://后左
-                AvmApp.getInstance().getCameraView().setRadar(vehicleId, status);
+                AvmApp.getInstance().getCameraView().setRadar(vehicleId, status, CanManager.getInstance().getIntStatus(CLUSTER_VCU_GEAR_LVL_DISP, 0));
                 break;
             case ASSIST_DRIVE_PAS_BUTTON_PRESS:// 雷达报警声
             case CLUSTER_CHIME_PAS_WARNTONE://雷达报警音状态

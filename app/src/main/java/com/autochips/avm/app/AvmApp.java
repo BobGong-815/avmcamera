@@ -35,7 +35,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     private int IS_AY5T = 103;
     private int IS_AY5G = 112; //左陀
     private int IS_AY5G_R = 112; //右陀 已经获取的值 112
-    public static boolean ISAY5T = false;
+    public static boolean ISAY5T = true;
     private boolean ISAY5G = false;
     private boolean ISAY5G_R = false;
     private boolean IsOutsidebackmirrorautofoldswitch = true; //后视镜倒车下翻开关是否存在
@@ -126,18 +126,9 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 Log.i("AvmApp","注册完成---- outsidebackmirrorautofoldswitch:"+outsidebackmirrorautofoldswitch);
                 OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
                 OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
-                //AY5T AY5G左陀  AY5右陀
-                if (vehicalplatform == IS_AY5T) {
-                    ISAY5T = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
-                }else if (vehicalplatform == IS_AY5G_R) {
-                    ISAY5G_R = true;
-                    isRight = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
-                } else {
-                    ISAY5G = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
-                }
+                //AY5T
+                ISAY5T = true;
+                BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
                 mHandler.post(()->mCameraView = new CameraView(this));
             }else {
                 KLog.i("Avmapp....还未连接成功 ...");
