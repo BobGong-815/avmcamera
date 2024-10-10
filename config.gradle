@@ -7,7 +7,7 @@ ext {
             minSdkVersion    : 29,
             targetSdkVersion : 30,
             versionCode      : 192,
-            versionName      : "V1.1.0T"
+            versionName      : "V1.1.1T"
     ]
     //version配置
     versions = [

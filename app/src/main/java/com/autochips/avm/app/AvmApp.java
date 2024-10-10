@@ -126,9 +126,30 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 Log.i("AvmApp","注册完成---- outsidebackmirrorautofoldswitch:"+outsidebackmirrorautofoldswitch);
                 OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
                 OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
-                //AY5T
-                ISAY5T = true;
-                BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+                //AY5T AY5G左陀  AY5右陀
+                /*
+                if (vehicalplatform == IS_AY5T) {
+                    ISAY5T = true;
+                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+                }else if (vehicalplatform == IS_AY5G_R) {
+                    ISAY5G_R = true;
+                    isRight = true;
+                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+                } else {
+                    ISAY5T = true;
+                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+                }
+
+                 */
+                if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
+                    ISAY5T = true;
+                } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_G_ID) {
+                    ISAY5T = false;
+                } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_GR_ID) {
+                    ISAY5G_R = true;
+                    isRight = true;
+                }
+                BvAvmJNIHelper.getInstance().bwSetProjectID(BvAvmJNIHelper.CAMERA_TYPE);
                 mHandler.post(()->mCameraView = new CameraView(this));
             }else {
                 KLog.i("Avmapp....还未连接成功 ...");
