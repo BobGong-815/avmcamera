@@ -10,6 +10,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.autochips.avm.R;
+import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.viewmode.CameraViewModel;
 
 import androidx.annotation.Nullable;
@@ -60,7 +62,6 @@ public class RadarStatusView extends View {
     private boolean isShowGreen3 = false;
 
     private CameraViewModel viewModel;
-    private  int  mGear;
 
     public void setViewModel(CameraViewModel viewModel) {
         this.viewModel = viewModel;
@@ -72,8 +73,7 @@ public class RadarStatusView extends View {
     private  int rRRLen = 180;
     private  int mildLen = 180;
     private  int rRLLen = 180;
-    public void status(int vehicleId, int len ,int gear) {
-        this.mGear = gear;
+    public void status(int vehicleId, int len) {
         switch (vehicleId) {
 
             case CLUSTER_PAS_RLMidDistance:// 后左中
@@ -113,25 +113,22 @@ public class RadarStatusView extends View {
         //if (bl)
             //ToastUtils.showLong("请停车 30CM");
             //viewModel.getInfo().setRadarDistance("请停车");
-        return bl;
+        return bl && AvmRuntime.self().isRearGearSts();
 
     }
 
     private boolean isShowBitmap60(int len) {
-        return len > 30 && len <= 60;
+        return len > 30 && len <= 60 && AvmRuntime.self().isRearGearSts();
 
     }
 
     private boolean isShowBitmap90(int len) {
         boolean bl = len > 60 && len <= 90;
-
-        return bl;
-
-
+        return bl  && AvmRuntime.self().isRearGearSts();
     }
 
     private boolean isShowBitmap150(int len) {
-        return len > 90 && len <= 150  && mGear == 3;
+        return len > 90 && len <= 150  && AvmRuntime.self().isRearGearSts();
     }
 
     /**
@@ -157,7 +154,7 @@ public class RadarStatusView extends View {
     private  void showRadarBtn(){
         int radLen = 150 ;
         if (viewModel == null )return;
-        if ( mGear != 3 ){
+        if (!AvmRuntime.self().isRearGearSts()){
             viewModel.getInfo().setRadarDistance("");
             viewModel.getInfo().setShowRadarBtn(false);
             return;
@@ -170,7 +167,7 @@ public class RadarStatusView extends View {
         if (radLen>30 && radLen <= 90){
             viewModel.getInfo().setRadarDistance(radLen+"cm");
         }else if(radLen > 0 && radLen <= 30){
-            viewModel.getInfo().setRadarDistance("请停车");
+            viewModel.getInfo().setRadarDistance(AvmApp.getInstance().getString(R.string.camera_please_park));
         }else {
             viewModel.getInfo().setRadarDistance("");
         }

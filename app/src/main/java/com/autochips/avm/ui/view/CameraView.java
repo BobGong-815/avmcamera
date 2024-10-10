@@ -707,7 +707,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void setRadarFailStatus(int flag, int value) {
         if (mViewCameraBinding == null) return;
-
+        KLog.d(" setRadarFailStatus flag & value："+flag +" :"+value);
         switch (flag) {
             case 1:
                 radarErrImgId1.setVisibility(value == 0 ? GONE : VISIBLE);
@@ -1871,8 +1871,8 @@ public class CameraView extends View implements LifecycleOwner {
         CallBackHelper.getInstance().setup(msg, param1, param2);
     }
 
-    public void setRadar(int model, int len,int gear) {
-        rearRadarViewId.status(model, len,gear);
+    public void setRadar(int model, int len) {
+        rearRadarViewId.status(model, len);
     }
 
 
@@ -2143,7 +2143,7 @@ public class CameraView extends View implements LifecycleOwner {
                 infoContent.setTextColor(mContext.getResources().getColor(R.color.setting_view_content_color));
                 infoOk.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color));
                 infoOk.setBackgroundResource(R.drawable.shape_text_bg_nor);
-                rearRadarImgId.setBackgroundResource(R.mipmap.rada_distance_30);
+                //rearRadarImgId.setBackgroundResource(R.mipmap.rada_distance_30);
 
                 if (AvmApp.ISAY5T) {
                     segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle);

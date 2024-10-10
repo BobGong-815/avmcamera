@@ -495,7 +495,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
     private final CanManager.onSignalValueChangedListener mOnSignalValueChangedListener = (vehicleId, value) -> {
         if(AvmApp.getInstance().getCameraView() == null){
-            KLog.d("AvmApp", "avm is null ");
+            KLog.d("AvmApp", "avm is null  vehicleId & value："+vehicleId +" :"+value);
             return;
         }
         if (vehicleId == AVM_UINM_TURN_LIGHT_SW_ST) { //转向激活
@@ -647,14 +647,13 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 return;
             }
             KLog.i(arr.length + "  length 雷达检测距离CLUSTER_PAS_Distance ： " + vehicleId + "  value   " + Arrays.toString(arr));
-            int gearValue = CanManager.getInstance().getIntStatus(CLUSTER_VCU_GEAR_LVL_DISP, 0);
             //后雷达
             int mil = arr[1];
             int right = arr[2];
             int left = arr[3];
-            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLDistance, left, gearValue);
-            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLMidDistance, mil, gearValue);
-            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RRDistance, right, gearValue);
+            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLDistance, left);
+            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RLMidDistance, mil);
+            AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RRDistance, right);
             return;
         }
 
@@ -722,7 +721,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case CLUSTER_PAS_RRMidDistance:// 后中
             case CLUSTER_PAS_RRDistance:// 后右
             case CLUSTER_PAS_RLDistance://后左
-                AvmApp.getInstance().getCameraView().setRadar(vehicleId, status, CanManager.getInstance().getIntStatus(CLUSTER_VCU_GEAR_LVL_DISP, 0));
+                AvmApp.getInstance().getCameraView().setRadar(vehicleId, status);
                 break;
             case ASSIST_DRIVE_PAS_BUTTON_PRESS:// 雷达报警声
             case CLUSTER_CHIME_PAS_WARNTONE://雷达报警音状态
@@ -975,6 +974,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                     isFirstEnter = false;
                 }
+            }else if(action.equals(init_can)){
+
             }
         }
     }

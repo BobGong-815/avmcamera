@@ -1,7 +1,7 @@
 # compiler: R8
 # compiler_version: 2.2.66
 # min_api: 29
-# pg_map_id: c7e9ab8
+# pg_map_id: e6d756e
 # common_typos_disable
 android.car.-$$Lambda$Car$TUxEUQEyMHY05z32LVgNJZwGV0k -> android.car.a:
 # {"id":"sourceFile","fileName":"lambda"}
@@ -58082,16 +58082,13 @@ com.autochips.avm.DataBinderMapperImpl$InnerLayoutIdLookup -> com.autochips.avm.
     1:1:void <clinit>():149:149 -> <clinit>
     2:6:void <clinit>():152:156 -> <clinit>
     1:1:void <init>():148:148 -> <init>
-com.autochips.avm.app.-$$Lambda$AvmApp$GfLN_-KkIccQWATJFHKrdRYV08A -> com.autochips.avm.app.a:
-# {"id":"sourceFile","fileName":"lambda"}
-    com.autochips.avm.app.AvmApp f$0 -> b
-com.autochips.avm.app.-$$Lambda$AvmApp$H_MpC5ajHcm1F8rb6VW2u_Ipev8 -> com.autochips.avm.app.b:
-# {"id":"sourceFile","fileName":"lambda"}
-    com.autochips.avm.app.AvmApp f$0 -> b
-com.autochips.avm.app.-$$Lambda$AvmApp$qNzgMWsB8tD98tsPglYbktJsOTM -> com.autochips.avm.app.c:
+com.autochips.avm.app.-$$Lambda$AvmApp$3Hf5XhEd-T4ZaGB_HaCDW_10P8M -> com.autochips.avm.app.a:
 # {"id":"sourceFile","fileName":"lambda"}
     com.autochips.avm.app.AvmApp f$0 -> a
     gxa.car.engineModeSdk.ConfigManager f$1 -> b
+com.autochips.avm.app.-$$Lambda$AvmApp$H_MpC5ajHcm1F8rb6VW2u_Ipev8 -> com.autochips.avm.app.b:
+# {"id":"sourceFile","fileName":"lambda"}
+    com.autochips.avm.app.AvmApp f$0 -> b
 com.autochips.avm.app.AvmApp -> com.autochips.avm.app.AvmApp:
     boolean ISAY5G -> m
     boolean ISAY5G_R -> n
@@ -58113,42 +58110,39 @@ com.autochips.avm.app.AvmApp -> com.autochips.avm.app.AvmApp:
     3:5:void <init>():35:37 -> <init>
     6:8:void <init>():39:41 -> <init>
     9:9:void <init>():45:45 -> <init>
-    10:10:void <init>():94:94 -> <init>
+    10:10:void <init>():96:96 -> <init>
     void lambda$closeAndShowAvm$0$AvmApp() -> a
-    void lambda$initConfig$1$AvmApp() -> b
-    void lambda$initConfig$2$AvmApp(gxa.car.engineModeSdk.ConfigManager,boolean) -> c
-    1:4:void closeAndShowAvm():96:99 -> closeAndShowAvm
-    5:6:void closeAndShowAvm():101:102 -> closeAndShowAvm
-    7:7:void closeAndShowAvm():104:104 -> closeAndShowAvm
-    8:12:void closeAndShowAvm():107:111 -> closeAndShowAvm
-    13:13:void closeAndShowAvm():114:114 -> closeAndShowAvm
-    14:14:void closeAndShowAvm():111:111 -> closeAndShowAvm
-    1:1:com.autochips.avm.ui.view.CameraView getCameraView():161:161 -> getCameraView
+    void lambda$initConfig$1$AvmApp(gxa.car.engineModeSdk.ConfigManager,boolean) -> b
+    1:4:void closeAndShowAvm():98:101 -> closeAndShowAvm
+    5:6:void closeAndShowAvm():103:104 -> closeAndShowAvm
+    7:7:void closeAndShowAvm():106:106 -> closeAndShowAvm
+    8:12:void closeAndShowAvm():109:113 -> closeAndShowAvm
+    13:13:void closeAndShowAvm():116:116 -> closeAndShowAvm
+    14:14:void closeAndShowAvm():113:113 -> closeAndShowAvm
+    1:1:com.autochips.avm.ui.view.CameraView getCameraView():147:147 -> getCameraView
     1:1:com.autochips.avm.app.AvmApp getInstance():48:48 -> getInstance
-    1:2:void initConfig(android.content.Context):118:119 -> initConfig
-    1:7:void initCrash():165:171 -> initCrash
-    8:8:void initCrash():175:175 -> initCrash
-    1:2:void lambda$closeAndShowAvm$0():112:113 -> lambda$closeAndShowAvm$0
-    1:1:void lambda$initConfig$1():153:153 -> lambda$initConfig$1
-    1:8:void lambda$initConfig$2(gxa.car.engineModeSdk.ConfigManager,boolean):121:128 -> lambda$initConfig$2
-    9:10:void lambda$initConfig$2(gxa.car.engineModeSdk.ConfigManager,boolean):144:145 -> lambda$initConfig$2
-    11:11:void lambda$initConfig$2(gxa.car.engineModeSdk.ConfigManager,boolean):147:147 -> lambda$initConfig$2
-    12:13:void lambda$initConfig$2(gxa.car.engineModeSdk.ConfigManager,boolean):149:150 -> lambda$initConfig$2
-    14:15:void lambda$initConfig$2(gxa.car.engineModeSdk.ConfigManager,boolean):152:153 -> lambda$initConfig$2
-    16:16:void lambda$initConfig$2(gxa.car.engineModeSdk.ConfigManager,boolean):155:155 -> lambda$initConfig$2
-    1:3:void onConfigurationChanged(android.content.res.Configuration):205:207 -> onConfigurationChanged
+    1:2:void initConfig(android.content.Context):120:121 -> initConfig
+    1:7:void initCrash():151:157 -> initCrash
+    8:8:void initCrash():161:161 -> initCrash
+    1:2:void lambda$closeAndShowAvm$0():114:115 -> lambda$closeAndShowAvm$0
+    1:8:void lambda$initConfig$1(gxa.car.engineModeSdk.ConfigManager,boolean):123:130 -> lambda$initConfig$1
+    9:10:void lambda$initConfig$1(gxa.car.engineModeSdk.ConfigManager,boolean):132:133 -> lambda$initConfig$1
+    11:11:void lambda$initConfig$1(gxa.car.engineModeSdk.ConfigManager,boolean):135:135 -> lambda$initConfig$1
+    12:13:void lambda$initConfig$1(gxa.car.engineModeSdk.ConfigManager,boolean):137:138 -> lambda$initConfig$1
+    14:14:void lambda$initConfig$1(gxa.car.engineModeSdk.ConfigManager,boolean):141:141 -> lambda$initConfig$1
+    1:3:void onConfigurationChanged(android.content.res.Configuration):191:193 -> onConfigurationChanged
     1:4:void onCreate():57:60 -> onCreate
-    5:5:void onCreate():62:62 -> onCreate
-    6:6:void onCreate():66:66 -> onCreate
-    7:7:void onCreate():68:68 -> onCreate
-    8:8:void onCreate():72:72 -> onCreate
-    9:12:void onCreate():78:81 -> onCreate
-    13:13:void onCreate():83:83 -> onCreate
-    14:15:void onCreate():87:88 -> onCreate
-    1:2:void onLowMemory():188:189 -> onLowMemory
-    1:2:void onTerminate():182:183 -> onTerminate
-    1:2:void onTrimMemory(int):194:195 -> onTrimMemory
-    1:1:void uncaughtException(java.lang.Thread,java.lang.Throwable):200:200 -> uncaughtException
+    5:7:void onCreate():62:64 -> onCreate
+    8:8:void onCreate():68:68 -> onCreate
+    9:9:void onCreate():70:70 -> onCreate
+    10:10:void onCreate():74:74 -> onCreate
+    11:14:void onCreate():80:83 -> onCreate
+    15:15:void onCreate():85:85 -> onCreate
+    16:17:void onCreate():89:90 -> onCreate
+    1:2:void onLowMemory():174:175 -> onLowMemory
+    1:2:void onTerminate():168:169 -> onTerminate
+    1:2:void onTrimMemory(int):180:181 -> onTrimMemory
+    1:1:void uncaughtException(java.lang.Thread,java.lang.Throwable):186:186 -> uncaughtException
 com.autochips.avm.databinding.ActivityCameraBinding -> l7:
     androidx.appcompat.widget.AppCompatImageButton btClose -> C
     android.widget.ImageView radarSoundIv -> u0
@@ -58506,131 +58500,133 @@ com.autochips.avm.databinding.ViewCameraBinding -> r7:
     3:3:com.autochips.avm.databinding.ViewCameraBinding inflate(android.view.LayoutInflater):378:378 -> inflate
     4:4:com.autochips.avm.databinding.ViewCameraBinding inflate(android.view.LayoutInflater,java.lang.Object):392:392 -> inflate
 com.autochips.avm.databinding.ViewCameraBindingImpl -> s7:
-    long mDirtyFlags -> K1
-    androidx.appcompat.widget.AppCompatButton mboundView21 -> f1
-    androidx.appcompat.widget.AppCompatButton mboundView22 -> g1
-    androidx.appcompat.widget.AppCompatButton mboundView23 -> h1
-    androidx.appcompat.widget.AppCompatButton mboundView25 -> j1
-    android.view.View$OnClickListener mCallback46 -> J1
-    android.view.View$OnClickListener mCallback34 -> I1
-    androidx.appcompat.widget.AppCompatButton mboundView16 -> a1
-    androidx.appcompat.widget.AppCompatButton mboundView17 -> b1
-    androidx.appcompat.widget.AppCompatButton mboundView18 -> c1
-    androidx.appcompat.widget.AppCompatButton mboundView20 -> e1
-    android.widget.TextView mboundView28 -> k1
-    android.view.View$OnClickListener mCallback38 -> y1
-    android.view.View$OnClickListener mCallback26 -> z1
-    android.widget.LinearLayout mboundView24 -> i1
+    androidx.appcompat.widget.AppCompatImageButton mboundView30 -> m1
+    long mDirtyFlags -> L1
+    androidx.appcompat.widget.AppCompatButton mboundView22 -> f1
+    androidx.appcompat.widget.AppCompatButton mboundView23 -> g1
+    androidx.appcompat.widget.AppCompatButton mboundView24 -> h1
+    androidx.appcompat.widget.AppCompatButton mboundView26 -> j1
+    android.view.View$OnClickListener mCallback46 -> K1
+    android.view.View$OnClickListener mCallback34 -> J1
+    android.view.View$OnClickListener mCallback29 -> I1
+    androidx.appcompat.widget.AppCompatButton mboundView17 -> a1
+    androidx.appcompat.widget.AppCompatButton mboundView18 -> b1
+    androidx.appcompat.widget.AppCompatButton mboundView19 -> c1
+    androidx.appcompat.widget.AppCompatButton mboundView21 -> e1
+    android.widget.TextView mboundView29 -> k1
+    android.view.View$OnClickListener mCallback40 -> y1
+    android.view.View$OnClickListener mCallback38 -> z1
+    android.widget.LinearLayout mboundView25 -> i1
     android.util.SparseIntArray sViewsWithIds -> X0
     androidx.databinding.ViewDataBinding$IncludedLayouts sIncludes -> W0
-    android.view.View$OnClickListener mCallback29 -> H1
-    android.view.View$OnClickListener mCallback33 -> G1
-    androidx.appcompat.widget.AppCompatButton mboundView15 -> Z0
-    android.view.View$OnClickListener mCallback45 -> F1
-    androidx.appcompat.widget.AppCompatButton mboundView14 -> Y0
-    android.view.View$OnClickListener mCallback24 -> E1
-    android.view.View$OnClickListener mCallback27 -> m1
-    android.view.View$OnClickListener mCallback36 -> D1
-    android.view.View$OnClickListener mCallback39 -> n1
-    android.view.View$OnClickListener mCallback35 -> C1
-    android.view.View$OnClickListener mCallback43 -> o1
-    android.view.View$OnClickListener mCallback47 -> B1
-    android.widget.LinearLayout mboundView19 -> d1
-    android.view.View$OnClickListener mCallback30 -> p1
-    android.view.View$OnClickListener mCallback41 -> A1
-    android.view.View$OnClickListener mCallback42 -> q1
-    android.view.View$OnClickListener mCallback28 -> r1
-    android.view.View$OnClickListener mCallback32 -> s1
-    android.view.View$OnClickListener mCallback44 -> t1
-    android.view.View$OnClickListener mCallback31 -> u1
-    androidx.appcompat.widget.AppCompatImageButton mboundView29 -> l1
-    android.view.View$OnClickListener mCallback25 -> v1
-    android.view.View$OnClickListener mCallback37 -> w1
-    android.view.View$OnClickListener mCallback40 -> x1
+    android.widget.LinearLayout mboundView3 -> l1
+    android.view.View$OnClickListener mCallback33 -> H1
+    android.view.View$OnClickListener mCallback45 -> G1
+    androidx.appcompat.widget.AppCompatButton mboundView16 -> Z0
+    android.view.View$OnClickListener mCallback24 -> F1
+    androidx.appcompat.widget.AppCompatButton mboundView15 -> Y0
+    android.view.View$OnClickListener mCallback36 -> E1
+    android.view.View$OnClickListener mCallback35 -> D1
+    android.view.View$OnClickListener mCallback27 -> n1
+    android.view.View$OnClickListener mCallback47 -> C1
+    android.view.View$OnClickListener mCallback39 -> o1
+    android.view.View$OnClickListener mCallback41 -> B1
+    android.widget.LinearLayout mboundView20 -> d1
+    android.view.View$OnClickListener mCallback43 -> p1
+    android.view.View$OnClickListener mCallback26 -> A1
+    android.view.View$OnClickListener mCallback30 -> q1
+    android.view.View$OnClickListener mCallback42 -> r1
+    android.view.View$OnClickListener mCallback28 -> s1
+    android.view.View$OnClickListener mCallback32 -> t1
+    android.view.View$OnClickListener mCallback44 -> u1
+    android.view.View$OnClickListener mCallback31 -> v1
+    android.view.View$OnClickListener mCallback25 -> w1
+    android.view.View$OnClickListener mCallback37 -> x1
     1:57:void <clinit>():16:72 -> <clinit>
-    1:1:void <init>(androidx.databinding.DataBindingComponent,android.view.View):157:157 -> <init>
-    2:2:void <init>(androidx.databinding.DataBindingComponent,android.view.View,java.lang.Object[]):160:160 -> <init>
-    3:3:void <init>(androidx.databinding.DataBindingComponent,android.view.View,java.lang.Object[]):952:952 -> <init>
-    4:48:void <init>(androidx.databinding.DataBindingComponent,android.view.View,java.lang.Object[]):234:278 -> <init>
-    49:73:void <init>(androidx.databinding.DataBindingComponent,android.view.View,java.lang.Object[]):280:304 -> <init>
-    1:1:void _internalCallbackOnClick(int,android.view.View):799:799 -> _internalCallbackOnClick
-    2:2:void _internalCallbackOnClick(int,android.view.View):809:809 -> _internalCallbackOnClick
-    3:3:void _internalCallbackOnClick(int,android.view.View):935:935 -> _internalCallbackOnClick
-    4:4:void _internalCallbackOnClick(int,android.view.View):945:945 -> _internalCallbackOnClick
-    5:5:void _internalCallbackOnClick(int,android.view.View):867:867 -> _internalCallbackOnClick
-    6:6:void _internalCallbackOnClick(int,android.view.View):877:877 -> _internalCallbackOnClick
-    7:7:void _internalCallbackOnClick(int,android.view.View):663:663 -> _internalCallbackOnClick
-    8:8:void _internalCallbackOnClick(int,android.view.View):673:673 -> _internalCallbackOnClick
-    9:9:void _internalCallbackOnClick(int,android.view.View):578:578 -> _internalCallbackOnClick
-    10:10:void _internalCallbackOnClick(int,android.view.View):588:588 -> _internalCallbackOnClick
-    11:11:void _internalCallbackOnClick(int,android.view.View):612:612 -> _internalCallbackOnClick
-    12:12:void _internalCallbackOnClick(int,android.view.View):622:622 -> _internalCallbackOnClick
-    13:13:void _internalCallbackOnClick(int,android.view.View):782:782 -> _internalCallbackOnClick
-    14:14:void _internalCallbackOnClick(int,android.view.View):792:792 -> _internalCallbackOnClick
-    15:15:void _internalCallbackOnClick(int,android.view.View):731:731 -> _internalCallbackOnClick
-    16:16:void _internalCallbackOnClick(int,android.view.View):741:741 -> _internalCallbackOnClick
-    17:17:void _internalCallbackOnClick(int,android.view.View):561:561 -> _internalCallbackOnClick
-    18:18:void _internalCallbackOnClick(int,android.view.View):571:571 -> _internalCallbackOnClick
-    19:19:void _internalCallbackOnClick(int,android.view.View):748:748 -> _internalCallbackOnClick
-    20:20:void _internalCallbackOnClick(int,android.view.View):758:758 -> _internalCallbackOnClick
-    21:21:void _internalCallbackOnClick(int,android.view.View):714:714 -> _internalCallbackOnClick
-    22:22:void _internalCallbackOnClick(int,android.view.View):724:724 -> _internalCallbackOnClick
-    23:23:void _internalCallbackOnClick(int,android.view.View):833:833 -> _internalCallbackOnClick
-    24:24:void _internalCallbackOnClick(int,android.view.View):843:843 -> _internalCallbackOnClick
-    25:25:void _internalCallbackOnClick(int,android.view.View):816:816 -> _internalCallbackOnClick
-    26:26:void _internalCallbackOnClick(int,android.view.View):826:826 -> _internalCallbackOnClick
-    27:27:void _internalCallbackOnClick(int,android.view.View):918:918 -> _internalCallbackOnClick
-    28:28:void _internalCallbackOnClick(int,android.view.View):928:928 -> _internalCallbackOnClick
-    29:29:void _internalCallbackOnClick(int,android.view.View):884:884 -> _internalCallbackOnClick
-    30:30:void _internalCallbackOnClick(int,android.view.View):894:894 -> _internalCallbackOnClick
-    31:31:void _internalCallbackOnClick(int,android.view.View):646:646 -> _internalCallbackOnClick
-    32:32:void _internalCallbackOnClick(int,android.view.View):656:656 -> _internalCallbackOnClick
-    33:33:void _internalCallbackOnClick(int,android.view.View):680:680 -> _internalCallbackOnClick
-    34:34:void _internalCallbackOnClick(int,android.view.View):690:690 -> _internalCallbackOnClick
-    35:35:void _internalCallbackOnClick(int,android.view.View):595:595 -> _internalCallbackOnClick
-    36:36:void _internalCallbackOnClick(int,android.view.View):605:605 -> _internalCallbackOnClick
-    37:37:void _internalCallbackOnClick(int,android.view.View):901:901 -> _internalCallbackOnClick
-    38:38:void _internalCallbackOnClick(int,android.view.View):911:911 -> _internalCallbackOnClick
-    39:39:void _internalCallbackOnClick(int,android.view.View):629:629 -> _internalCallbackOnClick
-    40:40:void _internalCallbackOnClick(int,android.view.View):639:639 -> _internalCallbackOnClick
-    41:41:void _internalCallbackOnClick(int,android.view.View):544:544 -> _internalCallbackOnClick
-    42:42:void _internalCallbackOnClick(int,android.view.View):554:554 -> _internalCallbackOnClick
-    43:43:void _internalCallbackOnClick(int,android.view.View):765:765 -> _internalCallbackOnClick
-    44:44:void _internalCallbackOnClick(int,android.view.View):775:775 -> _internalCallbackOnClick
-    45:45:void _internalCallbackOnClick(int,android.view.View):697:697 -> _internalCallbackOnClick
-    46:46:void _internalCallbackOnClick(int,android.view.View):707:707 -> _internalCallbackOnClick
-    47:47:void _internalCallbackOnClick(int,android.view.View):850:850 -> _internalCallbackOnClick
-    48:48:void _internalCallbackOnClick(int,android.view.View):860:860 -> _internalCallbackOnClick
-    1:3:boolean hasPendingBindings():317:319 -> hasPendingBindings
-    4:4:boolean hasPendingBindings():321:321 -> hasPendingBindings
-    1:4:void invalidateAll():309:312 -> invalidateAll
-    5:5:void invalidateAll():311:311 -> invalidateAll
-    1:4:void executeBindings():397:400 -> j
-    5:5:void executeBindings():409:409 -> j
-    6:6:void executeBindings():417:417 -> j
-    7:7:void executeBindings():419:419 -> j
-    8:8:void executeBindings():425:425 -> j
-    9:9:void executeBindings():432:432 -> j
-    10:10:void executeBindings():439:439 -> j
-    11:11:void executeBindings():458:458 -> j
-    12:12:void executeBindings():465:465 -> j
-    13:36:void executeBindings():485:508 -> j
-    37:38:void executeBindings():513:514 -> j
-    39:39:void executeBindings():519:519 -> j
-    40:40:void executeBindings():524:524 -> j
-    41:41:void executeBindings():529:529 -> j
-    42:42:void executeBindings():534:534 -> j
-    43:43:void executeBindings():400:400 -> j
-    1:1:boolean onFieldChange(int,java.lang.Object,int):350:350 -> n
-    1:3:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):356:358 -> onChangeViewModelInfo
-    4:6:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):362:364 -> onChangeViewModelInfo
-    7:9:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):368:370 -> onChangeViewModelInfo
-    10:12:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):374:376 -> onChangeViewModelInfo
-    13:15:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):380:382 -> onChangeViewModelInfo
-    16:18:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):386:388 -> onChangeViewModelInfo
-    1:1:boolean setVariable(int,java.lang.Object):329:329 -> setVariable
-    1:6:void setViewModel(com.autochips.avm.viewmode.CameraViewModel):338:343 -> setViewModel
-    7:7:void setViewModel(com.autochips.avm.viewmode.CameraViewModel):341:341 -> setViewModel
+    1:1:void <init>(androidx.databinding.DataBindingComponent,android.view.View):159:159 -> <init>
+    2:2:void <init>(androidx.databinding.DataBindingComponent,android.view.View,java.lang.Object[]):162:162 -> <init>
+    3:3:void <init>(androidx.databinding.DataBindingComponent,android.view.View,java.lang.Object[]):975:975 -> <init>
+    4:50:void <init>(androidx.databinding.DataBindingComponent,android.view.View,java.lang.Object[]):236:282 -> <init>
+    51:75:void <init>(androidx.databinding.DataBindingComponent,android.view.View,java.lang.Object[]):284:308 -> <init>
+    1:1:void _internalCallbackOnClick(int,android.view.View):822:822 -> _internalCallbackOnClick
+    2:2:void _internalCallbackOnClick(int,android.view.View):832:832 -> _internalCallbackOnClick
+    3:3:void _internalCallbackOnClick(int,android.view.View):958:958 -> _internalCallbackOnClick
+    4:4:void _internalCallbackOnClick(int,android.view.View):968:968 -> _internalCallbackOnClick
+    5:5:void _internalCallbackOnClick(int,android.view.View):890:890 -> _internalCallbackOnClick
+    6:6:void _internalCallbackOnClick(int,android.view.View):900:900 -> _internalCallbackOnClick
+    7:7:void _internalCallbackOnClick(int,android.view.View):686:686 -> _internalCallbackOnClick
+    8:8:void _internalCallbackOnClick(int,android.view.View):696:696 -> _internalCallbackOnClick
+    9:9:void _internalCallbackOnClick(int,android.view.View):601:601 -> _internalCallbackOnClick
+    10:10:void _internalCallbackOnClick(int,android.view.View):611:611 -> _internalCallbackOnClick
+    11:11:void _internalCallbackOnClick(int,android.view.View):635:635 -> _internalCallbackOnClick
+    12:12:void _internalCallbackOnClick(int,android.view.View):645:645 -> _internalCallbackOnClick
+    13:13:void _internalCallbackOnClick(int,android.view.View):805:805 -> _internalCallbackOnClick
+    14:14:void _internalCallbackOnClick(int,android.view.View):815:815 -> _internalCallbackOnClick
+    15:15:void _internalCallbackOnClick(int,android.view.View):754:754 -> _internalCallbackOnClick
+    16:16:void _internalCallbackOnClick(int,android.view.View):764:764 -> _internalCallbackOnClick
+    17:17:void _internalCallbackOnClick(int,android.view.View):584:584 -> _internalCallbackOnClick
+    18:18:void _internalCallbackOnClick(int,android.view.View):594:594 -> _internalCallbackOnClick
+    19:19:void _internalCallbackOnClick(int,android.view.View):771:771 -> _internalCallbackOnClick
+    20:20:void _internalCallbackOnClick(int,android.view.View):781:781 -> _internalCallbackOnClick
+    21:21:void _internalCallbackOnClick(int,android.view.View):737:737 -> _internalCallbackOnClick
+    22:22:void _internalCallbackOnClick(int,android.view.View):747:747 -> _internalCallbackOnClick
+    23:23:void _internalCallbackOnClick(int,android.view.View):856:856 -> _internalCallbackOnClick
+    24:24:void _internalCallbackOnClick(int,android.view.View):866:866 -> _internalCallbackOnClick
+    25:25:void _internalCallbackOnClick(int,android.view.View):839:839 -> _internalCallbackOnClick
+    26:26:void _internalCallbackOnClick(int,android.view.View):849:849 -> _internalCallbackOnClick
+    27:27:void _internalCallbackOnClick(int,android.view.View):941:941 -> _internalCallbackOnClick
+    28:28:void _internalCallbackOnClick(int,android.view.View):951:951 -> _internalCallbackOnClick
+    29:29:void _internalCallbackOnClick(int,android.view.View):907:907 -> _internalCallbackOnClick
+    30:30:void _internalCallbackOnClick(int,android.view.View):917:917 -> _internalCallbackOnClick
+    31:31:void _internalCallbackOnClick(int,android.view.View):669:669 -> _internalCallbackOnClick
+    32:32:void _internalCallbackOnClick(int,android.view.View):679:679 -> _internalCallbackOnClick
+    33:33:void _internalCallbackOnClick(int,android.view.View):703:703 -> _internalCallbackOnClick
+    34:34:void _internalCallbackOnClick(int,android.view.View):713:713 -> _internalCallbackOnClick
+    35:35:void _internalCallbackOnClick(int,android.view.View):618:618 -> _internalCallbackOnClick
+    36:36:void _internalCallbackOnClick(int,android.view.View):628:628 -> _internalCallbackOnClick
+    37:37:void _internalCallbackOnClick(int,android.view.View):924:924 -> _internalCallbackOnClick
+    38:38:void _internalCallbackOnClick(int,android.view.View):934:934 -> _internalCallbackOnClick
+    39:39:void _internalCallbackOnClick(int,android.view.View):652:652 -> _internalCallbackOnClick
+    40:40:void _internalCallbackOnClick(int,android.view.View):662:662 -> _internalCallbackOnClick
+    41:41:void _internalCallbackOnClick(int,android.view.View):567:567 -> _internalCallbackOnClick
+    42:42:void _internalCallbackOnClick(int,android.view.View):577:577 -> _internalCallbackOnClick
+    43:43:void _internalCallbackOnClick(int,android.view.View):788:788 -> _internalCallbackOnClick
+    44:44:void _internalCallbackOnClick(int,android.view.View):798:798 -> _internalCallbackOnClick
+    45:45:void _internalCallbackOnClick(int,android.view.View):720:720 -> _internalCallbackOnClick
+    46:46:void _internalCallbackOnClick(int,android.view.View):730:730 -> _internalCallbackOnClick
+    47:47:void _internalCallbackOnClick(int,android.view.View):873:873 -> _internalCallbackOnClick
+    48:48:void _internalCallbackOnClick(int,android.view.View):883:883 -> _internalCallbackOnClick
+    1:3:boolean hasPendingBindings():321:323 -> hasPendingBindings
+    4:4:boolean hasPendingBindings():325:325 -> hasPendingBindings
+    1:4:void invalidateAll():313:316 -> invalidateAll
+    5:5:void invalidateAll():315:315 -> invalidateAll
+    1:4:void executeBindings():401:404 -> j
+    5:5:void executeBindings():415:415 -> j
+    6:6:void executeBindings():423:423 -> j
+    7:7:void executeBindings():425:425 -> j
+    8:8:void executeBindings():431:431 -> j
+    9:9:void executeBindings():438:438 -> j
+    10:10:void executeBindings():445:445 -> j
+    11:11:void executeBindings():464:464 -> j
+    12:12:void executeBindings():469:469 -> j
+    13:13:void executeBindings():487:487 -> j
+    14:37:void executeBindings():507:530 -> j
+    38:39:void executeBindings():535:536 -> j
+    40:40:void executeBindings():541:541 -> j
+    41:41:void executeBindings():546:546 -> j
+    42:42:void executeBindings():551:551 -> j
+    43:44:void executeBindings():556:557 -> j
+    45:45:void executeBindings():404:404 -> j
+    1:1:boolean onFieldChange(int,java.lang.Object,int):354:354 -> n
+    1:3:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):360:362 -> onChangeViewModelInfo
+    4:6:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):366:368 -> onChangeViewModelInfo
+    7:9:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):372:374 -> onChangeViewModelInfo
+    10:12:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):378:380 -> onChangeViewModelInfo
+    13:15:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):384:386 -> onChangeViewModelInfo
+    16:18:boolean onChangeViewModelInfo(com.autochips.avm.info.CameraInfo,int):390:392 -> onChangeViewModelInfo
+    1:1:boolean setVariable(int,java.lang.Object):333:333 -> setVariable
+    1:6:void setViewModel(com.autochips.avm.viewmode.CameraViewModel):342:347 -> setViewModel
+    7:7:void setViewModel(com.autochips.avm.viewmode.CameraViewModel):345:345 -> setViewModel
 com.autochips.avm.databinding.ViewRearviewMirrorBinding -> t7:
     java.lang.String mPassedText -> N
     android.widget.LinearLayout llSettingRearviewMirrorDown -> H
@@ -59441,38 +59437,39 @@ com.autochips.avm.service.AvmRuntime$DataSts -> com.autochips.avm.service.e$e:
     4:4:void writeMemoryMode(int):1748:1748 -> writeMemoryMode
 com.autochips.avm.service.AvmService -> com.autochips.avm.service.AvmService:
     java.lang.String exit_action -> g
-    boolean ENABLE_SIGNAL_UPDATE -> m
-    com.autochips.avm.service.AvmService$MyBroadcastReceiver broadcastReceiver -> k
-    boolean isActAndWindowMode -> n
-    com.avm.framwork.manager.CanManager$onSignalValueChangedListener mOnSignalValueChangedListener -> q
+    com.avm.framwork.manager.CanManager$onSignalValueChangedListener mOnSignalValueChangedListener -> r
+    boolean ENABLE_SIGNAL_UPDATE -> n
     java.lang.String close_act -> i
-    boolean isFirstEnter -> o
+    boolean isActAndWindowMode -> o
     java.lang.String open_act -> h
+    boolean isFirstEnter -> p
+    java.lang.String init_can -> k
     java.lang.String first_open_act -> j
-    boolean isCallFRadarSound -> u
-    boolean isInt3801 -> v
+    com.autochips.avm.service.AvmService$MyBroadcastReceiver broadcastReceiver -> l
+    boolean isCallRRadarSound -> u
+    boolean isCallFRadarSound -> v
     int MSG_DEL_CAMERA -> d
-    boolean isInt3801_2 -> w
+    boolean isInt3801 -> w
+    boolean isInt3801_2 -> x
     int MSG_ACTION_ENTER -> b
     int MSG_CR_CAMERA -> c
-    boolean isRadarFront60 -> r
-    com.gxa.service.camera.AvmManager mAvmManager -> p
-    boolean isRadarFront110 -> s
-    boolean isCallRRadarSound -> t
-    int calStatus -> x
+    com.gxa.service.camera.AvmManager mAvmManager -> q
+    boolean isRadarFront60 -> s
+    boolean isRadarFront110 -> t
+    int calStatus -> y
     boolean isCalibration -> e
     boolean isExitAction -> f
-    android.os.Handler mHandler -> l
-    1:1:void <init>():143:143 -> <init>
-    2:6:void <init>():130:134 -> <init>
-    7:7:void <init>():136:136 -> <init>
-    8:8:void <init>():138:138 -> <init>
-    9:9:void <init>():140:140 -> <init>
-    10:10:void <init>():496:496 -> <init>
-    11:12:void <init>():635:636 -> <init>
-    13:14:void <init>():638:639 -> <init>
-    15:16:void <init>():766:767 -> <init>
-    17:17:void <init>():915:915 -> <init>
+    android.os.Handler mHandler -> m
+    1:1:void <init>():144:144 -> <init>
+    2:7:void <init>():130:135 -> <init>
+    8:8:void <init>():137:137 -> <init>
+    9:9:void <init>():139:139 -> <init>
+    10:10:void <init>():141:141 -> <init>
+    11:11:void <init>():497:497 -> <init>
+    12:13:void <init>():636:637 -> <init>
+    14:15:void <init>():639:640 -> <init>
+    16:17:void <init>():766:767 -> <init>
+    18:18:void <init>():915:915 -> <init>
     1:1:android.os.Handler access$000(com.autochips.avm.service.AvmService):120:120 -> a
     1:1:com.gxa.service.camera.AvmManager access$100(com.autochips.avm.service.AvmService):120:120 -> b
     1:1:java.lang.String access$200(com.autochips.avm.service.AvmService):120:120 -> c
@@ -59483,51 +59480,52 @@ com.autochips.avm.service.AvmService -> com.autochips.avm.service.AvmService:
     1:5:int getCalStatus(int,java.lang.String):918:922 -> getCalStatus
     6:6:int getCalStatus(int,java.lang.String):929:929 -> getCalStatus
     1:1:boolean access$602(com.autochips.avm.service.AvmService,boolean):120:120 -> h
-    void lambda$getCalStatus$3$AvmService() -> i
-    1:2:void initDefault():487:488 -> initDefault
-    3:3:void initDefault():490:490 -> initDefault
-    4:4:void initDefault():492:492 -> initDefault
-    void lambda$new$2$AvmService(int,java.lang.Object) -> j
+    1:1:java.lang.String access$700(com.autochips.avm.service.AvmService):120:120 -> i
+    1:2:void initDefault():488:489 -> initDefault
+    3:3:void initDefault():491:491 -> initDefault
+    4:4:void initDefault():493:493 -> initDefault
+    void lambda$getCalStatus$3$AvmService() -> j
+    void lambda$new$2$AvmService(int,java.lang.Object) -> k
     1:4:void lambda$getCalStatus$3():923:926 -> lambda$getCalStatus$3
-    1:2:void lambda$new$2(int,java.lang.Object):497:498 -> lambda$new$2
-    3:5:void lambda$new$2(int,java.lang.Object):502:504 -> lambda$new$2
-    6:6:void lambda$new$2(int,java.lang.Object):507:507 -> lambda$new$2
-    7:7:void lambda$new$2(int,java.lang.Object):510:510 -> lambda$new$2
-    8:9:void lambda$new$2(int,java.lang.Object):514:515 -> lambda$new$2
-    10:11:void lambda$new$2(int,java.lang.Object):521:522 -> lambda$new$2
-    12:12:void lambda$new$2(int,java.lang.Object):530:530 -> lambda$new$2
-    13:13:void lambda$new$2(int,java.lang.Object):533:533 -> lambda$new$2
-    14:17:void lambda$new$2(int,java.lang.Object):537:540 -> lambda$new$2
-    18:19:void lambda$new$2(int,java.lang.Object):542:543 -> lambda$new$2
-    20:21:void lambda$new$2(int,java.lang.Object):545:546 -> lambda$new$2
-    22:23:void lambda$new$2(int,java.lang.Object):548:549 -> lambda$new$2
-    24:25:void lambda$new$2(int,java.lang.Object):552:553 -> lambda$new$2
-    26:30:void lambda$new$2(int,java.lang.Object):558:562 -> lambda$new$2
-    1:2:void lambda$onCreate$0(android.view.View):379:380 -> lambda$onCreate$0
-    1:3:void lambda$onCreate$1():376:378 -> lambda$onCreate$1
-    1:2:android.os.IBinder onBind(android.content.Intent):392:393 -> onBind
-    1:3:void onCreate():148:150 -> onCreate
-    4:8:void onCreate():152:156 -> onCreate
-    9:11:void onCreate():158:160 -> onCreate
-    12:18:void onCreate():162:168 -> onCreate
-    19:19:void onCreate():170:170 -> onCreate
-    20:20:void onCreate():211:211 -> onCreate
-    21:21:void onCreate():213:213 -> onCreate
-    22:24:void onCreate():373:375 -> onCreate
-    25:25:void onCreate():385:385 -> onCreate
-    1:2:void onDestroy():434:435 -> onDestroy
-    3:5:void onDestroy():438:440 -> onDestroy
-    6:8:void onDestroy():443:445 -> onDestroy
-    1:5:void onEnter(int):451:455 -> onEnter
-    1:1:void onExit(int):460:460 -> onExit
-    1:1:void onGearNoAct(int):465:465 -> onGearNoAct
-    2:2:void onGearNoAct(int):477:477 -> onGearNoAct
-    1:1:int onStartCommand(android.content.Intent,int,int):404:404 -> onStartCommand
-    2:4:int onStartCommand(android.content.Intent,int,int):406:408 -> onStartCommand
-    5:7:int onStartCommand(android.content.Intent,int,int):413:415 -> onStartCommand
-    8:11:int onStartCommand(android.content.Intent,int,int):418:421 -> onStartCommand
-    12:12:int onStartCommand(android.content.Intent,int,int):424:424 -> onStartCommand
-    1:2:boolean onUnbind(android.content.Intent):398:399 -> onUnbind
+    1:2:void lambda$new$2(int,java.lang.Object):498:499 -> lambda$new$2
+    3:5:void lambda$new$2(int,java.lang.Object):503:505 -> lambda$new$2
+    6:6:void lambda$new$2(int,java.lang.Object):508:508 -> lambda$new$2
+    7:7:void lambda$new$2(int,java.lang.Object):511:511 -> lambda$new$2
+    8:9:void lambda$new$2(int,java.lang.Object):515:516 -> lambda$new$2
+    10:11:void lambda$new$2(int,java.lang.Object):522:523 -> lambda$new$2
+    12:12:void lambda$new$2(int,java.lang.Object):531:531 -> lambda$new$2
+    13:13:void lambda$new$2(int,java.lang.Object):534:534 -> lambda$new$2
+    14:17:void lambda$new$2(int,java.lang.Object):538:541 -> lambda$new$2
+    18:19:void lambda$new$2(int,java.lang.Object):543:544 -> lambda$new$2
+    20:21:void lambda$new$2(int,java.lang.Object):546:547 -> lambda$new$2
+    22:23:void lambda$new$2(int,java.lang.Object):549:550 -> lambda$new$2
+    24:25:void lambda$new$2(int,java.lang.Object):553:554 -> lambda$new$2
+    26:30:void lambda$new$2(int,java.lang.Object):559:563 -> lambda$new$2
+    1:2:void lambda$onCreate$0(android.view.View):380:381 -> lambda$onCreate$0
+    1:3:void lambda$onCreate$1():377:379 -> lambda$onCreate$1
+    1:2:android.os.IBinder onBind(android.content.Intent):393:394 -> onBind
+    1:3:void onCreate():149:151 -> onCreate
+    4:8:void onCreate():153:157 -> onCreate
+    9:11:void onCreate():159:161 -> onCreate
+    12:18:void onCreate():163:169 -> onCreate
+    19:19:void onCreate():171:171 -> onCreate
+    20:20:void onCreate():212:212 -> onCreate
+    21:21:void onCreate():214:214 -> onCreate
+    22:24:void onCreate():374:376 -> onCreate
+    25:25:void onCreate():386:386 -> onCreate
+    1:2:void onDestroy():435:436 -> onDestroy
+    3:5:void onDestroy():439:441 -> onDestroy
+    6:8:void onDestroy():444:446 -> onDestroy
+    1:5:void onEnter(int):452:456 -> onEnter
+    1:1:void onExit(int):461:461 -> onExit
+    1:1:void onGearNoAct(int):466:466 -> onGearNoAct
+    2:2:void onGearNoAct(int):478:478 -> onGearNoAct
+    1:1:int onStartCommand(android.content.Intent,int,int):405:405 -> onStartCommand
+    2:4:int onStartCommand(android.content.Intent,int,int):407:409 -> onStartCommand
+    5:7:int onStartCommand(android.content.Intent,int,int):414:416 -> onStartCommand
+    8:11:int onStartCommand(android.content.Intent,int,int):419:422 -> onStartCommand
+    12:12:int onStartCommand(android.content.Intent,int,int):425:425 -> onStartCommand
+    1:2:boolean onUnbind(android.content.Intent):399:400 -> onUnbind
     1:3:void setCalibration(int,java.lang.Object):770:772 -> setCalibration
     4:6:void setCalibration(int,java.lang.Object):774:776 -> setCalibration
     7:8:void setCalibration(int,java.lang.Object):904:905 -> setCalibration
@@ -59561,80 +59559,80 @@ com.autochips.avm.service.AvmService -> com.autochips.avm.service.AvmService:
     52:53:void setCalibration(int,java.lang.Object):786:787 -> setCalibration
     54:55:void setCalibration(int,java.lang.Object):789:790 -> setCalibration
     56:56:void setCalibration(int,java.lang.Object):793:793 -> setCalibration
-    1:1:void setDoorStatus(int,java.lang.Object):579:579 -> setDoorStatus
-    1:1:void setFlWheelStatus(int,java.lang.Object):606:606 -> setFlWheelStatus
-    2:2:void setFlWheelStatus(int,java.lang.Object):595:595 -> setFlWheelStatus
-    1:1:void setLight(int,java.lang.Object):625:625 -> setLight
-    1:1:void setRadar(int,java.lang.Object):642:642 -> setRadar
-    2:4:void setRadar(int,java.lang.Object):644:646 -> setRadar
-    5:6:void setRadar(int,java.lang.Object):649:650 -> setRadar
-    7:12:void setRadar(int,java.lang.Object):652:657 -> setRadar
-    13:13:void setRadar(int,java.lang.Object):661:661 -> setRadar
-    14:14:void setRadar(int,java.lang.Object):664:664 -> setRadar
-    15:16:void setRadar(int,java.lang.Object):701:702 -> setRadar
-    17:17:void setRadar(int,java.lang.Object):705:705 -> setRadar
-    18:19:void setRadar(int,java.lang.Object):711:712 -> setRadar
-    20:20:void setRadar(int,java.lang.Object):714:714 -> setRadar
-    21:21:void setRadar(int,java.lang.Object):674:674 -> setRadar
-    22:23:void setRadar(int,java.lang.Object):676:677 -> setRadar
-    24:24:void setRadar(int,java.lang.Object):680:680 -> setRadar
-    25:27:void setRadar(int,java.lang.Object):685:687 -> setRadar
-    28:28:void setRadar(int,java.lang.Object):689:689 -> setRadar
-    29:29:void setRadar(int,java.lang.Object):725:725 -> setRadar
-    30:30:void setRadar(int,java.lang.Object):748:748 -> setRadar
-    31:31:void setRadar(int,java.lang.Object):741:741 -> setRadar
-    32:32:void setRadar(int,java.lang.Object):735:735 -> setRadar
-    33:33:void setRadar(int,java.lang.Object):738:738 -> setRadar
-    34:37:void setRadar(int,java.lang.Object):751:754 -> setRadar
-    38:38:void setRadar(int,java.lang.Object):729:729 -> setRadar
+    1:1:void setDoorStatus(int,java.lang.Object):580:580 -> setDoorStatus
+    1:1:void setFlWheelStatus(int,java.lang.Object):607:607 -> setFlWheelStatus
+    2:2:void setFlWheelStatus(int,java.lang.Object):596:596 -> setFlWheelStatus
+    1:1:void setLight(int,java.lang.Object):626:626 -> setLight
+    1:1:void setRadar(int,java.lang.Object):643:643 -> setRadar
+    2:4:void setRadar(int,java.lang.Object):645:647 -> setRadar
+    5:5:void setRadar(int,java.lang.Object):650:650 -> setRadar
+    6:11:void setRadar(int,java.lang.Object):652:657 -> setRadar
+    12:12:void setRadar(int,java.lang.Object):661:661 -> setRadar
+    13:13:void setRadar(int,java.lang.Object):664:664 -> setRadar
+    14:15:void setRadar(int,java.lang.Object):701:702 -> setRadar
+    16:16:void setRadar(int,java.lang.Object):705:705 -> setRadar
+    17:18:void setRadar(int,java.lang.Object):711:712 -> setRadar
+    19:19:void setRadar(int,java.lang.Object):714:714 -> setRadar
+    20:20:void setRadar(int,java.lang.Object):674:674 -> setRadar
+    21:22:void setRadar(int,java.lang.Object):676:677 -> setRadar
+    23:23:void setRadar(int,java.lang.Object):680:680 -> setRadar
+    24:26:void setRadar(int,java.lang.Object):685:687 -> setRadar
+    27:27:void setRadar(int,java.lang.Object):689:689 -> setRadar
+    28:28:void setRadar(int,java.lang.Object):725:725 -> setRadar
+    29:29:void setRadar(int,java.lang.Object):748:748 -> setRadar
+    30:30:void setRadar(int,java.lang.Object):741:741 -> setRadar
+    31:31:void setRadar(int,java.lang.Object):735:735 -> setRadar
+    32:32:void setRadar(int,java.lang.Object):738:738 -> setRadar
+    33:36:void setRadar(int,java.lang.Object):751:754 -> setRadar
+    37:37:void setRadar(int,java.lang.Object):729:729 -> setRadar
 com.autochips.avm.service.AvmService$1 -> com.autochips.avm.service.AvmService$a:
     com.autochips.avm.service.AvmService this$0 -> a
-    1:1:void <init>(com.autochips.avm.service.AvmService):170:170 -> <init>
-    1:1:void onCarPowerWorkModeChangeEvent(gxa.car.power.data.CarPowerWorkModeStatus):173:173 -> onCarPowerWorkModeChangeEvent
-    2:7:void onCarPowerWorkModeChangeEvent(gxa.car.power.data.CarPowerWorkModeStatus):175:180 -> onCarPowerWorkModeChangeEvent
-    8:11:void onCarPowerWorkModeChangeEvent(gxa.car.power.data.CarPowerWorkModeStatus):182:185 -> onCarPowerWorkModeChangeEvent
+    1:1:void <init>(com.autochips.avm.service.AvmService):171:171 -> <init>
+    1:1:void onCarPowerWorkModeChangeEvent(gxa.car.power.data.CarPowerWorkModeStatus):174:174 -> onCarPowerWorkModeChangeEvent
+    2:7:void onCarPowerWorkModeChangeEvent(gxa.car.power.data.CarPowerWorkModeStatus):176:181 -> onCarPowerWorkModeChangeEvent
+    8:11:void onCarPowerWorkModeChangeEvent(gxa.car.power.data.CarPowerWorkModeStatus):183:186 -> onCarPowerWorkModeChangeEvent
 com.autochips.avm.service.AvmService$2 -> com.autochips.avm.service.AvmService$b:
     com.autochips.avm.service.AvmService this$0 -> a
-    1:1:void <init>(com.autochips.avm.service.AvmService):213:213 -> <init>
-    1:1:void handleMessage(android.os.Message):219:219 -> handleMessage
-    2:3:void handleMessage(android.os.Message):221:222 -> handleMessage
-    4:5:void handleMessage(android.os.Message):225:226 -> handleMessage
-    6:9:void handleMessage(android.os.Message):309:312 -> handleMessage
-    10:11:void handleMessage(android.os.Message):314:315 -> handleMessage
-    12:16:void handleMessage(android.os.Message):317:321 -> handleMessage
-    17:17:void handleMessage(android.os.Message):292:292 -> handleMessage
-    18:19:void handleMessage(android.os.Message):294:295 -> handleMessage
-    20:27:void handleMessage(android.os.Message):297:304 -> handleMessage
-    28:28:void handleMessage(android.os.Message):279:279 -> handleMessage
-    29:30:void handleMessage(android.os.Message):281:282 -> handleMessage
-    31:33:void handleMessage(android.os.Message):284:286 -> handleMessage
-    34:34:void handleMessage(android.os.Message):266:266 -> handleMessage
-    35:39:void handleMessage(android.os.Message):268:272 -> handleMessage
-    40:41:void handleMessage(android.os.Message):274:275 -> handleMessage
-    42:42:void handleMessage(android.os.Message):263:263 -> handleMessage
-    43:43:void handleMessage(android.os.Message):260:260 -> handleMessage
-    44:45:void handleMessage(android.os.Message):252:253 -> handleMessage
-    46:47:void handleMessage(android.os.Message):256:257 -> handleMessage
-    48:48:void handleMessage(android.os.Message):246:246 -> handleMessage
-    49:49:void handleMessage(android.os.Message):249:249 -> handleMessage
-    50:51:void handleMessage(android.os.Message):328:329 -> handleMessage
-    52:52:void handleMessage(android.os.Message):243:243 -> handleMessage
-    53:54:void handleMessage(android.os.Message):235:236 -> handleMessage
-    55:56:void handleMessage(android.os.Message):239:240 -> handleMessage
-    57:58:void handleMessage(android.os.Message):231:232 -> handleMessage
-    59:59:void handleMessage(android.os.Message):228:228 -> handleMessage
-    60:61:void handleMessage(android.os.Message):336:337 -> handleMessage
-    62:68:void handleMessage(android.os.Message):339:345 -> handleMessage
-    69:70:void handleMessage(android.os.Message):332:333 -> handleMessage
-    71:73:void handleMessage(android.os.Message):350:352 -> handleMessage
-    74:75:void handleMessage(android.os.Message):361:362 -> handleMessage
+    1:1:void <init>(com.autochips.avm.service.AvmService):214:214 -> <init>
+    1:1:void handleMessage(android.os.Message):220:220 -> handleMessage
+    2:3:void handleMessage(android.os.Message):222:223 -> handleMessage
+    4:5:void handleMessage(android.os.Message):226:227 -> handleMessage
+    6:9:void handleMessage(android.os.Message):310:313 -> handleMessage
+    10:11:void handleMessage(android.os.Message):315:316 -> handleMessage
+    12:16:void handleMessage(android.os.Message):318:322 -> handleMessage
+    17:17:void handleMessage(android.os.Message):293:293 -> handleMessage
+    18:19:void handleMessage(android.os.Message):295:296 -> handleMessage
+    20:27:void handleMessage(android.os.Message):298:305 -> handleMessage
+    28:28:void handleMessage(android.os.Message):280:280 -> handleMessage
+    29:30:void handleMessage(android.os.Message):282:283 -> handleMessage
+    31:33:void handleMessage(android.os.Message):285:287 -> handleMessage
+    34:34:void handleMessage(android.os.Message):267:267 -> handleMessage
+    35:39:void handleMessage(android.os.Message):269:273 -> handleMessage
+    40:41:void handleMessage(android.os.Message):275:276 -> handleMessage
+    42:42:void handleMessage(android.os.Message):264:264 -> handleMessage
+    43:43:void handleMessage(android.os.Message):261:261 -> handleMessage
+    44:45:void handleMessage(android.os.Message):253:254 -> handleMessage
+    46:47:void handleMessage(android.os.Message):257:258 -> handleMessage
+    48:48:void handleMessage(android.os.Message):247:247 -> handleMessage
+    49:49:void handleMessage(android.os.Message):250:250 -> handleMessage
+    50:51:void handleMessage(android.os.Message):329:330 -> handleMessage
+    52:52:void handleMessage(android.os.Message):244:244 -> handleMessage
+    53:54:void handleMessage(android.os.Message):236:237 -> handleMessage
+    55:56:void handleMessage(android.os.Message):240:241 -> handleMessage
+    57:58:void handleMessage(android.os.Message):232:233 -> handleMessage
+    59:59:void handleMessage(android.os.Message):229:229 -> handleMessage
+    60:61:void handleMessage(android.os.Message):337:338 -> handleMessage
+    62:68:void handleMessage(android.os.Message):340:346 -> handleMessage
+    69:70:void handleMessage(android.os.Message):333:334 -> handleMessage
+    71:73:void handleMessage(android.os.Message):351:353 -> handleMessage
+    74:75:void handleMessage(android.os.Message):362:363 -> handleMessage
 com.autochips.avm.service.AvmService$3 -> com.autochips.avm.service.AvmService$c:
     com.autochips.avm.service.AvmService this$0 -> b
-    1:1:void <init>(com.autochips.avm.service.AvmService):477:477 -> <init>
-    1:1:void run():480:480 -> run
+    1:1:void <init>(com.autochips.avm.service.AvmService):478:478 -> <init>
+    1:1:void run():481:481 -> run
 com.autochips.avm.service.AvmService$AvmServiceIBinder -> com.autochips.avm.service.AvmService$d:
     com.autochips.avm.service.AvmService this$0 -> a
-    1:1:void <init>(com.autochips.avm.service.AvmService):982:982 -> <init>
+    1:1:void <init>(com.autochips.avm.service.AvmService):984:984 -> <init>
 com.autochips.avm.service.AvmService$MyBroadcastReceiver -> com.autochips.avm.service.AvmService$e:
     com.autochips.avm.service.AvmService this$0 -> a
     1:1:void <init>(com.autochips.avm.service.AvmService):937:937 -> <init>
@@ -59644,6 +59642,7 @@ com.autochips.avm.service.AvmService$MyBroadcastReceiver -> com.autochips.avm.se
     19:23:void onReceive(android.content.Context,android.content.Intent):962:966 -> onReceive
     24:25:void onReceive(android.content.Context,android.content.Intent):968:969 -> onReceive
     26:31:void onReceive(android.content.Context,android.content.Intent):971:976 -> onReceive
+    32:32:void onReceive(android.content.Context,android.content.Intent):978:978 -> onReceive
 com.autochips.avm.service.BootReceiver -> com.autochips.avm.service.BootReceiver:
     android.os.Handler mHandler -> a
     1:2:void <init>():13:14 -> <init>
@@ -60739,12 +60738,12 @@ com.autochips.avm.ui.view.CameraView -> com.autochips.avm.ui.view.CameraView:
     8:11:void setCameraViewLayer():1453:1456 -> setCameraViewLayer
     12:13:void setCameraViewLayer():1459:1460 -> setCameraViewLayer
     1:3:void setCurrentGear(int):578:580 -> setCurrentGear
-    1:1:void setRadar(int,int,int):1875:1875 -> setRadar
-    1:1:void setRadarFailStatus(int,int):709:709 -> setRadarFailStatus
-    2:2:void setRadarFailStatus(int,int):722:722 -> setRadarFailStatus
-    3:3:void setRadarFailStatus(int,int):716:716 -> setRadarFailStatus
-    4:4:void setRadarFailStatus(int,int):713:713 -> setRadarFailStatus
-    5:5:void setRadarFailStatus(int,int):726:726 -> setRadarFailStatus
+    1:1:void setRadar(int,int):1875:1875 -> setRadar
+    1:2:void setRadarFailStatus(int,int):709:710 -> setRadarFailStatus
+    3:3:void setRadarFailStatus(int,int):722:722 -> setRadarFailStatus
+    4:4:void setRadarFailStatus(int,int):716:716 -> setRadarFailStatus
+    5:5:void setRadarFailStatus(int,int):713:713 -> setRadarFailStatus
+    6:6:void setRadarFailStatus(int,int):726:726 -> setRadarFailStatus
     1:4:void setViewDialog():2630:2633 -> setViewDialog
     5:7:void setViewDialog():2635:2637 -> setViewDialog
     8:10:void setViewDialog():2639:2641 -> setViewDialog
@@ -60801,12 +60800,12 @@ com.autochips.avm.ui.view.CameraView -> com.autochips.avm.ui.view.CameraView:
     5:7:void skinView():2110:2112 -> skinView
     8:9:void skinView():2115:2116 -> skinView
     10:10:void skinView():2119:2119 -> skinView
-    11:35:void skinView():2122:2146 -> skinView
-    36:40:void skinView():2148:2152 -> skinView
-    41:41:void skinView():2156:2156 -> skinView
-    42:60:void skinView():2159:2177 -> skinView
-    61:65:void skinView():2179:2183 -> skinView
-    66:70:void skinView():2187:2191 -> skinView
+    11:34:void skinView():2122:2145 -> skinView
+    35:39:void skinView():2148:2152 -> skinView
+    40:40:void skinView():2156:2156 -> skinView
+    41:59:void skinView():2159:2177 -> skinView
+    60:64:void skinView():2179:2183 -> skinView
+    65:69:void skinView():2187:2191 -> skinView
     1:1:void startCalibration():2600:2600 -> startCalibration
     void lambda$chick2DView$28$CameraView(int) -> t
     1:1:void tabView():1124:1124 -> tabView
@@ -61300,10 +61299,10 @@ com.autochips.avm.ui.view.RadarStatusView -> com.autochips.avm.ui.view.RadarStat
     boolean isShowOrange2 -> u
     android.graphics.Bitmap bmRadar1_red_2 -> d
     boolean isShowGreen2 -> w
-    int mildLen -> E
+    int rRLLen -> E
     android.graphics.Bitmap bmRadar3_yellow_2 -> j
     boolean isShowOrange1 -> q
-    int mGear -> C
+    int rRRLen -> C
     android.graphics.Bitmap bmRadar2_orange_3 -> h
     boolean isShowGreen1 -> s
     boolean isShowOrange3 -> y
@@ -61311,10 +61310,9 @@ com.autochips.avm.ui.view.RadarStatusView -> com.autochips.avm.ui.view.RadarStat
     boolean isShowGreen3 -> A
     android.graphics.Bitmap bmRadar4_green_2 -> m
     boolean isShowRed1 -> p
-    int rRLLen -> F
     android.graphics.Bitmap bmRadar2_orange_2 -> g
     boolean isShowYellow2 -> v
-    int rRRLen -> D
+    int mildLen -> D
     android.graphics.Bitmap bmRadar1_red_3 -> e
     android.graphics.Paint paint -> o
     boolean isShowRed3 -> x
@@ -61325,53 +61323,55 @@ com.autochips.avm.ui.view.RadarStatusView -> com.autochips.avm.ui.view.RadarStat
     android.graphics.Bitmap bmRadar1_red_1 -> c
     boolean isShowYellow3 -> z
     java.lang.String TAG -> b
-    1:1:void <clinit>():27:27 -> <clinit>
-    1:1:void <init>(android.content.Context):180:180 -> <init>
-    2:2:void <init>(android.content.Context):43:43 -> <init>
-    3:6:void <init>(android.content.Context):45:48 -> <init>
-    7:10:void <init>(android.content.Context):51:54 -> <init>
-    11:14:void <init>(android.content.Context):57:60 -> <init>
-    15:17:void <init>(android.content.Context):72:74 -> <init>
-    18:18:void <init>(android.content.Context):181:181 -> <init>
-    19:19:void <init>(android.content.Context,android.util.AttributeSet):185:185 -> <init>
-    20:20:void <init>(android.content.Context,android.util.AttributeSet):43:43 -> <init>
-    21:24:void <init>(android.content.Context,android.util.AttributeSet):45:48 -> <init>
-    25:28:void <init>(android.content.Context,android.util.AttributeSet):51:54 -> <init>
-    29:32:void <init>(android.content.Context,android.util.AttributeSet):57:60 -> <init>
-    33:35:void <init>(android.content.Context,android.util.AttributeSet):72:74 -> <init>
-    36:36:void <init>(android.content.Context,android.util.AttributeSet):186:186 -> <init>
-    37:37:void <init>(android.content.Context,android.util.AttributeSet,int):190:190 -> <init>
-    38:38:void <init>(android.content.Context,android.util.AttributeSet,int):43:43 -> <init>
-    39:42:void <init>(android.content.Context,android.util.AttributeSet,int):45:48 -> <init>
-    43:46:void <init>(android.content.Context,android.util.AttributeSet,int):51:54 -> <init>
-    47:50:void <init>(android.content.Context,android.util.AttributeSet,int):57:60 -> <init>
-    51:53:void <init>(android.content.Context,android.util.AttributeSet,int):72:74 -> <init>
-    54:54:void <init>(android.content.Context,android.util.AttributeSet,int):191:191 -> <init>
-    1:1:void canvasBitmap(android.graphics.Canvas,boolean,android.graphics.Bitmap):255:255 -> canvasBitmap
-    1:3:void init():198:200 -> init
-    4:6:void init():202:204 -> init
-    7:9:void init():206:208 -> init
-    10:12:void init():210:212 -> init
-    1:1:boolean isShowBitmap150(int):134:134 -> isShowBitmap150
-    1:1:boolean isShowTextTip():142:142 -> isShowTextTip
-    2:2:boolean isShowTextTip():145:145 -> isShowTextTip
-    3:3:boolean isShowTextTip():148:148 -> isShowTextTip
-    1:1:void onDraw(android.graphics.Canvas):218:218 -> onDraw
-    2:3:void onDraw(android.graphics.Canvas):221:222 -> onDraw
-    4:9:void onDraw(android.graphics.Canvas):225:230 -> onDraw
-    10:13:void onDraw(android.graphics.Canvas):234:237 -> onDraw
-    14:17:void onDraw(android.graphics.Canvas):239:242 -> onDraw
-    18:21:void onDraw(android.graphics.Canvas):244:247 -> onDraw
-    1:1:void setViewModel(com.autochips.avm.viewmode.CameraViewModel):66:66 -> setViewModel
-    1:4:void showRadarBtn():159:162 -> showRadarBtn
-    5:9:void showRadarBtn():165:169 -> showRadarBtn
-    10:10:void showRadarBtn():171:171 -> showRadarBtn
-    11:11:void showRadarBtn():173:173 -> showRadarBtn
-    12:12:void showRadarBtn():175:175 -> showRadarBtn
-    1:1:void status(int,int,int):76:76 -> status
-    2:8:void status(int,int,int):98:104 -> status
-    9:15:void status(int,int,int):89:95 -> status
-    16:22:void status(int,int,int):80:86 -> status
+    1:1:void <clinit>():29:29 -> <clinit>
+    1:1:void <init>(android.content.Context):177:177 -> <init>
+    2:2:void <init>(android.content.Context):45:45 -> <init>
+    3:6:void <init>(android.content.Context):47:50 -> <init>
+    7:10:void <init>(android.content.Context):53:56 -> <init>
+    11:14:void <init>(android.content.Context):59:62 -> <init>
+    15:17:void <init>(android.content.Context):73:75 -> <init>
+    18:18:void <init>(android.content.Context):178:178 -> <init>
+    19:19:void <init>(android.content.Context,android.util.AttributeSet):182:182 -> <init>
+    20:20:void <init>(android.content.Context,android.util.AttributeSet):45:45 -> <init>
+    21:24:void <init>(android.content.Context,android.util.AttributeSet):47:50 -> <init>
+    25:28:void <init>(android.content.Context,android.util.AttributeSet):53:56 -> <init>
+    29:32:void <init>(android.content.Context,android.util.AttributeSet):59:62 -> <init>
+    33:35:void <init>(android.content.Context,android.util.AttributeSet):73:75 -> <init>
+    36:36:void <init>(android.content.Context,android.util.AttributeSet):183:183 -> <init>
+    37:37:void <init>(android.content.Context,android.util.AttributeSet,int):187:187 -> <init>
+    38:38:void <init>(android.content.Context,android.util.AttributeSet,int):45:45 -> <init>
+    39:42:void <init>(android.content.Context,android.util.AttributeSet,int):47:50 -> <init>
+    43:46:void <init>(android.content.Context,android.util.AttributeSet,int):53:56 -> <init>
+    47:50:void <init>(android.content.Context,android.util.AttributeSet,int):59:62 -> <init>
+    51:53:void <init>(android.content.Context,android.util.AttributeSet,int):73:75 -> <init>
+    54:54:void <init>(android.content.Context,android.util.AttributeSet,int):188:188 -> <init>
+    1:1:void canvasBitmap(android.graphics.Canvas,boolean,android.graphics.Bitmap):252:252 -> canvasBitmap
+    1:3:void init():195:197 -> init
+    4:6:void init():199:201 -> init
+    7:9:void init():203:205 -> init
+    10:12:void init():207:209 -> init
+    1:1:boolean isShowBitmap150(int):131:131 -> isShowBitmap150
+    1:1:boolean isShowBitmap30(int):116:116 -> isShowBitmap30
+    1:1:boolean isShowBitmap60(int):121:121 -> isShowBitmap60
+    1:1:boolean isShowBitmap90(int):127:127 -> isShowBitmap90
+    1:1:boolean isShowTextTip():139:139 -> isShowTextTip
+    2:2:boolean isShowTextTip():142:142 -> isShowTextTip
+    3:3:boolean isShowTextTip():145:145 -> isShowTextTip
+    1:1:void onDraw(android.graphics.Canvas):215:215 -> onDraw
+    2:3:void onDraw(android.graphics.Canvas):218:219 -> onDraw
+    4:9:void onDraw(android.graphics.Canvas):222:227 -> onDraw
+    10:13:void onDraw(android.graphics.Canvas):231:234 -> onDraw
+    14:17:void onDraw(android.graphics.Canvas):236:239 -> onDraw
+    18:21:void onDraw(android.graphics.Canvas):241:244 -> onDraw
+    1:1:void setViewModel(com.autochips.avm.viewmode.CameraViewModel):67:67 -> setViewModel
+    1:4:void showRadarBtn():156:159 -> showRadarBtn
+    5:9:void showRadarBtn():162:166 -> showRadarBtn
+    10:10:void showRadarBtn():168:168 -> showRadarBtn
+    11:11:void showRadarBtn():170:170 -> showRadarBtn
+    12:12:void showRadarBtn():172:172 -> showRadarBtn
+    1:7:void status(int,int):98:104 -> status
+    8:14:void status(int,int):89:95 -> status
+    15:21:void status(int,int):80:86 -> status
 com.autochips.avm.ui.view.RearviewMirrorView -> com.autochips.avm.ui.view.RearviewMirrorView:
     android.os.Handler mHandler -> f
     android.content.Context context -> c

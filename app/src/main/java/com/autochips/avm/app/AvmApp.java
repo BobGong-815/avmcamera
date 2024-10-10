@@ -60,6 +60,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         mAvmApp = this;
         //是否开启打印日志
         KLog.init(true);
+        BvAvmJNIHelper.getInstance().bwSetProjectID(BvAvmJNIHelper.CAMERA_TYPE);
+        mCameraView = new CameraView(this);
         // 暂时废弃
 //        viewBottom = new CameraViewBottom(this);
 //        viewBottom.showInit();
@@ -127,20 +129,6 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
                 OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
                 //AY5T AY5G左陀  AY5右陀
-                /*
-                if (vehicalplatform == IS_AY5T) {
-                    ISAY5T = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
-                }else if (vehicalplatform == IS_AY5G_R) {
-                    ISAY5G_R = true;
-                    isRight = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
-                } else {
-                    ISAY5T = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
-                }
-
-                 */
                 if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
                     ISAY5T = true;
                 } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_G_ID) {
@@ -149,8 +137,6 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                     ISAY5G_R = true;
                     isRight = true;
                 }
-                BvAvmJNIHelper.getInstance().bwSetProjectID(BvAvmJNIHelper.CAMERA_TYPE);
-                mHandler.post(()->mCameraView = new CameraView(this));
             }else {
                 KLog.i("Avmapp....还未连接成功 ...");
             }
