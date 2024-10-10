@@ -133,7 +133,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private String first_open_act = "action.syncore.FOPEN.mode";
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     private Handler mHandler;
-    private boolean ENABLE_SIGNAL_UPDATE = true;
     public static boolean isCalibration = false;
     public boolean isActAndWindowMode = false; //act + window 模式
 
@@ -268,8 +267,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().dismissView(null);
                             SystemProperties.setGlobal("avm_state", 0);
                             mAvmManager.sendAvmState(0);
-                            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 0);
-                            BvAvmJNIHelper.getInstance().bwSetCarTransparency(1.f);
+                            BvAvmJNIHelper.getInstance().updateTransparentChassis(true);
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_CR_CAMERA);
                                 mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 500);
@@ -284,6 +282,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().showSmartWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
+                            BvAvmJNIHelper.getInstance().updateTransparentChassis(false);
 //                            intent = new Intent(AvmService.this, MainActivity.class);
 //                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                            startActivity(intent);
@@ -297,6 +296,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().showFullWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
+                            BvAvmJNIHelper.getInstance().updateTransparentChassis(false);
                             if (isActAndWindowMode) {
                                 if (!AvmRuntime.self().isRearGearSts()) {
                                     intent = new Intent(AvmService.this, MainActivity.class);
@@ -310,6 +310,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().showFullWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
+                            BvAvmJNIHelper.getInstance().updateTransparentChassis(false);
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
@@ -512,7 +513,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         } else if (vehicleId == VEHICLE_SPEED) {// 车速
             //KLog.d(" 车速 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Float) {
-                if (ENABLE_SIGNAL_UPDATE) AvmRuntime.self().speedChange((Float) value);
+                AvmRuntime.self().speedChange((Float) value);
             }
         } else if (vehicleId == SETTINGS_VCU_BRKPEDPST) {//刹车踏板
 
@@ -537,7 +538,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d(" 挡位 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
                 int gear = (int) value;
-                if (ENABLE_SIGNAL_UPDATE) AvmRuntime.self().gearChange(gear);
+                AvmRuntime.self().gearChange(gear);
                 if (gear == 3) {
                     bvavmJNI.bwSetCarIsDgear(0);
                     bvavmJNI.bwSetCarIsBack((byte) 1);
@@ -549,8 +550,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     bvavmJNI.bwSetCarIsBack((byte) 0);
                 }
                 if (gear == 4) {
-                    BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 0);
-                    BvAvmJNIHelper.getInstance().bwSetCarTransparency(1.f);
+                    BvAvmJNIHelper.getInstance().updateTransparentChassis(true);
                 }
             }
         }
