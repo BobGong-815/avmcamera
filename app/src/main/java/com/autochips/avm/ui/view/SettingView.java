@@ -358,7 +358,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 settingBinding.tvSettingPExit.setTextColor(context.getResources().getColor(R.color.setting_view_title_color_day));
                 settingBinding.segmentTab.setThumbDrawable(R.drawable.tab_setting_selector_thumb_day);
                 settingBinding.segmentTab.setThumbDrawable3(R.drawable.tab_setting_selector_thumb_day);
-                settingBinding.segmentTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old);
+                settingBinding.segmentTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old_day);
                 settingBinding.segmentTab.setBackground(context.getResources().getDrawable(R.drawable.tab_setting_selector_thumb_day));
                 settingBinding.segmentTab.setTextSelectColor(R.color.setting_tab_color_day,0);
                 settingBinding.segmentTab.setTextUnselectColor(R.color.setting_view_content_color_day);
@@ -369,7 +369,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
 
                 settingBinding.transparentChassisTab.setThumbDrawable(R.drawable.tab_setting_selector_thumb_day);
                 settingBinding.transparentChassisTab.setThumbDrawable3(R.drawable.tab_setting_selector_thumb_day);
-                settingBinding.transparentChassisTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old);
+                settingBinding.transparentChassisTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old_day);
                 settingBinding.transparentChassisTab.setBackground(context.getResources().getDrawable(R.drawable.tab_setting_selector_thumb_day));
                 settingBinding.transparentChassisTab.setTextSelectColor(R.color.setting_tab_color_day,0);
                 settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_view_content_color_day);
