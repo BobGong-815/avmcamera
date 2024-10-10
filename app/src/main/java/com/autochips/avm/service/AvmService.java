@@ -133,7 +133,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private String first_open_act = "action.syncore.FOPEN.mode";
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     private Handler mHandler;
-    private boolean ENABLE_SIGNAL_UPDATE = true;
     public static boolean isCalibration = false;
     public boolean isActAndWindowMode = false; //act + window 模式
 
@@ -177,6 +176,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.d("[mCarPowerManager]  半功能  释放资源,释放摄像头");
+//                    mHandler.removeMessages(MSG_CR_CAMERA);
+//                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     KLog.d("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
@@ -268,8 +269,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().dismissView(null);
                             SystemProperties.setGlobal("avm_state", 0);
                             mAvmManager.sendAvmState(0);
-                            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 0);
-                            BvAvmJNIHelper.getInstance().bwSetCarTransparency(1.f);
+                            BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_CR_CAMERA);
                                 mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 500);
@@ -512,7 +512,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         } else if (vehicleId == VEHICLE_SPEED) {// 车速
             //KLog.d(" 车速 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Float) {
-                if (ENABLE_SIGNAL_UPDATE) AvmRuntime.self().speedChange((Float) value);
+                AvmRuntime.self().speedChange((Float) value);
             }
         } else if (vehicleId == SETTINGS_VCU_BRKPEDPST) {//刹车踏板
 
@@ -537,7 +537,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d(" 挡位 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
                 int gear = (int) value;
-                if (ENABLE_SIGNAL_UPDATE) AvmRuntime.self().gearChange(gear);
+                AvmRuntime.self().gearChange(gear);
                 if (gear == 3) {
                     bvavmJNI.bwSetCarIsDgear(0);
                     bvavmJNI.bwSetCarIsBack((byte) 1);
@@ -549,8 +549,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     bvavmJNI.bwSetCarIsBack((byte) 0);
                 }
                 if (gear == 4) {
-                    BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 0);
-                    BvAvmJNIHelper.getInstance().bwSetCarTransparency(1.f);
+                    BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                 }
             }
         }
