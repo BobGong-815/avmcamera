@@ -16,12 +16,11 @@
 
     <LinearLayout
         android:id="@+id/ll_rearviewMirror"
-        android:layout_width="522dp"
-        android:layout_height="237dp"
-        android:layout_marginTop="84px"
-        android:elevation="7px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="66px"
         binding:onClickCommand="@{viewModel.pRearviewClick}"
-        android:background="@drawable/shape_bg_nor"
+        android:background="@mipmap/rearview_setting_bg"
         android:orientation="vertical">
 
         <TextView
