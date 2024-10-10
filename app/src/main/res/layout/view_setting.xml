@@ -116,7 +116,7 @@
         <com.autochips.avm.ui.view.SegmentTabLayout
             android:id="@+id/transparent_chassis_tab"
             android:layout_width="wrap_content"
-            android:layout_height="25dp"
+            android:layout_height="60dp"
             app:tl_indicator_anim_enable="true"
             app:tl_textSelectColor="@color/setting_view_title_color"
             app:tl_textUnClickColor="@color/setting_view_content_color"
