@@ -29,7 +29,7 @@ import java.util.Arrays;
  */
 public class BvAvmJNIHelper {
 
-    private int cameraType = bvavmJNI.PROJ_AY5_T_ID;// 车型选配，分不同的车型进行打包
+    public static int CAMERA_TYPE = bvavmJNI.PROJ_AY5_T_ID; // 车型选配，分不同的车型进行打包
 
     private static BvAvmJNIHelper instance;
     private boolean isActive = false; // 是否激活 或打开AVM
@@ -48,10 +48,6 @@ public class BvAvmJNIHelper {
             }
         }
         return instance;
-    }
-
-    public int getCameraType() {
-        return cameraType;
     }
 
     public static boolean isIsAvmDeInit() {
@@ -74,11 +70,13 @@ public class BvAvmJNIHelper {
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
+    public int getCameraType() { return CAMERA_TYPE; }
+
     public void bwSetProjectID(int type){
         KLog.i("setProjectID ...............  " + type);
         synchronized (syncObj) {
-            cameraType = type;
-            bvavmJNI.bwSetProjID(cameraType);
+            CAMERA_TYPE = type;
+            bvavmJNI.bwSetProjID(CAMERA_TYPE);
         }
     }
 
@@ -122,17 +120,25 @@ public class BvAvmJNIHelper {
         KLog.e(position + " setIndexTab 设置透明底盘-初始化后调用: " + position);
         if (position == -1) return;
         if (position == 0) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 0);
-            bvavmJNI.bwSetCarTransparency(1f);
+//            bvavmJNI.bwSetCarBottomStatus((byte) 0);
+//            bvavmJNI.bwSetCarTransparency(1f);
+            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 0);
+            BvAvmJNIHelper.getInstance().bwSetCarTransparency(1.f);
         } else if (position == 1) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.3f);
+//            bvavmJNI.bwSetCarBottomStatus((byte) 1);
+//            bvavmJNI.bwSetCarTransparency(0.3f);
+            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 1);
+            BvAvmJNIHelper.getInstance().bwSetCarTransparency(0.3f);
         } else if (position == 2) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.15f);
+//            bvavmJNI.bwSetCarBottomStatus((byte) 1);
+//            bvavmJNI.bwSetCarTransparency(0.15f);
+            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 1);
+            BvAvmJNIHelper.getInstance().bwSetCarTransparency(0.15f);
         } else {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.05f);
+//            bvavmJNI.bwSetCarBottomStatus((byte) 1);
+//            bvavmJNI.bwSetCarTransparency(0.05f);
+            BvAvmJNIHelper.getInstance().bwSetCarBottomStatus((byte) 1);
+            BvAvmJNIHelper.getInstance().bwSetCarTransparency(0.05f);
         }
     }
 
@@ -165,8 +171,24 @@ public class BvAvmJNIHelper {
         }
     }
 
-    public boolean isActive() {
-        return isActive;
+    private byte chassisSts = -1;
+    public void bwSetCarBottomStatus(byte value) {
+        if (chassisSts != value) {
+            chassisSts = value;
+            synchronized (syncObj) {
+                bvavmJNI.bwSetCarBottomStatus(chassisSts);
+            }
+        }
+    }
+
+    private float transparencyValue = -1.f;
+    public void bwSetCarTransparency(float value) {
+        if (transparencyValue != value) {
+            transparencyValue = value;
+            synchronized (syncObj) {
+                bvavmJNI.bwSetCarTransparency(transparencyValue);
+            }
+        }
     }
 
     public long bwCreateCamera(String path, String met) {
