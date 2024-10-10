@@ -222,7 +222,7 @@
                     android:layout_marginBottom="20px"
                     android:background="@drawable/selector_radar_bg"
                     android:gravity="center"
-                    android:visibility="gone"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.info.radarDistance)?View.GONE:View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
@@ -231,7 +231,6 @@
                         android:id="@+id/rearRadarImgId"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/shape_bg_nor"
                         android:gravity="center"
                         android:text="@{viewModel.info.radarDistance}"
                         android:textColor="@color/white"

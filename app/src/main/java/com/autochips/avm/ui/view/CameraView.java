@@ -2235,7 +2235,7 @@ public class CameraView extends View implements LifecycleOwner {
                 infoContent.setTextColor(mContext.getResources().getColor(R.color.setting_view_content_color));
                 infoOk.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color));
                 infoOk.setBackgroundResource(R.drawable.shape_text_bg_nor);
-                rearRadarImgId.setBackgroundResource(R.mipmap.rada_distance_30);
+                //rearRadarImgId.setBackgroundResource(R.mipmap.rada_distance_30);
 
                 if (AvmApp.ISAY5T) {
                     segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle);

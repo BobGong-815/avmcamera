@@ -42,7 +42,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static int OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = 1;//0、无配置后视镜下翻 ，1、有配置后视镜下翻
     public static int OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = 1;//0、无配置后视镜折叠 ，1、有配置后视镜折叠
 
-    public volatile boolean isRight = false; // 默认非右陀
+    public volatile boolean isRight = false; // 默认非右陀,打包时根据修改该配置传入是否传入左右舵车型id
 
     public static AvmApp getInstance() {
         return mAvmApp;
@@ -60,6 +60,13 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         mAvmApp = this;
         //是否开启打印日志
         KLog.init(true);
+        if(isRight){
+            //临时不通过配置判断
+            BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+        }else {
+            BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
+        }
+        mCameraView = new CameraView(this);
         // 暂时废弃
 //        viewBottom = new CameraViewBottom(this);
 //        viewBottom.showInit();
@@ -129,16 +136,15 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 //AY5T AY5G左陀  AY5右陀
                 if (vehicalplatform == IS_AY5T) {
                     ISAY5T = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+                    //BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
                 }else if (vehicalplatform == IS_AY5G_R) {
                     ISAY5G_R = true;
                     isRight = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+                    //BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
                 } else {
                     ISAY5G = true;
-                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
+                    //BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
                 }
-                mHandler.post(()->mCameraView = new CameraView(this));
             }else {
                 KLog.i("Avmapp....还未连接成功 ...");
             }
