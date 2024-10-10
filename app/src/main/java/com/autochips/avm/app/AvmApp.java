@@ -134,12 +134,12 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
             if (isConnect) {
                 int vehicalplatform = configManager.getVehicleplatform();
                 KLog.i("Avmapp....注册完成 ... " + vehicalplatform);
-                int outsidebackmirrorbackupdownswitch = configManager.getOutsidebackmirrorbackupdownswitch();
-                int outsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch();
-                Log.i("AvmApp","注册完成---- outsidebackmirrorbackupdownswitch:"+outsidebackmirrorbackupdownswitch);
-                Log.i("AvmApp","注册完成---- outsidebackmirrorautofoldswitch:"+outsidebackmirrorautofoldswitch);
-                OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
-                OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
+//                int outsidebackmirrorbackupdownswitch = configManager.getOutsidebackmirrorbackupdownswitch();
+//                int outsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch();
+//                Log.i("AvmApp","注册完成---- outsidebackmirrorbackupdownswitch:"+outsidebackmirrorbackupdownswitch);
+//                Log.i("AvmApp","注册完成---- outsidebackmirrorautofoldswitch:"+outsidebackmirrorautofoldswitch);
+//                OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
+//                OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
                 //AY5T AY5G左陀  AY5右陀
                 /*
                 if (vehicalplatform == IS_AY5T) {
