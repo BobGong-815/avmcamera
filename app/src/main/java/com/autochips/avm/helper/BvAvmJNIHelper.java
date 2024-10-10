@@ -28,7 +28,7 @@ import java.util.Arrays;
  */
 public class BvAvmJNIHelper {
 
-    public static int CAMERA_TYPE = bvavmJNI.PROJ_AY5_GR_ID;// 车型选配，分不同的车型进行打包
+    public static int CAMERA_TYPE = bvavmJNI.PROJ_AY5_G_ID; // 车型选配，分不同的车型进行打包
 
     private static BvAvmJNIHelper instance;
     private boolean isActive = false; // 是否激活 或打开AVM
