@@ -465,7 +465,7 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.d(" 当前language："+language);
         if(language.equals("vi") || language.equals("ms")){
             //越南
-            ViewGroup.LayoutParams layoutParams = mViewCameraBinding.infobook.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams = infobook.getLayoutParams();
             layoutParams.height = 260;
             infobook.setLayoutParams(layoutParams);
         }
