@@ -1115,7 +1115,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/close_btn"
             android:layout_width="40px"
             android:layout_height="40px"
             android:layout_marginTop="113px"
