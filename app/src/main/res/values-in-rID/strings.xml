@@ -10,7 +10,7 @@
     <string name="setting_centre">sedang</string>
     <string name="setting_high">tinggi</string>
     <string name="setting_radar_activated_panorama">Aktifkan panorama radar</string>
-    <string name="setting_radar_activated_panorama_content">Saat kecepatan &amp;#06012 km/jam sensor depan memberikan peringatan akan masuk ke panorama</string>
+    <string name="setting_radar_activated_panorama_content">Saat kecepatan &lt;12 km/jam sensor depan memberikan peringatan akan masuk ke panorama</string>
     <string name="setting_path_line">Garis lintasan</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Aktifkan lampu belok panorama</string>

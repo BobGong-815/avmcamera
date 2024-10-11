@@ -10,7 +10,7 @@
     <string name="setting_centre">Medium</string>
     <string name="setting_high">High</string>
     <string name="setting_radar_activated_panorama">Panoramic view activated\nwhen radar on</string>
-    <string name="setting_radar_activated_panorama_content">Enter the AVM when speed &amp;#06012km/h and front radar alarms</string>
+    <string name="setting_radar_activated_panorama_content">Enter the AVM when speed &lt;12km/h and front radar alarms</string>
     <string name="setting_path_line">Track line</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Panoramic view activated\nwhen turn signal light on</string>
