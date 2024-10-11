@@ -738,7 +738,8 @@ public class CameraViewModelHelper {
                 if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_ID) {
                     bvavmJNI.bwSetLampStatus((byte) highBeamStatus, (byte) lowBeamStatus, (byte) readFog, (byte) parkingLamp, (byte) 0, (byte) 1, (byte) brakeLight);
                 } else if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID
-                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID) {
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_GR_ID) {
                     lamp[5] = 1;
                     bvavmJNI.bwSetLampStatus2(lamp);
                 }
@@ -746,7 +747,8 @@ public class CameraViewModelHelper {
                 if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_ID) {
                     bvavmJNI.bwSetLampStatus((byte) highBeamStatus, (byte) lowBeamStatus, (byte) readFog, (byte) parkingLamp, (byte) 0, (byte) 0, (byte) brakeLight);
                 } else if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID
-                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID) {
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_GR_ID) {
                     lamp[5] = 0;
                     bvavmJNI.bwSetLampStatus2(lamp);
                 }
@@ -754,7 +756,8 @@ public class CameraViewModelHelper {
                 if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_ID) {
                     bvavmJNI.bwSetLampStatus((byte) highBeamStatus, (byte) lowBeamStatus, (byte) readFog, (byte) parkingLamp, (byte) 0, (byte) 2, (byte) brakeLight);
                 } else if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID
-                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID) {
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_GR_ID) {
                     lamp[5] = 2;
                     bvavmJNI.bwSetLampStatus2(lamp);
                 }
@@ -762,7 +765,8 @@ public class CameraViewModelHelper {
                 if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_ID) {
                     bvavmJNI.bwSetLampStatus((byte) highBeamStatus, (byte) lowBeamStatus, (byte) readFog, (byte) parkingLamp, (byte) 0, (byte) 3, (byte) brakeLight);
                 } else if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID
-                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID) {
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_GR_ID) {
                     lamp[5] = 3;
                     bvavmJNI.bwSetLampStatus2(lamp);
                 }
