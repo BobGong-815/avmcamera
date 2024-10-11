@@ -75,7 +75,8 @@
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/radarErrImgId2"
@@ -85,7 +86,8 @@
                 android:layout_marginTop="72px"
                 android:src="@mipmap/radar_fault_2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/radarErrImgId3"
@@ -95,7 +97,8 @@
                 android:layout_marginTop="72px"
                 android:src="@mipmap/radar_fault_3"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/radarErrImgId4"
@@ -106,7 +109,8 @@
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_4"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <!--自定标定、手动标定-->
