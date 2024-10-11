@@ -9,6 +9,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AV
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RSR_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_YAW_RATE_AND_VEH_ACCEL;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_Distance;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_FRONT_DISTANCE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_STOP_ON_BRK_REMIND_SIGNAL;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_WARNING_SOUND;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ;
@@ -276,6 +277,7 @@ public class CanManager implements Handler.Callback {
         mRegisterId.add(CLUSTER_PAS_FRMidDistance); //     FRM雷达距离（前右中）(预留)
         mRegisterId.add(CLUSTER_PAS_FLMidDistance); //     FLM雷达距离（前左中）(预留)
         mRegisterId.add(CLUSTER_PAS_Distance); //    12个雷达合一个信号
+        mRegisterId.add(CLUSTER_PAS_FRONT_DISTANCE); //前雷达信号
 
         // 雷达故障
         mRegisterId.add(AVM_RR_MIDSNS_ERR_FLAG);    //     后右中
