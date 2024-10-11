@@ -686,12 +686,13 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 isCallFRadarSound = fMir <= 90 || fMil <= 90 || fRight <= 60 || fLeft <=60;
             }
 
-            if(isCallRRadarSound || isCallFRadarSound){
-                //此时表示警报声音会响起
-                AvmApp.getInstance().getCameraView().showRadarSoundView(1);
-            }else {
-                AvmApp.getInstance().getCameraView().showRadarSoundView(0);
-            }
+            //todo 暂时屏蔽雷达音开关
+//            if(isCallRRadarSound || isCallFRadarSound){
+//                //此时表示警报声音会响起
+//                AvmApp.getInstance().getCameraView().showRadarSoundView(1);
+//            }else {
+//                AvmApp.getInstance().getCameraView().showRadarSoundView(0);
+//            }
             return;
         }
 

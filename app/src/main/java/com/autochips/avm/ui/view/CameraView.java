@@ -51,6 +51,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.view.ViewCompat;
@@ -178,6 +179,7 @@ public class CameraView extends View implements LifecycleOwner {
             ,parkingAssistLayout,mainAvmViewRootId,cameraImageLayoutLift;
     protected TextView tvBreakdown,manualCalibration,automaticCalibration,infoTitle,infoContent,rearRadarImgId;
     protected AppCompatButton infoOk;
+    protected AppCompatImageButton btnClose;
     protected View red2dTop,red2dLift,red2dRight,red2dBottom,red3dleftFront,red3dleftFront1,red3drightFront,red3drightFront1,
             red3dleftRear,red3dleftRear1,red3drightRear,red3drightRear1;
 
@@ -574,6 +576,7 @@ public class CameraView extends View implements LifecycleOwner {
             red3drightRear1 = mViewCameraRightBinding.red3drightRear1;
             cameraImageLayoutLift = mViewCameraRightBinding.cameraImageLayoutLift;
             cameraIvLift = mViewCameraRightBinding.cameraIvLift;
+            btnClose = mViewCameraRightBinding.btnClose;
         }else {
             rearRadarViewId = mViewCameraBinding.rearRadarViewId;
             rearRadarFrontViewId = mViewCameraBinding.rearRadarFrontViewId;
@@ -1347,9 +1350,13 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowLps.x = 1360;
         }
         isSmartWin = true;
-        mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width_smart) + (AvmApp.getInstance().isRight ?  74 :142);
+        mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width_smart) + 142;
         mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
-
+        if(btnClose != null){
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)btnClose.getLayoutParams();
+            layoutParams.setMarginEnd(136);
+            btnClose.setLayoutParams(layoutParams);
+        }
         mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
 
         mWindowLps.format = PixelFormat.TRANSLUCENT; // 设置透明背景
@@ -1390,6 +1397,11 @@ public class CameraView extends View implements LifecycleOwner {
         }
         cameraBinding.frameLayoutId.setVisibility(GONE);
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
+        if(btnClose != null){
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)btnClose.getLayoutParams();
+            layoutParams.setMarginEnd(68);
+            btnClose.setLayoutParams(layoutParams);
+        }
         if (AvmRuntime.self().isRearGearSts()) {
             mWindowLps.height = 1080;
         } else {
@@ -1595,7 +1607,6 @@ public class CameraView extends View implements LifecycleOwner {
             KLog.d("雷达提示音 is show or hide ");
             return;
         }
-        KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible);
         if (isVisible==1) {
             //隐藏掉雷达提示音
             radarSoundLayout.setVisibility(VISIBLE);
@@ -1604,6 +1615,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
         //获取当前雷达音开关状态
         int status = CanManager.getInstance().getIntStatus(ASSIST_DRIVE_PAS_BUTTON_PRESS, 0);
+        KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible+" status:"+status);
         radarSoundIv.setImageDrawable(mContext.getDrawable(status == 1 ? R.mipmap.ic_radar_sound_sel
                 : R.mipmap.ic_radar_sound_nor));
     }
