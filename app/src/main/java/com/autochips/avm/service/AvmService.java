@@ -766,7 +766,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 break;
             case ASSIST_DRIVE_PAS_BUTTON_PRESS:// 雷达报警声
             case CLUSTER_CHIME_PAS_WARNTONE://雷达报警音状态
-                AvmApp.getInstance().getCameraView().showRadarSoundView(status);
+                //AvmApp.getInstance().getCameraView().showRadarSoundView(status);
                 break;
             case AVM_RADAR_ALARM_ACOUSTIC_SWITCH:// 雷达故障报警
                 //AvmApp.getInstance().getCameraView().showParkingAssistView(status);
