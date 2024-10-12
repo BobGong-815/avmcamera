@@ -371,16 +371,16 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
         //快速启动
         if(AvmApp.getInstance().getCameraView()!=null)
-        AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
+            AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
         mHandler.postDelayed(() -> {
-            if(AvmApp.getInstance().getCameraView()!=null)
-            AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
+            if(AvmApp.getInstance().getCameraView() != null)
+                AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
             CanManager.getInstance().startConnect((v -> {
                 KLog.d("注册完成----fishTh ");
                 CameraViewModelHelper.getInstance().initActive();
 
             }));
-        }, 1600);
+        }, 0);
 
         mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 15 * 1000);
 
@@ -766,7 +766,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 break;
             case ASSIST_DRIVE_PAS_BUTTON_PRESS:// 雷达报警声
             case CLUSTER_CHIME_PAS_WARNTONE://雷达报警音状态
-                //AvmApp.getInstance().getCameraView().showRadarSoundView(status);
+                AvmApp.getInstance().getCameraView().showRadarSoundView(status);
                 break;
             case AVM_RADAR_ALARM_ACOUSTIC_SWITCH:// 雷达故障报警
                 //AvmApp.getInstance().getCameraView().showParkingAssistView(status);
@@ -810,6 +810,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         if (value instanceof byte[]) {
             byte[] arr = (byte[]) value;// [0x00 ]
             KLog.i(arr.length + "  length 标定-byte----vehicleId: " + vehicleId + "  value   " + Arrays.toString(arr) + "  版本号： " + ServiceUtils.getVersionName());
+
+            if (vehicleId == DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ) {
+                KLog.i("步骤 0  标定-信息请求:DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ:" + Arrays.toString(arr));
+                CanManager.getInstance().setByteArray(DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_RESP, 0, new byte[] {1});
+                return;
+            }
 
             byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
             if (arr.length < 2) {
