@@ -26,6 +26,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.PO
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,6 +35,7 @@ import android.util.Log;
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
@@ -535,6 +537,9 @@ public class CameraViewModelHelper {
      * @param value
      */
     public void radarActive(int value) {
+        if (CameraView.isShowing) {
+            return;
+        }
         KLog.d(isRadarActiveTow + " radarActive 雷达距离 = " + value);
         if (value >= 0 && isRadarActiveTow == 2) {
             // 雷达激活全景开关打开，且车速《12，且 雷达检测到障碍物
@@ -556,11 +561,17 @@ public class CameraViewModelHelper {
         }
     }
 
+    public void setIsRadarActiveTow(){
+        //主动点击关闭雷达不能激活，设置关闭雷达可以激活
+        isRadarActiveTow  = 2;
+    }
+
     public void radarExit(int value) {
         KLog.d(isRadarActive + " 雷达退出：" + value);
         if (isRadarActive) {
             isRadarActive = false;
-            dismissView(isClick, 3 * 1000, "d6");
+            AvmRuntime.self().radarChange(false);
+            //dismissView(isClick, 3 * 1000, "d6");
         }
 
     }
@@ -575,7 +586,8 @@ public class CameraViewModelHelper {
 
     public void smartActive(int value) {
         isSmartView = true;
-        AvmApp.getInstance().getCameraView().showSmartWin();
+        AvmRuntime.self().radarChange(true);
+        //AvmApp.getInstance().getCameraView().showSmartWin();
     }
 
 

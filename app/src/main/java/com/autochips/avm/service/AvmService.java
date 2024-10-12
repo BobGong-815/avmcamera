@@ -176,8 +176,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.d("[mCarPowerManager]  半功能  释放资源,释放摄像头");
-//                    mHandler.removeMessages(MSG_CR_CAMERA);
-//                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
+                    mHandler.removeMessages(MSG_CR_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     KLog.d("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
@@ -669,8 +669,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_FRMidDistance, fMir);
                 AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_PAS_FRDistance, fRight);
                 //雷达激活
-                int signalActivates = SystemProperties.getInt("radarActivates", 0);
-                if(signalActivates == 1) {
+                int activatedPanorama = SystemProperties.getInt("activatedPanorama", 2);
+                KLog.d("activatedPanorama = " + activatedPanorama);
+                if(activatedPanorama == 1) {
                     if (fLeft <= 60 || fRight <= 60 || fMil <= 110 || fMir <= 110) {
                         if (!CameraView.isShowing) {
                             CameraViewModelHelper.getInstance().radarActive(1);

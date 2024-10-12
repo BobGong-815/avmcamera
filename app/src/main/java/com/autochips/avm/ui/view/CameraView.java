@@ -182,6 +182,7 @@ public class CameraView extends View implements LifecycleOwner {
     protected AppCompatImageButton btnClose;
     protected View red2dTop,red2dLift,red2dRight,red2dBottom,red3dleftFront,red3dleftFront1,red3drightFront,red3drightFront1,
             red3dleftRear,red3dleftRear1,red3drightRear,red3drightRear1;
+    protected ConstraintLayout clCon;
 
 
     public CameraView(Context context) {
@@ -577,6 +578,7 @@ public class CameraView extends View implements LifecycleOwner {
             cameraImageLayoutLift = mViewCameraRightBinding.cameraImageLayoutLift;
             cameraIvLift = mViewCameraRightBinding.cameraIvLift;
             btnClose = mViewCameraRightBinding.btnClose;
+            clCon = mViewCameraRightBinding.clCon;
         }else {
             rearRadarViewId = mViewCameraBinding.rearRadarViewId;
             rearRadarFrontViewId = mViewCameraBinding.rearRadarFrontViewId;
@@ -1356,6 +1358,9 @@ public class CameraView extends View implements LifecycleOwner {
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)btnClose.getLayoutParams();
             layoutParams.setMarginEnd(136);
             btnClose.setLayoutParams(layoutParams);
+            ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
+            layoutParamsCl.setMarginEnd(66);
+            clCon.setLayoutParams(layoutParamsCl);
         }
         mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
 
@@ -1401,6 +1406,9 @@ public class CameraView extends View implements LifecycleOwner {
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)btnClose.getLayoutParams();
             layoutParams.setMarginEnd(68);
             btnClose.setLayoutParams(layoutParams);
+            ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
+            layoutParamsCl.setMarginEnd(0);
+            clCon.setLayoutParams(layoutParamsCl);
         }
         if (AvmRuntime.self().isRearGearSts()) {
             mWindowLps.height = 1080;
@@ -1484,6 +1492,7 @@ public class CameraView extends View implements LifecycleOwner {
                 KLog.d("关闭resRvc  = " + resRvc);
             }, 2000);
         }
+        CameraViewModelHelper.getInstance().setIsRadarActiveTow();
     }
 
     private void inputViewModel() {
