@@ -1250,10 +1250,15 @@ public class AvmRuntime {
     }
 
     public void radarChange(boolean active) {
-        Log.d("AvmRuntime", Log.getStackTraceString(new Throwable()));
-        KLog.d("radarChange() : " + active);
+//        Log.d("AvmRuntime", Log.getStackTraceString(new Throwable()));
+        KLog.d("radarChange() : " + active + " currSpeed is " + (dataSts==null?0:dataSts.currSpeed));
         if (active) {
             synchronized (syncObj) {
+                if (dataSts.sensors[0] == DataDefine.SENSOR_RADAR || dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP) {
+                    return;
+                }
+                if (dataSts.currSpeed > 30) return;
+
                 if (dataSts.sensors[0] == DataDefine.SENSOR_TURN_LAMP) {
                     dataSts.events.add(DataDefine.EVT_RADAR_TURN_LAMP_ACTIVE);
                 }
@@ -1264,10 +1269,12 @@ public class AvmRuntime {
             }
         } else {
             synchronized (syncObj) {
-                dataSts.events.add(DataDefine.EVT_RADAR_RESET);
-                dataSts.lastChangeTime = System.currentTimeMillis();
+                if (dataSts.sensors[0] == DataDefine.SENSOR_RADAR || dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP) {
+                    dataSts.events.add(DataDefine.EVT_RADAR_RESET);
+                    dataSts.lastChangeTime = System.currentTimeMillis();
 
-                syncObj.notify();
+                    syncObj.notify();
+                }
             }
         }
     }
