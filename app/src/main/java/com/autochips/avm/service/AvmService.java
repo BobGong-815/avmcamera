@@ -673,10 +673,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.d("activatedPanorama = " + activatedPanorama);
                 if(activatedPanorama == 1) {
                     if (fLeft <= 60 || fRight <= 60 || fMil <= 110 || fMir <= 110) {
+                        AvmRuntime.self().radarChange(true);
                         if (!CameraView.isShowing) {
                             CameraViewModelHelper.getInstance().radarActive(1);
                         }
                     } else if (fLeft >= 60 && fRight >= 60 && fMil >= 110 && fMir >= 110) {
+                        AvmRuntime.self().radarChange(false);
                         if (CameraView.isShowing && AvmApp.getInstance().getCameraView().isSmartWin
                                 && CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT) == 0) {
                             //已展示小窗口，当前没有转向

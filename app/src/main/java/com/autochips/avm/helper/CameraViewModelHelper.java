@@ -570,7 +570,7 @@ public class CameraViewModelHelper {
         KLog.d(isRadarActive + " 雷达退出：" + value);
         if (isRadarActive) {
             isRadarActive = false;
-            AvmRuntime.self().radarChange(false);
+//            AvmRuntime.self().radarChange(false);
             //dismissView(isClick, 3 * 1000, "d6");
         }
 
@@ -586,7 +586,7 @@ public class CameraViewModelHelper {
 
     public void smartActive(int value) {
         isSmartView = true;
-        AvmRuntime.self().radarChange(true);
+//        AvmRuntime.self().radarChange(true);
         //AvmApp.getInstance().getCameraView().showSmartWin();
     }
 
