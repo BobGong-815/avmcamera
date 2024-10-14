@@ -246,7 +246,7 @@ public class CameraView extends View implements LifecycleOwner {
                 if (segmentTab.getCurrentTab() == 0) {
                     layout2d.setVisibility(VISIBLE);
                 }
-                showFullWin();
+                //showFullWin();
                 chick2DView(type);
             }
         });
@@ -304,7 +304,7 @@ public class CameraView extends View implements LifecycleOwner {
             public void onChanged(String type) {
                 layout3d.setVisibility(VISIBLE);
                 hidViewButtonTimer.start(1);
-                showFullWin();
+                //showFullWin();
                 chick3DView(type);
             }
         });
