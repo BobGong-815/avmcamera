@@ -9,7 +9,7 @@
     <string name="setting_low">Thấp</string>
     <string name="setting_centre">Trung bình</string>
     <string name="setting_high">Cao</string>
-    <string name="setting_radar_activated_panorama">Đã kích hoạt chế độ xem toàn cảnh khi bật rađa</string>
+    <string name="setting_radar_activated_panorama">Đã kích hoạt chế độ xem \ntoàn cảnh khi bật rađa</string>
     <string name="setting_radar_activated_panorama_content">Chuyển sang chế độ xem toàn cảnh khi tốc độ xe &lt;12km/h và khi rađa phía trước phát cảnh báo</string>
     <string name="setting_path_line">Theo dõi đường đi</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>

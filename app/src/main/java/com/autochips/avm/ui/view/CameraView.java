@@ -1824,7 +1824,9 @@ public class CameraView extends View implements LifecycleOwner {
                     KLog.i(endX + " startX开始拖动车模bwSetTouchScreenPos " + endY);
                     int finalTouch_x = endX;
                     int finalTouch_y = endY;
-                    if (endX < 1860 && endX > 570 && endY < 950 && endY > 113) {
+                    boolean canMove = AvmApp.getInstance().isRight ? (endX > 66 && endX < 1356 && endY < 950 && endY > 113)
+                            : (endX < 1860 && endX > 570 && endY < 950 && endY > 113);
+                    if (canMove) {
                         mMainHandler.postDelayed(() -> {
                             int touchPos = bvavmJNI.bwSetTouchScreenPos(finalTouch_x, finalTouch_y);
                             KLog.i("滑动车模角度touchPos  " + touchPos);
