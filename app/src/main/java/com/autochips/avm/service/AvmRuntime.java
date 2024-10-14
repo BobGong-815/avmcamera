@@ -1250,6 +1250,8 @@ public class AvmRuntime {
     }
 
     public void radarChange(boolean active) {
+        Log.d("AvmRuntime", Log.getStackTraceString(new Throwable()));
+        KLog.d("radarChange() : " + active);
         if (active) {
             synchronized (syncObj) {
                 if (dataSts.sensors[0] == DataDefine.SENSOR_TURN_LAMP) {
