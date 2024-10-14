@@ -585,8 +585,7 @@
                     android:src="@mipmap/ic_radar_sound_sel"
                     android:tag="nor"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"/>
+                    app:layout_constraintTop_toTopOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
