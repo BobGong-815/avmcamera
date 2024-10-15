@@ -487,7 +487,7 @@ public class CameraViewModel extends BaseCameraViewModel {
             //CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP, 0, arrBack);
             CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
             CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
-            isCaliStatus = -1;
+//            isCaliStatus = -1;
             isDIAGCalibration = false;
             KLog.d("标定-DIAG_31 app 标定成功：isCaliStatus " + isCaliStatus);
             calibrationInspect(1);
