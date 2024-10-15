@@ -35,7 +35,6 @@ public class BvAvmJNIHelper {
 
     private long bwInitValue = -1;
     private byte[] syncObj = new byte[0];
-    private boolean isCalibration = false;
 
     public static boolean isAvmDeInit = false;
     private View.OnClickListener listener;
@@ -152,10 +151,6 @@ public class BvAvmJNIHelper {
                 bwDeleteCamera();
             }, 500);
         }
-    }
-
-    public void setCalibration(boolean calibration) {
-        isCalibration = calibration;
     }
 
     public int avmRender2(int sCameraDirection) {

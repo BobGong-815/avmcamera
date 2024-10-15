@@ -105,11 +105,9 @@ public class CameraViewModel extends BaseCameraViewModel {
                 if (msg.what == MSG_CALIBRATE) {
                     KLog.d("标定 handle MSG_CALIBRATE.");
                     threadHandler.sendEmptyMessage(MSG_CALIBRATING);
-                    BvAvmJNIHelper.getInstance().setCalibration(true);
                     isCaliStatus = -1;
                     isCaliStatus = bvavmJNI.bwStartCalibrate(msg.arg1);
                     KLog.d("标定 bwStartCalibrate ret is " + isCaliStatus);
-                    BvAvmJNIHelper.getInstance().setCalibration(false);
                     // isCaliStatus 返回值
                     // 0 成功
                     // 2 后视图标定失败
@@ -311,7 +309,6 @@ public class CameraViewModel extends BaseCameraViewModel {
         } else {
             ThreadPoolUtil.getInstance().runOnSubThreadDelayed(() -> {
                 bvavmJNI.bwStartCalibrate(0);
-                BvAvmJNIHelper.getInstance().setCalibration(true);
             }, 100);
         }
 
@@ -338,7 +335,6 @@ public class CameraViewModel extends BaseCameraViewModel {
             ThreadPoolUtil.getInstance().runOnSubThreadDelayed(() -> {
                 int ret = bvavmJNI.bwStartCalibrate(1);
                 info.setShowCaliView(false);
-                BvAvmJNIHelper.getInstance().setCalibration(false);
                 // ret 返回值
                 // 0 成功
                 // 2 后视图标定失败
@@ -412,7 +408,6 @@ public class CameraViewModel extends BaseCameraViewModel {
                 } else {
                     info.setShowCaliBtnText("标定失败! - " + isCaliStatus);
                 }
-                BvAvmJNIHelper.getInstance().setCalibration(false);
                 CameraViewModelHelper.getInstance().setAutomaticCalibration(isCaliStatus);
 
             }, 0);
@@ -487,7 +482,7 @@ public class CameraViewModel extends BaseCameraViewModel {
             //CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP, 0, arrBack);
             CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
             CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
-            isCaliStatus = -1;
+//            isCaliStatus = -1;
             isDIAGCalibration = false;
             KLog.d("标定-DIAG_31 app 标定成功：isCaliStatus " + isCaliStatus);
             calibrationInspect(1);
@@ -743,7 +738,6 @@ public class CameraViewModel extends BaseCameraViewModel {
     public void bwSetIRKeyExit() {
         CustomToast.showToast("标定-bwSetIRKeyExit");
         bvavmJNI.bwSetIRKeyData(SCANCODE_IR_POINT1);
-        BvAvmJNIHelper.getInstance().setCalibration(false);
         CameraViewModelHelper.getInstance().setCalibrateRunning(false);
         info.setShowCaliDemo(false);
     }
