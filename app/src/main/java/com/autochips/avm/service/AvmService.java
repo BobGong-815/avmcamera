@@ -998,7 +998,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                System.exit(0);
             } else if (action.equals(Intent.ACTION_LOCALE_CHANGED)) {
                 KLog.i("语言切换 。。。。。。。。:" + action);
-                System.exit(0);
+                //System.exit(0);
+                if(AvmApp.getInstance().getCameraView()!=null) {
+                    AvmApp.getInstance().getCameraView().reloadLanauge();
+                }
             } else if(action.equals(open_act)){
                 KLog.i("AvmApp","open avm ");
                 AvmApp.getInstance().getCameraView().showFullWin();

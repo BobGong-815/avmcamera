@@ -249,6 +249,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         TextView title = mInfoView.findViewById(R.id.info_title);
         TextView content = mInfoView.findViewById(R.id.info_content);
         TextView ok = mInfoView.findViewById(R.id.info_ok);
+        ok.setText(R.string.setting_transparent_chassis_infobook_ok);
         ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -394,4 +395,13 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         }
     }
 
+    public void reloadLanauge(){
+        settingBinding.tvSettingPExit.setText(R.string.setting_p_exit);
+        settingBinding.tvActivatesPanorama.setText(R.string.setting_signal_activates_panorama);
+        settingBinding.activatedPanorama.setText(R.string.setting_radar_activated_panorama);
+        settingBinding.segmentTab.setTabData(getDescValueArray());
+        settingBinding.pathLine.setText(R.string.setting_path_line);
+        settingBinding.transparentChassis.setText(R.string.setting_transparent_chassis);
+        settingBinding.transparentChassisTab.setTabData(getTransparentChassisDescValueArray());
+    }
 }

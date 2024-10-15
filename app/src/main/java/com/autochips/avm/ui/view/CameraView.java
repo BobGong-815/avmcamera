@@ -466,7 +466,7 @@ public class CameraView extends View implements LifecycleOwner {
         Locale current = AvmApp.getInstance().getResources().getConfiguration().locale;
         String language = current.getLanguage();
         KLog.d(" 当前language："+language);
-        if(language.equals("vi") || language.equals("ms")){
+        if(language.equals("vi") || language.equals("ms") || language.equals("en")){
             //越南
             ViewGroup.LayoutParams layoutParams = infobook.getLayoutParams();
             layoutParams.height = 260;
@@ -2309,6 +2309,17 @@ public class CameraView extends View implements LifecycleOwner {
         }
 
 
+    }
+
+    public void reloadLanauge(){
+        rearviewMirrorView.reloadLanauge();
+        settingView.reloadLanauge();
+        Locale current = AvmApp.getInstance().getResources().getConfiguration().locale;
+        String language = current.getLanguage();
+        KLog.d(" 当前language："+language);
+        ViewGroup.LayoutParams layoutParams = infobook.getLayoutParams();
+        layoutParams.height = language.equals("vi") || language.equals("ms") || language.equals("en") ? 260 : 240;
+        infobook.setLayoutParams(layoutParams);
     }
 
     public void chick2DView(String type) {

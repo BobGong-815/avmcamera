@@ -311,4 +311,11 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 break;
         }
     }
+
+    public void  reloadLanauge(){
+        rearviewMirrorBinding.tvSettingRearview.setText(R.string.setting_rearview_mirror_down);
+        rearviewMirrorBinding.tvSettingFold.setText(R.string.setting_fold);
+        rearviewMirrorBinding.tvSettingExpand.setText(R.string.setting_expand);
+        rearviewMirrorBinding.tvRearview.setText(R.string.setting_rearview_mirror);
+    }
 }
