@@ -19,7 +19,7 @@ public class CameraInfo extends BaseObservable {
 
     private  boolean isShowRadarBtn = false ; // 是否显示雷达按钮
 
-    private String radarDistance ="30cm"; // 雷达距离显示
+    private String radarDistance =""; // 雷达距离显示
 
 
 
