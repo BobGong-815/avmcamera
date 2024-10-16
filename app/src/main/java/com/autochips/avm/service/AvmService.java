@@ -155,9 +155,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         AvmRuntime.self().registerActionListener(this);
 
         mAvmManager = AvmManager.getInstance(this);
-        CanManager.getInstance().init(this);
-        CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(exit_action);
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
@@ -370,17 +367,19 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         };
 
         //快速启动
-        if(AvmApp.getInstance().getCameraView()!=null)
-            AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
         mHandler.postDelayed(() -> {
-            if(AvmApp.getInstance().getCameraView() != null)
+            CanManager.getInstance().init(this);
+            CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
+            //延迟初始化避免配置连接慢存在问题
+            if(AvmApp.getInstance().getCameraView()!=null) {
+                AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
                 AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
+            }
             CanManager.getInstance().startConnect((v -> {
                 KLog.d("注册完成----fishTh ");
                 CameraViewModelHelper.getInstance().initActive();
-
             }));
-        }, 0);
+        }, 1500);
 
         mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 15 * 1000);
 

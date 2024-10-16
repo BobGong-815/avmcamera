@@ -38,6 +38,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static boolean ISAY5T = false;
     private boolean ISAY5G = false;
     private boolean ISAY5G_R = false;
+    public static int EEA = 0;//平台,2表示3.0平台，0,1表示2.5平台
     private boolean IsOutsidebackmirrorautofoldswitch = true; //后视镜倒车下翻开关是否存在
     public static int OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = 1;//0、无配置后视镜下翻 ，1、有配置后视镜下翻
     public static int OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = 1;//0、无配置后视镜折叠 ，1、有配置后视镜折叠
@@ -61,19 +62,19 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         //是否开启打印日志
         KLog.init(true);
 
-        if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
-            ISAY5T = true;
-            isRight = false;
-        } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_G_ID) {
-            ISAY5T = false;
-            isRight = false;
-        } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_GR_ID) {
-            ISAY5G_R = true;
-            isRight = true;
-        }
-        BvAvmJNIHelper.getInstance().bwSetProjectID(BvAvmJNIHelper.CAMERA_TYPE);
-
-        mCameraView = new CameraView(this);
+//        if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
+//            ISAY5T = true;
+//            isRight = false;
+//        } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_G_ID) {
+//            ISAY5T = false;
+//            isRight = false;
+//        } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_GR_ID) {
+//            ISAY5G_R = true;
+//            isRight = true;
+//        }
+//        BvAvmJNIHelper.getInstance().bwSetProjectID(BvAvmJNIHelper.CAMERA_TYPE);
+//
+//        mCameraView = new CameraView(this);
         // 暂时废弃
 //        viewBottom = new CameraViewBottom(this);
 //        viewBottom.showInit();
@@ -133,7 +134,9 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         configManager.registerInitListener(isConnect -> {
             if (isConnect) {
                 int vehicalplatform = configManager.getVehicleplatform();
-                KLog.i("Avmapp....注册完成 ... " + vehicalplatform);
+                int rudderCfg = configManager.getRudderCfg();
+                EEA = configManager.getEEA();
+                KLog.i("Avmapp....注册完成 ... " + rudderCfg+" 平台:"+EEA);
 //                int outsidebackmirrorbackupdownswitch = configManager.getOutsidebackmirrorbackupdownswitch();
 //                int outsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch();
 //                Log.i("AvmApp","注册完成---- outsidebackmirrorbackupdownswitch:"+outsidebackmirrorbackupdownswitch);
@@ -141,21 +144,18 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
 //                OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
 //                OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
                 //AY5T AY5G左陀  AY5右陀
-                /*
-                if (vehicalplatform == IS_AY5T) {
-                    ISAY5T = true;
-                    //BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
-                }else if (vehicalplatform == IS_AY5G_R) {
-                    ISAY5G_R = true;
-                    isRight = true;
-                    //BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
-                } else {
-                    ISAY5G = true;
-                    //BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
-                }
-
-                 */
-
+//                if (vehicalplatform == IS_AY5T) {
+//                    ISAY5T = true;
+//                    //BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+//                }else
+ //               if (rudderCfg == 1) {
+                isRight = true;
+                BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_GR_ID);
+//                } else {
+//                    isRight = false;
+//                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
+//                }
+                mHandler.post(()->mCameraView = new CameraView(this));
             }else {
                 KLog.i("Avmapp....还未连接成功 ...");
             }
