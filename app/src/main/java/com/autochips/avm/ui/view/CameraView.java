@@ -655,7 +655,7 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     public void hidenMirrowView(){
-        mViewCameraBinding.rearviewMirrorView.hidenMirrowView();
+        rearviewMirrorView.hidenMirrowView();
     }
 
     public void viewRearStatus(int status) {
@@ -939,7 +939,7 @@ public class CameraView extends View implements LifecycleOwner {
 //            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
             chick3DView(CAMERA_3_D);
 //            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
-            mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+            cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
         } else if (outsideTabIndex == 2) {
             //            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
             //            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
