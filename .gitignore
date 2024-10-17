@@ -86,3 +86,8 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
+/.idea/misc.xml
+/.idea/compiler.xml
+/app/mapping.txt
+/app/seeds.txt
+/app/unused.txt

@@ -148,14 +148,16 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
 //                    ISAY5T = true;
 //                    //BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
 //                }else
- //               if (rudderCfg == 1) {
-                isRight = true;
-                BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_GR_ID);
-//                } else {
-//                    isRight = false;
-//                    BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
-//                }
-                mHandler.post(()->mCameraView = new CameraView(this));
+                if (mCameraView == null) {
+                    if (rudderCfg == 1) {
+                        isRight = true;
+                        BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_GR_ID);
+                    } else {
+                        isRight = false;
+                        BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
+                    }
+                    mHandler.post(() -> mCameraView = new CameraView(this));
+                }
             }else {
                 KLog.i("Avmapp....还未连接成功 ...");
             }

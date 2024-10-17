@@ -27,8 +27,8 @@
             android:id="@+id/tv_rearview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="36px"
-            android:layout_marginTop="27px"
+            android:layout_marginLeft="54px"
+            android:layout_marginTop="45px"
             android:text="@string/setting_rearview_mirror"
             android:textColor="@drawable/text_selcet"
             android:textSize="@dimen/text_size_24px" />
@@ -37,7 +37,7 @@
             android:id="@+id/ll_fold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="36px"
+            android:layout_marginLeft="54px"
             android:layout_marginTop="18px"
             android:orientation="horizontal">
 
@@ -60,6 +60,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/setting_fold"
+                    android:paddingTop="1px"
+                    android:layout_marginStart="6px"
+                    android:includeFontPadding="false"
+                    android:lineHeight="36px"
                     android:textColor="@drawable/text_selcet"
                     android:textSize="@dimen/text_size_24px" />
 
@@ -69,7 +73,7 @@
                 android:id="@+id/ll_setting_expand"
                 android:layout_width="216px"
                 android:layout_height="60px"
-                android:layout_marginLeft="12px"
+                android:layout_marginLeft="18px"
                 android:background="@drawable/shape_btn_bg_nor"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -85,6 +89,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/setting_expand"
+                    android:paddingTop="1px"
+                    android:includeFontPadding="false"
+                    android:lineHeight="36px"
+                    android:textAlignment="center"
+                    android:layout_marginStart="6px"
                     android:textColor="@drawable/text_selcet"
                     android:textSize="@dimen/text_size_24px" />
 
@@ -97,7 +106,7 @@
             android:id="@+id/ll_setting_rearview_mirror_down"
             android:layout_width="450dp"
             android:layout_height="60dp"
-            android:layout_marginLeft="36px"
+            android:layout_marginLeft="54px"
             android:layout_marginTop="18px"
             android:background="@drawable/shape_btn_bg_nor"
             android:gravity="center"
@@ -108,6 +117,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/setting_rearview_mirror_down"
+                android:includeFontPadding="false"
+                android:lineHeight="36px"
+                android:paddingTop="1px"
+                android:textAlignment="center"
                 android:textColor="@color/setting_view_content_color"
                 android:textSize="@dimen/text_size_24px" />
 

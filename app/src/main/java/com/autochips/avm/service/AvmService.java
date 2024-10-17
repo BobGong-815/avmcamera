@@ -20,6 +20,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AV
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RSL_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RSR_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SAS_STEERING_ANGLE;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_EPS_STEERING_ANGLE_VD;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_UINM_TURN_LIGHT_SW_ST;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_WHEEL_DIRE_SPEED;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.BCM_HIGH_BEAM_STATUS;
@@ -516,7 +517,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         } else if (vehicleId == SETTINGS_VCU_BRKPEDPST) {//刹车踏板
 
         } else if (vehicleId == AVM_SAS_STEERING_ANGLE) {//转角值
-//            KLog.d(" wheel angle , value = " + value);
+
+            //int status = CanManager.getInstance().getIntStatus(AVM_EPS_STEERING_ANGLE_VD, 0);
+            //KLog.d(" wheel angle , value = " + value +" status:"+status);
+//            if(status == 0) {
+//                return;
+//            }
             if (value instanceof Float) {
                 float angle = (float) value;
                 if (angle > 540) {

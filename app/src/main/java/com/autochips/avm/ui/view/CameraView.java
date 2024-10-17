@@ -1624,7 +1624,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
         //获取当前雷达音开关状态
         int status = CanManager.getInstance().getIntStatus(ASSIST_DRIVE_PAS_BUTTON_PRESS, 0);
-        KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible+" status:"+status);
+        KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible+"open status:"+status);
         radarSoundIv.setImageDrawable(mContext.getDrawable(status == 1 ? R.mipmap.ic_radar_sound_sel
                 : R.mipmap.ic_radar_sound_nor));
     }
