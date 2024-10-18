@@ -583,7 +583,6 @@
                     android:onClick="@{()->viewModel.cameraRadarSound()}"
                     android:src="@mipmap/ic_radar_sound_sel"
                     android:tag="nor"
-                    android:visibility="@{viewModel.info.showRadarBtn?View.VISIBLE : View.GONE }"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
