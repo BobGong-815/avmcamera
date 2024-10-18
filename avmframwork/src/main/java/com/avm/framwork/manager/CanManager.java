@@ -2,6 +2,8 @@ package com.avm.framwork.manager;
 
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_FLS_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_FRS_SNS_ERR_FLAG;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_PAS_FLMIDSNSERRFLAG;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_PAS_FRMIDSNSERRFLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RL_MIDSNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RL_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RR_SNS_ERR_FLAG;
@@ -288,7 +290,8 @@ public class CanManager implements Handler.Callback {
         mRegisterId.add(AVM_RSR_SNS_ERR_FLAG);    //
         mRegisterId.add(AVM_FRS_SNS_ERR_FLAG);    //
         mRegisterId.add(AVM_FLS_SNS_ERR_FLAG);    //
-
+        mRegisterId.add(AVM_PAS_FLMIDSNSERRFLAG);    //
+        mRegisterId.add(AVM_PAS_FRMIDSNSERRFLAG);    //
 
         mRegisterId.add(MIRROR_FOLD_UNFOLD_STATUS);    //   后视镜折叠
         mRegisterId.add(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE);    //   后视镜下翻

@@ -11,6 +11,8 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AV
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_EL_SIDE_BRKLIGHT_CTRL_CMD;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_FLS_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_FRS_SNS_ERR_FLAG;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_PAS_FLMIDSNSERRFLAG;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_PAS_FRMIDSNSERRFLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_PAS_SYSTEMTYPE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RADAR_ALARM_ACOUSTIC_SWITCH;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RL_MIDSNS_ERR_FLAG;
@@ -695,12 +697,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             }
 
             //todo 暂时屏蔽雷达音开关
-//            if(isCallRRadarSound || isCallFRadarSound){
-//                //此时表示警报声音会响起
-//                AvmApp.getInstance().getCameraView().showRadarSoundView(1);
-//            }else {
-//                AvmApp.getInstance().getCameraView().showRadarSoundView(0);
-//            }
+            if(isCallRRadarSound || isCallFRadarSound){
+                //此时表示警报声音会响起
+                //AvmApp.getInstance().getCameraView().showRadarSoundView(1);
+            }else {
+                //AvmApp.getInstance().getCameraView().showRadarSoundView(0);
+            }
             return;
         }
 
@@ -774,7 +776,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 break;
             case ASSIST_DRIVE_PAS_BUTTON_PRESS:// 雷达报警声
             case CLUSTER_CHIME_PAS_WARNTONE://雷达报警音状态
-                AvmApp.getInstance().getCameraView().showRadarSoundView(status);
+                //AvmApp.getInstance().getCameraView().showRadarSoundView(status);
                 break;
             case AVM_RADAR_ALARM_ACOUSTIC_SWITCH:// 雷达故障报警
                 //AvmApp.getInstance().getCameraView().showParkingAssistView(status);
@@ -790,10 +792,20 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 break;
             case AVM_RSL_SNS_ERR_FLAG:    //       后左
             case AVM_RSR_SNS_ERR_FLAG:    //       后左
-            case AVM_FRS_SNS_ERR_FLAG:    //       后左
-            case AVM_FLS_SNS_ERR_FLAG:    //       后左
             case AVM_RL_SNS_ERR_FLAG:    //       后左
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(1, status);
+                break;
+            case AVM_FRS_SNS_ERR_FLAG:    //       前左
+                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(1, status);
+                break;
+            case AVM_FLS_SNS_ERR_FLAG:    //       前右
+                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(3, status);
+                break;
+            case AVM_PAS_FLMIDSNSERRFLAG:    //       前左中
+                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(2, status);
+                break;
+            case AVM_PAS_FRMIDSNSERRFLAG:    //       前右中
+                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(4, status);
                 break;
             case AVM_PAS_SYSTEMTYPE:    //       雷达系统故障，没有找到相关UI
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(1, status);

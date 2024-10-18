@@ -171,18 +171,19 @@ public class CameraView extends View implements LifecycleOwner {
     protected SegmentTabLayout segmentTab;
     protected Group viewShow2dGroupId;
     protected Group viewShow3dGroupId,smartGroupId;
-    protected ImageView radarSoundIv,radarErrImgId1,radarErrImgId2,radarErrImgId3,radarErrImgId4,cameraIv
+    protected ImageView radarSoundIv,radarfErrImgId1,radarfErrImgId2,radarfErrImgId3,radarfErrImgId4,
+            radarErrImgId1,radarErrImgId2,radarErrImgId3,radarErrImgId4,cameraIv
             ,cameraLeftFront,cameraRightFront,cameraLeftRear,cameraRightRear,cameraRight
             ,cameraTop,cameraBottom,cameraLift,ivBreakdown,ivSetting,ivBackMirror,cameraIvLift;
     protected LinearLayout llBackMirror,llSetting,cameraBreakdown,toastBg,layoutShowFull2d,layoutCalibrateId;
     protected ConstraintLayout layoutWideAngle,cameraImageLayout,radarSoundLayout
             ,parkingAssistLayout,mainAvmViewRootId,cameraImageLayoutLift;
-    protected TextView tvBreakdown,manualCalibration,automaticCalibration,infoTitle,infoContent,rearRadarImgId;
+    protected TextView tvBreakdown,manualCalibration,automaticCalibration,infoTitle,infoContent,rearRadarImgId,rearRadarFrontId;
     protected AppCompatButton infoOk;
-    protected AppCompatImageButton btnClose;
+    protected RelativeLayout rlClose;
     protected View red2dTop,red2dLift,red2dRight,red2dBottom,red3dleftFront,red3dleftFront1,red3drightFront,red3drightFront1,
             red3dleftRear,red3dleftRear1,red3drightRear,red3drightRear1;
-    protected ConstraintLayout clCon;
+    protected ConstraintLayout clCon,conRadarError;
 
 
     public CameraView(Context context) {
@@ -286,16 +287,14 @@ public class CameraView extends View implements LifecycleOwner {
             public void onChanged(String s) {
                 int status = CanManager.getInstance().getIntStatus(ASSIST_DRIVE_PAS_BUTTON_PRESS, 0);
                 KLog.d("雷达 点击status " + status);
-                if (status == 1) {
-                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
-                    CameraViewModelHelper.getInstance().radarSoundStatus((Integer) 0, status);
+                if (status == 0) {
+                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.drawable.ic_radar_sound_close));
                     KLog.d("雷达 关闭提示音 ");
                 } else {
-                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_sel));
-                    CameraViewModelHelper.getInstance().radarSoundStatus((Integer) 1, status);
+                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.drawable.ic_radar_sound_open));
                     KLog.d("雷达 打开提示音 ");
                 }
-
+                CameraViewModelHelper.getInstance().radarSoundStatus((Integer) 1, status);
             }
         });
 
@@ -457,6 +456,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
         findViewById();
         rearRadarViewId.setViewModel(viewModel);
+        rearRadarFrontViewId.setViewModel(viewModel);
         settingView.setInfoBookView(infobook, infoBg, segmentWideAngle);
         layout3dTouchId.setOnTouchListener(this::onTouch);
         viewFrame.setOnTouchListener(this::onTouchView);
@@ -525,6 +525,10 @@ public class CameraView extends View implements LifecycleOwner {
             viewShow2dGroupId = mViewCameraRightBinding.viewShow2dGroupId;
             viewShow3dGroupId = mViewCameraRightBinding.viewShow3dGroupId;
             radarSoundIv = mViewCameraRightBinding.radarSoundIv;
+            radarfErrImgId1 = mViewCameraRightBinding.radarfErrImgId1;
+            radarfErrImgId2 = mViewCameraRightBinding.radarfErrImgId2;
+            radarfErrImgId3 = mViewCameraRightBinding.radarfErrImgId3;
+            radarfErrImgId4 = mViewCameraRightBinding.radarfErrImgId4;
             radarErrImgId1 = mViewCameraRightBinding.radarErrImgId1;
             radarErrImgId2 = mViewCameraRightBinding.radarErrImgId2;
             radarErrImgId3 = mViewCameraRightBinding.radarErrImgId3;
@@ -562,6 +566,7 @@ public class CameraView extends View implements LifecycleOwner {
             infoContent = mViewCameraRightBinding.infoContent;
             infoOk = mViewCameraRightBinding.infoOk;
             rearRadarImgId = mViewCameraRightBinding.rearRadarImgId;
+            rearRadarFrontId = mViewCameraRightBinding.rearRadarFrontId;
             //热区
             red2dTop = mViewCameraRightBinding.red2dTop;
             red2dLift = mViewCameraRightBinding.red2dLift;
@@ -577,8 +582,9 @@ public class CameraView extends View implements LifecycleOwner {
             red3drightRear1 = mViewCameraRightBinding.red3drightRear1;
             cameraImageLayoutLift = mViewCameraRightBinding.cameraImageLayoutLift;
             cameraIvLift = mViewCameraRightBinding.cameraIvLift;
-            btnClose = mViewCameraRightBinding.btnClose;
+            rlClose = mViewCameraRightBinding.rlClose;
             clCon = mViewCameraRightBinding.clCon;
+            conRadarError = mViewCameraRightBinding.conRadarError;
         }else {
             rearRadarViewId = mViewCameraBinding.rearRadarViewId;
             rearRadarFrontViewId = mViewCameraBinding.rearRadarFrontViewId;
@@ -599,6 +605,10 @@ public class CameraView extends View implements LifecycleOwner {
             viewShow2dGroupId = mViewCameraBinding.viewShow2dGroupId;
             viewShow3dGroupId = mViewCameraBinding.viewShow3dGroupId;
             radarSoundIv = mViewCameraBinding.radarSoundIv;
+            radarfErrImgId1 = mViewCameraBinding.radarfErrImgId1;
+            radarfErrImgId2 = mViewCameraBinding.radarfErrImgId2;
+            radarfErrImgId3 = mViewCameraBinding.radarfErrImgId3;
+            radarfErrImgId4 = mViewCameraBinding.radarfErrImgId4;
             radarErrImgId1 = mViewCameraBinding.radarErrImgId1;
             radarErrImgId2 = mViewCameraBinding.radarErrImgId2;
             radarErrImgId3 = mViewCameraBinding.radarErrImgId3;
@@ -636,6 +646,7 @@ public class CameraView extends View implements LifecycleOwner {
             infoContent = mViewCameraBinding.infoContent;
             infoOk = mViewCameraBinding.infoOk;
             rearRadarImgId = mViewCameraBinding.rearRadarImgId;
+            rearRadarFrontId = mViewCameraRightBinding.rearRadarFrontId;
             //热区
             red2dTop = mViewCameraBinding.red2dTop;
             red2dLift = mViewCameraBinding.red2dLift;
@@ -799,7 +810,6 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void setRadarFailStatus(int flag, int value) {
         if (mViewCameraBinding == null && mViewCameraRightBinding == null) return;
-
         switch (flag) {
             case 1:
                 radarErrImgId1.setVisibility(value == 0 ? GONE : VISIBLE);
@@ -818,6 +828,27 @@ public class CameraView extends View implements LifecycleOwner {
             RearviewToast.getInstance().showToast(AvmApp.getInstance().getString(R.string.camera_radar_error));
         }
 
+    }
+
+    public void setFrontRadarFailStatus(int flag, int value) {
+        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return;
+        switch (flag) {
+            case 1:
+                radarfErrImgId1.setVisibility(value == 0 ? GONE : VISIBLE);
+                break;
+            case 2:
+                radarfErrImgId2.setVisibility(value == 0 ? GONE : VISIBLE);
+                break;
+            case  3:
+                radarfErrImgId3.setVisibility(value == 0 ? GONE :VISIBLE);
+                break;
+            case 4:
+                radarfErrImgId4.setVisibility(value == 0 ? GONE : VISIBLE);
+                break;
+        }
+        if (value > 0) {
+            RearviewToast.getInstance().showToast(AvmApp.getInstance().getString(R.string.camera_radar_error));
+        }
     }
 
     /**
@@ -1354,13 +1385,16 @@ public class CameraView extends View implements LifecycleOwner {
         isSmartWin = true;
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width_smart) + 142;
         mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
-        if(btnClose != null){
-            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)btnClose.getLayoutParams();
-            layoutParams.setMarginEnd(136);
-            btnClose.setLayoutParams(layoutParams);
+        if(rlClose != null){
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
+            layoutParams.setMarginEnd(119);
+            rlClose.setLayoutParams(layoutParams);
             ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
             layoutParamsCl.setMarginEnd(66);
             clCon.setLayoutParams(layoutParamsCl);
+            ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
+            layoutParamsCl.setMarginEnd(68);
+            conRadarError.setLayoutParams(layoutParamsCr);
         }
         mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
 
@@ -1402,13 +1436,16 @@ public class CameraView extends View implements LifecycleOwner {
         }
         cameraBinding.frameLayoutId.setVisibility(GONE);
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
-        if(btnClose != null){
-            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)btnClose.getLayoutParams();
-            layoutParams.setMarginEnd(68);
-            btnClose.setLayoutParams(layoutParams);
+        if(rlClose != null){
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
+            layoutParams.setMarginEnd(51);
+            rlClose.setLayoutParams(layoutParams);
             ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
             layoutParamsCl.setMarginEnd(0);
             clCon.setLayoutParams(layoutParamsCl);
+            ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
+            layoutParamsCl.setMarginEnd(0);
+            conRadarError.setLayoutParams(layoutParamsCr);
         }
         if (AvmRuntime.self().isRearGearSts()) {
             mWindowLps.height = 1080;
@@ -1625,8 +1662,8 @@ public class CameraView extends View implements LifecycleOwner {
         //获取当前雷达音开关状态
         int status = CanManager.getInstance().getIntStatus(ASSIST_DRIVE_PAS_BUTTON_PRESS, 0);
         KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible+"open status:"+status);
-        radarSoundIv.setImageDrawable(mContext.getDrawable(status == 1 ? R.mipmap.ic_radar_sound_sel
-                : R.mipmap.ic_radar_sound_nor));
+        radarSoundIv.setImageDrawable(mContext.getDrawable(status == 0 ? R.drawable.ic_radar_sound_open
+                : R.drawable.ic_radar_sound_close));
     }
 
     //雷达故障提示显隐

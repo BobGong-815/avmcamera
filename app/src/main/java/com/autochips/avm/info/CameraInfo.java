@@ -20,6 +20,7 @@ public class CameraInfo extends BaseObservable {
     private  boolean isShowRadarBtn = false ; // 是否显示雷达按钮
 
     private String radarDistance =""; // 雷达距离显示
+    private String radarFrontDistance =""; // 前雷达距离显示
 
 
 
@@ -100,5 +101,15 @@ public class CameraInfo extends BaseObservable {
     public void setRadarDistance(String radarDistance) {
         this.radarDistance = radarDistance;
         notifyPropertyChanged(BR.radarDistance);
+    }
+
+    @Bindable
+    public String getRadarFrontDistance() {
+        return radarFrontDistance;
+    }
+
+    public void setRadarFrontDistance(String radarFrontDistance) {
+        this.radarFrontDistance = radarFrontDistance;
+        notifyPropertyChanged(BR.radarFrontDistance);
     }
 }

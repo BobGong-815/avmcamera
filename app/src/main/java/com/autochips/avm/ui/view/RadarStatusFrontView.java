@@ -10,8 +10,12 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.autochips.avm.R;
+import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.service.AvmRuntime;
+import com.autochips.avm.viewmode.CameraViewModel;
 
 import androidx.annotation.Nullable;
+import me.goldze.mvvmhabit.utils.KLog;
 
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_FLMidDistance;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_FRMidDistance;
@@ -67,6 +71,11 @@ public class RadarStatusFrontView extends View {
     private boolean isShowGreen4 = false;
 
 
+    private CameraViewModel viewModel;
+
+    public void setViewModel(CameraViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
     public RadarStatusFrontView(Context context) {
         super(context);
@@ -83,32 +92,63 @@ public class RadarStatusFrontView extends View {
         init();
     }
 
+    private  int fRRLen = 180;
+    private  int mildLen = 180;
+    private  int mirdLen = 180;
+    private  int fRLLen = 180;
     public void status(int vehicleId, int len ) {
 
         switch (vehicleId) {
             case CLUSTER_PAS_PAS_FRDistance:// 前右
+                fRRLen = len;
                 isShowRed1 = isShowBitmap30(len);
                 isShowOrange1 = isShowBitmap60(len);
+                showRadarBtn();
                 invalidate();
                 break;
             case CLUSTER_PAS_PAS_FLDistance:// 前左
+                fRLLen = len;
                 isShowRed4 = isShowBitmap30(len);
                 isShowOrange4 = isShowBitmap60(len);
+                showRadarBtn();
                 invalidate();
                 break;
             case CLUSTER_PAS_FRMidDistance://前右中
+                mirdLen = len;
                 isShowRed2 = isShowBitmap30(len);
                 isShowOrange2 = isShowBitmap60(len);
                 isShowYellow2 = isShowBitmap90(len);
                 isShowGreen2 = isShowBitmap110(len);
+                showRadarBtn();
                 invalidate();
                 break;
             case CLUSTER_PAS_FLMidDistance://（前左中） 60
+                mildLen = len;
                 isShowRed3 = isShowBitmap30(len);
                 isShowOrange3 = isShowBitmap60(len);
                 isShowYellow3 = isShowBitmap90(len);
                 isShowGreen3 = isShowBitmap110(len);
+                showRadarBtn();
+                invalidate();
                 break;
+        }
+    }
+
+    // 修复雷达距离最小显示
+    private  void showRadarBtn(){
+        int radLen = 110 ;
+        if (viewModel == null)return;
+        radLen= Math.min(radLen,fRLLen);
+        radLen= Math.min(radLen,fRRLen);
+        radLen= Math.min(radLen,mildLen);
+        radLen= Math.min(radLen,mirdLen);
+        KLog.d(radLen+" 雷达距离最小："+radLen );
+        if (radLen>30 && radLen <= 90){
+            viewModel.getInfo().setRadarFrontDistance(radLen+"cm");
+        }else if(radLen > 0 && radLen <= 30){
+            viewModel.getInfo().setRadarFrontDistance(AvmApp.getInstance().getString(R.string.camera_please_park));
+        }else {
+            viewModel.getInfo().setRadarFrontDistance("");
         }
     }
 

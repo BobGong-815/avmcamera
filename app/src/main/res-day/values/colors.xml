@@ -16,5 +16,5 @@
     <color name="toast_bg_color_1_day">#FF4081</color>
     <color name="test_color_day">#000000</color>
     <color name="test_color_D9">#D9ffffff</color>
-
+    <color name="close_bg">#4d000000</color>
 </resources>
