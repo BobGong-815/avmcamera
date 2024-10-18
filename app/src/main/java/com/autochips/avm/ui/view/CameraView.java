@@ -646,7 +646,7 @@ public class CameraView extends View implements LifecycleOwner {
             infoContent = mViewCameraBinding.infoContent;
             infoOk = mViewCameraBinding.infoOk;
             rearRadarImgId = mViewCameraBinding.rearRadarImgId;
-            rearRadarFrontId = mViewCameraRightBinding.rearRadarFrontId;
+            rearRadarFrontId = mViewCameraBinding.rearRadarFrontId;
             //热区
             red2dTop = mViewCameraBinding.red2dTop;
             red2dLift = mViewCameraBinding.red2dLift;
