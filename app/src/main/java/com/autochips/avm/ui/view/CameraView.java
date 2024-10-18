@@ -703,7 +703,7 @@ public class CameraView extends View implements LifecycleOwner {
 //        isChangeGear = true;
         KLog.d("viewShowStatus()");
         isDismissView = false;
-        radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
+        //radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
         rearviewMirrorView.gearInfo(0);
 //       KLog.d(hisModel + "  valGear viewShowStatus 模式：" + model + " 记忆模式: " + viewPosition);
         int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
@@ -751,11 +751,11 @@ public class CameraView extends View implements LifecycleOwner {
                 viewModelReverseIn();
                 int status = CanManager.getInstance().getIntStatus(CLUSTER_CHIME_PAS_WARNTONE, 0);
                 KLog.d("雷达报警图标状态:" + status);
-                if (0 < status && status < 6) {
-                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_sel));
-                } else {
-                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
-                }
+//                if (0 < status && status < 6) {
+//                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_sel));
+//                } else {
+//                    radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
+//                }
             } else {
                 viewModelByActive("gear_P_D_N");
             }
@@ -1493,7 +1493,7 @@ public class CameraView extends View implements LifecycleOwner {
         tabView();
         skinView();
         //初始化进来也要显示上一次设置的透明度的车模
-
+        showRadarSoundView();
 //        setTransparentIndexTab();
 //        SystemProperties.setGlobal("avm_state", 1);
 //        AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
@@ -1645,23 +1645,11 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     //雷达提示音显隐
-    public void showRadarSoundView(int isVisible) {
-        KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible);
+    public void showRadarSoundView() {
         if (mViewCameraBinding == null && mViewCameraRightBinding == null) return;
-        if ((radarSoundLayout.getVisibility() == VISIBLE && isVisible == 1) ||
-                (radarSoundLayout.getVisibility() == GONE && isVisible != 1)) {
-            KLog.d("雷达提示音 is show or hide ");
-            return;
-        }
-        if (isVisible==1) {
-            //隐藏掉雷达提示音
-            radarSoundLayout.setVisibility(VISIBLE);
-        } else {
-            radarSoundLayout.setVisibility(GONE);
-        }
         //获取当前雷达音开关状态
         int status = CanManager.getInstance().getIntStatus(ASSIST_DRIVE_PAS_BUTTON_PRESS, 0);
-        KLog.d("雷达提示音 showRadarSoundView isVisible " + isVisible+"open status:"+status);
+        KLog.d("雷达提示音 showRadarSoundView open status:"+status);
         radarSoundIv.setImageDrawable(mContext.getDrawable(status == 0 ? R.drawable.ic_radar_sound_open
                 : R.drawable.ic_radar_sound_close));
     }

@@ -642,7 +642,6 @@
                 android:onClick="@{()->viewModel.cameraRadarSound()}"
                 android:background="@drawable/shape_bg_nor_12"
                 android:contentDescription="雷达提示音::parkimage_home_warningTone"
-                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 

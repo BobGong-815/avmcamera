@@ -636,14 +636,13 @@
                 android:onClick="@{()->viewModel.cameraRadarSound()}"
                 android:background="@drawable/shape_bg_nor_12"
                 android:contentDescription="雷达提示音::parkimage_home_warningTone"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/radar_sound_iv"
-                    android:layout_width="75px"
-                    android:layout_height="75px"
+                    android:layout_width="48px"
+                    android:layout_height="48px"
                     android:src="@drawable/ic_radar_sound_open"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
