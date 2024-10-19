@@ -935,7 +935,8 @@ public class CameraView extends View implements LifecycleOwner {
             } else if (viewPosition == 1) {
                 status = bvavmJNI.BW_FRONT_3D;
                 chick3DView(CAMERA_3_D);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_back
+                        : R.mipmap.ic_camera_card_rback));
             } else if (viewPosition == 2) {
 //                status = bvavmJNI.BW_2D_REAR_120;
                 if (AvmRuntime.self().isRearGearSts()) {
@@ -974,7 +975,8 @@ public class CameraView extends View implements LifecycleOwner {
 //            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
             chick3DView(CAMERA_3_D);
 //            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
-            cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+            cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_back
+                    : R.mipmap.ic_camera_card_rback));
         } else if (outsideTabIndex == 2) {
             //            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
             //            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
@@ -1866,19 +1868,23 @@ public class CameraView extends View implements LifecycleOwner {
                             KLog.i("滑动车模角度touchPos  " + touchPos);
                             if (touchIndex != touchPos) {
                                 if (touchPos == 1) {
-                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftfront));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_leftfront
+                                            : R.mipmap.ic_camera_card_rleftfront));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
                                 } else if (touchPos == 2) {
-                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftback));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_leftback
+                                            : R.mipmap.ic_camera_card_rleftback));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_REAR);
                                 } else if (touchPos == 3) {
-                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_rightfront
+                                            : R.mipmap.ic_camera_card_rrightfront));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_RIGHT_FRONT);
                                 } else if (touchPos == 4) {
-                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightback));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_rightback
+                                            : R.mipmap.ic_camera_card_rrightback));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_RIGHT_REAR);
                                 }
@@ -2359,7 +2365,8 @@ public class CameraView extends View implements LifecycleOwner {
                 cameraBottom.setRotation(180);
                 cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
                 cameraRight.setRotation(90);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_back
+                        : R.mipmap.ic_camera_card_rback));
                 cameraImageLayoutLift.setVisibility(GONE);
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_FRONT_CAM_ID == 0) {
@@ -2376,7 +2383,8 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
                 showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_front));
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
+                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_front
+                        : R.mipmap.ic_camera_card_rfront));
                 cameraImageLayoutLift.setVisibility(GONE);
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_FRONT_CAM_ID == 0) {
@@ -2416,7 +2424,8 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
                 showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_rear));
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_back
+                        : R.mipmap.ic_camera_card_rback));
                 cameraImageLayoutLift.setVisibility(GONE);
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_REAR_CAM_ID == 0) {
@@ -2494,6 +2503,11 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.e("chick3DView : leftFrontStatus:"+leftFrontStatus+"  rightFrontStatus:"+rightFrontStatus
                 +" leftRearStatus:"+leftRearStatus +" rightRearStatus:"+rightRearStatus);
         boolean isAy5T = AvmApp.ISAY5T;
+        if(AvmApp.getInstance().isRight){
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)cameraImageLayout.getLayoutParams();
+            layoutParams.setMarginEnd(1806);
+            cameraImageLayout.setLayoutParams(layoutParams);
+        }
         switch (type) {
             case CAMERA_3_D:
                 camera3DShowType = -1;
@@ -2501,7 +2515,8 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
+                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_front
+                        : R.mipmap.ic_camera_card_rfront));
                 break;
             case CAMERA_3_D_LEFT_FRONT:
                 camera3DShowType = 1;
@@ -2509,7 +2524,8 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftfront));
+                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_leftfront
+                        : R.mipmap.ic_camera_card_rleftfront));
                 break;
             case CAMERA_3_D_RIGHT_FRONT:
                 camera3DShowType = 2;
@@ -2517,7 +2533,8 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
+                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_rightfront
+                        : R.mipmap.ic_camera_card_rrightfront));
                 break;
             case CAMERA_3_D_LEFT_REAR:
                 camera3DShowType = 3;
@@ -2525,7 +2542,9 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftback));
+                showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
+                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_leftback
+                        : R.mipmap.ic_camera_card_rleftback));
                 break;
             case CAMERA_3_D_RIGHT_REAR:
                 camera3DShowType = 4;
@@ -2533,7 +2552,8 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightback));
+                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_rightback
+                        : R.mipmap.ic_camera_card_rrightback));
                 break;
         }
     }
