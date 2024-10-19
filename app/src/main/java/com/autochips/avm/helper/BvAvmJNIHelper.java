@@ -37,6 +37,7 @@ public class BvAvmJNIHelper {
     private byte[] syncObj = new byte[0];
 
     public static boolean isAvmDeInit = false;
+    public static boolean isAvmInit = false;
     private View.OnClickListener listener;
 
     public static BvAvmJNIHelper getInstance() {
@@ -111,8 +112,16 @@ public class BvAvmJNIHelper {
             setTransparentChassis();
 //        bvavmJNI.bwNotifyRVC(0);
             isAvmDeInit = true;
+            isAvmInit = true;
             return res;
         }
+    }
+
+    ///*获取摄像头状态，camID表示摄像头ID:0是前摄像头，1是后摄像头，2是左摄像头，3是右摄像头，返回值:0表示图像正常，-1表示无图像*/
+    public int bwGetCamerastatus(int cType){
+        int status = bvavmJNI.bwGetCameraStatus(cType);
+        KLog.e(" bwGetCamerastatus cType: " + cType + " status:"+status);
+        return status;
     }
 
     private void setTransparentChassis() {

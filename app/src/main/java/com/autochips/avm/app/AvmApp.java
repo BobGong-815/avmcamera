@@ -157,6 +157,9 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                         BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
                     }
                     mHandler.post(() -> mCameraView = new CameraView(this));
+                    Intent intent = new Intent();
+                    intent.setAction("action.syncore.INITCAM.mode");
+                    sendBroadcast(intent);
                 }
             }else {
                 KLog.i("Avmapp....还未连接成功 ...");

@@ -290,7 +290,6 @@
                         android:id="@+id/rearRadarImgId"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/shape_bg_nor"
                         android:gravity="center"
                         android:text="@{viewModel.info.radarDistance}"
                         android:textColor="@color/white"
@@ -632,7 +631,7 @@
                 android:layout_width="66px"
                 android:layout_height="66px"
                 android:layout_marginTop="9px"
-                android:layout_marginEnd="411px"
+                android:layout_marginEnd="453px"
                 android:onClick="@{()->viewModel.cameraRadarSound()}"
                 android:background="@drawable/shape_bg_nor_12"
                 android:contentDescription="雷达提示音::parkimage_home_warningTone"
@@ -658,7 +657,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="42px"
                 android:layout_marginTop="4px"
-                android:layout_marginEnd="546px"
+                android:layout_marginEnd="1806px"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -971,7 +970,7 @@
                 android:background="@color/avm_bg"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/iv_breakdown"

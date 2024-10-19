@@ -134,6 +134,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private String open_act = "action.syncore.OPEN.mode";
     private String close_act = "action.syncore.CLOSE.mode";
     private String first_open_act = "action.syncore.FOPEN.mode";
+    private String init_cam = "action.syncore.INITCAM.mode";
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     private Handler mHandler;
     public static boolean isCalibration = false;
@@ -164,6 +165,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         filter.addAction(open_act);
         filter.addAction(close_act);
         filter.addAction(first_open_act);
+        filter.addAction(init_cam);
         registerReceiver(broadcastReceiver, filter);
 
         CarPowerManager mCarPowerManager = CarPowerManager.getInstance(this, new CarPowerEventListener() {
@@ -369,21 +371,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             }
         };
 
-        //快速启动
-        mHandler.postDelayed(() -> {
-            CanManager.getInstance().init(this);
-            CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
-            //延迟初始化避免配置连接慢存在问题
-            if(AvmApp.getInstance().getCameraView()!=null) {
-                AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
-                AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
-            }
-            CanManager.getInstance().startConnect((v -> {
-                KLog.d("注册完成----fishTh ");
-                CameraViewModelHelper.getInstance().initActive();
-            }));
-        }, 1500);
-
         mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 15 * 1000);
 
     }
@@ -410,6 +397,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d("AvmApp", "avm is null ");
             return START_STICKY;
         }
+//        if(!BvAvmJNIHelper.isAvmInit){
+//            KLog.d("AvmApp", "avm is not init");
+//            return START_STICKY;
+//        }
         //adb shell am start-service -n com.autochips.avm/.service.AvmService --ei avm_onclick 1
         if (intent != null) {
             int avm_onclick = intent.getIntExtra("avm_start", -1);
@@ -1044,6 +1035,21 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                     isFirstEnter = false;
                 }
+            }else if(action.equals(init_cam)){
+                KLog.i("init can");
+                //快速启动
+                mHandler.postDelayed(() -> {
+                    CanManager.getInstance().init(getApplicationContext());
+                    CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
+                    if(AvmApp.getInstance().getCameraView()!=null) {
+                        AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
+                        AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
+                    }
+                    CanManager.getInstance().startConnect((v -> {
+                        KLog.d("注册完成----fishTh ");
+                        CameraViewModelHelper.getInstance().initActive();
+                    }));
+                }, 200);
             }
         }
     }

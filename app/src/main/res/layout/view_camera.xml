@@ -637,7 +637,7 @@
                 android:id="@+id/radar_sound_layout"
                 android:layout_width="66px"
                 android:layout_height="66px"
-                android:layout_marginStart="411px"
+                android:layout_marginStart="453px"
                 android:layout_marginTop="9px"
                 android:onClick="@{()->viewModel.cameraRadarSound()}"
                 android:background="@drawable/shape_bg_nor_12"
