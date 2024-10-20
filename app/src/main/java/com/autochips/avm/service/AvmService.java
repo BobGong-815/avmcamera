@@ -536,7 +536,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (value instanceof Integer) {
                 int gear = (int) value;
                 AvmRuntime.self().gearChange(gear);
-                if (gear == 3) {
+                /*if (gear == 3) {
                     bvavmJNI.bwSetCarIsDgear(0);
                     bvavmJNI.bwSetCarIsBack((byte) 1);
                 } else if (gear == 1) {
@@ -546,6 +546,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     bvavmJNI.bwSetCarIsDgear(0);
                     bvavmJNI.bwSetCarIsBack((byte) 0);
                 }
+
+                 */
+                BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
                 if (gear == 4) {
                     BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                 }
