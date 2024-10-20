@@ -689,14 +689,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 }
                 isCallFRadarSound = fMir <= 90 || fMil <= 90 || fRight <= 60 || fLeft <=60;
             }
-
-            //todo 暂时屏蔽雷达音开关
-            if(isCallRRadarSound || isCallFRadarSound){
-                //此时表示警报声音会响起
-                //AvmApp.getInstance().getCameraView().showRadarSoundView(1);
-            }else {
-                //AvmApp.getInstance().getCameraView().showRadarSoundView(0);
-            }
             return;
         }
 
@@ -1046,13 +1038,17 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
                     if(AvmApp.getInstance().getCameraView()!=null) {
                         AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
-                        AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
                     }
                     CanManager.getInstance().startConnect((v -> {
                         KLog.d("注册完成----fishTh ");
                         CameraViewModelHelper.getInstance().initActive();
                     }));
-                }, 200);
+                }, 100);
+                mHandler.postDelayed(()->{
+                    if(AvmApp.getInstance().getCameraView()!=null) {
+                        AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
+                    }
+                },1500);
             }
         }
     }

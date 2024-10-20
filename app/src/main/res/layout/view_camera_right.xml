@@ -262,9 +262,9 @@
                     android:id="@+id/rearRadarFrontId"
                     android:layout_width="84px"
                     android:layout_height="30px"
-                    android:layout_marginLeft="-16px"
                     android:layout_marginTop="55px"
                     android:gravity="center"
+                    android:textAlignment="center"
                     android:background="@drawable/selector_radar_bg"
                     android:visibility="@{TextUtils.isEmpty(viewModel.info.radarFrontDistance)?View.GONE:View.VISIBLE}"
                     android:text="@{viewModel.info.radarFrontDistance}"
@@ -277,7 +277,6 @@
                 <LinearLayout
                     android:layout_width="84px"
                     android:layout_height="30px"
-                    android:layout_marginLeft="-16px"
                     android:layout_marginBottom="20px"
                     android:background="@drawable/selector_radar_bg"
                     android:gravity="center"
@@ -313,7 +312,7 @@
                 android:id="@+id/layout_2d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="40px"
+                android:layout_marginEnd="36px"
                 android:minWidth="480px"
                 android:minHeight="800px"
                 android:visibility="gone"
@@ -427,7 +426,7 @@
                 android:id="@+id/layout_3d"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="40px"
+                android:layout_marginEnd="50px"
                 android:minWidth="480px"
                 android:minHeight="850px"
                 android:visibility="gone"
@@ -574,6 +573,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <!--广角-->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_wide_angle"
@@ -625,30 +625,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!--雷达提示音-->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/radar_sound_layout"
-                android:layout_width="66px"
-                android:layout_height="66px"
-                android:layout_marginTop="9px"
-                android:layout_marginEnd="453px"
-                android:onClick="@{()->viewModel.cameraRadarSound()}"
-                android:background="@drawable/shape_bg_nor_12"
-                android:contentDescription="雷达提示音::parkimage_home_warningTone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/radar_sound_iv"
-                    android:layout_width="48px"
-                    android:layout_height="48px"
-                    android:src="@drawable/ic_radar_sound_open"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!--摄像头右视角-->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -903,6 +880,44 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="84px"
+            android:layout_marginStart="42px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <!--infobook 摄像头故障-->
+
+            <LinearLayout
+                android:id="@+id/camera_breakdown"
+                android:layout_width="1333px"
+                android:layout_height="871px"
+                android:background="@color/avm_bg"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_breakdown"
+                    android:layout_width="92.81px"
+                    android:layout_height="92.81px"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/info_default_56_day" />
+
+                <TextView
+                    android:id="@+id/tv_breakdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48px"
+                    android:text="@string/camera_breakdown"
+                    android:textColor="@color/test_color_0A1532"
+                    android:textSize="@dimen/text_size_27px" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -952,44 +967,6 @@
                 android:layout_height="870px"
                 android:background="@drawable/selector_info_bg"
                 android:visibility="gone" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="93px"
-            android:layout_marginEnd="546px"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <!--infobook 摄像头故障-->
-
-            <LinearLayout
-                android:id="@+id/camera_breakdown"
-                android:layout_width="1333px"
-                android:layout_height="871px"
-                android:background="@color/avm_bg"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/iv_breakdown"
-                    android:layout_width="92.81px"
-                    android:layout_height="92.81px"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@mipmap/info_default_56_day" />
-
-                <TextView
-                    android:id="@+id/tv_breakdown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="48px"
-                    android:text="@string/camera_breakdown"
-                    android:textColor="@color/test_color_0A1532"
-                    android:textSize="@dimen/text_size_27px" />
-
-            </LinearLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -1191,6 +1168,31 @@
 <!--            android:src="@mipmap/close_default"-->
 <!--            app:layout_constraintEnd_toEndOf="parent"-->
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <!--雷达提示音-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/radar_sound_layout"
+            android:layout_width="66px"
+            android:layout_height="66px"
+            android:layout_marginTop="93px"
+            android:layout_marginEnd="453px"
+            android:onClick="@{()->viewModel.cameraRadarSound()}"
+            android:background="@drawable/shape_bg_nor_12"
+            android:contentDescription="雷达提示音::parkimage_home_warningTone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/radar_sound_iv"
+                android:layout_width="48px"
+                android:layout_height="48px"
+                android:src="@drawable/ic_radar_sound_open"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <RelativeLayout
             android:id="@+id/rl_close"

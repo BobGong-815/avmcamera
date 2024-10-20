@@ -35,6 +35,7 @@ public class CameraGLSurfaceView extends GLSurfaceView {
     public static int doCalibrateNum = 0;
     public static volatile int lastCeameraDirection = bvavmJNI.BW_VIEW_POWER_OFF;
     private static volatile int sCameraDirection = bvavmJNI.BW_VIEW_POWER_OFF;
+    private int nowShowDirection = -1;//当前显示视图
 
     Renderer renderer;
     {
@@ -125,6 +126,10 @@ public class CameraGLSurfaceView extends GLSurfaceView {
 
              */
 
+            if(nowShowDirection != sCameraDirection) {
+                KLog.d("sCameraDirection 视图=" + sCameraDirection);
+                nowShowDirection = sCameraDirection;
+            }
             try {
                 if (doCalibrateNum > 0) {
                     KLog.d("doCalibrateNum = " + doCalibrateNum);

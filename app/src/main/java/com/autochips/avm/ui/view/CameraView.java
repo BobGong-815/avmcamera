@@ -1126,6 +1126,7 @@ public class CameraView extends View implements LifecycleOwner {
 //                camera3DDirection = bvavmJNI.BW_LEFT_FRONT_3D;
                 KLog.d("转向3d前FRONT_3D 3");
                 bvavmJNI.bwSet3DfreeFlag(0);//复位3D
+                cameraBreakdown.setVisibility(View.GONE);
                 chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
             } else {
                 cameraShowType = 0;
@@ -1314,7 +1315,7 @@ public class CameraView extends View implements LifecycleOwner {
             camera3dBg.setVisibility(View.GONE);
 
         } else if (outsideTabIndex == 1) {
-            KLog.d("转向3d前FRONT_3D 2");
+            KLog.d("转向3d前FRONT_3D 2："+CameraGLSurfaceView.getCameraDirection());
 
             if (!isSmartWin) {
                 //                camera3DDirection = bvavmJNI.BW_LEFT_FRONT_3D;
@@ -1322,7 +1323,12 @@ public class CameraView extends View implements LifecycleOwner {
                 layout2d.setVisibility(View.GONE);
                 layout3d.setVisibility(View.VISIBLE);
                 layoutWideAngle.setVisibility(GONE);
-                chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
+                if(CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_REAR_3D
+                        || CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_FRONT_3D){
+                    chick3DView(CAMERA_3_D);
+                }else {
+                    chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
+                }
                 cameraImageLayout.setVisibility(VISIBLE);
             } else {
                 cameraImageLayout.setVisibility(GONE);
@@ -1398,13 +1404,16 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
         if(rlClose != null){
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
-            layoutParams.setMarginEnd(119);
+            layoutParams.setMarginEnd(115);
             rlClose.setLayoutParams(layoutParams);
+            ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
+            layoutParamsRl.setMarginEnd(515);
+            radarSoundLayout.setLayoutParams(layoutParamsRl);
             ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
-            layoutParamsCl.setMarginEnd(68);
+            layoutParamsCl.setMarginEnd(64);
             clCon.setLayoutParams(layoutParamsCl);
             ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
-            layoutParamsCl.setMarginEnd(68);
+            layoutParamsCl.setMarginEnd(64);
             conRadarError.setLayoutParams(layoutParamsCr);
         }
         mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
@@ -1425,6 +1434,7 @@ public class CameraView extends View implements LifecycleOwner {
         cameraRight.setVisibility(GONE);
         cameraLeftFront.setVisibility(GONE);
         viewShow3dGroupId.setVisibility(GONE);
+        cameraBreakdown.setVisibility(GONE);
         KLog.d("设置：1");
         //viewModel.startTestTimer();
         CameraGLSurfaceView.glStatus = 0;
@@ -1451,6 +1461,9 @@ public class CameraView extends View implements LifecycleOwner {
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
             layoutParams.setMarginEnd(51);
             rlClose.setLayoutParams(layoutParams);
+            ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
+            layoutParamsRl.setMarginEnd(453);
+            radarSoundLayout.setLayoutParams(layoutParamsRl);
             ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
             layoutParamsCl.setMarginEnd(0);
             clCon.setLayoutParams(layoutParamsCl);
@@ -2060,7 +2073,9 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowManager.updateViewLayout(cameraBinding.getRoot(),mWindowLps);
             KLog.e(" setAVMBreakdown mWindowLps: = " + mWindowLps);
         }
-
+        if(isSmartWin){
+            return;
+        }
         if (msg == bvavmJNI.BWAVM_MSG_CAMERA2_STATUS) {
             if (segmentTab.getCurrentTab() == 0) {//2D
                 boolean isCanOpreateBreakDown = (param1 == bvavmJNI.BWAVM_FRONT_CAM_ID && cameraShowType == 0) ||
@@ -2076,7 +2091,7 @@ public class CameraView extends View implements LifecycleOwner {
                             if(isCanOpreateBreakDown) {
                                 mMainHandler.postDelayed(() -> {
                                     cameraBreakdown.setVisibility(View.GONE);
-                                }, 200);
+                                }, 0);
                             }
                         } else {
                             cameraStatus = true;
@@ -2086,7 +2101,7 @@ public class CameraView extends View implements LifecycleOwner {
                             if(isCanOpreateBreakDown) {
                                 mMainHandler.postDelayed(() -> {
                                     cameraBreakdown.setVisibility(View.VISIBLE);
-                                }, 200);
+                                }, 0);
                             }
                         }
                     }
@@ -2099,7 +2114,7 @@ public class CameraView extends View implements LifecycleOwner {
                             if(isCanOpreateBreakDown) {
                                 mMainHandler.postDelayed(() -> {
                                     cameraBreakdown.setVisibility(View.GONE);
-                                }, 200);
+                                }, 0);
                             }
                         } else {
                             cameraStatus = true;
@@ -2109,7 +2124,7 @@ public class CameraView extends View implements LifecycleOwner {
                             if(isCanOpreateBreakDown) {
                                 mMainHandler.postDelayed(() -> {
                                     cameraBreakdown.setVisibility(View.VISIBLE);
-                                }, 200);
+                                }, 0);
                             }
                         }
 
@@ -2123,7 +2138,7 @@ public class CameraView extends View implements LifecycleOwner {
                             if(isCanOpreateBreakDown) {
                                 mMainHandler.postDelayed(() -> {
                                     cameraBreakdown.setVisibility(View.GONE);
-                                }, 200);
+                                }, 0);
                             }
                         } else {
                             cameraStatus = true;
@@ -2133,7 +2148,7 @@ public class CameraView extends View implements LifecycleOwner {
                             if(isCanOpreateBreakDown) {
                                 mMainHandler.postDelayed(() -> {
                                     cameraBreakdown.setVisibility(View.VISIBLE);
-                                }, 200);
+                                }, 0);
                             }
                         }
                     }
@@ -2146,7 +2161,7 @@ public class CameraView extends View implements LifecycleOwner {
                             if(isCanOpreateBreakDown) {
                                 mMainHandler.postDelayed(() -> {
                                     cameraBreakdown.setVisibility(View.GONE);
-                                }, 200);
+                                }, 0);
                             }
                         } else {
                             cameraStatus = true;
@@ -2159,7 +2174,7 @@ public class CameraView extends View implements LifecycleOwner {
                                     if(BWAVM_LEFT_CAM_ID == -1) {
                                         cameraBreakdown.setVisibility(View.VISIBLE);
                                     }
-                                }, 200);
+                                }, 0);
                             }
                         }
                     }
@@ -2169,6 +2184,7 @@ public class CameraView extends View implements LifecycleOwner {
                 }
 
             } else if (segmentTab.getCurrentTab() == 1) {//3D
+                cameraBreakdown.setVisibility(View.GONE);
                 switch (param1) {
                     case bvavmJNI.BWAVM_FRONT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
@@ -2233,8 +2249,9 @@ public class CameraView extends View implements LifecycleOwner {
                     default:
                         break;
                 }
+            }else {
+                cameraBreakdown.setVisibility(View.GONE);
             }
-
         }
 
     }
@@ -2374,7 +2391,7 @@ public class CameraView extends View implements LifecycleOwner {
                     } else {
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_TOP:
                 cameraShowType = 0;
@@ -2392,7 +2409,7 @@ public class CameraView extends View implements LifecycleOwner {
                     } else {
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_LIFT:
                 cameraShowType = 2;
@@ -2415,7 +2432,7 @@ public class CameraView extends View implements LifecycleOwner {
                     }else{
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_BOTTOM:
                 cameraShowType = 1;
@@ -2433,7 +2450,7 @@ public class CameraView extends View implements LifecycleOwner {
                     } else {
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_RIGHT:
                 cameraShowType = 3;
@@ -2455,7 +2472,7 @@ public class CameraView extends View implements LifecycleOwner {
                     }else{
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_LIFT_RIGHT:
                 cameraShowType = 4;
@@ -2478,7 +2495,7 @@ public class CameraView extends View implements LifecycleOwner {
                     } else {
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
         }
         if(AvmApp.getInstance().isRight){
@@ -2490,6 +2507,7 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     private void chick3DView(String type) {
+        KLog.e("type :"+type);
         AvmRuntime.self().userTap();
         cameraImageLayoutLift.setVisibility(GONE);
         int BWAVM_FRONT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(0);
@@ -2762,6 +2780,15 @@ public class CameraView extends View implements LifecycleOwner {
             } else if (CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_LEFT_RIGHT_FRONT
                 || CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_LEFT_RIGHT_BACK) {
                 chick2DView(CAMERA_2_D_LIFT_RIGHT);
+            }
+        }else if(outsideTabIndex == 1){
+            KLog.d("AvmRuntime updateTabViewIndex() getCameraDirection = " + CameraGLSurfaceView.getCameraDirection());
+            if (CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_LEFT_REAR_3D) {
+                chick3DView(CAMERA_3_D_LEFT_REAR);
+            } else if (CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_RIGHT_REAR_3D) {
+                chick3DView(CAMERA_3_D_RIGHT_REAR);
+            } else if(CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_REAR_3D){
+                chick3DView(CAMERA_3_D);
             }
         } else if (outsideTabIndex == 2) {
             int wideAngleTabIndex = getWideAngleTabIndex();

@@ -65,7 +65,7 @@ public class CameraViewModelHelper {
     private int turnValue = -1;// 转向-左/右转
     private float speedValue = 0f;// 车速
 
-    private boolean isClick = false; // 是否手动进入
+    public static boolean isClick = false; // 是否手动进入
 
     private boolean isCalibrateRunning = false;
 
@@ -692,7 +692,7 @@ public class CameraViewModelHelper {
             int[] arr = (int[]) object1;
 //            KLog.d("轮速：" + Arrays.toString(arr));
             if (arr.length >= 7) {
-                KLog.d("轮速：arr.length  >=7" + Arrays.toString(arr));
+                //KLog.d("轮速：arr.length  >=7" + Arrays.toString(arr));
                 bvavmJNI.bwSetFourWheelSpeed(arr[0], arr[2], arr[4], arr[6]);
             }
         }
