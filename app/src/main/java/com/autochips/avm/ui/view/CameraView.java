@@ -1695,9 +1695,6 @@ public class CameraView extends View implements LifecycleOwner {
                 // 按下时，为开始坐标
                 touch_x = (int) event.getRawX();
                 touch_y = (int) event.getRawY();
-//                if (viewPosition == 1) {
-//                    bvavmJNI.bwSet3DfreeFlag(1);
-//                }
                 break;
             case MotionEvent.ACTION_UP:
 
