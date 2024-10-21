@@ -72,7 +72,7 @@
             android:layout_width="486px"
             android:layout_height="870px"
             android:layout_marginLeft="7px"
-            android:layout_marginTop="84px"
+            android:layout_marginTop="79px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -81,7 +81,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35px"
-                android:layout_marginTop="75px"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_f1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +93,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35px"
-                android:layout_marginTop="72px"
                 android:src="@mipmap/radar_fault_f2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -105,7 +103,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35px"
-                android:layout_marginTop="72px"
                 android:src="@mipmap/radar_fault_f3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -116,7 +113,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35px"
-                android:layout_marginTop="75px"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_f4"
                 app:layout_constraintStart_toStartOf="parent"
@@ -128,7 +124,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35px"
-                android:layout_marginTop="75px"
                 android:rotation="0"
                 android:visibility="gone"
                 android:src="@mipmap/radar_fault_1"
@@ -140,7 +135,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35px"
-                android:layout_marginTop="72px"
                 android:src="@mipmap/radar_fault_2"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +145,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35px"
-                android:layout_marginTop="72px"
                 android:src="@mipmap/radar_fault_3"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
@@ -162,7 +155,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35px"
-                android:layout_marginTop="75px"
                 android:rotation="0"
                 android:visibility="gone"
                 android:src="@mipmap/radar_fault_4"
@@ -263,7 +255,7 @@
                     android:id="@+id/rearRadarFrontViewId"
                     android:layout_width="366px"
                     android:layout_height="174px"
-                    android:layout_marginTop="60px"
+                    android:layout_marginTop="108px"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -310,7 +302,7 @@
                     android:id="@+id/rearRadarViewId"
                     android:layout_width="366px"
                     android:layout_height="174px"
-                    android:layout_marginBottom="40px"
+                    android:layout_marginBottom="68px"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -903,16 +895,16 @@
 
                 <ImageView
                     android:id="@+id/iv_breakdown"
-                    android:layout_width="92.81px"
-                    android:layout_height="92.81px"
+                    android:layout_width="108px"
+                    android:layout_height="108px"
                     android:layout_gravity="center_horizontal"
-                    android:src="@mipmap/info_default_56_day" />
+                    android:src="@mipmap/info_cam_error_day" />
 
                 <TextView
                     android:id="@+id/tv_breakdown"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="48px"
+                    android:layout_marginTop="25.5px"
                     android:text="@string/camera_breakdown"
                     android:textColor="@color/test_color_0A1532"
                     android:textSize="@dimen/text_size_27px" />

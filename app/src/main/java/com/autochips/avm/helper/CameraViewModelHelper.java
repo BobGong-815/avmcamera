@@ -627,8 +627,12 @@ public class CameraViewModelHelper {
     public void radarSoundStatus(int val, int status) {
         Log.i(TAG, val + "雷达 AvmService 雷达提示音音开关: " + status);
         CanManager.getInstance().setIntProperty(ASSIST_DRIVE_PAS_BUTTON_PRESS, 0, val);
-        String msg = val == 0 ? AvmApp.getInstance().getString(R.string.radar_sound_open) : AvmApp.getInstance().getString(R.string.radar_sound_close);
-        CustomToast.showToast(msg);
+        String msg = status == 0 ? AvmApp.getInstance().getString(R.string.radar_sound_close) : AvmApp.getInstance().getString(R.string.radar_sound_open);
+        if(AvmApp.getInstance().getCameraView().isSmartWin){
+            CustomToast.showToast(msg);
+        }else {
+            RearviewToast.getInstance().showToast(msg);
+        }
     }
 
     /**

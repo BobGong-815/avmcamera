@@ -986,7 +986,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     /**
      * 终端测试 命令： adb shell am broadcast -a action.syncore.EOL.mode -o
      */
-    class MyBroadcastReceiver extends BroadcastReceiver {
+    public class MyBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -294,9 +294,11 @@ public class CameraView extends View implements LifecycleOwner {
                 if (status == 0) {
                     radarSoundIv.setImageDrawable(mContext.getDrawable(R.drawable.ic_radar_sound_close));
                     KLog.d("雷达 关闭提示音 ");
+                    radarSoundLayout.setBackground(mContext.getDrawable(R.drawable.shape_bg_blue_12));
                 } else {
                     radarSoundIv.setImageDrawable(mContext.getDrawable(R.drawable.ic_radar_sound_open));
                     KLog.d("雷达 打开提示音 ");
+                    radarSoundLayout.setBackground(mContext.getDrawable(R.drawable.shape_bg_nor_12));
                 }
                 CameraViewModelHelper.getInstance().radarSoundStatus((Integer) 1, status);
             }
@@ -1676,6 +1678,8 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.d("雷达提示音 showRadarSoundView open status:"+status);
         radarSoundIv.setImageDrawable(mContext.getDrawable(status == 0 ? R.drawable.ic_radar_sound_open
                 : R.drawable.ic_radar_sound_close));
+        radarSoundLayout.setBackground(mContext.getDrawable(status == 0 ? R.drawable.shape_bg_nor_12
+                : R.drawable.shape_bg_blue_12));
     }
 
     //雷达故障提示显隐
@@ -2280,7 +2284,7 @@ public class CameraView extends View implements LifecycleOwner {
                     cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg));
                 mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg));
                 cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg);
-                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_default_56));
+                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_cam_error_day));
                 tvBreakdown.setTextColor(mContext.getResources().getColor(R.color.test_color_D9));
                 llSetting.setBackgroundResource(R.drawable.button_select);
                 llBackMirror.setBackgroundResource(R.drawable.button_select);
@@ -2317,7 +2321,7 @@ public class CameraView extends View implements LifecycleOwner {
                     cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
                 mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
                 cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg_day);
-                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_default_56_day));
+                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_cam_error_day));
                 tvBreakdown.setTextColor(mContext.getResources().getColor(R.color.test_color_0A1532));
                 llSetting.setBackgroundResource(R.drawable.button_select_day);
                 llBackMirror.setBackgroundResource(R.drawable.button_select_day);
@@ -2361,6 +2365,7 @@ public class CameraView extends View implements LifecycleOwner {
         ViewGroup.LayoutParams layoutParams = infobook.getLayoutParams();
         layoutParams.height = language.equals("vi") || language.equals("ms") || language.equals("en") ? 260 : 240;
         infobook.setLayoutParams(layoutParams);
+        tvBreakdown.setText(R.string.camera_breakdown);
     }
 
     public void chick2DView(String type) {
