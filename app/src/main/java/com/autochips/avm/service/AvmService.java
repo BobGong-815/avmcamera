@@ -248,11 +248,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_FRONT_3D);
                             break;
                         case DataDefine.ACT_3D_RIGHT_REAR:
-                            AvmApp.getInstance().getCameraView().getViewModel().reset3D();
+                            AvmApp.getInstance().getCameraView().getViewModel().reset3D(1);
                             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_RIGHT_REAR_3D);
                             break;
                         case DataDefine.ACT_3D_LEFT_REAR:
-                            AvmApp.getInstance().getCameraView().getViewModel().reset3D();
+                            AvmApp.getInstance().getCameraView().getViewModel().reset3D(1);
                             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_REAR_3D);
                             break;
                         case DataDefine.ACT_WIDE_ANGLE_REAR:
@@ -525,7 +525,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 }
                 //angle = (float) (((angle + 540.0) / 1080.0) * 72.0 - 36.0);
 //                bvavmJNI.bwSetWheelAngle(angle * -1);
-                BvAvmJNIHelper.getInstance().bwSetWheelAngle(angle * -1);
+                if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) BvAvmJNIHelper.getInstance().bwSetWheelAngle(angle * -1);
             }
         } else if (vehicleId == MIRROR_FOLD_UNFOLD_STATUS) { // 后视镜折叠
             KLog.d(" 后视镜折叠 ....  ..... " + value);
@@ -536,16 +536,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (value instanceof Integer) {
                 int gear = (int) value;
                 AvmRuntime.self().gearChange(gear);
-                if (gear == 3) {
-                    bvavmJNI.bwSetCarIsDgear(0);
-                    bvavmJNI.bwSetCarIsBack((byte) 1);
-                } else if (gear == 1) {
-                    bvavmJNI.bwSetCarIsDgear(1);
-                    bvavmJNI.bwSetCarIsBack((byte) 0);
-                } else {
-                    bvavmJNI.bwSetCarIsDgear(0);
-                    bvavmJNI.bwSetCarIsBack((byte) 0);
-                }
+                BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
                 if (gear == 4) {
                     BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                 }

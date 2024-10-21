@@ -610,7 +610,6 @@ public class CameraView extends View implements LifecycleOwner {
         }
 //        hisModel = model;
 //        viewModel.setmHisModel(hisModel);
-        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
         if (AvmRuntime.self().isRearGearSts()) {
             if (AvmService.JNI_IN_THREAD_FLAG) {
                 AvmApp.getInstance().getCameraView().getViewModel().updateTrajLineStatus(3);
@@ -765,7 +764,6 @@ public class CameraView extends View implements LifecycleOwner {
             viewShow2dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(viewPosition);
         } else if (viewPosition == 1) {
-            bvavmJNI.bwSet3DfreeFlag(0);//复位3D
             status = bvavmJNI.BW_RIGHT_REAR_3D;
             chick3DView(CAMERA_3_D_RIGHT_REAR);
             viewShow3dGroupId.setVisibility(VISIBLE);
@@ -964,7 +962,6 @@ public class CameraView extends View implements LifecycleOwner {
             viewPosition = position;// 是否点击了2d按钮
             KLog.d("AvmRuntime viewPosition set to " + position);
             hidViewButtonTimer.start(position);
-//            bvavmJNI.bwSet3DfreeFlag(0);//复位3D
             if (position == 0) {
                 layout2d.setEnabled(true);
                 layout3d.setEnabled(false);
@@ -996,7 +993,6 @@ public class CameraView extends View implements LifecycleOwner {
                 }
 //                camera3DDirection = bvavmJNI.BW_LEFT_FRONT_3D;
                 KLog.d("转向3d前FRONT_3D 3");
-                bvavmJNI.bwSet3DfreeFlag(0);//复位3D
                 chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
             } else {
                 //setAngleStatus();
@@ -1135,9 +1131,10 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.d("2D+++++ tabSelect= " + outsideTabIndex);
 
         if (AvmService.JNI_IN_THREAD_FLAG) {
-            if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().reset3D();
+            if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().reset3D(outsideTabIndex==1?1:0);
+            resetFinalTouch();
         } else {
-            bvavmJNI.bwSet3DfreeFlag(0);//复位3D
+            bvavmJNI.bwSet3DfreeFlag(outsideTabIndex==1?1:0);//复位3D
         }
 
         if (outsideTabIndex == 0) {
@@ -1398,7 +1395,7 @@ public class CameraView extends View implements LifecycleOwner {
                 hisPosition = -1;// R挡的时候需要记忆，广角或3d模式
 
                 if (AvmService.JNI_IN_THREAD_FLAG) {
-                    AvmApp.getInstance().getCameraView().getViewModel().reset3D();
+                    AvmApp.getInstance().getCameraView().getViewModel().reset3D(0);
                 } else {
                     BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
                 }
@@ -1666,6 +1663,15 @@ public class CameraView extends View implements LifecycleOwner {
     private boolean isOnTouch = false;
 
     private int touchIndex = 0;
+    private int finalTouch_x = 0;
+    private int finalTouch_y = 0;
+    int lastTouchX = 0;
+    int lastTouchY = 0;
+
+    public void resetFinalTouch() {
+        finalTouch_x = 0;
+        finalTouch_y = 0;
+    }
 
     public boolean onTouch(View v, MotionEvent event) {
         viewModel.setRunning(true);
@@ -1680,8 +1686,7 @@ public class CameraView extends View implements LifecycleOwner {
         }*/
 
         int action = event.getAction();
-        int touch_x = 0;
-        int touch_y = 0;
+
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 KLog.i("calibrationBt - ACTION_DOWN");
@@ -1693,8 +1698,8 @@ public class CameraView extends View implements LifecycleOwner {
                     liftBg.setVisibility(GONE);
                 }
                 // 按下时，为开始坐标
-                touch_x = (int) event.getRawX();
-                touch_y = (int) event.getRawY();
+                lastTouchX = (int) event.getRawX();
+                lastTouchY = (int) event.getRawY();
                 break;
             case MotionEvent.ACTION_UP:
 
@@ -1711,9 +1716,12 @@ public class CameraView extends View implements LifecycleOwner {
                 if (viewPosition == 1 && infoBg.getVisibility() != VISIBLE) {
                     //3D的时候拖动车模
                     KLog.i(endX + " startX开始拖动车模bwSetTouchScreenPos " + endY);
-                    int finalTouch_x = endX;
-                    int finalTouch_y = endY;
-                    if (endX < 1860 && endX > 570 && endY < 950 && endY > 113) {
+                    finalTouch_x += endX-lastTouchX;
+                    finalTouch_y += endY-lastTouchY;
+                    lastTouchX = endX;
+                    lastTouchY = endY;
+//                    Log.d("AVM", "touch finalTouch_x is " + finalTouch_x + " , finalTouch_y is " + finalTouch_y);
+//                    if (endX < 1860 && endX > 570 && endY < 950 && endY > 113) {
                         mMainHandler.postDelayed(() -> {
                             int touchPos = bvavmJNI.bwSetTouchScreenPos(finalTouch_x, finalTouch_y);
                             KLog.i("滑动车模角度touchPos  " + touchPos);
@@ -1738,7 +1746,7 @@ public class CameraView extends View implements LifecycleOwner {
                             }
                             touchIndex = touchPos;
                         }, 30);
-                    }
+//                    }
 
 
                 }

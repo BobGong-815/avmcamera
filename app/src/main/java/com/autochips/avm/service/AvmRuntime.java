@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
 import com.autochips.avm.util.DataDefine;
@@ -1314,7 +1315,15 @@ public class AvmRuntime {
                 dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
                 dataSts.events.add(DataDefine.EVT_SHIFT_P);
             }
-            dataSts.gearChanged = true;
+            if (SystemProperties.get("pExit").equals("1")) {
+                if (dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                    if (gear == 4) {
+                        dataSts.shiftPFlag = true;
+                    } else {
+                        dataSts.shiftPFlag = false;
+                    }
+                }
+            }
             dataSts.lastChangeTime = System.currentTimeMillis();
             AvmApp.getInstance().getCameraView().setCurrentGear(gear);
             syncObj.notify();
@@ -1415,16 +1424,7 @@ public class AvmRuntime {
         } else if (intent.getAction().equals(TestDefine.GEAR_STATUS)) {
             int gear = intent.getIntExtra("value", 0);
             gearChange(gear);
-            if (gear == 3) {
-                bvavmJNI.bwSetCarIsDgear(0);
-                bvavmJNI.bwSetCarIsBack((byte) 1);
-            } else if (gear == 1) {
-                bvavmJNI.bwSetCarIsDgear(1);
-                bvavmJNI.bwSetCarIsBack((byte) 0);
-            } else {
-                bvavmJNI.bwSetCarIsDgear(0);
-                bvavmJNI.bwSetCarIsBack((byte) 0);
-            }
+            BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
         } else if (intent.getAction().equals(TestDefine.EVT_RADAR_ACTIVE)) {
             int kk = intent.getIntExtra("value", 0);
             radarChange(kk == 1);
@@ -1471,6 +1471,7 @@ public class AvmRuntime {
     }
 
     public int getFullSceneSts() {
+        if (dataSts == null) return DataDefine.FV_STATE_NON;
         return dataSts.fvSts[0];
     }
 
@@ -1510,8 +1511,8 @@ public class AvmRuntime {
 
     private void handleEvent() {
         if ((System.currentTimeMillis() - dataSts.lastChangeTime) > 30000) {
-            if (dataSts.gearChanged && dataSts.gears[0] == DataDefine.GEAR_P && SystemProperties.get("pExit").equals("1")) {
-                dataSts.gearChanged = false;
+            if (dataSts.shiftPFlag) {// 开了了P档延时30s退出，且avm显示的时候，挂了P档
+                dataSts.shiftPFlag = false;
                 KLog.d("--------------------- EVT_SHIFT_P_30S. ");
                 dataSts.events.add(DataDefine.EVT_SHIFT_P_30S);
             }
@@ -1707,7 +1708,7 @@ public class AvmRuntime {
         boolean overSpeedSts; //超速状态
         long lastChangeTime; //上次变更时间
         long turnLampResetTime;
-        boolean gearChanged;
+        boolean shiftPFlag;
 
         int[] fvSts; // 全景状态
         int[] gears; // 档位
@@ -1720,7 +1721,7 @@ public class AvmRuntime {
         DataSts() {
             radarAlive = false;
             turnLampAlive = false;
-            gearChanged = false;
+            shiftPFlag = false;
 
             fvSts = new int[2];
             fvSts[0] = DataDefine.FV_STATE_NON;

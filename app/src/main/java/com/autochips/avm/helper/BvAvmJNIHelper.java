@@ -260,6 +260,7 @@ public class BvAvmJNIHelper {
         if (wheelAngle != angle) {
             wheelAngle = angle;
             synchronized (syncObj) {
+                KLog.d("bwSetWheelAngle : " + angle);
                 bvavmJNI.bwSetWheelAngle(angle);
             }
         }

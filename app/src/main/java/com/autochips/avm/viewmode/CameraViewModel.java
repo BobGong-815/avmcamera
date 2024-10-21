@@ -42,6 +42,7 @@ import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
 import com.avm.framwork.manager.ViewSwitchManager;
+import com.gxa.lib.car.VehicleVendorProperty;
 
 import java.util.Arrays;
 import java.util.Timer;
@@ -137,7 +138,8 @@ public class CameraViewModel extends BaseCameraViewModel {
                 } else if (msg.what == MSG_AVM_INIT) {
                     BvAvmJNIHelper.getInstance().avmInit(AvmApp.getInstance().getApplicationContext());
                 } else if (msg.what == MSG_FREE_3D) {
-                    BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+                    KLog.d("bwSet3DfreeFlag : " + msg.arg1);
+                    BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(msg.arg1);
                 } else if (msg.what == MSG_WHEEL_DIRECTION) {
                     CameraViewModelHelper.getInstance().flWheelDir();
                 } else if (msg.what == MSG_WHEEL_SPEED) {
@@ -231,7 +233,7 @@ public class CameraViewModel extends BaseCameraViewModel {
         CameraViewModelHelper.getInstance().dismissView(false, 0, "2");
 
         if (AvmService.JNI_IN_THREAD_FLAG) {
-            reset3D();
+            reset3D(0);
         } else {
             BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
         }
@@ -604,9 +606,10 @@ public class CameraViewModel extends BaseCameraViewModel {
     //2D 下视角
     public void camera2dBottom() {
         if (AvmService.JNI_IN_THREAD_FLAG) {
-            reset3D();
+            reset3D(0);
+            AvmApp.getInstance().getCameraView().resetFinalTouch();
         } else {
-            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(1);
         }
 
         setRunning(true);
@@ -624,9 +627,10 @@ public class CameraViewModel extends BaseCameraViewModel {
     //2D 右视角
     public void camera2dRight() {
         if (AvmService.JNI_IN_THREAD_FLAG) {
-            reset3D();
+            reset3D(0);
+            AvmApp.getInstance().getCameraView().resetFinalTouch();
         } else {
-            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(1);
         }
         setRunning(true);
         //if(!TextUtils.isEmpty(chick2DView) &&chick2DView.equals(ViewSwitchManager.CAMERA_2_D_LIFT)){
@@ -646,9 +650,11 @@ public class CameraViewModel extends BaseCameraViewModel {
     //3D 左前
     public void camera3dLeftFront() {
         if (AvmService.JNI_IN_THREAD_FLAG) {
-            reset3D();
+            reset3D(0);
+            reset3D(1, 200);
+            AvmApp.getInstance().getCameraView().resetFinalTouch();
         } else {
-            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(1);
         }
         setRunning(true);
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_FRONT_3D);
@@ -658,22 +664,27 @@ public class CameraViewModel extends BaseCameraViewModel {
     //3D 右前
     public void camera3dRightFront() {
         if (AvmService.JNI_IN_THREAD_FLAG) {
-            reset3D();
+            reset3D(0);
+            reset3D(1, 200);
+            AvmApp.getInstance().getCameraView().resetFinalTouch();
         } else {
-            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(1);
         }
         setRunning(true);
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_RIGHT_FRONT_3D);
         liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_RIGHT_FRONT);
+
 
     }
 
     //3D 左后
     public void camera3dLeftRear() {
         if (AvmService.JNI_IN_THREAD_FLAG) {
-            reset3D();
+            reset3D(0);
+            reset3D(1, 200);
+            AvmApp.getInstance().getCameraView().resetFinalTouch();
         } else {
-            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(1);
         }
         setRunning(true);
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_REAR_3D);
@@ -683,9 +694,11 @@ public class CameraViewModel extends BaseCameraViewModel {
     //3D 左后
     public void camera3dRightRear() {
         if (AvmService.JNI_IN_THREAD_FLAG) {
-            reset3D();
+            reset3D(0);
+            reset3D(1, 200);
+            AvmApp.getInstance().getCameraView().resetFinalTouch();
         } else {
-            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(1);
         }
         setRunning(true);
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_RIGHT_REAR_3D);
@@ -810,8 +823,18 @@ public class CameraViewModel extends BaseCameraViewModel {
         threadHandler.sendEmptyMessage(MSG_DELETE_CAMERA);
     }
 
-    public void reset3D() {
-        threadHandler.sendEmptyMessage(MSG_FREE_3D);
+    public void reset3D(int enable, long delay) {
+        Message message = Message.obtain();
+        message.what = MSG_FREE_3D;
+        message.arg1 = enable;
+        threadHandler.sendMessageDelayed(message, delay);
+    }
+
+    public void reset3D(int enable) {
+        Message message = Message.obtain();
+        message.what = MSG_FREE_3D;
+        message.arg1 = enable;
+        threadHandler.sendMessage(message);
     }
 
     public void setWheelDirection() {
