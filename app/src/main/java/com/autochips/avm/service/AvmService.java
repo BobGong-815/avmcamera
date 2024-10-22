@@ -525,7 +525,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 }
                 //angle = (float) (((angle + 540.0) / 1080.0) * 72.0 - 36.0);
 //                bvavmJNI.bwSetWheelAngle(angle * -1);
-                BvAvmJNIHelper.getInstance().bwSetWheelAngle(angle * -1);
+                if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) BvAvmJNIHelper.getInstance().bwSetWheelAngle(angle * -1);
             }
         } else if (vehicleId == MIRROR_FOLD_UNFOLD_STATUS) { // 后视镜折叠
             KLog.d(" 后视镜折叠 ....  ..... " + value);

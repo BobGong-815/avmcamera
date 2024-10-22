@@ -1338,7 +1338,15 @@ public class AvmRuntime {
                 dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
                 dataSts.events.add(DataDefine.EVT_SHIFT_P);
             }
-            dataSts.gearChanged = true;
+            if (SystemProperties.get("pExit").equals("1")) {
+                if (dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                    if (gear == 4) {
+                        dataSts.shiftPFlag = true;
+                    } else {
+                        dataSts.shiftPFlag = false;
+                    }
+                }
+            }
             dataSts.lastChangeTime = System.currentTimeMillis();
             AvmApp.getInstance().getCameraView().setCurrentGear(gear);
             syncObj.notify();
@@ -1535,8 +1543,8 @@ public class AvmRuntime {
 
     private void handleEvent() {
         if ((System.currentTimeMillis() - dataSts.lastChangeTime) > 30000) {
-            if (dataSts.gearChanged && dataSts.gears[0] == DataDefine.GEAR_P && SystemProperties.get("pExit").equals("1")) {
-                dataSts.gearChanged = false;
+            if (dataSts.shiftPFlag) {// 开了了P档延时30s退出，且avm显示的时候，挂了P档
+                dataSts.shiftPFlag = false;
                 KLog.d("--------------------- EVT_SHIFT_P_30S. ");
                 dataSts.events.add(DataDefine.EVT_SHIFT_P_30S);
             }
@@ -1732,7 +1740,7 @@ public class AvmRuntime {
         boolean overSpeedSts; //超速状态
         long lastChangeTime; //上次变更时间
         long turnLampResetTime;
-        boolean gearChanged;
+        boolean shiftPFlag;
 
         int[] fvSts; // 全景状态
         int[] gears; // 档位
@@ -1745,7 +1753,7 @@ public class AvmRuntime {
         DataSts() {
             radarAlive = false;
             turnLampAlive = false;
-            gearChanged = false;
+            shiftPFlag = false;
 
             fvSts = new int[2];
             fvSts[0] = DataDefine.FV_STATE_NON;
