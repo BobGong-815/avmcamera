@@ -1733,12 +1733,14 @@ public class CameraView extends View implements LifecycleOwner {
                 if (viewPosition == 1 && infoBg.getVisibility() != VISIBLE) {
                     //3D的时候拖动车模
                     KLog.i(endX + " startX开始拖动车模bwSetTouchScreenPos " + endY);
-                    finalTouch_x += endX-lastTouchX;
-                    finalTouch_y += endY-lastTouchY;
+//                    finalTouch_x += endX-lastTouchX;
+//                    finalTouch_y += endY-lastTouchY;
+                    finalTouch_x = endX;
+                    finalTouch_y = endY;
                     lastTouchX = endX;
                     lastTouchY = endY;
                     //                    Log.d("AVM", "touch finalTouch_x is " + finalTouch_x + " , finalTouch_y is " + finalTouch_y);
-                    //                    if (endX < 1860 && endX > 570 && endY < 950 && endY > 113) {
+                    if (endX < 1860 && endX > 570 && endY < 950 && endY > 113) {
                         mMainHandler.postDelayed(() -> {
                             int touchPos = bvavmJNI.bwSetTouchScreenPos(finalTouch_x, finalTouch_y);
                             KLog.i("滑动车模角度touchPos  " + touchPos);
@@ -1763,7 +1765,7 @@ public class CameraView extends View implements LifecycleOwner {
                             }
                             touchIndex = touchPos;
                         }, 30);
-//                    }
+                    }
 
 
                 }
