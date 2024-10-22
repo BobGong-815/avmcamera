@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="avm_bg">#000000</color>
-
+    <color name="close_bg">#4d000000</color>
     <color name="setting_view_bg">#22252E</color>
     <color name="setting_view_title_color">#D9FFFFFF</color>
     <color name="setting_view_content_color">#99FFFFFF</color>
@@ -15,10 +15,10 @@
     <color name="test_color">#ffffff</color>
     <color name="test_color_F0A1532">#F0A153</color>
 
-    <color name="test_color_0A1532">#0A1532</color>
+    <color name="test_color_0A1532">#B30A1532</color>
 
     <color name="transparent">#00000000</color>
     <color name="angle_btn_E8EEF6">#E8EEF6</color>
-
+    <color name="shape_bule_bg">#0082F5</color>
 
 </resources>

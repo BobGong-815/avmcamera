@@ -107,7 +107,9 @@ public class CameraView extends View implements LifecycleOwner {
             if ( mViewCameraBinding == null) {
                 return;
             }
-            //            setAVMBreakdown(msg, param1, param2);
+            mMainHandler.post(() -> {
+                setAVMBreakdown(msg, param1, param2);
+            });
         }
     };
 
@@ -177,6 +179,8 @@ public class CameraView extends View implements LifecycleOwner {
     protected AppCompatButton infoOk;
     protected View red2dTop,red2dLift,red2dRight,red2dBottom,red3dleftFront,red3dleftFront1,red3drightFront,red3drightFront1,
             red3dleftRear,red3dleftRear1,red3drightRear,red3drightRear1;
+    private int cameraShowType = -1;//记录当前显示视角，判断是否要显示故障,0前，1,后，2左，3右，4左右
+    private int camera3DShowType = -1;//记录当前显示视角，判断是否要显示故障,-1、无选中、1,左前，2右前，3左后，4右后，
 
 
     public CameraView(Context context) {
@@ -764,6 +768,7 @@ public class CameraView extends View implements LifecycleOwner {
             viewShow2dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(viewPosition);
         } else if (viewPosition == 1) {
+            bvavmJNI.bwSet3DfreeFlag(0);//复位3D
             status = bvavmJNI.BW_RIGHT_REAR_3D;
             chick3DView(CAMERA_3_D_RIGHT_REAR);
             viewShow3dGroupId.setVisibility(VISIBLE);
@@ -993,8 +998,10 @@ public class CameraView extends View implements LifecycleOwner {
                 }
 //                camera3DDirection = bvavmJNI.BW_LEFT_FRONT_3D;
                 KLog.d("转向3d前FRONT_3D 3");
+                cameraBreakdown.setVisibility(View.GONE);
                 chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
             } else {
+                cameraShowType = 0;
                 //setAngleStatus();
                 KLog.d("tabSelectListener isSmartWin = " + isSmartWin);
                 if (!isSmartWin) {//三分之一屏不显示
@@ -1054,6 +1061,7 @@ public class CameraView extends View implements LifecycleOwner {
         if (type == bvavmJNI.BW_2D_FRONT_120) {
             if (tabIndex != -1) segmentWideAngle.setSelectTab(tabIndex);
         } else if (type == bvavmJNI.BW_2D_REAR_120 || type == bvavmJNI.BW_2D_REAR_UNDISTORT) {
+            cameraShowType = 3;
             if (tabIndex != -1) segmentWideAngle.setSelectTab(tabIndex);
         } else if (type == bvavmJNI.BW_LEFT_RIGHT_FRONT) {
             if (tabIndex != -1) segmentWideAngle.setSelectTab(tabIndex);
@@ -1075,12 +1083,14 @@ public class CameraView extends View implements LifecycleOwner {
             viewModel.setRunning(true);
             if (position == 0) {
                 if (segmentTab.getCurrentTab() == 2) {
+                    cameraShowType = 0;
                     CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_120);
                     SystemProperties.set("tabSelectWideAngle", "0");
                     //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.front_wide_angle));
                 }
             } else if (position == 1) {
                 if (segmentTab.getCurrentTab() == 2) {
+                    cameraShowType = 1;
                     CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_REAR_120);
                     SystemProperties.set("tabSelectWideAngle", "1");
                     //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.back_wide_angle));
@@ -1185,7 +1195,12 @@ public class CameraView extends View implements LifecycleOwner {
                 layout2d.setVisibility(View.GONE);
                 layout3d.setVisibility(View.VISIBLE);
                 layoutWideAngle.setVisibility(GONE);
-                chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
+                if(CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_REAR_3D
+                        || CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_FRONT_3D){
+                    chick3DView(CAMERA_3_D);
+                }else {
+                    chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
+                }
                 cameraImageLayout.setVisibility(VISIBLE);
             } else {
                 cameraImageLayout.setVisibility(GONE);
@@ -1278,6 +1293,7 @@ public class CameraView extends View implements LifecycleOwner {
         cameraRight.setVisibility(GONE);
         cameraLeftFront.setVisibility(GONE);
         viewShow3dGroupId.setVisibility(GONE);
+        cameraBreakdown.setVisibility(GONE);
         KLog.d("设置：1");
         //viewModel.startTestTimer();
         CameraGLSurfaceView.glStatus = 0;
@@ -1686,7 +1702,8 @@ public class CameraView extends View implements LifecycleOwner {
         }*/
 
         int action = event.getAction();
-
+        int touch_x = 0;
+        int touch_y = 0;
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 KLog.i("calibrationBt - ACTION_DOWN");
@@ -1720,8 +1737,8 @@ public class CameraView extends View implements LifecycleOwner {
                     finalTouch_y += endY-lastTouchY;
                     lastTouchX = endX;
                     lastTouchY = endY;
-//                    Log.d("AVM", "touch finalTouch_x is " + finalTouch_x + " , finalTouch_y is " + finalTouch_y);
-//                    if (endX < 1860 && endX > 570 && endY < 950 && endY > 113) {
+                    //                    Log.d("AVM", "touch finalTouch_x is " + finalTouch_x + " , finalTouch_y is " + finalTouch_y);
+                    //                    if (endX < 1860 && endX > 570 && endY < 950 && endY > 113) {
                         mMainHandler.postDelayed(() -> {
                             int touchPos = bvavmJNI.bwSetTouchScreenPos(finalTouch_x, finalTouch_y);
                             KLog.i("滑动车模角度touchPos  " + touchPos);
@@ -1904,91 +1921,115 @@ public class CameraView extends View implements LifecycleOwner {
 
         KLog.e("msg: = " + msg + "  param1: = " + param1 + "   param2: = " + param2);
 //      param2 = bvavmJNI.CAMERA2_ERR_OK；
-        if (cameraBinding.getRoot().getParent() != null && cameraBinding.getRoot().isAttachedToWindow()) {
+        if (cameraBinding.getRoot().getParent() != null && cameraBinding.getRoot().isAttachedToWindow()){
             mWindowLps.alpha = 1.0f;
-            mWindowLps.format = PixelFormat.UNKNOWN;
-            if (SHOW_OVERLAY_LAYER)
-                mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
+            mWindowLps.format = isSmartWin ? PixelFormat.TRANSLUCENT : PixelFormat.UNKNOWN;
+            mWindowManager.updateViewLayout(cameraBinding.getRoot(),mWindowLps);
             KLog.e(" setAVMBreakdown mWindowLps: = " + mWindowLps);
         }
-
+        if(isSmartWin){
+            return;
+        }
         if (msg == bvavmJNI.BWAVM_MSG_CAMERA2_STATUS) {
             if (segmentTab.getCurrentTab() == 0) {//2D
+                boolean isCanOpreateBreakDown = (param1 == bvavmJNI.BWAVM_FRONT_CAM_ID && cameraShowType == 0) ||
+                        (param1 == bvavmJNI.BWAVM_REAR_CAM_ID && cameraShowType == 1) ||
+                        (param1 == bvavmJNI.BWAVM_LEFT_CAM_ID && (cameraShowType == 2 || cameraShowType == 3 || cameraShowType == 4)) ||
+                        (param1 == bvavmJNI.BWAVM_RIGHT_CAM_ID && (cameraShowType == 2 || cameraShowType == 3 || cameraShowType == 4));
                 switch (param1) {
                     case bvavmJNI.BWAVM_FRONT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraTop.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? R.mipmap.ic_camera_click_t
+                                    : R.mipmap.ic_camera_default));
                             cameraTop.setRotation(0);
-                            SystemProperties.set("BWAVM_FRONT_CAM_ID", String.valueOf(0));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.GONE);
-                            }, 200);
+                            if(isCanOpreateBreakDown) {
+                                mMainHandler.postDelayed(() -> {
+                                    cameraBreakdown.setVisibility(View.GONE);
+                                }, 0);
+                            }
                         } else {
                             cameraStatus = true;
-                            cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraTop.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown
+                                    ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
                             cameraTop.setRotation(0);
-                            SystemProperties.set("BWAVM_FRONT_CAM_ID", String.valueOf(1));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.VISIBLE);
-                            }, 200);
+                            if(isCanOpreateBreakDown) {
+                                mMainHandler.postDelayed(() -> {
+                                    cameraBreakdown.setVisibility(View.VISIBLE);
+                                }, 0);
+                            }
                         }
                     }
                     break;
                     case bvavmJNI.BWAVM_REAR_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraBottom.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? R.mipmap.ic_camera_click_t
+                                    : R.mipmap.ic_camera_default));
                             cameraBottom.setRotation(180);
-                            SystemProperties.set("BWAVM_REAR_CAM_ID", String.valueOf(0));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.GONE);
-                            }, 200);
+                            if(isCanOpreateBreakDown) {
+                                mMainHandler.postDelayed(() -> {
+                                    cameraBreakdown.setVisibility(View.GONE);
+                                }, 0);
+                            }
                         } else {
                             cameraStatus = true;
-                            cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraBottom.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown
+                                    ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
                             cameraBottom.setRotation(180);
-                            SystemProperties.set("BWAVM_REAR_CAM_ID", String.valueOf(1));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.VISIBLE);
-                            }, 200);
+                            if(isCanOpreateBreakDown) {
+                                mMainHandler.postDelayed(() -> {
+                                    cameraBreakdown.setVisibility(View.VISIBLE);
+                                }, 0);
+                            }
                         }
 
                     }
                     break;
                     case bvavmJNI.BWAVM_LEFT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraLift.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? R.mipmap.ic_camera_click_t
+                                    : R.mipmap.ic_camera_default));
                             cameraLift.setRotation(270);
-                            SystemProperties.set("BWAVM_LEFT_CAM_ID", String.valueOf(0));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.GONE);
-                            }, 200);
+                            if(isCanOpreateBreakDown) {
+                                mMainHandler.postDelayed(() -> {
+                                    cameraBreakdown.setVisibility(View.GONE);
+                                }, 0);
+                            }
                         } else {
                             cameraStatus = true;
-                            cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraLift.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown
+                                    ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
                             cameraLift.setRotation(270);
-                            SystemProperties.set("BWAVM_LEFT_CAM_ID", String.valueOf(1));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.VISIBLE);
-                            }, 200);
+                            if(isCanOpreateBreakDown) {
+                                mMainHandler.postDelayed(() -> {
+                                    cameraBreakdown.setVisibility(View.VISIBLE);
+                                }, 0);
+                            }
                         }
                     }
                     break;
                     case bvavmJNI.BWAVM_RIGHT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
+                            cameraRight.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? R.mipmap.ic_camera_click_t
+                                    : R.mipmap.ic_camera_default));
                             cameraRight.setRotation(90);
-                            SystemProperties.set("BWAVM_RIGHT_CAM_ID", String.valueOf(0));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.GONE);
-                            }, 200);
+                            if(isCanOpreateBreakDown) {
+                                mMainHandler.postDelayed(() -> {
+                                    cameraBreakdown.setVisibility(View.GONE);
+                                }, 0);
+                            }
                         } else {
                             cameraStatus = true;
-                            cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
+                            cameraRight.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown
+                                    ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
                             cameraRight.setRotation(90);
-                            SystemProperties.set("BWAVM_RIGHT_CAM_ID", String.valueOf(1));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.VISIBLE);
-                            }, 200);
+                            int BWAVM_LEFT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(2);
+                            if(isCanOpreateBreakDown) {
+                                mMainHandler.postDelayed(() -> {
+                                    if(BWAVM_LEFT_CAM_ID == -1) {
+                                        cameraBreakdown.setVisibility(View.VISIBLE);
+                                    }
+                                }, 0);
+                            }
                         }
                     }
                     break;
@@ -1997,112 +2038,75 @@ public class CameraView extends View implements LifecycleOwner {
                 }
 
             } else if (segmentTab.getCurrentTab() == 1) {//3D
+                cameraBreakdown.setVisibility(View.GONE);
                 switch (param1) {
                     case bvavmJNI.BWAVM_FRONT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            cameraLeftFront.setRotation(150);
-
-                            cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            cameraRightFront.setRotation(210);
-                            SystemProperties.set("BWAVM_FRONT_CAM_ID_1", String.valueOf(0));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.GONE);
-                            }, 200);
+                            cameraLeftFront.setImageDrawable(
+                                    mContext.getDrawable(camera3DShowType == 1 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraLeftFront.setRotation(135);
+                            cameraRightFront.setImageDrawable(
+                                    mContext.getDrawable(camera3DShowType == 2 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraRightFront.setRotation(225);
                         } else {
-                            cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            cameraLeftFront.setRotation(150);
-
-                            cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            cameraRightFront.setRotation(210);
-                            SystemProperties.set("BWAVM_FRONT_CAM_ID_1", String.valueOf(1));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.VISIBLE);
-                            }, 200);
+                            cameraLeftFront.setImageDrawable(
+                                    mContext.getDrawable(camera3DShowType == 1 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
+                            cameraLeftFront.setRotation(135);
+                            cameraRightFront.setImageDrawable(
+                                    mContext.getDrawable(camera3DShowType == 2 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
+                            cameraRightFront.setRotation(225);
                         }
                     }
                     break;
                     case bvavmJNI.BWAVM_REAR_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            cameraRightRear.setRotation(320);
-
-                            cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            cameraLeftRear.setRotation(30);
-                            SystemProperties.set("BWAVM_REAR_CAM_ID_1", String.valueOf(0));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.GONE);
-                            }, 200);
+                            cameraRightRear.setImageDrawable( mContext.getDrawable(camera3DShowType == 4 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraRightRear.setRotation(315);
+                            cameraLeftRear.setImageDrawable( mContext.getDrawable(camera3DShowType == 3 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraLeftRear.setRotation(45);
                         } else {
-                            cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            cameraRightRear.setRotation(320);
-
-                            cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            cameraLeftRear.setRotation(30);
-                            SystemProperties.set("BWAVM_REAR_CAM_ID_1", String.valueOf(1));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.VISIBLE);
-                            }, 200);
+                            cameraRightRear.setImageDrawable( mContext.getDrawable(camera3DShowType == 4 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
+                            cameraRightRear.setRotation(315);
+                            cameraLeftRear.setImageDrawable( mContext.getDrawable(camera3DShowType == 3 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
+                            cameraLeftRear.setRotation(45);
                         }
-
                     }
                     break;
                     case bvavmJNI.BWAVM_LEFT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            cameraLeftFront.setRotation(150);
-
-                            cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            cameraLeftRear.setRotation(30);
-                            SystemProperties.set("BWAVM_LEFT_CAM_ID_1", String.valueOf(0));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.GONE);
-                            }, 200);
+                            cameraLeftFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 1 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraLeftFront.setRotation(135);
+                            cameraLeftRear.setImageDrawable(mContext.getDrawable(camera3DShowType == 3 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraLeftRear.setRotation(45);
                         } else {
-                            cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            cameraLeftFront.setRotation(150);
-
-                            cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            cameraLeftRear.setRotation(30);
-                            SystemProperties.set("BWAVM_LEFT_CAM_ID_1", String.valueOf(1));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.VISIBLE);
-                            }, 200);
+                            cameraLeftFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 1 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
+                            cameraLeftFront.setRotation(135);
+                            cameraLeftRear.setImageDrawable(mContext.getDrawable(camera3DShowType == 3 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
+                            cameraLeftRear.setRotation(45);
                         }
-
                     }
                     break;
                     case bvavmJNI.BWAVM_RIGHT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            cameraRightFront.setRotation(210);
-
-                            cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                            cameraRightRear.setRotation(320);
-                            SystemProperties.set("BWAVM_RIGHT_CAM_ID_1", String.valueOf(0));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.GONE);
-                            }, 200);
+                            cameraRightFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 2 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraRightFront.setRotation(225);
+                            cameraRightRear.setImageDrawable(mContext.getDrawable(camera3DShowType == 4 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraRightRear.setRotation(315);
                         } else {
-                            cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            cameraRightFront.setRotation(210);
-
-                            cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_fault));
-                            cameraRightRear.setRotation(320);
-                            SystemProperties.set("BWAVM_RIGHT_CAM_ID_1", String.valueOf(1));
-                            mMainHandler.postDelayed(() -> {
-                                cameraBreakdown.setVisibility(View.VISIBLE);
-                            }, 200);
+                            cameraRightFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 2 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
+                            cameraRightFront.setRotation(225);
+                            cameraRightRear.setImageDrawable(mContext.getDrawable(camera3DShowType == 4 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
+                            cameraRightRear.setRotation(315);
                         }
                     }
                     break;
                     default:
                         break;
                 }
+            }else {
+                cameraBreakdown.setVisibility(View.GONE);
             }
-
         }
-
     }
 
     public void skinView() {
@@ -2129,7 +2133,7 @@ public class CameraView extends View implements LifecycleOwner {
                     cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg));
                 mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg));
                 cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg);
-                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_default_56));
+                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_cam_error_day));
                 tvBreakdown.setTextColor(mContext.getResources().getColor(R.color.test_color_D9));
                 llSetting.setBackgroundResource(R.drawable.button_select);
                 llBackMirror.setBackgroundResource(R.drawable.button_select);
@@ -2166,7 +2170,7 @@ public class CameraView extends View implements LifecycleOwner {
                     cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
                 mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
                 cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg_day);
-                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_default_56_day));
+                ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_cam_error_day));
                 tvBreakdown.setTextColor(mContext.getResources().getColor(R.color.test_color_0A1532));
                 llSetting.setBackgroundResource(R.drawable.button_select_day);
                 llBackMirror.setBackgroundResource(R.drawable.button_select_day);
@@ -2204,13 +2208,14 @@ public class CameraView extends View implements LifecycleOwner {
     public void chick2DView(String type) {
         KLog.i("chick2DView ......... " + type);
         AvmRuntime.self().userTap();
-        int BWAVM_FRONT_CAM_ID = SystemProperties.getInt("BWAVM_FRONT_CAM_ID", 0);
-        int BWAVM_REAR_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID", 0);
-        int BWAVM_LEFT_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID", 0);
-        int BWAVM_RIGHT_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID", 0);
-        boolean isAy5T = BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID ? true : false;
+        int BWAVM_FRONT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(0);
+        int BWAVM_REAR_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(1);
+        int BWAVM_LEFT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(2);
+        int BWAVM_RIGHT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(3);
+        boolean isAy5T = AvmApp.ISAY5T;
         switch (type) {
             case CAMERA_2_D:
+                cameraShowType = 0;
                 cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
                 cameraTop.setRotation(0);
                 cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
@@ -2227,20 +2232,14 @@ public class CameraView extends View implements LifecycleOwner {
                     } else {
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_TOP:
-                cameraTop.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraTop.setRotation(0);
-
-                cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLift.setRotation(270);
-
-                cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraBottom.setRotation(180);
-
-                cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRight.setRotation(90);
+                cameraShowType = 0;
+                showCameraImgStatus(cameraTop,0,BWAVM_FRONT_CAM_ID,0,true);
+                showCameraImgStatus(cameraBottom,180,BWAVM_REAR_CAM_ID,1,true);
+                showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
+                showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_front));
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
                 cameraImageLayoutLift.setVisibility(GONE);
@@ -2250,20 +2249,14 @@ public class CameraView extends View implements LifecycleOwner {
                     } else {
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_LIFT:
-                cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraTop.setRotation(0);
-
-                cameraLift.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraLift.setRotation(270);
-
-                cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraBottom.setRotation(180);
-
-                cameraRight.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraRight.setRotation(90);
+                cameraShowType = 2;
+                showCameraImgStatus(cameraTop,0,BWAVM_FRONT_CAM_ID,0,true);
+                showCameraImgStatus(cameraBottom,180,BWAVM_REAR_CAM_ID,1,true);
+                showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
+                showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left));
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
                 if (!isSmartWin) {
@@ -2274,25 +2267,19 @@ public class CameraView extends View implements LifecycleOwner {
 
                 cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
                 mMainHandler.postDelayed(() -> {
-                    if (BWAVM_LEFT_CAM_ID == 0) {
+                    if(BWAVM_RIGHT_CAM_ID==0 || BWAVM_LEFT_CAM_ID ==0){
                         cameraBreakdown.setVisibility(View.GONE);
-                    } else {
+                    }else{
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_BOTTOM:
-                cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraTop.setRotation(0);
-
-                cameraLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLift.setRotation(270);
-
-                cameraBottom.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraBottom.setRotation(180);
-
-                cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRight.setRotation(90);
+                cameraShowType = 1;
+                showCameraImgStatus(cameraTop,0,BWAVM_FRONT_CAM_ID,0,true);
+                showCameraImgStatus(cameraBottom,180,BWAVM_REAR_CAM_ID,1,true);
+                showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
+                showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_rear));
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
                 cameraImageLayoutLift.setVisibility(GONE);
@@ -2302,20 +2289,14 @@ public class CameraView extends View implements LifecycleOwner {
                     } else {
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_RIGHT:
-                cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraTop.setRotation(0);
-
-                cameraLift.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraLift.setRotation(270);
-
-                cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraBottom.setRotation(180);
-
-                cameraRight.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraRight.setRotation(90);
+                cameraShowType = 3;
+                showCameraImgStatus(cameraTop,0,BWAVM_FRONT_CAM_ID,0,true);
+                showCameraImgStatus(cameraBottom,180,BWAVM_REAR_CAM_ID,1,true);
+                showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
+                showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 // CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_right));
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
                 if (!isSmartWin) {
@@ -2325,25 +2306,19 @@ public class CameraView extends View implements LifecycleOwner {
                 }
                 cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
                 mMainHandler.postDelayed(() -> {
-                    if (BWAVM_RIGHT_CAM_ID == 0) {
+                    if(BWAVM_RIGHT_CAM_ID==0 || BWAVM_LEFT_CAM_ID ==0){
                         cameraBreakdown.setVisibility(View.GONE);
-                    } else {
+                    }else{
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
             case CAMERA_2_D_LIFT_RIGHT:
-                cameraTop.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraTop.setRotation(0);
-
-                cameraLift.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraLift.setRotation(270);
-
-                cameraBottom.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraBottom.setRotation(180);
-
-                cameraRight.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraRight.setRotation(90);
+                cameraShowType = 4;
+                showCameraImgStatus(cameraTop,0,BWAVM_FRONT_CAM_ID,0,true);
+                showCameraImgStatus(cameraBottom,180,BWAVM_REAR_CAM_ID,1,true);
+                showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
+                showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left_right));
 
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
@@ -2354,136 +2329,110 @@ public class CameraView extends View implements LifecycleOwner {
                 }
                 cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
                 mMainHandler.postDelayed(() -> {
-                    if (BWAVM_RIGHT_CAM_ID == 0 && BWAVM_LEFT_CAM_ID == 0) {
+                    if (BWAVM_RIGHT_CAM_ID == 0 || BWAVM_LEFT_CAM_ID == 0) {
                         cameraBreakdown.setVisibility(View.GONE);
                     } else {
                         cameraBreakdown.setVisibility(View.VISIBLE);
                     }
-                }, 200);
+                }, 0);
                 break;
         }
     }
 
     private void chick3DView(String type) {
+        KLog.e("type :"+type);
         AvmRuntime.self().userTap();
         cameraImageLayoutLift.setVisibility(GONE);
-        int BWAVM_FRONT_CAM_ID = SystemProperties.getInt("BWAVM_FRONT_CAM_ID_1", 0);
-        int BWAVM_REAR_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID_1", 0);
-        int BWAVM_LEFT_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID_1", 0);
-        int BWAVM_RIGHT_CAM_ID = SystemProperties.getInt("BWAVM_REAR_CAM_ID_1", 0);
-        boolean isAy5T = BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID ? true : false;
+        int BWAVM_FRONT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(0);
+        int BWAVM_REAR_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(1);
+        int BWAVM_LEFT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(2);
+        int BWAVM_RIGHT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(3);
+        int leftFrontStatus = (BWAVM_FRONT_CAM_ID == 0 && BWAVM_LEFT_CAM_ID == 0) ? 0 : -1;
+        int rightFrontStatus = (BWAVM_FRONT_CAM_ID == 0 && BWAVM_RIGHT_CAM_ID == 0) ? 0 : -1;
+        int leftRearStatus = (BWAVM_REAR_CAM_ID == 0 && BWAVM_LEFT_CAM_ID == 0) ? 0 : -1;
+        int rightRearStatus = (BWAVM_REAR_CAM_ID == 0 && BWAVM_RIGHT_CAM_ID == 0) ? 0 : -1;
+        KLog.e("chick3DView : leftFrontStatus:"+leftFrontStatus+"  rightFrontStatus:"+rightFrontStatus
+                +" leftRearStatus:"+leftRearStatus +" rightRearStatus:"+rightRearStatus);
+        boolean isAy5T = AvmApp.ISAY5T;
+        if(AvmApp.getInstance().isRight){
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)cameraImageLayout.getLayoutParams();
+            layoutParams.setMarginEnd(1806);
+            cameraImageLayout.setLayoutParams(layoutParams);
+        }
         switch (type) {
             case CAMERA_3_D:
-                cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLeftFront.setRotation(150);
-                cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRightFront.setRotation(210);
-                cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLeftRear.setRotation(30);
-                cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRightRear.setRotation(320);
+                camera3DShowType = -1;
+                showCameraImgStatus(cameraLeftFront,135,leftFrontStatus,1,false);
+                showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
+                showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
+                showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
-                mMainHandler.postDelayed(() -> {
-                    if (BWAVM_FRONT_CAM_ID == 0) {
-                        cameraBreakdown.setVisibility(View.GONE);
-                    } else {
-                        cameraBreakdown.setVisibility(View.VISIBLE);
-                    }
-                }, 200);
                 break;
             case CAMERA_3_D_LEFT_FRONT:
-                cameraLeftFront.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraLeftFront.setRotation(150);
-
-                cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRightFront.setRotation(210);
-
-                cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLeftRear.setRotation(30);
-
-                cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRightRear.setRotation(320);
-                //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left_front));
-
+                camera3DShowType = 1;
+                showCameraImgStatus(cameraLeftFront,135,leftFrontStatus,1,false);
+                showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
+                showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
+                showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftfront));
-                mMainHandler.postDelayed(() -> {
-                    if (BWAVM_FRONT_CAM_ID == 0) {
-                        cameraBreakdown.setVisibility(View.GONE);
-                    } else {
-                        cameraBreakdown.setVisibility(View.VISIBLE);
-                    }
-                }, 200);
                 break;
             case CAMERA_3_D_RIGHT_FRONT:
-                cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLeftFront.setRotation(150);
-
-                cameraRightFront.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraRightFront.setRotation(210);
-
-                cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLeftRear.setRotation(30);
-
-                cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRightRear.setRotation(320);
-                //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_right_front));
-
+                camera3DShowType = 2;
+                showCameraImgStatus(cameraLeftFront,135,leftFrontStatus,1,false);
+                showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
+                showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
+                showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
-                mMainHandler.postDelayed(() -> {
-                    if (BWAVM_REAR_CAM_ID == 0) {
-                        cameraBreakdown.setVisibility(View.GONE);
-                    } else {
-                        cameraBreakdown.setVisibility(View.VISIBLE);
-                    }
-                }, 200);
                 break;
             case CAMERA_3_D_LEFT_REAR:
-                cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLeftFront.setRotation(150);
-
-                cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRightFront.setRotation(210);
-
-                cameraLeftRear.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraLeftRear.setRotation(30);
-
-                cameraRightRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRightRear.setRotation(320);
-                //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left_rear));
-
+                camera3DShowType = 3;
+                showCameraImgStatus(cameraLeftFront,135,leftFrontStatus,1,false);
+                showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
+                showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
+                showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
+                showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftback));
-                mMainHandler.postDelayed(() -> {
-                    if (BWAVM_LEFT_CAM_ID == 0) {
-                        cameraBreakdown.setVisibility(View.GONE);
-                    } else {
-                        cameraBreakdown.setVisibility(View.VISIBLE);
-                    }
-                }, 200);
                 break;
             case CAMERA_3_D_RIGHT_REAR:
-                cameraLeftFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLeftFront.setRotation(150);
-
-                cameraRightFront.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraRightFront.setRotation(210);
-
-                cameraLeftRear.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
-                cameraLeftRear.setRotation(30);
-
-                cameraRightRear.setImageDrawable(mContext.getDrawable(isAy5T ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click));
-                cameraRightRear.setRotation(320);
-                //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_right_rear));
-
+                camera3DShowType = 4;
+                showCameraImgStatus(cameraLeftFront,135,leftFrontStatus,1,false);
+                showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
+                showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
+                showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
                 cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightback));
-                mMainHandler.postDelayed(() -> {
-                    if (BWAVM_RIGHT_CAM_ID == 0) {
-                        cameraBreakdown.setVisibility(View.GONE);
-                    } else {
-                        cameraBreakdown.setVisibility(View.VISIBLE);
-                    }
-                }, 200);
                 break;
         }
+    }
+
+    /**
+     * 摄像头按钮显示（正常与故障）
+     * @param imageView
+     * @param rotation 旋转角度
+     * @param status 0是正常 -1是异常
+     * @param direction 方向 0前，1,后，2左，3右，4左右 3D:1左前、2右前、3左右、4右后
+     * @param is2d 是否是2d
+     */
+    private void showCameraImgStatus(ImageView imageView, float rotation, int status , int direction ,boolean is2d){
+        boolean isSelect = false;
+        if(is2d){
+            isSelect = cameraShowType == direction;
+            if(direction == 2 || direction == 3 || direction == 4) {
+                isSelect = (cameraShowType == 2 || cameraShowType == 3 || cameraShowType == 4);
+            }
+        }else {
+            //3d
+            if(camera3DShowType == -1){
+                isSelect = false;
+            }else {
+                isSelect = camera3DShowType == direction;
+            }
+        }
+        if (status == bvavmJNI.CAMERA2_ERR_OK) {
+            imageView.setImageDrawable(mContext.getDrawable(isSelect ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_default));
+        } else {
+            imageView.setImageDrawable(mContext.getDrawable(isSelect ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
+        }
+        imageView.setRotation(rotation);
     }
 
     /**
@@ -2660,7 +2609,16 @@ public class CameraView extends View implements LifecycleOwner {
                 || CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_LEFT_RIGHT_BACK) {
                 chick2DView(CAMERA_2_D_LIFT_RIGHT);
             }
-        } else if (outsideTabIndex == 2) {
+        }else if(outsideTabIndex == 1){
+            KLog.d("AvmRuntime updateTabViewIndex() getCameraDirection = " + CameraGLSurfaceView.getCameraDirection());
+            if (CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_LEFT_REAR_3D) {
+                chick3DView(CAMERA_3_D_LEFT_REAR);
+            } else if (CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_RIGHT_REAR_3D) {
+                chick3DView(CAMERA_3_D_RIGHT_REAR);
+            } else if(CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_REAR_3D){
+                chick3DView(CAMERA_3_D);
+            }
+        }  else if (outsideTabIndex == 2) {
             int wideAngleTabIndex = getWideAngleTabIndex();
             KLog.d("AvmRuntime updateTabViewIndex() wideAngleTabIndex = " + wideAngleTabIndex);
             if (wideAngleTabIndex != -1) {

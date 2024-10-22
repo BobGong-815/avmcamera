@@ -722,6 +722,15 @@ public class CameraViewModelHelper {
         int parkingLamp = CanManager.getInstance().getIntStatus(POWER_PARKING_LAMP, 0);//示宽灯、位置灯s
         int readFog = CanManager.getInstance().getIntStatus(CLUSTER_REAR_FOG_LAMP, 0);//后雾灯
 
+        KLog.d("3D 灯光 highBeamStatus:" + highBeamStatus);
+        KLog.d("3D 灯光 lowBeamStatus:" + lowBeamStatus);
+        KLog.d("3D 灯光 brakeLight:" + brakeLight);
+        KLog.d("3D 灯光 frontFogLamp:" + frontFogLamp);
+        KLog.d("3D 灯光 leftFogLamp:" + leftFogLamp);
+        KLog.d("3D 灯光 rightFogLamp:" + rightFogLamp);
+        KLog.d("3D 灯光 parkingLamp:" + parkingLamp);
+        KLog.d("3D 灯光 readFog 后雾灯:" + readFog);
+
         int[] lamp = new int[8];
         lamp[0] = highBeamStatus; //远光灯  0 关 1 开
         lamp[1] = lowBeamStatus;//  近光灯 0 关 1 开

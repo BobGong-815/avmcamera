@@ -68,10 +68,11 @@
 
         <!--        雷达故障显示图标 -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="740px"
-            android:layout_marginLeft="8px"
-            android:layout_marginTop="81px"
+            android:id="@+id/con_radar_error"
+            android:layout_width="486px"
+            android:layout_height="870px"
+            android:layout_marginLeft="7px"
+            android:layout_marginTop="79px"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -80,8 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35px"
-                android:layout_marginTop="75px"
                 android:rotation="0"
+                android:visibility="gone"
                 android:src="@mipmap/radar_fault_1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -90,10 +91,9 @@
                 android:id="@+id/radarErrImgId2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="72px"
-                android:rotation="-7.5"
+                android:layout_marginLeft="35px"
                 android:src="@mipmap/radar_fault_2"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -102,9 +102,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35px"
-                android:layout_marginTop="72px"
-                android:visibility="gone"
                 android:src="@mipmap/radar_fault_3"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -113,8 +112,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35px"
-                android:layout_marginTop="75px"
                 android:rotation="0"
+                android:visibility="gone"
                 android:src="@mipmap/radar_fault_4"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -208,7 +207,6 @@
                 android:layout_height="850px"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
                 <LinearLayout
                     android:layout_width="84px"
                     android:layout_height="30px"
@@ -233,12 +231,13 @@
 
                 <com.autochips.avm.ui.view.RadarStatusView
                     android:id="@+id/rearRadarViewId"
-                    android:layout_width="290px"
-                    android:layout_height="200px"
-                    android:layout_marginBottom="13px"
+                    android:layout_width="366px"
+                    android:layout_height="174px"
+                    android:layout_marginBottom="68px"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -506,6 +505,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <!--广角-->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_wide_angle"
@@ -556,30 +556,6 @@
                 android:background="@color/transparent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <!--雷达提示音-->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/radar_sound_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="247.5px"
-                android:layout_marginTop="400px"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/radar_sound_iv"
-                    android:layout_width="75px"
-                    android:layout_height="75px"
-                    android:contentDescription="雷达提示音::parkimage_home_warningTone"
-                    android:onClick="@{()->viewModel.cameraRadarSound()}"
-                    android:src="@mipmap/ic_radar_sound_sel"
-                    android:tag="nor"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!--摄像头右视角-->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -833,6 +809,44 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="546px"
+            android:layout_marginTop="84px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <!--infobook 摄像头故障-->
+
+            <LinearLayout
+                android:id="@+id/camera_breakdown"
+                android:layout_width="1333px"
+                android:layout_height="871px"
+                android:background="@color/avm_bg"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_breakdown"
+                    android:layout_width="108px"
+                    android:layout_height="108px"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/info_cam_error_day" />
+
+                <TextView
+                    android:id="@+id/tv_breakdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25.5px"
+                    android:text="@string/camera_breakdown"
+                    android:textColor="@color/test_color_0A1532"
+                    android:textSize="@dimen/text_size_27px" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -881,44 +895,6 @@
                 android:layout_height="870px"
                 android:background="@drawable/selector_info_bg"
                 android:visibility="gone" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="546px"
-            android:layout_marginTop="93px"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <!--infobook 摄像头故障-->
-
-            <LinearLayout
-                android:id="@+id/camera_breakdown"
-                android:layout_width="1333px"
-                android:layout_height="871px"
-                android:background="@color/avm_bg"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/iv_breakdown"
-                    android:layout_width="92.81px"
-                    android:layout_height="92.81px"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@mipmap/info_default_56_day" />
-
-                <TextView
-                    android:id="@+id/tv_breakdown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="48px"
-                    android:text="@string/camera_breakdown"
-                    android:textColor="@color/test_color_0A1532"
-                    android:textSize="@dimen/text_size_27px" />
-
-            </LinearLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -1112,16 +1088,49 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="40px"
-            android:layout_height="40px"
-            android:layout_marginStart="67.5px"
-            android:layout_marginTop="113px"
+        <!--雷达提示音-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/radar_sound_layout"
+            android:layout_width="66px"
+            android:layout_height="66px"
+            android:layout_marginStart="453px"
+            android:layout_marginTop="93px"
+            android:onClick="@{()->viewModel.cameraRadarSound()}"
+            android:visibility="gone"
+            android:contentDescription="雷达提示音::parkimage_home_warningTone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/radar_sound_iv"
+                android:layout_width="48px"
+                android:layout_height="48px"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <RelativeLayout
+            android:layout_width="66px"
+            android:layout_height="66px"
+            android:layout_marginStart="51px"
+            android:layout_marginTop="93px"
+            android:background="@drawable/shape_bg_nor_12"
             android:contentDescription="关闭360影像卡片|关闭全景影像卡片|关闭360全景影像卡片::parkimage_home_close360"
             android:onClick="@{() -> viewModel.closeAvm()}"
-            android:src="@mipmap/close_default"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="48px"
+                android:layout_height="48px"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_close_default"
+                />
+        </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

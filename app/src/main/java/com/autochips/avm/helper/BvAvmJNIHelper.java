@@ -114,6 +114,13 @@ public class BvAvmJNIHelper {
         }
     }
 
+    ///*获取摄像头状态，camID表示摄像头ID:0是前摄像头，1是后摄像头，2是左摄像头，3是右摄像头，返回值:0表示图像正常，-1表示无图像*/
+    public int bwGetCamerastatus(int cType){
+        int status = bvavmJNI.bwGetCameraStatus(cType);
+        KLog.e(" bwGetCamerastatus cType: " + cType + " status:"+status);
+        return status;
+    }
+
     public void updateTransparentChassis() {
         int position = SystemProperties.getInt("settingRadarActivatedPanorama", -1);
         KLog.e(position + " setIndexTab 设置透明底盘-初始化后调用: " + position);
