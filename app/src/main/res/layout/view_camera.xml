@@ -231,9 +231,9 @@
 
                 <com.autochips.avm.ui.view.RadarStatusView
                     android:id="@+id/rearRadarViewId"
-                    android:layout_width="366px"
-                    android:layout_height="174px"
-                    android:layout_marginBottom="68px"
+                    android:layout_width="290px"
+                    android:layout_height="200px"
+                    android:layout_marginBottom="20px"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

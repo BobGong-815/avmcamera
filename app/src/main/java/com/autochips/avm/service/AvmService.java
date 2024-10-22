@@ -248,11 +248,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_FRONT_3D);
                             break;
                         case DataDefine.ACT_3D_RIGHT_REAR:
-                            AvmApp.getInstance().getCameraView().getViewModel().reset3D(1);
+                            AvmApp.getInstance().getCameraView().getViewModel().reset3D();
                             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_RIGHT_REAR_3D);
                             break;
                         case DataDefine.ACT_3D_LEFT_REAR:
-                            AvmApp.getInstance().getCameraView().getViewModel().reset3D(1);
+                            AvmApp.getInstance().getCameraView().getViewModel().reset3D();
                             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_REAR_3D);
                             break;
                         case DataDefine.ACT_WIDE_ANGLE_REAR:
