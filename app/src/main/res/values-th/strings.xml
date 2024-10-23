@@ -18,10 +18,10 @@
     <string name="setting_transparent_chassis_infobook_title">แชสซีรถโปร่งใส</string>
     <string name="setting_transparent_chassis_infobook_content">หลังจากเปิดทำงาน\nจะสามารถสังเกตสภาพพื้นถนนใต้ท้องรถได้</string>
     <string name="setting_transparent_chassis_infobook_ok">โอเค</string>
-    <string name="setting_rearview_mirror">การปรับกระจกมองข้าง</string>
+    <string name="setting_rearview_mirror">ปรับกระจกมองหลัง</string>
     <string name="setting_fold">ทับซ้อน</string>
     <string name="setting_expand">ขยาย</string>
-    <string name="setting_rearview_mirror_down">ปรับกระจกมองหลัง</string>
+    <string name="setting_rearview_mirror_down">กระจกมองหลังพลิกลง</string>
     <string name="setting_rearview_mirror_down_open">กระจกมองหลังพลิกลงเปิดอยู่</string>
     <string name="setting_rearview_mirror_down_close">กระจกมองหลังพลิกลงปิดอยู่</string>
     <string name="camera_2d">2D</string>
