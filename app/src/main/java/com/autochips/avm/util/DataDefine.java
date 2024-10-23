@@ -104,6 +104,8 @@ public class DataDefine {
     public final static int ACT_ACTIVE_DUAL_CARD = 315;
     public final static int ACT_KEEP = 316;
     public final static int ACT_PREV_VIEW_ANGLE = 317;
+    public final static int ACT_OVER_SPEED = 318;
+    public final static int ACT_REDUCE_SPEED = 319;
 
     public static String id2String(int id) {
         switch (id) {
@@ -253,6 +255,10 @@ public class DataDefine {
                 return "GEAR_D_MOVING";
             case GEAR_N_MOVING:
                 return "GEAR_N_MOVING";
+            case ACT_OVER_SPEED:
+                return "ACT_OVER_SPEED";
+            case ACT_REDUCE_SPEED:
+                return "ACT_REDUCE_SPEED";
 
         }
 

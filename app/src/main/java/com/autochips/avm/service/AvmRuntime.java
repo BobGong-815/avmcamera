@@ -237,6 +237,13 @@ public class AvmRuntime {
                 null,
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET_ACTIVE},
                 new int[]{DataDefine.ACT_EXIT}));
+        // 降速
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
+                new int[]{DataDefine.EVT_REDUCE_SPEED},
+                new int[]{DataDefine.ACT_REDUCE_SPEED}));
 
         // 左卡片0.5
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 1
@@ -246,11 +253,11 @@ public class AvmRuntime {
                 new int[]{DataDefine.EVT_ACTIVE_EXIT},
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 2
-                new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE, DataDefine.GEAR_R_STOP, DataDefine.GEAR_R_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_OVER_SPEED},
-                new int[]{DataDefine.ACT_EXIT}));
+                new int[]{DataDefine.ACT_EXIT, DataDefine.ACT_OVER_SPEED}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 3
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE, DataDefine.GEAR_R_STOP, DataDefine.GEAR_R_LOW_RATE},
                 new int[]{DataDefine.SENSOR_TURN_LAMP},
@@ -1223,6 +1230,7 @@ public class AvmRuntime {
     public void turnLampChange(int direction) {
         if (direction == 0) {
             synchronized (syncObj) {
+                setOverExitFlag(false);
                 dataSts.events.add(DataDefine.EVT_TURN_LAMP_RESET);
                 dataSts.turnLampResetTime = System.currentTimeMillis();
                 dataSts.lastChangeTime = System.currentTimeMillis();
@@ -1347,6 +1355,7 @@ public class AvmRuntime {
                     }
                 }
             }
+            setOverExitFlag(false);
             dataSts.lastChangeTime = System.currentTimeMillis();
             AvmApp.getInstance().getCameraView().setCurrentGear(gear);
             syncObj.notify();
@@ -1356,6 +1365,7 @@ public class AvmRuntime {
     public void artificialEnter() {
         synchronized (syncObj) {
             KLog.d(" artificialEnter(). ");
+            setOverExitFlag(false);
             dataSts.events.add(DataDefine.EVT_ACTIVE_ENTER);
             dataSts.lastChangeTime = System.currentTimeMillis();
 
@@ -1366,6 +1376,7 @@ public class AvmRuntime {
     public void artificialExit() {
         synchronized (syncObj) {
             KLog.d(" artificialExit(). ");
+            setOverExitFlag(false);
             dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
             dataSts.lastChangeTime = System.currentTimeMillis();
 
@@ -1501,6 +1512,19 @@ public class AvmRuntime {
 
     public boolean isNullGearSts() {
         return dataSts.gears[0] == DataDefine.GEAR_N;
+    }
+
+    public void setOverExitFlag(boolean flag) {
+        KLog.d("setOverExitFlag : " + flag);
+        if (dataSts != null) {
+            dataSts.overExitFlag = flag;
+        }
+    }
+
+    public boolean getOverExitFlag() {
+        if (dataSts != null) return dataSts.overExitFlag;
+
+        return false;
     }
 
     public int getFullSceneSts() {
@@ -1735,6 +1759,7 @@ public class AvmRuntime {
 
     class DataSts {
         float currSpeed = -1;
+        boolean overExitFlag;
         boolean radarAlive;
         boolean turnLampAlive;
         boolean overSpeedSts; //超速状态
@@ -1754,6 +1779,7 @@ public class AvmRuntime {
             radarAlive = false;
             turnLampAlive = false;
             shiftPFlag = false;
+            overExitFlag = false;
 
             fvSts = new int[2];
             fvSts[0] = DataDefine.FV_STATE_NON;
@@ -1805,7 +1831,8 @@ public class AvmRuntime {
         public String toString() {
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append("DataSts (")
-                    .append("current Speed = " + currSpeed)
+                    .append("overExitFlag = " + overExitFlag)
+                    .append("\n, current Speed = " + currSpeed)
                     .append("\n, radarAlive = " + radarAlive)
                     .append("\n, turnLampAlive = " + turnLampAlive)
                     .append("\n, overSpeedSts = " + overSpeedSts)
