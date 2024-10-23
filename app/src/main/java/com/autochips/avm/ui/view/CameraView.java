@@ -472,7 +472,7 @@ public class CameraView extends View implements LifecycleOwner {
         Locale current = AvmApp.getInstance().getResources().getConfiguration().locale;
         String language = current.getLanguage();
         KLog.d(" 当前language："+language);
-        if(language.equals("vi") || language.equals("ms") || language.equals("en")){
+        if(language.equals("vi") || language.equals("ms") || language.equals("en") || language.equals("th")){
             //越南
             ViewGroup.LayoutParams layoutParams = infobook.getLayoutParams();
             layoutParams.height = 260;
@@ -2363,7 +2363,7 @@ public class CameraView extends View implements LifecycleOwner {
         String language = current.getLanguage();
         KLog.d(" 当前language："+language);
         ViewGroup.LayoutParams layoutParams = infobook.getLayoutParams();
-        layoutParams.height = language.equals("vi") || language.equals("ms") || language.equals("en") ? 260 : 240;
+        layoutParams.height = language.equals("vi") || language.equals("ms") || language.equals("en") || language.equals("th")  ? 260 : 240;
         infobook.setLayoutParams(layoutParams);
         tvBreakdown.setText(R.string.camera_breakdown);
     }

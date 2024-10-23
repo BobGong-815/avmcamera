@@ -988,6 +988,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:gravity="center"
                     android:layout_marginTop="25px"
                     android:layout_marginBottom="15px"
                     android:text="@string/setting_transparent_chassis_infobook_title"

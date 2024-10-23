@@ -246,6 +246,8 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
             TextView tv_tab_title = (TextView) tab_title;
             addTabDrawable(position, tabView.findViewById(R.id.tab_drawable));
             tv_tab_title.setText(mTitles[position]);
+            tv_tab_title.setIncludeFontPadding(false);
+            tv_tab_title.setLineSpacing(0.5f,0.7f);
             CharSequence sequence = "2D影像::parkimage_home_2DImage";
             if (mTitles[position] == R.string.camera_2d) {
                 sequence = "2D影像::parkimage_home_2DImage";
