@@ -1037,6 +1037,7 @@
                 android:layout_marginStart="18px"
                 android:background="@drawable/shape_btn_bg_nor"
                 android:gravity="center"
+                android:contentDescription="后视镜|后视镜调节|外后视镜|外后视镜调节|调节后视镜|调节外后视镜::parkimage_rearviewMirror"
                 android:onClick="@{() -> viewModel.openBackMirrorDialog()}">
 
                 <ImageView
