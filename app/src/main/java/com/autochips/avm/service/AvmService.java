@@ -279,6 +279,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                             }
+                            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
                             AvmApp.getInstance().getCameraView().showSmartWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
@@ -344,6 +345,19 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 }
                             }
                             break;
+//                        case DataDefine.ACT_OVER_SPEED:
+//                            AvmRuntime.self().setOverExitFlag(true);
+//                            break;
+//                        case DataDefine.ACT_REDUCE_SPEED:
+//                            if (AvmRuntime.self().getOverExitFlag() != 0) {
+//                                AvmRuntime.self().setOverExitFlag(0);
+//
+//                                Message message = Message.obtain();
+//                                message.what = MSG_ACTION_ENTER;
+//                                message.arg1 = DataDefine.ACT_LEFT_CARD;
+//                                mHandler.sendMessage(message);
+//                            }
+//                            break;
                     }
                 } else if (msg.what == MSG_CR_CAMERA) {
                     if (!BvAvmJNIHelper.isAvmDeInit) {
@@ -499,7 +513,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         if (vehicleId == AVM_UINM_TURN_LIGHT_SW_ST) { //转向激活
             KLog.d(" 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
-                AvmRuntime.self().turnLampChange((Integer) value);
+                int intValue = (int) value;
+                if (intValue == 0) {
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+                } else {
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0);
+                }
             }
         } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
             KLog.d(" 转向 左边转向灯闪");

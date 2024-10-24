@@ -76,7 +76,8 @@ public class DataDefine {
     public final static int EVT_ACTIVE_ENTER = 83;
     public final static int EVT_ACTIVE_EXIT = 84;
     public final static int EVT_OVER_SPEED = 85;  //超速
-    public final static int EVT_REDUCE_SPEED = 86; //降速
+    public final static int EVT_REDUCE_SPEED1 = 86; // 小卡片退出降速
+    public final static int EVT_REDUCE_SPEED2 = 87; // 全屏退出降速
 //    public final static int EVT_OBSTACLE_DISAPPEAR = 87;
     public final static int EVT_CLICK_LEFT_CARD = 88;
     public final static int EVT_KEEP_30S = 89;
@@ -189,8 +190,10 @@ public class DataDefine {
                 return "EVT_ACTIVE_EXIT";
             case EVT_OVER_SPEED:
                 return "EVT_OVER_SPEED";
-            case EVT_REDUCE_SPEED:
-                return "EVT_REDUCE_SPEED";
+            case EVT_REDUCE_SPEED1:
+                return "EVT_REDUCE_SPEED1";
+            case EVT_REDUCE_SPEED2:
+                return "EVT_REDUCE_SPEED2";
 //            case EVT_OBSTACLE_DISAPPEAR:
 //                return "EVT_OBSTACLE_DISAPPEAR";
             case EVT_CLICK_LEFT_CARD:
