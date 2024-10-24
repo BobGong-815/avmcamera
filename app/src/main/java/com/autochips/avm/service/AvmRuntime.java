@@ -237,13 +237,50 @@ public class AvmRuntime {
                 null,
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET_ACTIVE},
                 new int[]{DataDefine.ACT_EXIT}));
-        // 降速
+        // ---------------------降速
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
                 new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
-                new int[]{DataDefine.EVT_REDUCE_SPEED},
-                new int[]{DataDefine.ACT_REDUCE_SPEED}));
+                new int[]{DataDefine.EVT_REDUCE_SPEED1},
+                new int[]{DataDefine.ACT_LEFT_CARD}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.MEM_MODE_2D},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.MEM_MODE_2D},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.MEM_MODE_3D},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_FRONT_VIEW}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP_RIGHT},
+                new int[]{DataDefine.MEM_MODE_3D},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_RIGHT_REAR}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP_LEFT},
+                new int[]{DataDefine.MEM_MODE_3D},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 3
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.MEM_MODE_WIDE_ANGLE},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_REAR}));
+        // 降速 ---------------------
 
         // 左卡片0.5
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 1
@@ -252,12 +289,13 @@ public class AvmRuntime {
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_ACTIVE_EXIT},
                 new int[]{DataDefine.ACT_EXIT}));
+        // 超速退出
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 2
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
                 new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_OVER_SPEED},
-                new int[]{DataDefine.ACT_EXIT, DataDefine.ACT_OVER_SPEED}));
+                new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 3
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE, DataDefine.GEAR_R_STOP, DataDefine.GEAR_R_LOW_RATE},
                 new int[]{DataDefine.SENSOR_TURN_LAMP},
@@ -761,6 +799,13 @@ public class AvmRuntime {
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_3D},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
+        // 超速退出
+        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
+                new int[]{DataDefine.EVT_OVER_SPEED},
+                new int[]{DataDefine.ACT_EXIT}));
 
         // 主动双卡片
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 1
@@ -1184,6 +1229,60 @@ public class AvmRuntime {
                 new int[]{DataDefine.EVT_SHIFT_P_30S},
                 new int[]{DataDefine.ACT_EXIT}));
 
+        // 2d 3d切换视角后，挂挡恢复
+        /*
+        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N, DataDefine.GEAR_D, DataDefine.GEAR_P},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.MEM_MODE_2D},
+                new int[]{DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_D, DataDefine.EVT_SHIFT_N},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N, DataDefine.GEAR_D, DataDefine.GEAR_P},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.MEM_MODE_2D},
+                new int[]{DataDefine.EVT_SHIFT_R},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_REAR_VIEW}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N, DataDefine.GEAR_D, DataDefine.GEAR_P},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.MEM_MODE_2D},
+                new int[]{DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_D, DataDefine.EVT_SHIFT_N},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
+
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.MEM_MODE_2D},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.MEM_MODE_3D},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_FRONT_VIEW}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP_RIGHT},
+                new int[]{DataDefine.MEM_MODE_3D},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_RIGHT_REAR}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP_LEFT},
+                new int[]{DataDefine.MEM_MODE_3D},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
+        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 3
+                new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.MEM_MODE_WIDE_ANGLE},
+                new int[]{DataDefine.EVT_REDUCE_SPEED2},
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_REAR}));
+
+         */
+
         KLog.d("configTable.size is " + configTable.size());
 
         thread = new Thread(new Runnable() {
@@ -1230,7 +1329,7 @@ public class AvmRuntime {
     public void turnLampChange(int direction) {
         if (direction == 0) {
             synchronized (syncObj) {
-                setOverExitFlag(false);
+                setOverExitFlag(0);
                 dataSts.events.add(DataDefine.EVT_TURN_LAMP_RESET);
                 dataSts.turnLampResetTime = System.currentTimeMillis();
                 dataSts.lastChangeTime = System.currentTimeMillis();
@@ -1311,7 +1410,11 @@ public class AvmRuntime {
             CameraViewModelHelper.getInstance().setTransparentIndexTab();
             if (dataSts.overSpeedSts) {
                 if (dataSts.currSpeed < 30) {
-                    dataSts.events.add(DataDefine.EVT_REDUCE_SPEED);
+                    if (getOverExitFlag() == 1) {
+                        dataSts.events.add(DataDefine.EVT_REDUCE_SPEED1);
+                    } else if (getOverExitFlag() == 2) {
+                        dataSts.events.add(DataDefine.EVT_REDUCE_SPEED2);
+                    }
                     dataSts.overSpeedSts = false;
                     flag = true;
                 }
@@ -1355,7 +1458,7 @@ public class AvmRuntime {
                     }
                 }
             }
-            setOverExitFlag(false);
+            setOverExitFlag(0);
             dataSts.lastChangeTime = System.currentTimeMillis();
             AvmApp.getInstance().getCameraView().setCurrentGear(gear);
             syncObj.notify();
@@ -1365,7 +1468,7 @@ public class AvmRuntime {
     public void artificialEnter() {
         synchronized (syncObj) {
             KLog.d(" artificialEnter(). ");
-            setOverExitFlag(false);
+            setOverExitFlag(0);
             dataSts.events.add(DataDefine.EVT_ACTIVE_ENTER);
             dataSts.lastChangeTime = System.currentTimeMillis();
 
@@ -1376,7 +1479,7 @@ public class AvmRuntime {
     public void artificialExit() {
         synchronized (syncObj) {
             KLog.d(" artificialExit(). ");
-            setOverExitFlag(false);
+            setOverExitFlag(0);
             dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
             dataSts.lastChangeTime = System.currentTimeMillis();
 
@@ -1514,17 +1617,17 @@ public class AvmRuntime {
         return dataSts.gears[0] == DataDefine.GEAR_N;
     }
 
-    public void setOverExitFlag(boolean flag) {
+    public void setOverExitFlag(int flag) {
         KLog.d("setOverExitFlag : " + flag);
         if (dataSts != null) {
             dataSts.overExitFlag = flag;
         }
     }
 
-    public boolean getOverExitFlag() {
+    public int getOverExitFlag() {
         if (dataSts != null) return dataSts.overExitFlag;
 
-        return false;
+        return 0;
     }
 
     public int getFullSceneSts() {
@@ -1594,6 +1697,10 @@ public class AvmRuntime {
                         KLog.w("break for show avm 转向激活全景 不显示");
                         break;
                     }
+                    if (dataSts.currSpeed > 30 && dataSts.fvSts[0] == DataDefine.FV_STATE_NON && actions[0] == DataDefine.ACT_LEFT_CARD) {
+                        KLog.w("速度大于30，转向不激活左卡片");
+                        break;
+                    }
                 }
                 flag = true;
                 KLog.d("find match cfg : " + cfgItem);
@@ -1610,6 +1717,13 @@ public class AvmRuntime {
 //                }
                 dataSts.actions = actions;
 
+                if (cfgItem.actions[0] == DataDefine.ACT_EXIT && cfgItem.events[0] == DataDefine.EVT_OVER_SPEED) {
+                    if (cfgItem.fvState == DataDefine.FV_STATE_LEFT_CARD) {
+                        setOverExitFlag(1);
+                    } else if (cfgItem.fvState == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
+                        setOverExitFlag(2);
+                    }
+                }
                 if (cfgItem.actions[0] == DataDefine.ACT_PASSIVE_DUAL_CARD) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_PASSIVE_DUAL_CARD;
                     dataSts.fvSts[1] = DataDefine.INVALID;
@@ -1760,7 +1874,7 @@ public class AvmRuntime {
 
     class DataSts {
         float currSpeed = -1;
-        boolean overExitFlag;
+        int overExitFlag; // 0 none, 1 left_card exit, 2 full_screen exit
         boolean radarAlive;
         boolean turnLampAlive;
         boolean overSpeedSts; //超速状态
@@ -1780,7 +1894,7 @@ public class AvmRuntime {
             radarAlive = false;
             turnLampAlive = false;
             shiftPFlag = false;
-            overExitFlag = false;
+            overExitFlag = 0;
 
             fvSts = new int[2];
             fvSts[0] = DataDefine.FV_STATE_NON;
@@ -1934,6 +2048,7 @@ public class AvmRuntime {
             return false;
         }
 
+        // owner只要满足subs之一，即为真
         boolean fill(List<Integer> subs, int[] owner) {
             for (int s : subs) {
                 for (int o : owner) {
