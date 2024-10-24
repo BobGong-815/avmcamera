@@ -283,6 +283,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                             }
+                            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
                             AvmApp.getInstance().getCameraView().showSmartWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
@@ -346,6 +347,19 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 } else if (AvmRuntime.self().getMemoryType() == DataDefine.MEM_MODE_WIDE_ANGLE) {
                                     CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_120);
                                 }
+                            }
+                            break;
+                        case DataDefine.ACT_OVER_SPEED:
+                            AvmRuntime.self().setOverExitFlag(true);
+                            break;
+                        case DataDefine.ACT_REDUCE_SPEED:
+                            if (AvmRuntime.self().getOverExitFlag()) {
+                                AvmRuntime.self().setOverExitFlag(false);
+
+                                Message message = Message.obtain();
+                                message.what = MSG_ACTION_ENTER;
+                                message.arg1 = DataDefine.ACT_LEFT_CARD;
+                                mHandler.sendMessage(message);
                             }
                             break;
                     }
@@ -592,7 +606,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                CameraViewModelHelper.getInstance().flWheelDir();
 
                 if (JNI_IN_THREAD_FLAG) {
-                    AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
+                    if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
                 } else {
                     CameraViewModelHelper.getInstance().flWheelSpd(object);
                 }
@@ -603,7 +617,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case AVM_BCS_RRWHEEL_SPD:
             case AVM_BCS_FRWHEEL_SPD:
             case AVM_WHEEL_DIRE_SPEED:
-                CameraViewModelHelper.getInstance().flWheelSpd(object);
+                if (JNI_IN_THREAD_FLAG) {
+                    if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
+                } else {
+                    CameraViewModelHelper.getInstance().flWheelSpd(object);
+                }
                 break;
 
         }

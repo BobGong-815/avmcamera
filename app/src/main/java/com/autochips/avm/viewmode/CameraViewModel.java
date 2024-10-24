@@ -81,7 +81,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     private final int MSG_UPDATE_TRAJ_LINE_STS = 13;
     private final int MSG_SET_UNDISTORT_LEVEL = 14;
     private final int MSG_CALIBRATE_RESP = 15;
-    private final int MSG_CALIBRATING = 18;
+    private final int MSG_CALIBRATING = 18; // 正在做标定，拦截重复的标定请求
     private final int MSG_SIM_WHEEL_SPEED = 20;
     private final int MSG_SET_TRAJLINE_ENABLE = 21;
 
