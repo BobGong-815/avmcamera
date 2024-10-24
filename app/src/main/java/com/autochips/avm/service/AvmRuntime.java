@@ -1588,7 +1588,8 @@ public class AvmRuntime {
                         continue;
                     }
                 }
-                if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_ACTIVE)) {
+                if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_ACTIVE)
+                    || (dataSts.events.contains(DataDefine.EVT_RADAR_TURN_LAMP_ACTIVE) && dataSts.sensors[0] == DataDefine.SENSOR_RADAR)) {
                     if (SystemProperties.get("signalActivates").equals("0") && dataSts.fvSts[0] == DataDefine.FV_STATE_NON) {
                         KLog.w("break for show avm 转向激活全景 不显示");
                         break;
