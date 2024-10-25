@@ -788,14 +788,15 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 break;
             case AVM_RSL_SNS_ERR_FLAG:    //       后左
             case AVM_RSR_SNS_ERR_FLAG:    //       后左
+                break;
             case AVM_RL_SNS_ERR_FLAG:    //       后左
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(1, status);
                 break;
-            case AVM_FRS_SNS_ERR_FLAG:    //       前左
-                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(1, status);
-                break;
-            case AVM_FLS_SNS_ERR_FLAG:    //       前右
+            case AVM_FRS_SNS_ERR_FLAG:    //       前右
                 AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(3, status);
+                break;
+            case AVM_FLS_SNS_ERR_FLAG:    //       前左
+                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(1, status);
                 break;
             case AVM_PAS_FLMIDSNSERRFLAG:    //       前左中
                 AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(2, status);
