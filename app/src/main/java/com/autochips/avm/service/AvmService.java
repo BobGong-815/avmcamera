@@ -283,6 +283,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                             }
+                            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
                             AvmApp.getInstance().getCameraView().showSmartWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
@@ -494,7 +495,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         if (vehicleId == AVM_UINM_TURN_LIGHT_SW_ST) { //转向激活
             KLog.d(" 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
-                AvmRuntime.self().turnLampChange((Integer) value);
+                int intValue = (int) value;
+                if (intValue == 0) {
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+                } else {
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0);
+                }
             }
         } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
             KLog.d(" 转向 左边转向灯闪");
@@ -592,7 +598,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                CameraViewModelHelper.getInstance().flWheelDir();
 
                 if (JNI_IN_THREAD_FLAG) {
-                    AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
+                    if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
                 } else {
                     CameraViewModelHelper.getInstance().flWheelSpd(object);
                 }
@@ -603,7 +609,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case AVM_BCS_RRWHEEL_SPD:
             case AVM_BCS_FRWHEEL_SPD:
             case AVM_WHEEL_DIRE_SPEED:
-                CameraViewModelHelper.getInstance().flWheelSpd(object);
+                if (JNI_IN_THREAD_FLAG) {
+                    if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
+                } else {
+                    CameraViewModelHelper.getInstance().flWheelSpd(object);
+                }
                 break;
 
         }
