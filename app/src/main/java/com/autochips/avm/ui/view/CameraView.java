@@ -259,6 +259,7 @@ public class CameraView extends View implements LifecycleOwner {
         camera2dBg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                KLog.i(" onClick: "+1);
                 if (viewShow2dGroupId.getVisibility() == View.VISIBLE) {
                     viewShow2dGroupId.postDelayed(new Runnable() {
                         @Override
@@ -277,6 +278,7 @@ public class CameraView extends View implements LifecycleOwner {
         camera3dBg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                KLog.i(" onClick: "+2);
                 if (viewShow3dGroupId.getVisibility() == View.VISIBLE) {
                     viewShow3dGroupId.setVisibility(GONE);
                 } else {
@@ -319,6 +321,7 @@ public class CameraView extends View implements LifecycleOwner {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                KLog.i(" onClick: "+9);
                 if (clickCount < 10) {
                     return false;
                 }
@@ -372,7 +375,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     public boolean showFull2DByOnTouch(View v, MotionEvent event) {
         KLog.d("showFull2DByOnTouch");
-
+        KLog.i(" onClick: "+5);
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 //            viewModel.setRunning(true);
 //            showFullWin();
@@ -494,12 +497,14 @@ public class CameraView extends View implements LifecycleOwner {
         liftBg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                KLog.i(" onClick: "+3);
                 setViewDialog();
             }
         });
         layoutSettingId.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                KLog.i(" onClick: "+4);
                 setViewDialog();
             }
         });
@@ -710,7 +715,7 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.d("viewShowStatus()");
         isDismissView = false;
         //radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
-        rearviewMirrorView.gearInfo(0);
+        rearviewMirrorView.gearInfo(AvmRuntime.self().isRearGearSts() ? 1 : 0);
 //       KLog.d(hisModel + "  valGear viewShowStatus 模式：" + model + " 记忆模式: " + viewPosition);
         int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
         if (settingPathLine == 1) {
@@ -1080,10 +1085,10 @@ public class CameraView extends View implements LifecycleOwner {
             }
             KLog.d(viewPosition + "tabSelectListener onTabSelect = " + position + " isChangeGear：" + isChangeGear);
             viewModel.setRunning(true);
-            if (!isChangeGear) {// 换挡的时候，不给取消高亮
-                llBackMirror.setSelected(false);
-                llSetting.setSelected(false);
-            }
+//            if (!isChangeGear) {// 换挡的时候，不给取消高亮
+//                llBackMirror.setSelected(false);
+//                llSetting.setSelected(false);
+//            }
 
             if (viewPosition == position) {
 //                if (isChangeGear && viewPosition == 2) {
@@ -1830,7 +1835,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     public boolean onTouch(View v, MotionEvent event) {
         viewModel.setRunning(true);
-
+        KLog.i(" onClick: "+7);
         if (infobook.getVisibility() != VISIBLE)
             llSetting.setSelected(false);
         llBackMirror.setSelected(false);
@@ -1919,6 +1924,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     public boolean onTouchView(View v, MotionEvent event) {
         viewModel.setRunning(true);
+        KLog.i(" onClick: "+8);
         KLog.i("onTouch: viewPosition=" + viewPosition);
         int action = event.getAction();
         switch (action) {
@@ -2538,8 +2544,13 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_front
-                        : R.mipmap.ic_camera_card_rfront));
+                if(AvmRuntime.self().isRearGearSts()){
+                    cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_back
+                            : R.mipmap.ic_camera_card_rback));
+                }else {
+                    cameraIv.setImageDrawable(mContext.getDrawable(mViewCameraRightBinding == null ? R.mipmap.ic_camera_card_front
+                            : R.mipmap.ic_camera_card_rfront));
+                }
                 break;
             case CAMERA_3_D_LEFT_FRONT:
                 camera3DShowType = 1;
