@@ -522,9 +522,25 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             }
         } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
             KLog.d(" 转向 左边转向灯闪");
+            if (value instanceof Integer) {
+                int intValue = (int) value;
+                if (intValue == 0) {
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+                } else {
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
+                }
+            }
 //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_LEFT);
         } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
             KLog.d(" 右边转向灯闪 ");
+            if (value instanceof Integer) {
+                int intValue = (int) value;
+                if (intValue == 0) {
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+                } else {
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
+                }
+            }
 //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_RIGHT);
         } else if (vehicleId == VEHICLE_SPEED) {// 车速
             //KLog.d(" 车速 vehicleId = " + vehicleId + "  ,value = " + value);
