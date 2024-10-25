@@ -500,7 +500,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         KLog.d("avmInstalled = " + avmInstalled);
         if (avmInstalled == 0) {
             SystemProperties.set("avm_installed", "1");
-
+            SystemProperties.set("settingPathLine", "1");
             SystemProperties.set("signalActivates","1");
         }
     }
