@@ -793,7 +793,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(1, status);
                 break;
             case AVM_FRS_SNS_ERR_FLAG:    //       前右
-                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(3, status);
+                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(4, status);
                 break;
             case AVM_FLS_SNS_ERR_FLAG:    //       前左
                 AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(1, status);
@@ -802,7 +802,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(2, status);
                 break;
             case AVM_PAS_FRMIDSNSERRFLAG:    //       前右中
-                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(4, status);
+                AvmApp.getInstance().getCameraView().setFrontRadarFailStatus(3, status);
                 break;
             case AVM_PAS_SYSTEMTYPE:    //       雷达系统故障，没有找到相关UI
                 AvmApp.getInstance().getCameraView().setRadarFailStatus(1, status);
