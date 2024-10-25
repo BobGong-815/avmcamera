@@ -769,12 +769,7 @@ public class CameraViewModel extends BaseCameraViewModel {
             CustomToast.showToast("标定-bwSetIRKeyPOINT-失败");
             return;
         }
-
-        Intent mStartActivity = new Intent(AvmApp.getInstance(), MockActivity.class);
-        int mPendingIntentId = 123456;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(AvmApp.getInstance(), mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager) AvmApp.getInstance().getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        
         System.exit(0);
     }
 
