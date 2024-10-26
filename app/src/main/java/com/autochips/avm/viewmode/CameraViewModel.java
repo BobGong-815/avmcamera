@@ -102,7 +102,7 @@ public class CameraViewModel extends BaseCameraViewModel {
         threadHandler = new Handler(handlerThread.getLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                KLog.d("handleMessage : " + msg.what + " , " + msg.arg1 + " , " + msg.arg2);
+                if (msg.what != MSG_WHEEL_SPEED) KLog.d("handleMessage : " + msg.what + " , " + msg.arg1 + " , " + msg.arg2);
                 if (msg.what == MSG_CALIBRATE) {
                     KLog.d("标定 handle MSG_CALIBRATE.");
                     threadHandler.sendEmptyMessage(MSG_CALIBRATING);

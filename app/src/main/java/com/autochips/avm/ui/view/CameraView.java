@@ -1134,7 +1134,7 @@ public class CameraView extends View implements LifecycleOwner {
                 KLog.d("转向3d前FRONT_3D 3");
                 bvavmJNI.bwSet3DfreeFlag(0);//复位3D
                 cameraBreakdown.setVisibility(View.GONE);
-                chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
+                chick3DView(ViewSwitchManager.CAMERA_3_D);
             } else {
                 cameraShowType = 0;
                 //setAngleStatus();
@@ -1712,6 +1712,7 @@ public class CameraView extends View implements LifecycleOwner {
         isFullWin = false;
         isSmartWin = false;
         isShowing = false;
+        camera3DShowType = -1;
         isDismissView = true;
         boolean attachedToWindow = rootView.isAttachedToWindow();
         boolean attachedToWindowcameraBinding = cameraBinding.getRoot().isAttachedToWindow();
