@@ -1520,6 +1520,10 @@ public class AvmRuntime {
         }
     }
 
+    public void updateChangeTime() {
+        if (dataSts != null) dataSts.lastChangeTime = System.currentTimeMillis();
+    }
+
     public void onViewAngleChanged(int viewAngle) {
         KLog.d(" onViewAngleChanged for " + viewAngle);
 //        Log.d("AvmRuntime", Log.getStackTraceString(new Throwable()));

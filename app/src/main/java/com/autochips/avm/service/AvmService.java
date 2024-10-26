@@ -512,6 +512,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
 //                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
+                    AvmRuntime.self().updateChangeTime();
                 }
             }
         } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
@@ -522,6 +523,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
 //                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
+                    AvmRuntime.self().updateChangeTime();
                 }
             }
         } else if (vehicleId == VEHICLE_SPEED) {// 车速
