@@ -525,9 +525,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (value instanceof Integer) {
                 int intValue = (int) value;
                 if (intValue == 0) {
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+//                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
+//                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
                 }
             }
 //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_LEFT);
@@ -536,9 +536,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (value instanceof Integer) {
                 int intValue = (int) value;
                 if (intValue == 0) {
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+//                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
+//                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
                 }
             }
 //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_RIGHT);
