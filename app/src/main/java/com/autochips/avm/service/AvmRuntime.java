@@ -158,7 +158,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_ACTIVE_ENTER},
-                new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_OUTLINE}));
+                new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
 //        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-3-11
 //                new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_MOVING, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_MOVING},
 //                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
@@ -191,10 +191,10 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-3-16
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_ACTIVE_ENTER},
-                new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_OUTLINE}));
+                new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-3-17
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_D, DataDefine.GEAR_N},
                 new int[]{DataDefine.SENSOR_TURN_LAMP_RIGHT},
@@ -209,7 +209,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-3-18
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_ACTIVE_ENTER},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
@@ -285,7 +285,7 @@ public class AvmRuntime {
         // 左卡片0.5
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 1
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE, DataDefine.GEAR_R_STOP, DataDefine.GEAR_R_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_NONE},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_ACTIVE_EXIT},
                 new int[]{DataDefine.ACT_EXIT}));
@@ -298,13 +298,13 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 3
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE, DataDefine.GEAR_R_STOP, DataDefine.GEAR_R_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_NONE},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_P_30S},
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 4
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE, DataDefine.GEAR_R_STOP, DataDefine.GEAR_R_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET},
                 new int[]{DataDefine.ACT_EXIT}));
@@ -358,13 +358,13 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 2-1-13
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_NONE},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_ACTIVE_EXIT},
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 2-1-14
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_NONE},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET},
                 new int[]{DataDefine.ACT_EXIT}));
@@ -414,10 +414,10 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 7
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N, DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_CLICK_LEFT_CARD},
-                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_OUTLINE}));
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 8
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N, DataDefine.GEAR_P},
                 new int[]{DataDefine.SENSOR_TURN_LAMP_RIGHT},
@@ -432,16 +432,16 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 9
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_CLICK_LEFT_CARD},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 10
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_D, DataDefine.GEAR_N},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_CLICK_LEFT_CARD},
-                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_OUTLINE}));
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 11
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_D, DataDefine.GEAR_N},
                 new int[]{DataDefine.SENSOR_TURN_LAMP_RIGHT},
@@ -456,25 +456,25 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 12
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_D, DataDefine.GEAR_N},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_CLICK_LEFT_CARD},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 13
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_N_STOP},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_SHIFT_R},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_REAR_VIEW}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 14
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_N_STOP},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_3D},
                 new int[]{DataDefine.EVT_SHIFT_R},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_REAR_VIEW}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,// 15
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_N_STOP},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_R},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_REAR_VIEW}));
@@ -531,19 +531,19 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 6
                 new int[]{DataDefine.GEAR_R},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_ACTIVE_EXIT},
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 7
                 new int[]{DataDefine.GEAR_R},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_N_OVER_SPEED, DataDefine.EVT_SHIFT_D_OVER_SPEED},
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 8
                 new int[]{DataDefine.GEAR_R},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_P_30S},
                 new int[]{DataDefine.ACT_EXIT}));
@@ -591,19 +591,19 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 16
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_ACTIVE_EXIT},
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 17
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_D_OVER_SPEED, DataDefine.EVT_SHIFT_N_OVER_SPEED},
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 18
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_P_30S},
                 new int[]{DataDefine.ACT_EXIT}));
@@ -627,13 +627,13 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 3-2-1
                 new int[]{DataDefine.GEAR_R},
-                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_2D},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_REAR_VIEW}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 3-2-2
                 new int[]{DataDefine.GEAR_R},
-                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_3D},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_REAR_VIEW}));
@@ -660,7 +660,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_TURN_LAMP_ACTIVE},
-                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_OUTLINE}));
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 3-2-7
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N, DataDefine.GEAR_P},
                 new int[]{DataDefine.SENSOR_NONE},
@@ -708,7 +708,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_2D},
-                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_OUTLINE}));
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 3-2-14
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
                 new int[]{DataDefine.SENSOR_TURN_LAMP_RIGHT},
@@ -723,7 +723,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 3-2-15
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_WIDE_ANGLE},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
@@ -744,7 +744,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.SENSOR_NONE},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_TURN_LAMP_ACTIVE},
-                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_OUTLINE}));
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 3-2-19
                 new int[]{DataDefine.GEAR_P},
                 new int[]{DataDefine.SENSOR_NONE},
@@ -783,10 +783,10 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_KEEP}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 3-2-25
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_2D},
-                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_OUTLINE}));
+                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 3-2-26
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_N, DataDefine.GEAR_D},
                 new int[]{DataDefine.SENSOR_TURN_LAMP_RIGHT},
@@ -822,13 +822,13 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 3
                 new int[]{DataDefine.GEAR_R},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_ACTIVE_EXIT},
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 4
                 new int[]{DataDefine.GEAR_R},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_P_30S},
                 new int[]{DataDefine.ACT_EXIT}));
@@ -852,13 +852,13 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 8
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_P_30S},
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 9
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_ACTIVE_EXIT},
                 new int[]{DataDefine.ACT_EXIT}));
@@ -960,7 +960,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 4-2-15
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_WIDE_ANGLE},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
@@ -1026,7 +1026,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_KEEP}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 4-2-25
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_2D},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
@@ -1044,7 +1044,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 4-2-27
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SWITCH_2_WIDE_ANGLE},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
@@ -1052,26 +1052,26 @@ public class AvmRuntime {
         // add 2024-8-31
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_N, DataDefine.GEAR_D},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_N, DataDefine.GEAR_D},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
 
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_N, DataDefine.GEAR_D},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_3D},
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_3D_FRONT_VIEW}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_N, DataDefine.GEAR_D},
-                new int[]{DataDefine.SENSOR_TURN_LAMP},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_3D},
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_FRONT_VIEW}));
@@ -1144,7 +1144,7 @@ public class AvmRuntime {
         //20240905
         configTable.add(new CfgItem(DataDefine.FV_STATE_LEFT_CARD,  //当前显示全景状态
                 new int[]{DataDefine.GEAR_N, DataDefine.GEAR_P, DataDefine.GEAR_D}, //支持显示的档位
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_NONE},//传感器状态
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},//传感器状态
                 new int[]{DataDefine.MEM_MODE_WIDE_ANGLE, DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D}, //记忆模式状态可执行
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET},//事件
                 new int[]{DataDefine.ACT_EXIT}));//执行动作
@@ -1179,14 +1179,14 @@ public class AvmRuntime {
 
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,
                 new int[]{DataDefine.GEAR_R},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_SHIFT_N, DataDefine.EVT_SHIFT_D},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
 
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,
                 new int[]{DataDefine.GEAR_R},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_SHIFT_N, DataDefine.EVT_SHIFT_D},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
@@ -1364,6 +1364,7 @@ public class AvmRuntime {
 //                } else {
 //                    dataSts.events.add(DataDefine.EVT_TURN_LAMP_RESET_ACTIVE);
 //                }
+                dataSts.lastSensorSrc = 1;
                 dataSts.events.add(DataDefine.EVT_TURN_LAMP_ACTIVE);
                 dataSts.events.add(DataDefine.EVT_TURN_LAMP_L_ACTIVE);
                 if (dataSts.sensors[0] == DataDefine.SENSOR_RADAR) {
@@ -1380,6 +1381,7 @@ public class AvmRuntime {
 //                } else {
 //                    dataSts.events.add(DataDefine.EVT_TURN_LAMP_RESET_ACTIVE);
 //                }
+                dataSts.lastSensorSrc = 1;
                 dataSts.events.add(DataDefine.EVT_TURN_LAMP_ACTIVE);
                 dataSts.events.add(DataDefine.EVT_TURN_LAMP_R_ACTIVE);
                 if (dataSts.sensors[0] == DataDefine.SENSOR_RADAR) {
@@ -1401,7 +1403,8 @@ public class AvmRuntime {
 //                    return;
 //                }
 
-                if (dataSts.sensors[0] == DataDefine.SENSOR_TURN_LAMP) {
+                dataSts.lastSensorSrc = 2;
+                if (dataSts.sensors[0] == DataDefine.SENSOR_TURN_LAMP || dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP) {
                     dataSts.events.add(DataDefine.EVT_RADAR_TURN_LAMP_ACTIVE);
                 }
                 dataSts.events.add(DataDefine.EVT_RADAR_ACTIVE);
@@ -1644,6 +1647,13 @@ public class AvmRuntime {
         }
     }
 
+    public void setRadarPauseFlag(boolean flag) {
+        KLog.d("setRadarPauseFlag : " + flag);
+        if (dataSts != null) {
+            dataSts.radarPause = flag;
+        }
+    }
+
     public int getOverExitFlag() {
         if (dataSts != null) return dataSts.overExitFlag;
 
@@ -1722,6 +1732,13 @@ public class AvmRuntime {
                         break;
                     }
                 }
+                if (dataSts.events.contains(DataDefine.EVT_RADAR_ACTIVE)
+                        || (dataSts.events.contains(DataDefine.EVT_RADAR_TURN_LAMP_ACTIVE) && dataSts.sensors[0] == DataDefine.SENSOR_TURN_LAMP)) {
+                    if (dataSts.radarPause) {
+                        KLog.w("雷达暂停激活左卡片中。。。");
+                        break;
+                    }
+                }
                 flag = true;
                 KLog.d("find match cfg : " + cfgItem);
                 if (dataSts.actions != null) {
@@ -1743,6 +1760,12 @@ public class AvmRuntime {
                     } else if (cfgItem.fvState == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
                         setOverExitFlag(2);
                     }
+                }
+                if (cfgItem.actions[0] == DataDefine.ACT_EXIT
+                        && cfgItem.fvState == DataDefine.FV_STATE_LEFT_CARD
+                        && dataSts.events.contains(DataDefine.EVT_ACTIVE_EXIT)
+                        && (dataSts.sensors[0] == DataDefine.SENSOR_RADAR || (dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP && dataSts.lastSensorSrc == 2))) {
+                    if (!dataSts.events.contains(DataDefine.EVT_SHIFT_P)) setRadarPauseFlag(true);
                 }
                 if (cfgItem.actions[0] == DataDefine.ACT_PASSIVE_DUAL_CARD) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_PASSIVE_DUAL_CARD;
@@ -1895,12 +1918,14 @@ public class AvmRuntime {
     class DataSts {
         float currSpeed = -1;
         int overExitFlag; // 0 none, 1 left_card exit, 2 full_screen exit
+        boolean radarPause;
         boolean radarAlive;
         boolean turnLampAlive;
         boolean overSpeedSts; //超速状态
         long lastChangeTime; //上次变更时间
         long turnLampResetTime;
         boolean shiftPFlag;
+        int lastSensorSrc = 0; // 0 none, 1 turn lamp, 2 radar
 
         int[] fvSts; // 全景状态
         int[] gears; // 档位
@@ -1911,6 +1936,7 @@ public class AvmRuntime {
         int[] actions; // 切换全景状态 切换视角
 
         DataSts() {
+            radarPause = false;
             radarAlive = false;
             turnLampAlive = false;
             shiftPFlag = false;
