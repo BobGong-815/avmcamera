@@ -51,6 +51,7 @@ public class AvmRuntime {
     private byte[] syncObj = new byte[0];
     private List<ActionListener> actionListeners;
     private List<ActionListener> toRemoves;
+    private final float SPEED_THRESHOLD = 30.f;
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -238,7 +239,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_LEFT_CARD}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
-                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_REDUCE_SPEED2},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
@@ -250,7 +251,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
-                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR},
+                new int[]{DataDefine.SENSOR_RADAR},
                 new int[]{DataDefine.MEM_MODE_3D},
                 new int[]{DataDefine.EVT_REDUCE_SPEED2},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_FRONT_VIEW}));
@@ -268,7 +269,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_LEFT_REAR}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 3
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N},
-                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_REDUCE_SPEED2},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_REAR}));
@@ -1424,7 +1425,7 @@ public class AvmRuntime {
             CameraViewModelHelper.getInstance().setSpeedValue(dataSts.currSpeed);
             CameraViewModelHelper.getInstance().setTransparentIndexTab();
             if (dataSts.overSpeedSts) {
-                if (dataSts.currSpeed < 30) {
+                if (dataSts.currSpeed < SPEED_THRESHOLD) {
                     if (getOverExitFlag() == 1) {
                         dataSts.events.add(DataDefine.EVT_REDUCE_SPEED1);
                     } else if (getOverExitFlag() == 2) {
@@ -1434,7 +1435,7 @@ public class AvmRuntime {
                     flag = true;
                 }
             } else {
-                if (dataSts.currSpeed > 30) {
+                if (dataSts.currSpeed > SPEED_THRESHOLD) {
                     dataSts.events.add(DataDefine.EVT_OVER_SPEED);
                     dataSts.overSpeedSts = true;
                     flag = true;
@@ -1714,8 +1715,9 @@ public class AvmRuntime {
                         KLog.w("break for show avm 转向激活全景 不显示");
                         break;
                     }
-                    if (dataSts.currSpeed > 30 && dataSts.fvSts[0] == DataDefine.FV_STATE_NON && actions[0] == DataDefine.ACT_LEFT_CARD) {
+                    if (dataSts.currSpeed > SPEED_THRESHOLD && dataSts.fvSts[0] == DataDefine.FV_STATE_NON && actions[0] == DataDefine.ACT_LEFT_CARD) {
                         KLog.w("速度大于30，转向及雷达不激活左卡片");
+                        setOverExitFlag(1);//速度降下来的时候需要恢复
                         break;
                     }
                 }
@@ -1780,7 +1782,7 @@ public class AvmRuntime {
             if (dataSts.currSpeed == 0.f) {
                 dataSts.gears[1] = DataDefine.GEAR_D_STOP;
                 dataSts.gears[2] = DataDefine.INVALID;
-            } else if (dataSts.currSpeed < 30.f) {
+            } else if (dataSts.currSpeed < SPEED_THRESHOLD) {
                 dataSts.gears[1] = DataDefine.GEAR_D_LOW_RATE;
                 dataSts.gears[2] = DataDefine.GEAR_D_MOVING;
             } else {
@@ -1792,7 +1794,7 @@ public class AvmRuntime {
             if (dataSts.currSpeed == 0.f) {
                 dataSts.gears[1] = DataDefine.GEAR_N_STOP;
                 dataSts.gears[2] = DataDefine.INVALID;
-            } else if (dataSts.currSpeed < 30.f) {
+            } else if (dataSts.currSpeed < SPEED_THRESHOLD) {
                 dataSts.gears[1] = DataDefine.GEAR_N_LOW_RATE;
                 dataSts.gears[2] = DataDefine.GEAR_N_MOVING;
             } else {
@@ -1804,7 +1806,7 @@ public class AvmRuntime {
             if (dataSts.currSpeed == 0.f) {
                 dataSts.gears[1] = DataDefine.GEAR_R_STOP;
                 dataSts.gears[2] = DataDefine.INVALID;
-            } else if (dataSts.currSpeed < 30.f) {
+            } else if (dataSts.currSpeed < SPEED_THRESHOLD) {
                 dataSts.gears[1] = DataDefine.GEAR_R_LOW_RATE;
                 dataSts.gears[2] = DataDefine.INVALID;
             } else {
@@ -1881,58 +1883,67 @@ public class AvmRuntime {
 
     public void updateTiming30sFlag() {
         // 变更 timing30sFlag 逻辑
-        if (SystemProperties.get("pExit").equals("1")) {
-            if (dataSts.events.size() > 0) {
-                if (dataSts.events.contains(DataDefine.EVT_SHIFT_P) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
-                    if (dataSts.sensors[0] == DataDefine.SENSOR_NONE || dataSts.sensors[0] == DataDefine.SENSOR_RADAR) {
+        if (dataSts.events.size() > 0) {
+            if (dataSts.events.contains(DataDefine.EVT_SHIFT_N) || dataSts.events.contains(DataDefine.EVT_SHIFT_D)) {
+                if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
+                    if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
                         dataSts.timing30sFlag = true;
-                        KLog.d("set timing30sFlag for EVT_SHIFT_P.");
+                        KLog.d("set timing30sFlag for EVT_SHIFT_ND.");
                         return;
-                    } else {
+                    }  else {
                         dataSts.sensorBlockPExit = true;
                     }
                 }
-                if (dataSts.events.contains(DataDefine.EVT_RADAR_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
-                    if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
-                        if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
-                            if (dataSts.gears[0] != DataDefine.GEAR_R) {
-                                dataSts.timing30sFlag = true;
-                                KLog.d("set timing30sFlag for EVT_RADAR_RESET.");
-                                return;
-                            }
-                        }
-                        if (dataSts.fvSts[0] == DataDefine.FV_STATE_ACTIVE_DUAL_CARD) {
-                            if (dataSts.sensorBlockPExit) {
-                                dataSts.sensorBlockPExit = false;
-                                dataSts.timing30sFlag = true;
-                                KLog.d("set timing30sFlag for EVT_RADAR_RESET.");
-                                return;
-                            }
-                        }
-                    }
-                }
-                if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
-                    if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
-                        if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
-                            if (dataSts.gears[0] != DataDefine.GEAR_R) {
-                                dataSts.timing30sFlag = true;
-                                KLog.d("set timing30sFlag for EVT_TURN_LAMP_RESET.");
-                                return;
-                            }
-                        }
-                        if (dataSts.fvSts[0] == DataDefine.FV_STATE_ACTIVE_DUAL_CARD) {
-                            if (dataSts.sensorBlockPExit) {
-                                dataSts.sensorBlockPExit = false;
-                                dataSts.timing30sFlag = true;
-                                KLog.d("set timing30sFlag for EVT_TURN_LAMP_RESET.");
-                                return;
-                            }
-                        }
-                    }
-
-                }
-                dataSts.timing30sFlag = false;
             }
+            if (dataSts.events.contains(DataDefine.EVT_SHIFT_P) && SystemProperties.get("pExit").equals("1") && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                if (dataSts.sensors[0] == DataDefine.SENSOR_NONE || dataSts.sensors[0] == DataDefine.SENSOR_RADAR) {
+                    dataSts.timing30sFlag = true;
+                    KLog.d("set timing30sFlag for EVT_SHIFT_P.");
+                    return;
+                } else {
+                    dataSts.sensorBlockPExit = true;
+                }
+            }
+            if (dataSts.events.contains(DataDefine.EVT_RADAR_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
+                    if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
+                        if (dataSts.gears[0] != DataDefine.GEAR_R) {
+                            dataSts.timing30sFlag = true;
+                            KLog.d("set timing30sFlag for EVT_RADAR_RESET.");
+                            return;
+                        }
+                    }
+                    if (dataSts.fvSts[0] == DataDefine.FV_STATE_ACTIVE_DUAL_CARD) {
+                        if (dataSts.sensorBlockPExit) {
+                            dataSts.sensorBlockPExit = false;
+                            dataSts.timing30sFlag = true;
+                            KLog.d("set timing30sFlag for EVT_RADAR_RESET.");
+                            return;
+                        }
+                    }
+                }
+            }
+            if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
+                    if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
+                        if (dataSts.gears[0] != DataDefine.GEAR_R) {
+                            dataSts.timing30sFlag = true;
+                            KLog.d("set timing30sFlag for EVT_TURN_LAMP_RESET.");
+                            return;
+                        }
+                    }
+                    if (dataSts.fvSts[0] == DataDefine.FV_STATE_ACTIVE_DUAL_CARD) {
+                        if (dataSts.sensorBlockPExit) {
+                            dataSts.sensorBlockPExit = false;
+                            dataSts.timing30sFlag = true;
+                            KLog.d("set timing30sFlag for EVT_TURN_LAMP_RESET.");
+                            return;
+                        }
+                    }
+                }
+
+            }
+            dataSts.timing30sFlag = false;
         }
     }
 

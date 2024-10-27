@@ -1183,7 +1183,6 @@ public class CameraView extends View implements LifecycleOwner {
      */
     @SuppressLint("NewApi")
     private void setAngleStatus(int type) {
-        AvmRuntime.self().userTap();
         int tabIndex = getWideAngleTabIndex();
         if (isSmartWin) {
             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
@@ -1213,7 +1212,6 @@ public class CameraView extends View implements LifecycleOwner {
         @Override
         public void onTabSelect(int position, boolean fromUser) {
             KLog.d("onTabSelectListener onTabSelect = " + position);
-            AvmRuntime.self().userTap();
             viewModel.setRunning(true);
             if (position == 0) {
                 if (segmentTab.getCurrentTab() == 2) {
@@ -2375,7 +2373,6 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void chick2DView(String type) {
         KLog.i("chick2DView ......... " + type);
-        AvmRuntime.self().userTap();
         int BWAVM_FRONT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(0);
         int BWAVM_REAR_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(1);
         int BWAVM_LEFT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(2);
@@ -2518,7 +2515,6 @@ public class CameraView extends View implements LifecycleOwner {
 
     private void chick3DView(String type) {
         KLog.e("type :"+type);
-        AvmRuntime.self().userTap();
         cameraImageLayoutLift.setVisibility(GONE);
         int BWAVM_FRONT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(0);
         int BWAVM_REAR_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(1);
@@ -2630,7 +2626,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 0) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera2dTop();
                 }
             }
@@ -2639,7 +2634,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 0) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera2dLift();
                 }
             }
@@ -2648,7 +2642,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 0) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera2dRight();
                 }
             }
@@ -2657,7 +2650,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 0) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera2dBottom();
                 }
             }
@@ -2666,7 +2658,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 1) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera3dLeftFront();
                 }
             }
@@ -2675,7 +2666,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 1) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera3dLeftFront();
                 }
             }
@@ -2684,7 +2674,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 1) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera3dRightFront();
                 }
             }
@@ -2693,7 +2682,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 1) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera3dRightFront();
                 }
             }
@@ -2702,7 +2690,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 1) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera3dLeftRear();
                 }
             }
@@ -2711,7 +2698,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 1) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera3dLeftRear();
                 }
             }
@@ -2720,7 +2706,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 1) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera3dRightRear();
                 }
             }
@@ -2729,7 +2714,6 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 if (segmentTab.getCurrentTab() == 1) {
-                    AvmRuntime.self().userTap();
                     viewModel.camera3dRightRear();
                 }
             }
