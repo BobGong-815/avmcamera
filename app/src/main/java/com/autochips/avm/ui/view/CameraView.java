@@ -482,8 +482,8 @@ public class CameraView extends View implements LifecycleOwner {
             infobook.setLayoutParams(layoutParams);
         }
 
-        settingView.setOnClickListener((v) -> {
-        });
+//        settingView.setOnClickListener((v) -> {
+//        });
         layout2d.setOnClickListener((view) -> {
             KLog.d(" layout2d setOnClickListener ");
             viewShow2dGroupId.setVisibility(VISIBLE);
@@ -690,9 +690,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void setCurrentGear(int gear) {
         if (rearviewMirrorView.getVisibility() == View.VISIBLE){
-            if (AvmRuntime.self().isRearGearSts()) {
-                rearviewMirrorView.gearInfo(1);
-            }
+            rearviewMirrorView.gearInfo(gear == 3 ? 1 : 0);
         }
     }
 

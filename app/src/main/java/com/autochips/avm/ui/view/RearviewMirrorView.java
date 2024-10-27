@@ -265,7 +265,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
     }
 
     public void setRearviewMirrorDownViewStatus(int reverseLightSts) {
-        KLog.e("reverseLightSts: " + reverseLightSts);
+        KLog.e("reverseLightSts: " + reverseLightSts+"AvmRuntime.self().isRearGearSts():"+AvmRuntime.self().isRearGearSts());
         //倒车档可以操作
         if (reverseLightSts == 1) {
             int status = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
