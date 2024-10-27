@@ -457,7 +457,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     }
 
     @Override
-    public void onGearNoAct(int gear) {
+    public void onGearNoAct(int gear, boolean handleFlag) {
         KLog.i("onGearNoAct ...  " + gear);
         //处理档位变更逻辑
         switch (gear) {
@@ -473,7 +473,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                AvmApp.getInstance().getCameraView().viewShowStatus();
+                if (!handleFlag) {
+                    AvmApp.getInstance().getCameraView().viewShowStatus();
+                }
+                AvmApp.getInstance().getCameraView().setCurrentGear(gear);
             }
         });
     }
