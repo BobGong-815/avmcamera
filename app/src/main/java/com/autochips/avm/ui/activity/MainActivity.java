@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     }
 
     @Override
-    public void onGearNoAct(int gear) {
+    public void onGearNoAct(int gear, boolean handleFlag) {
         updateLayer();
     }
 

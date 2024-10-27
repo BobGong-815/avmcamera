@@ -12,18 +12,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.provider.ContactsContract;
-import android.util.Log;
 
-import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
-import com.autochips.avm.ui.view.CameraGLSurfaceView;
 import com.autochips.avm.util.DataDefine;
 import com.autochips.avm.util.SystemProperties;
 import com.autochips.avm.util.TestDefine;
-import com.autochips.avm.viewmode.CameraViewModel;
 import com.avm.framwork.manager.CanManager;
 
 import java.io.FileInputStream;
@@ -33,10 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.goldze.mvvmhabit.utils.KLog;
-import me.goldze.mvvmhabit.utils.SPUtils;
 
-import static android.content.Intent.ACTION_LOCALE_CHANGED;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_RIGHT_TURN_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
 
 /**
@@ -565,12 +557,12 @@ public class AvmRuntime {
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_P_30S},
                 new int[]{DataDefine.ACT_EXIT}));
-        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 12
-                new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
-                new int[]{DataDefine.SENSOR_NONE},
-                new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
-                new int[]{DataDefine.EVT_KEEP_30S},
-                new int[]{DataDefine.ACT_EXIT}));
+//        configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 12
+//                new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
+//                new int[]{DataDefine.SENSOR_NONE},
+//                new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
+//                new int[]{DataDefine.EVT_KEEP_30S},
+//                new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 13
                 new int[]{DataDefine.GEAR_D_STOP, DataDefine.GEAR_D_LOW_RATE, DataDefine.GEAR_N_STOP, DataDefine.GEAR_N_LOW_RATE},
                 new int[]{DataDefine.SENSOR_RADAR},
@@ -1472,18 +1464,9 @@ public class AvmRuntime {
                 dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
                 dataSts.events.add(DataDefine.EVT_SHIFT_P);
             }
-            if (SystemProperties.get("pExit").equals("1")) {
-                if (dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
-                    if (gear == 4) {
-                        dataSts.shiftPFlag = true;
-                    } else {
-                        dataSts.shiftPFlag = false;
-                    }
-                }
-            }
             setOverExitFlag(0);
+            dataSts.sensorBlockPExit = false;
             dataSts.lastChangeTime = System.currentTimeMillis();
-            AvmApp.getInstance().getCameraView().setCurrentGear(gear);
             syncObj.notify();
         }
     }
@@ -1704,12 +1687,12 @@ public class AvmRuntime {
 
     private void handleEvent() {
         if ((System.currentTimeMillis() - dataSts.lastChangeTime) > 30000) {
-            if (dataSts.shiftPFlag) {// 开了P档延时30s退出，且avm显示的时候，挂了P档
-                dataSts.shiftPFlag = false;
+            if (dataSts.timing30sFlag) {// 开了P档延时30s退出，且avm显示的时候，挂了P档
+                dataSts.timing30sFlag = false;
                 KLog.d("--------------------- EVT_SHIFT_P_30S. ");
                 dataSts.events.add(DataDefine.EVT_SHIFT_P_30S);
             }
-            dataSts.events.add(DataDefine.EVT_KEEP_30S);
+//            dataSts.events.add(DataDefine.EVT_KEEP_30S);
         }
         KLog.d("DataSts is " + dataSts.toString());
 
@@ -1751,6 +1734,9 @@ public class AvmRuntime {
                     }
                 }
                 for (int i = actions.length - 1; i >= 0; i--) {//倒序
+                    if (actions[i] == DataDefine.ACT_EXIT) {
+                        onExit();
+                    }
                     actionEnter(actions[i]);
                 }
 //                for (int a : actions) {
@@ -1785,25 +1771,6 @@ public class AvmRuntime {
                     dataSts.fvSts[1] = DataDefine.INVALID;
                 }
 
-//                if (cfgItem.actions.length > 1) {
-//                    if (cfgItem.actions[1] == DataDefine.ACT_2D_REAR_VIEW
-//                            || cfgItem.actions[1] == DataDefine.ACT_2D_FRONT_OUTLINE
-//                            || cfgItem.actions[1] == DataDefine.ACT_2D_FRONT_VIEW
-//                            || cfgItem.actions[1] == DataDefine.ACT_2D_LR
-//                            || cfgItem.actions[1] == DataDefine.ACT_2D_REAR_OUTLINE) {
-//                        setMemoryMode(DataDefine.MEM_MODE_2D);
-//                    } else if (cfgItem.actions[1] == DataDefine.ACT_AERIAL_VIEW
-//                            || cfgItem.actions[1] == DataDefine.ACT_3D_FRONT_VIEW
-//                            || cfgItem.actions[1] == DataDefine.ACT_3D_LR_REAR
-//                            || cfgItem.actions[1] == DataDefine.ACT_3D_REAR_VIEW) {
-//                        setMemoryMode(DataDefine.MEM_MODE_3D);
-//                    } else {
-//                        setMemoryMode(DataDefine.MEM_MODE_WIDE_ANGLE);
-//                    }
-//                }
-//                if (dataSts.fvSts == DataDefine.FV_STATE_NON) {
-//                    dataSts.sensor = DataDefine.SENSOR_NONE;
-//                }
                 break;
             }
         }
@@ -1875,7 +1842,7 @@ public class AvmRuntime {
 //            dataSts.sensors[2] = DataDefine.SENSOR_RADAR;
 //            dataSts.sensors[3] = DataDefine.SENSOR_NONE;
         } else if (dataSts.events.contains(DataDefine.EVT_RADAR_RESET)) {
-            if (dataSts.sensors[0] == DataDefine.EVT_RADAR_TURN_LAMP_ACTIVE) {
+            if (dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP) {
                 dataSts.sensors[0] = DataDefine.SENSOR_TURN_LAMP;
             } else {
                 dataSts.sensors[0] = DataDefine.SENSOR_NONE;
@@ -1884,7 +1851,7 @@ public class AvmRuntime {
 //            dataSts.sensors[2] = DataDefine.SENSOR_NONE;
 //            dataSts.sensors[3] = DataDefine.SENSOR_NONE;
         } else if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET)) {
-            if (dataSts.sensors[0] == DataDefine.EVT_RADAR_TURN_LAMP_ACTIVE) {
+            if (dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP) {
                 dataSts.sensors[0] = DataDefine.SENSOR_RADAR;
                 dataSts.sensors[1] = DataDefine.SENSOR_NONE;
             } else {
@@ -1893,23 +1860,16 @@ public class AvmRuntime {
             }
         }
 
-        if (!flag) {
-            if (dataSts.events.contains(DataDefine.EVT_SHIFT_R)
-                    || dataSts.events.contains(DataDefine.EVT_SHIFT_D)
-                    || dataSts.events.contains(DataDefine.EVT_SHIFT_P)
-                    || dataSts.events.contains(DataDefine.EVT_SHIFT_N)) {
-                for (ActionListener listener : actionListeners) {
-                    listener.onGearNoAct(dataSts.gears[0]);
-                }
+        if (dataSts.events.contains(DataDefine.EVT_SHIFT_R)
+                || dataSts.events.contains(DataDefine.EVT_SHIFT_D)
+                || dataSts.events.contains(DataDefine.EVT_SHIFT_P)
+                || dataSts.events.contains(DataDefine.EVT_SHIFT_N)) {
+            for (ActionListener listener : actionListeners) {
+                listener.onGearNoAct(dataSts.gears[0], flag);
             }
-//            if (dataSts.fvSts[0] == DataDefine.FV_STATE_ACTIVE_DUAL_CARD
-//                    || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
-//                // 解决avm模式下，拨动转向又复位，视角不复位的问题
-//                if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) && dataSts.events.contains(DataDefine.EVT_TURN_LAMP_ACTIVE)) {
-//                    CameraGLSurfaceView.setAngleOfView(CameraGLSurfaceView.lastCeameraDirection);
-//                }
-//            }
         }
+
+        updateTiming30sFlag();
 
         dataSts.events.clear();
         if (toRemoves != null) {
@@ -1919,16 +1879,78 @@ public class AvmRuntime {
         KLog.d("handleEvent() end.");
     }
 
+    public void updateTiming30sFlag() {
+        // 变更 timing30sFlag 逻辑
+        if (SystemProperties.get("pExit").equals("1")) {
+            if (dataSts.events.size() > 0) {
+                if (dataSts.events.contains(DataDefine.EVT_SHIFT_P) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                    if (dataSts.sensors[0] == DataDefine.SENSOR_NONE || dataSts.sensors[0] == DataDefine.SENSOR_RADAR) {
+                        dataSts.timing30sFlag = true;
+                        KLog.d("set timing30sFlag for EVT_SHIFT_P.");
+                        return;
+                    } else {
+                        dataSts.sensorBlockPExit = true;
+                    }
+                }
+                if (dataSts.events.contains(DataDefine.EVT_RADAR_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                    if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
+                        if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
+                            if (dataSts.gears[0] != DataDefine.GEAR_R) {
+                                dataSts.timing30sFlag = true;
+                                KLog.d("set timing30sFlag for EVT_RADAR_RESET.");
+                                return;
+                            }
+                        }
+                        if (dataSts.fvSts[0] == DataDefine.FV_STATE_ACTIVE_DUAL_CARD) {
+                            if (dataSts.sensorBlockPExit) {
+                                dataSts.sensorBlockPExit = false;
+                                dataSts.timing30sFlag = true;
+                                KLog.d("set timing30sFlag for EVT_RADAR_RESET.");
+                                return;
+                            }
+                        }
+                    }
+                }
+                if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                    if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
+                        if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
+                            if (dataSts.gears[0] != DataDefine.GEAR_R) {
+                                dataSts.timing30sFlag = true;
+                                KLog.d("set timing30sFlag for EVT_TURN_LAMP_RESET.");
+                                return;
+                            }
+                        }
+                        if (dataSts.fvSts[0] == DataDefine.FV_STATE_ACTIVE_DUAL_CARD) {
+                            if (dataSts.sensorBlockPExit) {
+                                dataSts.sensorBlockPExit = false;
+                                dataSts.timing30sFlag = true;
+                                KLog.d("set timing30sFlag for EVT_TURN_LAMP_RESET.");
+                                return;
+                            }
+                        }
+                    }
+
+                }
+                dataSts.timing30sFlag = false;
+            }
+        }
+    }
+
+    private void onExit() {
+        dataSts.sensorBlockPExit = false;
+    }
+
     class DataSts {
         float currSpeed = -1;
         int overExitFlag; // 0 none, 1 left_card exit, 2 full_screen exit
+        boolean sensorBlockPExit = false;
         boolean radarPause;
         boolean radarAlive;
         boolean turnLampAlive;
         boolean overSpeedSts; //超速状态
         long lastChangeTime; //上次变更时间
         long turnLampResetTime;
-        boolean shiftPFlag;
+        boolean timing30sFlag; // 30s计时标志
         int lastSensorSrc = 0; // 0 none, 1 turn lamp, 2 radar
 
         int[] fvSts; // 全景状态
@@ -1943,7 +1965,7 @@ public class AvmRuntime {
             radarPause = false;
             radarAlive = false;
             turnLampAlive = false;
-            shiftPFlag = false;
+            timing30sFlag = false;
             overExitFlag = 0;
 
             fvSts = new int[2];
@@ -1996,7 +2018,9 @@ public class AvmRuntime {
         public String toString() {
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append("DataSts (")
-                    .append("overExitFlag = " + overExitFlag)
+                    .append("\nsensorBlockPExit = " + sensorBlockPExit)
+                    .append("\ntiming30sFlag = " + timing30sFlag)
+                    .append("\n overExitFlag = " + overExitFlag)
                     .append("\n, current Speed = " + currSpeed)
                     .append("\n, radarAlive = " + radarAlive)
                     .append("\n, turnLampAlive = " + turnLampAlive)
@@ -2141,7 +2165,7 @@ public class AvmRuntime {
 
         void onExit(int act);
 
-        void onGearNoAct(int gear);
+        void onGearNoAct(int gear, boolean handleFlag);
     }
 
 }
