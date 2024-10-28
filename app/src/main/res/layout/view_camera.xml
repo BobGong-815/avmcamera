@@ -86,24 +86,14 @@
                 android:src="@mipmap/radar_fault_1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
             <ImageView
                 android:id="@+id/radarErrImgId2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35px"
+                android:layout_marginLeft="30px"
+                android:rotation="-7.5"
+                android:visibility="gone"
                 android:src="@mipmap/radar_fault_2"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/radarErrImgId3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="35px"
-                android:src="@mipmap/radar_fault_3"
-                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -231,8 +221,8 @@
 
                 <com.autochips.avm.ui.view.RadarStatusView
                     android:id="@+id/rearRadarViewId"
-                    android:layout_width="290px"
-                    android:layout_height="200px"
+                    android:layout_width="276px"
+                    android:layout_height="174dp"
                     android:layout_marginBottom="20px"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

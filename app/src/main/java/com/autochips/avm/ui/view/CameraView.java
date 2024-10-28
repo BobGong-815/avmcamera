@@ -112,6 +112,7 @@ public class CameraView extends View implements LifecycleOwner {
             });
         }
     };
+    private int uiMode = UiModeManager.MODE_NIGHT_NO;//白天黑夜，默认是白天
 
     private int[] getDescValueArray() {
         return new int[]{R.string.camera_2d, R.string.camera_3d, R.string.camera_wide_angle};
@@ -1927,7 +1928,7 @@ public class CameraView extends View implements LifecycleOwner {
                 switch (param1) {
                     case bvavmJNI.BWAVM_FRONT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraTop.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? R.mipmap.ic_camera_click_t
+                            cameraTop.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day)
                                     : R.mipmap.ic_camera_default));
                             cameraTop.setRotation(0);
                             if(isCanOpreateBreakDown) {
@@ -1950,7 +1951,7 @@ public class CameraView extends View implements LifecycleOwner {
                     break;
                     case bvavmJNI.BWAVM_REAR_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraBottom.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? R.mipmap.ic_camera_click_t
+                            cameraBottom.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day)
                                     : R.mipmap.ic_camera_default));
                             cameraBottom.setRotation(180);
                             if(isCanOpreateBreakDown) {
@@ -1974,7 +1975,7 @@ public class CameraView extends View implements LifecycleOwner {
                     break;
                     case bvavmJNI.BWAVM_LEFT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraLift.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? R.mipmap.ic_camera_click_t
+                            cameraLift.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day)
                                     : R.mipmap.ic_camera_default));
                             cameraLift.setRotation(270);
                             if(isCanOpreateBreakDown) {
@@ -1997,7 +1998,7 @@ public class CameraView extends View implements LifecycleOwner {
                     break;
                     case bvavmJNI.BWAVM_RIGHT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraRight.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? R.mipmap.ic_camera_click_t
+                            cameraRight.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day)
                                     : R.mipmap.ic_camera_default));
                             cameraRight.setRotation(90);
                             if(isCanOpreateBreakDown) {
@@ -2031,10 +2032,10 @@ public class CameraView extends View implements LifecycleOwner {
                     case bvavmJNI.BWAVM_FRONT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
                             cameraLeftFront.setImageDrawable(
-                                    mContext.getDrawable(camera3DShowType == 1 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                                    mContext.getDrawable(camera3DShowType == 1 ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day) :R.mipmap.ic_camera_default));
                             cameraLeftFront.setRotation(135);
                             cameraRightFront.setImageDrawable(
-                                    mContext.getDrawable(camera3DShowType == 2 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                                    mContext.getDrawable(camera3DShowType == 2 ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day) :R.mipmap.ic_camera_default));
                             cameraRightFront.setRotation(225);
                         } else {
                             cameraLeftFront.setImageDrawable(
@@ -2048,9 +2049,9 @@ public class CameraView extends View implements LifecycleOwner {
                     break;
                     case bvavmJNI.BWAVM_REAR_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraRightRear.setImageDrawable( mContext.getDrawable(camera3DShowType == 4 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraRightRear.setImageDrawable( mContext.getDrawable(camera3DShowType == 4 ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day) :R.mipmap.ic_camera_default));
                             cameraRightRear.setRotation(315);
-                            cameraLeftRear.setImageDrawable( mContext.getDrawable(camera3DShowType == 3 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraLeftRear.setImageDrawable( mContext.getDrawable(camera3DShowType == 3 ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day) :R.mipmap.ic_camera_default));
                             cameraLeftRear.setRotation(45);
                         } else {
                             cameraRightRear.setImageDrawable( mContext.getDrawable(camera3DShowType == 4 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
@@ -2062,9 +2063,9 @@ public class CameraView extends View implements LifecycleOwner {
                     break;
                     case bvavmJNI.BWAVM_LEFT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraLeftFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 1 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraLeftFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 1 ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day) :R.mipmap.ic_camera_default));
                             cameraLeftFront.setRotation(135);
-                            cameraLeftRear.setImageDrawable(mContext.getDrawable(camera3DShowType == 3 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraLeftRear.setImageDrawable(mContext.getDrawable(camera3DShowType == 3 ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day) :R.mipmap.ic_camera_default));
                             cameraLeftRear.setRotation(45);
                         } else {
                             cameraLeftFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 1 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
@@ -2076,9 +2077,9 @@ public class CameraView extends View implements LifecycleOwner {
                     break;
                     case bvavmJNI.BWAVM_RIGHT_CAM_ID: {
                         if (param2 == bvavmJNI.CAMERA2_ERR_OK) {
-                            cameraRightFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 2 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraRightFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 2 ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day) :R.mipmap.ic_camera_default));
                             cameraRightFront.setRotation(225);
-                            cameraRightRear.setImageDrawable(mContext.getDrawable(camera3DShowType == 4 ? R.mipmap.ic_camera_click_t :R.mipmap.ic_camera_default));
+                            cameraRightRear.setImageDrawable(mContext.getDrawable(camera3DShowType == 4 ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day) :R.mipmap.ic_camera_default));
                             cameraRightRear.setRotation(315);
                         } else {
                             cameraRightFront.setImageDrawable(mContext.getDrawable(camera3DShowType == 2 ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
@@ -2099,7 +2100,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void skinView() {
         UiModeManager uiModeManager = (UiModeManager) mContext.getSystemService(Context.UI_MODE_SERVICE);
-        int uiMode = uiModeManager.getNightMode();
+        uiMode = uiModeManager.getNightMode();
         KLog.e("skinView: isSmartWin " + isSmartWin);
         if (mViewCameraBinding == null) {
             return;
@@ -2415,7 +2416,7 @@ public class CameraView extends View implements LifecycleOwner {
             }
         }
         if (status == bvavmJNI.CAMERA2_ERR_OK) {
-            imageView.setImageDrawable(mContext.getDrawable(isSelect ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_default));
+            imageView.setImageDrawable(mContext.getDrawable(isSelect ? (uiMode == UiModeManager.MODE_NIGHT_YES ? R.mipmap.ic_camera_click_t : R.mipmap.ic_camera_click_t_day) : R.mipmap.ic_camera_default));
         } else {
             imageView.setImageDrawable(mContext.getDrawable(isSelect ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
         }
@@ -2590,7 +2591,8 @@ public class CameraView extends View implements LifecycleOwner {
                 chick3DView(CAMERA_3_D_LEFT_REAR);
             } else if (CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_RIGHT_REAR_3D) {
                 chick3DView(CAMERA_3_D_RIGHT_REAR);
-            } else if(CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_REAR_3D){
+            } else if(CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_REAR_3D ||
+                    CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_FRONT_3D){
                 chick3DView(CAMERA_3_D);
             }
         }  else if (outsideTabIndex == 2) {
