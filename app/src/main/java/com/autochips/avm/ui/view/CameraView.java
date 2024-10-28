@@ -580,9 +580,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void setCurrentGear(int gear) {
         if (rearviewMirrorView.getVisibility() == View.VISIBLE){
-            if (AvmRuntime.self().isRearGearSts()) {
-                rearviewMirrorView.gearInfo(1);
-            }
+            rearviewMirrorView.gearInfo(gear == 3 ? 1 : 0);
         }
     }
 
@@ -2354,7 +2352,8 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmRuntime.self().isRearGearSts() ? R.mipmap.ic_camera_card_back
+                        : R.mipmap.ic_camera_card_front));
                 break;
             case CAMERA_3_D_LEFT_FRONT:
                 camera3DShowType = 1;

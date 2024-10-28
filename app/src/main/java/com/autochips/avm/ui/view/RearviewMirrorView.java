@@ -240,6 +240,11 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
     }
 
     private void setRearviewMirrorStatus(int reverseLightSts) {
+        if(!AvmRuntime.self().isRearGearSts()){
+            setRearviewMirrorDownViewStatus(0);
+            KLog.d("is not R gear");
+            return;
+        }
         if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_ID) {
             if (reverseLightSts == 3) {
                 rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(true);
