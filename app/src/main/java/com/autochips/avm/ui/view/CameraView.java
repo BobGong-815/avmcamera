@@ -2786,7 +2786,8 @@ public class CameraView extends View implements LifecycleOwner {
                 chick3DView(CAMERA_3_D_LEFT_REAR);
             } else if (CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_RIGHT_REAR_3D) {
                 chick3DView(CAMERA_3_D_RIGHT_REAR);
-            } else if(CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_REAR_3D){
+            } else if(CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_REAR_3D ||
+                    CameraGLSurfaceView.getCameraDirection() == bvavmJNI.BW_FRONT_3D){
                 chick3DView(CAMERA_3_D);
             }
         } else if (outsideTabIndex == 2) {
