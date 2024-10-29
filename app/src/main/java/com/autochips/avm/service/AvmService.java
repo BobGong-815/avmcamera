@@ -313,6 +313,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             break;
                         case DataDefine.ACT_ACTIVE_DUAL_CARD:
                             KLog.i("avmService____ ACT_ACTVE_DUAL_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);
+                            AvmRuntime.self().setRadarPauseFlag(false);
                             AvmApp.getInstance().getCameraView().showFullWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
@@ -352,19 +353,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 }
                             }
                             break;
-//                        case DataDefine.ACT_OVER_SPEED:
-//                            AvmRuntime.self().setOverExitFlag(true);
-//                            break;
-//                        case DataDefine.ACT_REDUCE_SPEED:
-//                            if (AvmRuntime.self().getOverExitFlag() != 0) {
-//                                AvmRuntime.self().setOverExitFlag(0);
-//
-//                                Message message = Message.obtain();
-//                                message.what = MSG_ACTION_ENTER;
-//                                message.arg1 = DataDefine.ACT_LEFT_CARD;
-//                                mHandler.sendMessage(message);
-//                            }
-//                            break;
                     }
                 } else if (msg.what == MSG_CR_CAMERA) {
                     if (!BvAvmJNIHelper.isAvmDeInit) {
