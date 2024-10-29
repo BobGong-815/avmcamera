@@ -952,10 +952,10 @@ public class CameraView extends View implements LifecycleOwner {
             }
             KLog.d(viewPosition + "tabSelectListener onTabSelect = " + position + " isChangeGear：" + isChangeGear);
             viewModel.setRunning(true);
-            if (!isChangeGear) {// 换挡的时候，不给取消高亮
-                llBackMirror.setSelected(false);
-                llSetting.setSelected(false);
-            }
+//            if (!isChangeGear) {// 换挡的时候，不给取消高亮
+//                llBackMirror.setSelected(false);
+//                llSetting.setSelected(false);
+//            }
 
             if (viewPosition == position) {
 //                if (isChangeGear && viewPosition == 2) {
