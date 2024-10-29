@@ -20,7 +20,6 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AV
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RSL_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RSR_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SAS_STEERING_ANGLE;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SELECT_STATE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_UINM_TURN_LIGHT_SW_ST;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_WHEEL_DIRE_SPEED;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.BCM_HIGH_BEAM_STATUS;
@@ -127,8 +126,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static int MSG_ACTION_EXIT = 2;
     public static int MSG_CR_CAMERA = 3;
     public static int MSG_DEL_CAMERA = 4;
-    public static int MSG_CLOSE_RVC = 5;
-    public static int mRvcState = 0x0;
+
     private String exit_action = "action.syncore.EOL.mode";
     private String open_act = "action.syncore.OPEN.mode";
     private String close_act = "action.syncore.CLOSE.mode";
@@ -178,6 +176,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.d("[mCarPowerManager]  半功能  释放资源,释放摄像头");
+                    mHandler.removeMessages(MSG_CR_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     KLog.d("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
@@ -295,6 +295,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                             }
+                            AvmRuntime.self().setRadarPauseFlag(false);
                             AvmApp.getInstance().getCameraView().showFullWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
@@ -304,11 +305,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                 }
-                            }
-                            if(mRvcState == 0x0){
-                                //rvc 开启状态
-                                mRvcState = 0x2;
-                                mHandler.sendEmptyMessageDelayed(MSG_CLOSE_RVC,2000);
                             }
                             break;
                         case DataDefine.ACT_ACTIVE_DUAL_CARD:
@@ -372,9 +368,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                    } else {
 //                        BvAvmJNIHelper.getInstance().bwDeleteCamera();
 //                    }
-                }else if(msg.what == MSG_CLOSE_RVC) {
-                    KLog.i("avmService close rvc ");
-                    CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0, 0x2);
                 }
             }
         };
@@ -388,8 +381,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             CanManager.getInstance().startConnect((v -> {
                 KLog.d("注册完成----fishTh ");
                 CameraViewModelHelper.getInstance().initActive();
-                //发送avm初始化状态
-                CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0,0x0);
+
             }));
         }, 0);
 
@@ -505,6 +497,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         }
     }
 
+    int turnLampSwSts = 0;
+//    long turnLampChangeTime = 0;
+    long leftTurnLChangeTime = 0;
+    long rightTurnLChangeTime = 0;
     private final CanManager.onSignalValueChangedListener mOnSignalValueChangedListener = (vehicleId, value) -> {
         if(AvmApp.getInstance().getCameraView() == null){
             KLog.d("AvmApp", "avm is null  vehicleId & value："+vehicleId +" :"+value);
@@ -514,6 +510,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d(" 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
                 int intValue = (int) value;
+                turnLampSwSts = intValue;
+//                turnLampChangeTime = System.currentTimeMillis();
                 if (intValue == 0) {
                     AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
@@ -521,26 +519,52 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 }
             }
         } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
-            KLog.d(" 转向 左边转向灯闪");
-            if (value instanceof Integer) {
-                int intValue = (int) value;
-                if (intValue == 0) {
-//                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
-                } else {
-//                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
+            leftTurnLChangeTime = System.currentTimeMillis();
+            KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime));
+            long delay = 800;
+            if (turnLampSwSts == 0) {
+                if ((leftTurnLChangeTime-rightTurnLChangeTime) < 500) { //双闪
+                    delay = 0;
                 }
+                AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
             }
+            AvmRuntime.self().updateChangeTime();
+//            if (value instanceof Integer) {
+//                int intValue = (int) value;
+//                if (intValue == 0) {
+//                    if (CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, 0) == 0
+//                            && CanManager.getInstance().getIntStatus(CLUSTER_RIGHT_TURN_LAMP, 0) == 0) {
+//                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 500);
+//                    }
+//                } else {
+////                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
+//                    AvmRuntime.self().updateChangeTime();
+//                }
+//            }
 //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_LEFT);
         } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
-            KLog.d(" 右边转向灯闪 ");
-            if (value instanceof Integer) {
-                int intValue = (int) value;
-                if (intValue == 0) {
-//                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
-                } else {
-//                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
+            rightTurnLChangeTime = System.currentTimeMillis();
+            KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime));
+            long delay = 800;
+            if (turnLampSwSts == 0) {
+                if ((rightTurnLChangeTime-leftTurnLChangeTime) < 500) { //双闪
+                    delay = 0;
                 }
+                AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
             }
+            AvmRuntime.self().updateChangeTime();
+//            if (value instanceof Integer) {
+//                int intValue = (int) value;
+//                if (intValue == 0) {
+//                    if (CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, 0) == 0
+//                            && CanManager.getInstance().getIntStatus(CLUSTER_LEFT_TURN_LAMP, 0) == 0) {
+//                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 500);
+//                    }
+//                } else {
+////                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
+//                    AvmRuntime.self().updateChangeTime();
+//                }
+//            }
 //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_RIGHT);
         } else if (vehicleId == VEHICLE_SPEED) {// 车速
             //KLog.d(" 车速 vehicleId = " + vehicleId + "  ,value = " + value);
@@ -615,7 +639,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                CameraViewModelHelper.getInstance().flWheelDir();
 
                 if (JNI_IN_THREAD_FLAG) {
-                    AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
+                    if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
                 } else {
                     CameraViewModelHelper.getInstance().flWheelSpd(object);
                 }
@@ -626,7 +650,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case AVM_BCS_RRWHEEL_SPD:
             case AVM_BCS_FRWHEEL_SPD:
             case AVM_WHEEL_DIRE_SPEED:
-                CameraViewModelHelper.getInstance().flWheelSpd(object);
+                if (JNI_IN_THREAD_FLAG) {
+                    if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
+                } else {
+                    CameraViewModelHelper.getInstance().flWheelSpd(object);
+                }
                 break;
 
         }
@@ -662,7 +690,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private boolean isCallFRadarSound = false;//前雷达音是否在播报
     private void setRadar(int vehicleId, Object object) {
 
-        if (vehicleId == CLUSTER_PAS_Distance  && object instanceof Integer[]) {
+        if ((vehicleId == CLUSTER_PAS_Distance || vehicleId == CLUSTER_PAS_FRONT_DISTANCE)  && object instanceof Integer[]) {
             //后雷达信号
             Integer[] arr = (Integer[]) object;// [0x00 ]
             if (arr.length == 0) {
