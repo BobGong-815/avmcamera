@@ -176,6 +176,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.d("[mCarPowerManager]  半功能  释放资源,释放摄像头");
+                    mHandler.removeMessages(MSG_CR_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     KLog.d("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
@@ -293,6 +295,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                             }
+                            AvmRuntime.self().setRadarPauseFlag(false);
                             AvmApp.getInstance().getCameraView().showFullWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
@@ -306,6 +309,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             break;
                         case DataDefine.ACT_ACTIVE_DUAL_CARD:
                             KLog.i("avmService____ ACT_ACTVE_DUAL_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);
+                            AvmRuntime.self().setRadarPauseFlag(false);
                             AvmApp.getInstance().getCameraView().showFullWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
@@ -345,19 +349,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 }
                             }
                             break;
-//                        case DataDefine.ACT_OVER_SPEED:
-//                            AvmRuntime.self().setOverExitFlag(true);
-//                            break;
-//                        case DataDefine.ACT_REDUCE_SPEED:
-//                            if (AvmRuntime.self().getOverExitFlag() != 0) {
-//                                AvmRuntime.self().setOverExitFlag(0);
-//
-//                                Message message = Message.obtain();
-//                                message.what = MSG_ACTION_ENTER;
-//                                message.arg1 = DataDefine.ACT_LEFT_CARD;
-//                                mHandler.sendMessage(message);
-//                            }
-//                            break;
                     }
                 } else if (msg.what == MSG_CR_CAMERA) {
                     if (!BvAvmJNIHelper.isAvmDeInit) {
@@ -380,19 +371,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 }
             }
         };
-
-        //快速启动
-        if(AvmApp.getInstance().getCameraView()!=null)
-            AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
-        mHandler.postDelayed(() -> {
-            if(AvmApp.getInstance().getCameraView()!=null)
-                AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
-            CanManager.getInstance().startConnect((v -> {
-                KLog.d("注册完成----fishTh ");
-                CameraViewModelHelper.getInstance().initActive();
-
-            }));
-        }, 0);
 
         mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 15 * 1000);
 
@@ -529,6 +507,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
 //                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
+                    AvmRuntime.self().updateChangeTime();
                 }
             }
 //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_LEFT);
@@ -540,6 +519,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
 //                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
+                    AvmRuntime.self().updateChangeTime();
                 }
             }
 //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_RIGHT);
@@ -616,7 +596,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                CameraViewModelHelper.getInstance().flWheelDir();
 
                 if (JNI_IN_THREAD_FLAG) {
-                    AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
+                    if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
                 } else {
                     CameraViewModelHelper.getInstance().flWheelSpd(object);
                 }
@@ -627,7 +607,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             case AVM_BCS_RRWHEEL_SPD:
             case AVM_BCS_FRWHEEL_SPD:
             case AVM_WHEEL_DIRE_SPEED:
-                CameraViewModelHelper.getInstance().flWheelSpd(object);
+                if (JNI_IN_THREAD_FLAG) {
+                    if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) AvmApp.getInstance().getCameraView().getViewModel().setWheelSpeed(object);
+                } else {
+                    CameraViewModelHelper.getInstance().flWheelSpd(object);
+                }
                 break;
 
         }
@@ -663,7 +647,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private boolean isCallFRadarSound = false;//前雷达音是否在播报
     private void setRadar(int vehicleId, Object object) {
 
-        if (vehicleId == CLUSTER_PAS_Distance  && object instanceof Integer[]) {
+        if ((vehicleId == CLUSTER_PAS_Distance || vehicleId == CLUSTER_PAS_FRONT_DISTANCE)  && object instanceof Integer[]) {
             //后雷达信号
             Integer[] arr = (Integer[]) object;// [0x00 ]
             if (arr.length == 0) {
