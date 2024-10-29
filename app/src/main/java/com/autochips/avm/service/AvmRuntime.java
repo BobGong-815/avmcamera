@@ -29,6 +29,7 @@ import java.util.List;
 
 import me.goldze.mvvmhabit.utils.KLog;
 
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SELECT_STATE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
 
 /**
@@ -102,7 +103,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N, DataDefine.GEAR_P},
                 new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
-                new int[]{DataDefine.EVT_SHIFT_R},
+                new int[]{DataDefine.EVT_SHIFT_R,DataDefine.EVT_SHIFT_RVC_D,DataDefine.EVT_SHIFT_RVC_N},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_REAR_VIEW}));
 //        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-2-2
 //                new int[]{DataDefine.GEAR_P},

@@ -23,6 +23,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AV
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RSR_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SAS_STEERING_ANGLE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_EPS_STEERING_ANGLE_VD;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SELECT_STATE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_UINM_TURN_LIGHT_SW_ST;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_WHEEL_DIRE_SPEED;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.BCM_HIGH_BEAM_STATUS;
@@ -129,6 +130,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static int MSG_ACTION_EXIT = 2;
     public static int MSG_CR_CAMERA = 3;
     public static int MSG_DEL_CAMERA = 4;
+    public static int MSG_CLOSE_RVC = 5;
 
     private String exit_action = "action.syncore.EOL.mode";
     private String open_act = "action.syncore.OPEN.mode";
@@ -308,6 +310,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                     startActivity(intent);
                                 }
                             }
+                            if(CameraViewModelHelper.getInstance().mRvcState == 0x0){
+                                //rvc 开启状态
+                                CameraViewModelHelper.getInstance().mRvcState = 0x4;
+                                mHandler.sendEmptyMessageDelayed(MSG_CLOSE_RVC,2000);
+                            }
                             break;
                         case DataDefine.ACT_ACTIVE_DUAL_CARD:
                             KLog.i("avmService____ ACT_ACTVE_DUAL_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);
@@ -370,6 +377,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                    } else {
 //                        BvAvmJNIHelper.getInstance().bwDeleteCamera();
 //                    }
+                }else if(msg.what == MSG_CLOSE_RVC){
+                    KLog.i("avmService close rvc ");
+                    CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0,0x2);
                 }
             }
         };
@@ -1076,6 +1086,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     CanManager.getInstance().startConnect((v -> {
                         KLog.d("注册完成----fishTh ");
                         CameraViewModelHelper.getInstance().initActive();
+                        //发送avm初始化状态
+                        CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0,0x0);
                     }));
                 }, 100);
                 mHandler.postDelayed(()->{

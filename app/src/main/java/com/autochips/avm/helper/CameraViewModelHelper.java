@@ -22,6 +22,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.BC
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.BCM_LOW_BEAM_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CABIN_DOOR_OPEN_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_VCU_GEAR_LVL_DISP;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SELECT_STATE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.POWER_PARKING_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
@@ -844,12 +845,21 @@ public class CameraViewModelHelper {
         AvmApp.getInstance().getCameraView().viewShowStatus();
     }
 
+    public int mRvcState = 0x0;//默认是退出状态
     /**
      * 快速启动时，延时2s 触发AVM 打开；
      */
     public void initActive() {
         int gear_R = CanManager.getInstance().getIntStatus(CLUSTER_VCU_GEAR_LVL_DISP, 0);
         KLog.d(valGear + " 注册完成 获取挡位信息  valGear :" + gear_R);
+//        mRvcState = CanManager.getInstance().getIntStatus(AVM_SELECT_STATE, 0);
+//        KLog.d("AVM_SELECT_STATE  rvcState :" + rvcState);
+//        if(mRvcState != 0x2){
+//            //rcv没有显示
+//            KLog.d("AVM_SELECT_STATE  通知rvc退出");
+//            CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0x4);
+//            mRvcState = 0x4;
+//        }
         if (AvmService.isCalibration) {
             return;
         }
