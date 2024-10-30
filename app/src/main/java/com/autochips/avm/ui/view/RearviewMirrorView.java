@@ -2,6 +2,7 @@ package com.autochips.avm.ui.view;
 
 import static android.hardware.automotive.vehicle.V2_0.VehicleProperty.SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.REARVIEW_MIRROR_ADJUSTMENT;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.ACU_FOLD_UNFOLD_CTL_REQ;
 
 import android.app.UiModeManager;
 import android.content.Context;
@@ -184,7 +185,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
 
     @Override
     public void onClick(View view) {
-        KLog.d("后视镜11----");
+        KLog.d("后视镜11---- EEA:"+AvmApp.EEA);
         if (view.getId() == R.id.ll_setting_rearview_mirror_down) {
             // 外后视镜倒车下翻
             ThreadPoolUtil.getInstance().execute(() -> {
@@ -213,14 +214,22 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             rearviewMirrorModel.setRunning(true);
 
             Integer[] arrUnfold = {1, 10};
-
-            CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
+            //区分3.0平台
+            if(AvmApp.EEA == 2){
+                CanManager.getInstance().setIntProperty(ACU_FOLD_UNFOLD_CTL_REQ, 0, 2);
+            }else {
+                CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT,0, arrUnfold);
+            }
             RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_expand));
         } else if (view.getId() == R.id.ll_setting_fold) {//折叠
             rearviewMirrorModel.startTimer();
             rearviewMirrorModel.setRunning(true);
             Integer[] arrFold = {1, 9};
-            CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
+            if(AvmApp.EEA == 2){
+                CanManager.getInstance().setIntProperty(ACU_FOLD_UNFOLD_CTL_REQ, 0, 1);
+            }else {
+                CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
+            }
             RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_fold));
         }
 
