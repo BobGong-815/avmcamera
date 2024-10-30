@@ -70,6 +70,8 @@ public class DataDefine {
     public final static int EVT_SHIFT_P = 77;
     public final static int EVT_SHIFT_D = 78;
     public final static int EVT_SHIFT_N = 79;
+    public final static int EVT_SHIFT_RVC_N = 97;
+    public final static int EVT_SHIFT_RVC_D = 98;
     public final static int EVT_SHIFT_P_30S = 80;
     public final static int EVT_SHIFT_D_OVER_SPEED = 81;
     public final static int EVT_SHIFT_N_OVER_SPEED = 82;
