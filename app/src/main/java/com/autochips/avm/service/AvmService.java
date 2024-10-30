@@ -499,6 +499,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             SystemProperties.set("avm_installed", "1");
             SystemProperties.set("settingPathLine", "1");
             SystemProperties.set("signalActivates","1");
+            SystemProperties.set("activatedPanorama","1");
+            SystemProperties.set("settingRadarActivatedPanorama","1");
         }
     }
 
@@ -692,7 +694,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.e("Radar param length is 0.");
                 return;
             }
-            KLog.i(arr.length + "  length 雷达检测距离CLUSTER_PAS_Distance ： " + vehicleId + "  value   " + Arrays.toString(arr));
+            KLog.i(arr.length + "  length 雷达检测距离CLUSTER_PAS_Distance ： " + vehicleId + "  value   " + Arrays.toString(arr)+"EEA:"+AvmApp.EEA);
             if(vehicleId == CLUSTER_PAS_Distance) {
                 //后雷达
                 int rMir = arr[0];//后右中
@@ -705,12 +707,24 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_RRDistance, rRight);
                 isCallRRadarSound = rRight <= 60 || rLeft <= 60 || rMil <= 90 || rMir <= 90;
             }
-            if(vehicleId == CLUSTER_PAS_FRONT_DISTANCE) {
+            if(vehicleId == CLUSTER_PAS_FRONT_DISTANCE || (AvmApp.EEA == 2 && vehicleId == CLUSTER_PAS_Distance)) {
                 //前雷达
-                int fMir = arr[0];//前右中
-                int fMil = arr[1];//前左中
-                int fRight = arr[2];//前右
-                int fLeft = arr[3];//前左
+                int fMir;//前右中
+                int fMil;//前左中
+                int fRight;//前右
+                int fLeft;//前左
+                if(AvmApp.EEA == 2){
+                    //3.0平台信号适配
+                    fMir = arr[8];//前右中
+                    fMil = arr[9];//前左中
+                    fRight = arr[6];//前右
+                    fLeft = arr[7];//前左
+                }else {
+                    fMir = arr[0];//前右中
+                    fMil = arr[1];//前左中
+                    fRight = arr[2];//前右
+                    fLeft = arr[3];//前左
+                }
                 AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_PAS_FLDistance, fLeft);
                 AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_FLMidDistance, fMil);
                 AvmApp.getInstance().getCameraView().setRadar(CLUSTER_PAS_FRMidDistance, fMir);

@@ -262,12 +262,10 @@
 
                 <TextView
                     android:id="@+id/rearRadarFrontId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30px"
+                    android:layout_width="84px"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="55px"
-                    android:minWidth="84px"
-                    android:layout_marginLeft="16px"
-                    android:layout_marginRight="16px"
+                    android:minHeight="30px"
                     android:gravity="center"
                     android:textAlignment="center"
                     android:background="@drawable/selector_radar_bg"
@@ -280,8 +278,8 @@
                     android:textSize="20px" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="30px"
+                    android:layout_width="84px"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="20px"
                     android:background="@drawable/selector_radar_bg"
                     android:gravity="center"
@@ -292,11 +290,9 @@
 
                     <TextView
                         android:id="@+id/rearRadarImgId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:minWidth="84px"
-                        android:layout_marginLeft="16px"
-                        android:layout_marginRight="16px"
+                        android:layout_width="84px"
+                        android:layout_height="wrap_content"
+                        android:minHeight="30px"
                         android:gravity="center"
                         android:text="@{viewModel.info.radarDistance}"
                         android:textColor="@color/white"

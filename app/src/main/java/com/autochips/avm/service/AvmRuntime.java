@@ -1886,6 +1886,7 @@ public class AvmRuntime {
 
     public void updateTiming30sFlag() {
         // 变更 timing30sFlag 逻辑
+
         if (dataSts.events.size() > 0) {
             if (dataSts.events.contains(DataDefine.EVT_SHIFT_N) || dataSts.events.contains(DataDefine.EVT_SHIFT_D)) {
                 if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
