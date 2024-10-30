@@ -673,6 +673,7 @@ public class CameraView extends View implements LifecycleOwner {
             red3drightRear1 = mViewCameraBinding.red3drightRear1;
             cameraImageLayoutLift = mViewCameraBinding.cameraImageLayoutLift;
             cameraIvLift = mViewCameraBinding.cameraIvLift;
+            rlClose = mViewCameraBinding.rlClose;
         }
     }
 
@@ -690,8 +691,9 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void setCurrentGear(int gear) {
         if (rearviewMirrorView.getVisibility() == View.VISIBLE){
-            rearviewMirrorView.gearInfo(gear == 3 ? 1 : 0);
+            rearviewMirrorView.gearInfo(AvmRuntime.self().isRearGearSts() ? 1 : 0);
         }
+        rlClose.setVisibility(AvmRuntime.self().isRearGearSts() ? GONE : VISIBLE);
     }
 
     /**
@@ -1405,7 +1407,7 @@ public class CameraView extends View implements LifecycleOwner {
         isSmartWin = true;
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width_smart) + 142;
         mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
-        if(rlClose != null){
+        if(mViewCameraRightBinding != null){
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
             layoutParams.setMarginEnd(115);
             rlClose.setLayoutParams(layoutParams);
@@ -1460,7 +1462,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
         cameraBinding.frameLayoutId.setVisibility(GONE);
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
-        if(rlClose != null){
+        if(mViewCameraRightBinding != null){
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
             layoutParams.setMarginEnd(51);
             rlClose.setLayoutParams(layoutParams);
