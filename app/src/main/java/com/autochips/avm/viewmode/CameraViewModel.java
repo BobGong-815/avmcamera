@@ -227,15 +227,15 @@ public class CameraViewModel extends BaseCameraViewModel {
     public void closeAvm() {// 手动关闭
         KLog.d("closeAvm");
         AvmRuntime.self().artificialExit();
-        setRunning(false);
-        CameraViewModelHelper.getInstance().setRadarActiveTow(true);
-        CameraViewModelHelper.getInstance().dismissView(false, 0, "2");
-
-        if (AvmService.JNI_IN_THREAD_FLAG) {
-            reset3D();
-        } else {
-            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
-        }
+//        setRunning(false);
+//        CameraViewModelHelper.getInstance().setRadarActiveTow(true);
+//        CameraViewModelHelper.getInstance().dismissView(false, 0, "2");
+//
+//        if (AvmService.JNI_IN_THREAD_FLAG) {
+//            reset3D();
+//        } else {
+//            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+//        }
     }
 
 
