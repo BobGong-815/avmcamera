@@ -1487,8 +1487,10 @@ public class AvmRuntime {
     public void artificialExit() {
         synchronized (syncObj) {
             KLog.d(" artificialExit(). ");
-            setOverExitFlag(0);
-            dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
+            if (dataSts.gears[0] != DataDefine.GEAR_R) {
+                setOverExitFlag(0);
+                dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
+            }
             dataSts.lastChangeTime = System.currentTimeMillis();
 
             syncObj.notify();
