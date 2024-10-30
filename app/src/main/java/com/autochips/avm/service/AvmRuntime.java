@@ -70,8 +70,8 @@ public class AvmRuntime {
         configTable = new ArrayList<>();
         //非全景(状态0)
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-1-1
-                new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.GEAR_P, DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_TURN_LAMP_ACTIVE, DataDefine.EVT_RADAR_ACTIVE, DataDefine.EVT_RADAR_TURN_LAMP_ACTIVE},
                 new int[]{DataDefine.ACT_LEFT_CARD, DataDefine.ACT_AERIAL_VIEW}));
@@ -1731,6 +1731,13 @@ public class AvmRuntime {
                         break;
                     }
                 }
+                if (cfgItem.actions[0] == DataDefine.ACT_EXIT
+                        && cfgItem.fvState == DataDefine.FV_STATE_LEFT_CARD
+                        && dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET)
+                        && dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP) {
+                    KLog.w("转向灯复位的时候，雷达仍然处于激活状态，不退出左卡片。。。");
+                    break;
+                }
                 flag = true;
                 KLog.d("find match cfg : " + cfgItem);
                 if (dataSts.actions != null) {
@@ -1886,7 +1893,6 @@ public class AvmRuntime {
 
     public void updateTiming30sFlag() {
         // 变更 timing30sFlag 逻辑
-
         if (dataSts.events.size() > 0) {
             if (dataSts.events.contains(DataDefine.EVT_SHIFT_N) || dataSts.events.contains(DataDefine.EVT_SHIFT_D)) {
                 if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
