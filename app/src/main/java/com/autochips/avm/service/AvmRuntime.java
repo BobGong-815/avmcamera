@@ -29,6 +29,7 @@ import java.util.List;
 
 import me.goldze.mvvmhabit.utils.KLog;
 
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SELECT_STATE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
 
 /**
@@ -69,8 +70,8 @@ public class AvmRuntime {
         configTable = new ArrayList<>();
         //非全景(状态0)
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-1-1
-                new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.GEAR_P, DataDefine.GEAR_D, DataDefine.GEAR_N},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_RADAR_TURN_LAMP, DataDefine.SENSOR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
                 new int[]{DataDefine.EVT_TURN_LAMP_ACTIVE, DataDefine.EVT_RADAR_ACTIVE, DataDefine.EVT_RADAR_TURN_LAMP_ACTIVE},
                 new int[]{DataDefine.ACT_LEFT_CARD, DataDefine.ACT_AERIAL_VIEW}));
@@ -102,7 +103,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.GEAR_D, DataDefine.GEAR_N, DataDefine.GEAR_P},
                 new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_RADAR, DataDefine.SENSOR_TURN_LAMP, DataDefine.SENSOR_RADAR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D, DataDefine.MEM_MODE_3D, DataDefine.MEM_MODE_WIDE_ANGLE},
-                new int[]{DataDefine.EVT_SHIFT_R},
+                new int[]{DataDefine.EVT_SHIFT_R,DataDefine.EVT_SHIFT_RVC_D,DataDefine.EVT_SHIFT_RVC_N},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_REAR_VIEW}));
 //        configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-2-2
 //                new int[]{DataDefine.GEAR_P},
@@ -1486,8 +1487,10 @@ public class AvmRuntime {
     public void artificialExit() {
         synchronized (syncObj) {
             KLog.d(" artificialExit(). ");
-            setOverExitFlag(0);
-            dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
+            if (dataSts.gears[0] != DataDefine.GEAR_R) {
+                setOverExitFlag(0);
+                dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
+            }
             dataSts.lastChangeTime = System.currentTimeMillis();
 
             syncObj.notify();
@@ -1728,6 +1731,13 @@ public class AvmRuntime {
                         break;
                     }
                 }
+                if (cfgItem.actions[0] == DataDefine.ACT_EXIT
+                        && cfgItem.fvState == DataDefine.FV_STATE_LEFT_CARD
+                        && dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET)
+                        && dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP) {
+                    KLog.w("转向灯复位的时候，雷达仍然处于激活状态，不退出左卡片。。。");
+                    break;
+                }
                 flag = true;
                 KLog.d("find match cfg : " + cfgItem);
                 if (dataSts.actions != null) {
@@ -1905,6 +1915,9 @@ public class AvmRuntime {
                 }
             }
             if (dataSts.events.contains(DataDefine.EVT_RADAR_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                if (dataSts.timing30sFlag/*主动AVM，雷达激活的情况下挂P档*/) {//正在30s计时
+                    return;
+                }
                 if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
                     if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
                         if (dataSts.gears[0] != DataDefine.GEAR_R) {
@@ -1924,6 +1937,9 @@ public class AvmRuntime {
                 }
             }
             if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                if (dataSts.timing30sFlag/*主动AVM，转向激活的情况下挂P档*/) {//正在30s计时
+                    return;
+                }
                 if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
                     if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
                         if (dataSts.gears[0] != DataDefine.GEAR_R) {

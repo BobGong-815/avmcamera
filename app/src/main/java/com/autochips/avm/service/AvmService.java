@@ -509,7 +509,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         }
     }
 
-    int turnLampSwSts = 0;
+    int turnLampSwSts = -1;
 //    long turnLampChangeTime = 0;
     long leftTurnLChangeTime = 0;
     long rightTurnLChangeTime = 0;
