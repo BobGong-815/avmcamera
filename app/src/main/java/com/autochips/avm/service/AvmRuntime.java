@@ -1915,6 +1915,9 @@ public class AvmRuntime {
                 }
             }
             if (dataSts.events.contains(DataDefine.EVT_RADAR_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                if (dataSts.timing30sFlag/*主动AVM，雷达激活的情况下挂P档*/) {//正在30s计时
+                    return;
+                }
                 if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
                     if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
                         if (dataSts.gears[0] != DataDefine.GEAR_R) {
@@ -1934,6 +1937,9 @@ public class AvmRuntime {
                 }
             }
             if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) && dataSts.fvSts[0] != DataDefine.FV_STATE_NON) {
+                if (dataSts.timing30sFlag/*主动AVM，转向激活的情况下挂P档*/) {//正在30s计时
+                    return;
+                }
                 if (dataSts.sensors[0] == DataDefine.SENSOR_NONE) {
                     if (dataSts.fvSts[0] == DataDefine.FV_STATE_LEFT_CARD || dataSts.fvSts[0] == DataDefine.FV_STATE_PASSIVE_DUAL_CARD) {
                         if (dataSts.gears[0] != DataDefine.GEAR_R) {
