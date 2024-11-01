@@ -504,7 +504,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         }
     }
 
-    int turnLampSwSts = 0;
+    int turnLampSwSts = -1;
 //    long turnLampChangeTime = 0;
     long leftTurnLChangeTime = 0;
     long rightTurnLChangeTime = 0;
@@ -517,6 +517,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d(" 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
                 int intValue = (int) value;
+                turnLampSwSts = intValue;
                 if (intValue == 0) {
                     AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
