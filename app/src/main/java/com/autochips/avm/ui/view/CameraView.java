@@ -1160,6 +1160,7 @@ public class CameraView extends View implements LifecycleOwner {
             }
             KLog.d("tabSelectListener settingView = " + isChangeGear);
             if (settingView.getVisibility() == View.VISIBLE) {
+                llSetting.setSelected(false);
                 settingView.setVisibility(GONE);
                 liftBg.setVisibility(GONE);
             }
@@ -1169,6 +1170,7 @@ public class CameraView extends View implements LifecycleOwner {
                 liftBg.setVisibility(GONE);
             }
             if (rearviewMirrorView.getVisibility() == VISIBLE) {
+                llBackMirror.setSelected(false);
                 rearviewMirrorView.setVisibility(View.GONE);
                 liftBg.setVisibility(GONE);
             }
