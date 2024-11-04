@@ -685,6 +685,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
     private boolean isCallRRadarSound = false;//后雷达音是否在播报
     private boolean isCallFRadarSound = false;//前雷达音是否在播报
+    private boolean isFirstRadarPas = true;//判断第一次雷达信号
     private void setRadar(int vehicleId, Object object) {
 
         if ((vehicleId == CLUSTER_PAS_Distance || vehicleId == CLUSTER_PAS_FRONT_DISTANCE)  && object instanceof Integer[]) {
@@ -695,6 +696,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 return;
             }
             KLog.i(arr.length + "  length 雷达检测距离CLUSTER_PAS_Distance ： " + vehicleId + "  value   " + Arrays.toString(arr)+"EEA:"+AvmApp.EEA);
+            if((AvmApp.EEA == 2 && vehicleId == CLUSTER_PAS_Distance) && isFirstRadarPas){
+                KLog.e("is first pas");
+                isFirstRadarPas = false;
+                return;
+            }
             if(vehicleId == CLUSTER_PAS_Distance) {
                 //后雷达
                 int rMir = arr[0];//后右中
