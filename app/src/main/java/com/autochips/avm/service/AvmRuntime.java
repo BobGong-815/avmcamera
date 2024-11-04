@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
@@ -1487,9 +1488,14 @@ public class AvmRuntime {
     public void artificialExit() {
         synchronized (syncObj) {
             KLog.d(" artificialExit(). ");
-            if (dataSts.gears[0] != DataDefine.GEAR_R) {
+            if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
                 setOverExitFlag(0);
                 dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
+            } else {
+                if (dataSts.gears[0] != DataDefine.GEAR_R) {
+                    setOverExitFlag(0);
+                    dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
+                }
             }
             dataSts.lastChangeTime = System.currentTimeMillis();
 
