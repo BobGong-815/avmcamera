@@ -895,21 +895,13 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
             if (arr.length < 2) {
                 KLog.e(vehicleId + " DIAG_31_ vehicleId 标定-进入下线标定请求 value 长度错误:" + Arrays.toString(arr));
-                if (arr.length == 1 && arr[0] == -128) {
-                    //
-                } else {
-                    return;
-                }
+                return;
             }
             switch (vehicleId) {
                 case DIAG_31_3801_AVM_ENTER_CALIBRATION_REQ://进入下线标定请求
                     KLog.i(" 步骤 1  标定-进入下线标定请求:DIAG_31_3801_AVM_ENTER_CALIBRATION_REQ:" + Arrays.toString(arr) + "  版本号： " + ServiceUtils.getVersionName());
                     if (arr.length != 4) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
 
                     CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_UNDISTORT);
@@ -928,11 +920,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 case DIAG_31_3801_AVM_ENTER_CALIBRATION_RESULT_REQ://进入下线标定结果请求
                     KLog.i("步骤 2  标定-进入下线标定结果请求:DIAG_31_3801_AVM_ENTER_CALIBRATION_RESULT_REQ:" + Arrays.toString(arr));
                     if (arr.length != 4) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
                     arrBack = new byte[]{0x00, 0x01, 0x00, 0x00};
                     getCalStatus(vehicleId, "DIAG_31_3801_AVM_ENTER_CALIBRATION_RESULT_REQ");
@@ -947,11 +935,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 case DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_REQ://标定预检查请求
                     KLog.i("步骤 3  标定-标定预检查请求:DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_REQ:" + Arrays.toString(arr));
                     if (arr.length != 4) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
                     if (getCalStatus(vehicleId, "DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_REQ") != 3) {
                         KLog.i("标定-未进入:DIAG_31_3801_AVM_ENTER_CALIBRATION_RESULT_REQ");
@@ -966,11 +950,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 case DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_RESULT_REQ://标定预结果结果请求
                     KLog.i("步骤 4 标定-标定预结果结果请求:DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_RESULT_REQ:" + Arrays.toString(arr));
                     if (arr.length < 2) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
                     arrBack = new byte[]{0x00, 0x00, 0x00, 0x00};
                     if (getCalStatus(vehicleId, "查询结果") != 4) {
@@ -986,11 +966,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
 
                     if (arr.length != 8) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
 
                     if (AvmService.JNI_IN_THREAD_FLAG) {
@@ -1006,11 +982,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     //arrBack = new byte[]{0x00, 0x00, 0x00, 0x00};
                     //CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
                     if (arr.length != 4) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
 
                     if (AvmService.JNI_IN_THREAD_FLAG) {
@@ -1023,11 +995,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
                     KLog.i("步骤 7  标定-下线标定检查:DIAG_31_3806_AVM_CALIBRATION_CHECK_REQ:" + Arrays.toString(arr));
                     if (arr.length < 2) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
 
                     CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESP, 0, arrBack);
@@ -1035,11 +1003,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 case DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_REQ://下线标定检查结果请求
                     KLog.i("步骤 8 标定-下线标定检查结果请求:DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_REQ:" + Arrays.toString(arr));
                     if (arr.length != 4) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
                     arrBack = new byte[]{0x00, 0x02, 0x00, 0x00};
 
@@ -1052,11 +1016,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
                     //arrBack = new byte[]{0x00};
                     if (arr.length < 2) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
 
                     CanManager.getInstance().setByteArray(DIAG_31_380D_AVM_READ_FAIL_REASON_RESP, 0, arrBack);
@@ -1064,11 +1024,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 case DIAG_31_380D_AVM_READ_FAIL_REASON_RESULT_REQ://读取标定失败原因结果请求
                     KLog.i("步骤 10 标定-读取标定失败原因结果请求:DIAG_31_380D_AVM_READ_FAIL_REASON_RESULT_REQ:" + Arrays.toString(arr));
                     if (arr.length != 4) {
-                        if (arr.length == 1 && arr[0] == -128) {
-                            //
-                        } else {
-                            return;
-                        }
+                        return;
                     }
                     AvmApp.getInstance().getCameraView().calibrationError();
                     break;
