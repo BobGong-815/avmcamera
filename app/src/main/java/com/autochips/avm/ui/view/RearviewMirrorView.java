@@ -220,7 +220,9 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             }else {
                 CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT,0, arrUnfold);
             }
-            RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_expand));
+            if(AvmRuntime.self().getCurrentSped() <= 15) {
+                RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_expand));
+            }
         } else if (view.getId() == R.id.ll_setting_fold) {//折叠
             rearviewMirrorModel.startTimer();
             rearviewMirrorModel.setRunning(true);
@@ -230,7 +232,9 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             }else {
                 CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
             }
-            RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_fold));
+            if(AvmRuntime.self().getCurrentSped() <= 15) {
+                RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_fold));
+            }
         }
 
     }

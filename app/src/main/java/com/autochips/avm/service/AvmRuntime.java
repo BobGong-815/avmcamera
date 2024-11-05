@@ -1678,6 +1678,13 @@ public class AvmRuntime {
         return DataDefine.MEM_MODE_2D;
     }
 
+    public float getCurrentSped(){
+        if(dataSts != null){
+            return dataSts.currSpeed;
+        }
+        return 0.0f;
+    }
+
     /*
      * 该函数内部需要更新当前配置
      * */
