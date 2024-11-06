@@ -579,19 +579,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d(" 挡位 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
                 int gear = (int) value;
+                if (gear == 0) return;
                 AvmRuntime.self().gearChange(gear);
-                /*if (gear == 3) {
-                    bvavmJNI.bwSetCarIsDgear(0);
-                    bvavmJNI.bwSetCarIsBack((byte) 1);
-                } else if (gear == 1) {
-                    bvavmJNI.bwSetCarIsDgear(1);
-                    bvavmJNI.bwSetCarIsBack((byte) 0);
-                } else {
-                    bvavmJNI.bwSetCarIsDgear(0);
-                    bvavmJNI.bwSetCarIsBack((byte) 0);
-                }
-
-                 */
                 BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
                 if (gear == 4) {
                     BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
