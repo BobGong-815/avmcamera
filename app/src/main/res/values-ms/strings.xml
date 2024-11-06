@@ -10,7 +10,7 @@
     <string name="setting_centre">Tengah</string>
     <string name="setting_high">Tinggi</string>
     <string name="setting_radar_activated_panorama">Radar aktifkan\npemandangan panorama</string>
-    <string name="setting_radar_activated_panorama_content">Semasa kelajuan &lt;12km/j radar hadapan memberi amarandan masuk ke panorama</string>
+    <string name="setting_radar_activated_panorama_content">Semasa kelajuan &lt;15km/j radar hadapan memberi amarandan masuk ke panorama</string>
     <string name="setting_path_line">Garis lintasan</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Lampu isyarat belok aktifkan\npemandangan panorama</string>

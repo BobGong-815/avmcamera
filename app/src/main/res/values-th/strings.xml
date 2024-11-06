@@ -10,7 +10,7 @@
     <string name="setting_centre">กลาง</string>
     <string name="setting_high">สูง</string>
     <string name="setting_radar_activated_panorama">พาโนรามาที่เปิดใช้งานสัญญาณไฟเลี้ยว</string>
-    <string name="setting_radar_activated_panorama_content">เข้าสู่ภาพพาโนรามาเมื่อความเร็วรถ &lt;12 กม./ชม. และเรดาร์ด้านหน้าส่งสัญญาณแจ้งเตือน</string>
+    <string name="setting_radar_activated_panorama_content">เข้าสู่ภาพพาโนรามาเมื่อความเร็วรถ &lt;15 กม./ชม. และเรดาร์ด้านหน้าส่งสัญญาณแจ้งเตือน</string>
     <string name="setting_path_line">เส้นวงโคจร</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">สัญญาณไฟเลี้ยว\nเปิดใช้งานภาพพาโนรามา</string>

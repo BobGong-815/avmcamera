@@ -10,7 +10,7 @@
     <string name="setting_centre">Middels</string>
     <string name="setting_high">Høy</string>
     <string name="setting_radar_activated_panorama">Panoramavisning aktivertnår radaren er på</string>
-    <string name="setting_radar_activated_panorama_content">Panoramavisning aktiveres i hastigheter under 12 km/t og når den fremre alarmen piper</string>
+    <string name="setting_radar_activated_panorama_content">Panoramavisning aktiveres i hastigheter under 15 km/t og når den fremre alarmen piper</string>
     <string name="setting_path_line">Sporlinje</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Panoramautsikt aktiveresnår blinklyset er på</string>

@@ -10,7 +10,7 @@
     <string name="setting_centre">Medio</string>
     <string name="setting_high">Alta</string>
     <string name="setting_radar_activated_panorama">Vista panorámica activada cuando el radar está encendido</string>
-    <string name="setting_radar_activated_panorama_content">Se activa la vista panorámica cuando la velocidad del vehículo es &lt;12 km/h y el radar delantero emite una alerta.</string>
+    <string name="setting_radar_activated_panorama_content">Se activa la vista panorámica cuando la velocidad del vehículo es &lt;15 km/h y el radar delantero emite una alerta.</string>
     <string name="setting_path_line">Línea de vía</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Vista panorámica activada al encender los intermitentes</string>

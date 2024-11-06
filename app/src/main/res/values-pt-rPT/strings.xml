@@ -10,7 +10,7 @@
     <string name="setting_centre">Médio</string>
     <string name="setting_high">Alto</string>
     <string name="setting_radar_activated_panorama">Ativação de panoramapor radar</string>
-    <string name="setting_radar_activated_panorama_content">O panorama é ativado com um aviso sonoro em velocidade >12 km/h</string>
+    <string name="setting_radar_activated_panorama_content">O panorama é ativado com um aviso sonoro em velocidade >15 km/h</string>
     <string name="setting_path_line">Linha de trilha</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Visão panorâmica quando a luzdo sinal de pisca está acesa</string>
