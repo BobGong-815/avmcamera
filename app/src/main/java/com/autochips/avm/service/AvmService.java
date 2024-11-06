@@ -589,6 +589,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //            KLog.d(" wheel angle , value = " + value);
             if (value instanceof Float) {
                 float angle = (float) value;
+                //错误转角不下发
+                if(angle > 5000 || angle < -5000){
+                    return;
+                }
                 if (angle > 540) {
                     angle = 540;
                 } else if (angle < -540) {
