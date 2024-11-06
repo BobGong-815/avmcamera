@@ -280,7 +280,6 @@ public class BvAvmJNIHelper {
 //    public static native int bwSetCarIsBack(byte flag);
     public void updateTrajLineStatus(int gear) {
         // 轨迹线需要 bwSetTrajLineStatus(byte flag); 开启
-        if (gear == 0) return;
         synchronized (syncObj) {
             if (gear == 3) {// R档
                 bvavmJNI.bwSetCarIsDgear(0);

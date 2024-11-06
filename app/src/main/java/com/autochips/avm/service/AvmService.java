@@ -605,7 +605,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         } else if (vehicleId == CLUSTER_VCU_GEAR_LVL_DISP) {// 挡位
             KLog.d(" 挡位 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
-                int gear = (int) value;
+                int gear = (int) value;// 第一次开机后的默认值
+                if (gear == 0) return;
                 AvmRuntime.self().gearChange(gear);
                 BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
                 if (gear == 4) {
