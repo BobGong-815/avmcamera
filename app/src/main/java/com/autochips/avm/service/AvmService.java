@@ -564,7 +564,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 float angle = (float) value;
                 //错误转角不下发
                 if(angle > 5000 || angle < -5000){
-                    return;
+                    angle = 0.0f;
                 }
                 if (angle > 540) {
                     angle = 540;
