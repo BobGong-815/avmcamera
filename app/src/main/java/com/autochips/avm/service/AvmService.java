@@ -416,9 +416,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        KLog.d(flags + "[onStartCommand]" + startId);
+        KLog.d(flags + "[onStartCommand]" + startId + ", version is " + ServiceUtils.getVersionName());
         //adb指令模拟启动service带参数调试功能
-        KLog.d("XXX", "Build.BOARD : " + Build.BOARD);
         if(AvmApp.getInstance().getCameraView() == null){
             KLog.d("AvmApp", "avm is null ");
             return START_STICKY;
