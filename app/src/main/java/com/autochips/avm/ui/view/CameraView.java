@@ -1806,9 +1806,7 @@ public class CameraView extends View implements LifecycleOwner {
             liftBg.setVisibility(VISIBLE);
         }
         KLog.d("setBtnRearSelectView = " + btnRearSelect);
-        if (AvmRuntime.self().isRearGearSts()) {
-            rearviewMirrorView.setRearviewMirrorDownViewStatus(1);
-        }
+        rearviewMirrorView.setRearviewMirrorDownViewStatus(AvmRuntime.self().isRearGearSts() ? 1 : 0);
     }
 
     @Override
