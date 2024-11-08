@@ -1709,6 +1709,7 @@ public class AvmRuntime {
     }
 
     private void handleEvent() {
+//        KLog.d("(System.currentTimeMillis() - dataSts.lastChangeTime) is " + (System.currentTimeMillis() - dataSts.lastChangeTime) + " , timing30sFlag = " + dataSts.timing30sFlag);
         if ((System.currentTimeMillis() - dataSts.lastChangeTime) > 30000) {
             if (dataSts.timing30sFlag) {// 开了P档延时30s退出，且avm显示的时候，挂了P档
                 dataSts.timing30sFlag = false;
@@ -1918,7 +1919,7 @@ public class AvmRuntime {
     public void updateTiming30sFlag() {
         // 变更 timing30sFlag 逻辑
         if (dataSts.events.size() > 0) {
-            if (dataSts.events.contains(DataDefine.EVT_SWITCH_2_3D)
+            if (dataSts.events.contains(DataDefine.EVT_SWITCH_2_2D)
                 || dataSts.events.contains(DataDefine.EVT_SWITCH_2_3D)
                 || dataSts.events.contains(DataDefine.EVT_SWITCH_2_WIDE_ANGLE)) {
                 return;
@@ -1992,6 +1993,7 @@ public class AvmRuntime {
 
             }
             dataSts.timing30sFlag = false;
+            KLog.d("+++ set time30sFlag to false.");
         }
     }
 
