@@ -581,7 +581,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void setCurrentGear(int gear) {
         if (rearviewMirrorView.getVisibility() == View.VISIBLE){
-            rearviewMirrorView.gearInfo(gear == 3 ? 1 : 0);
+            rearviewMirrorView.gearInfo(AvmRuntime.self().isRearGearSts() ? 1 : 0);
         }
     }
 
@@ -604,7 +604,7 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.d("viewShowStatus()");
         isDismissView = false;
         radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
-        rearviewMirrorView.gearInfo(0);
+        rearviewMirrorView.gearInfo(AvmRuntime.self().isRearGearSts() ? 1 : 0);
 //       KLog.d(hisModel + "  valGear viewShowStatus 模式：" + model + " 记忆模式: " + viewPosition);
         int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
         if (settingPathLine == 1) {
@@ -1652,9 +1652,7 @@ public class CameraView extends View implements LifecycleOwner {
             liftBg.setVisibility(VISIBLE);
         }
         KLog.d("setBtnRearSelectView = " + btnRearSelect);
-        if (AvmRuntime.self().isRearGearSts()) {
-            rearviewMirrorView.setRearviewMirrorDownViewStatus(1);
-        }
+        rearviewMirrorView.setRearviewMirrorDownViewStatus(AvmRuntime.self().isRearGearSts() ? 1 : 0);
     }
 
     @Override
