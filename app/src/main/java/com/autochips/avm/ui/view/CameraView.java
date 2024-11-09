@@ -1294,6 +1294,7 @@ public class CameraView extends View implements LifecycleOwner {
         cameraLeftFront.setVisibility(GONE);
         viewShow3dGroupId.setVisibility(GONE);
         cameraBreakdown.setVisibility(GONE);
+        calibration.setVisibility(GONE);
         KLog.d("设置：1");
         //viewModel.startTestTimer();
         CameraGLSurfaceView.glStatus = 0;
