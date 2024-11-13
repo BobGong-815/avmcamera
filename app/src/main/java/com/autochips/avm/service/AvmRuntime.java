@@ -1992,6 +1992,13 @@ public class AvmRuntime {
                 }
 
             }
+
+            if (dataSts.timing30sFlag) {
+                if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_ACTIVE)) {
+                    KLog.d("Turn lamp active blocked 30s exit.");
+                    dataSts.sensorBlockPExit = true;
+                }
+            }
             dataSts.timing30sFlag = false;
             KLog.d("+++ set time30sFlag to false.");
         }
