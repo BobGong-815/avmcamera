@@ -1345,12 +1345,15 @@ public class AvmRuntime {
     public void turnLampChange(int direction) {
         if (direction == 0) {
             synchronized (syncObj) {
-                setOverExitFlag(0);
-                dataSts.events.add(DataDefine.EVT_TURN_LAMP_RESET);
-                dataSts.turnLampResetTime = System.currentTimeMillis();
-                dataSts.lastChangeTime = System.currentTimeMillis();
+                if (dataSts.sensors[0] == DataDefine.SENSOR_TURN_LAMP || dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP) {
+                    // 有时不在转向激活状态，也会收到转向复位信号
+                    setOverExitFlag(0);
+                    dataSts.events.add(DataDefine.EVT_TURN_LAMP_RESET);
+                    dataSts.turnLampResetTime = System.currentTimeMillis();
+                    dataSts.lastChangeTime = System.currentTimeMillis();
 
-                syncObj.notify();
+                    syncObj.notify();
+                }
             }
         } else if (direction == 1) {
             synchronized (syncObj) {
@@ -1994,8 +1997,9 @@ public class AvmRuntime {
             }
 
             if (dataSts.timing30sFlag) {
-                if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_ACTIVE)) {
-                    KLog.d("Turn lamp active blocked 30s exit.");
+                if (dataSts.events.contains(DataDefine.EVT_TURN_LAMP_ACTIVE)
+                    || dataSts.events.contains(DataDefine.EVT_RADAR_ACTIVE)) {
+                    KLog.d("Turn lamp active or radar active blocked 30s exit.");
                     dataSts.sensorBlockPExit = true;
                 }
             }
