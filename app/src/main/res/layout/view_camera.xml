@@ -953,6 +953,29 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
+            android:layout_marginTop="104px"
+            android:id="@+id/toast_nc_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_toast_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginLeft="460px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+            <TextView
+                android:id="@+id/toast_nc_text"
+                android:layout_width="456px"
+                android:layout_height="60px"
+                android:text="Custom Toast Message"
+                android:textColor="#FFFFFF"
+                android:textSize="28px"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/toast_bg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

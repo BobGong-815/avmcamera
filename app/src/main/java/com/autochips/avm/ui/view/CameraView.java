@@ -77,6 +77,7 @@ import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.BottomDialog;
 import com.autochips.avm.util.DataDefine;
+import com.autochips.avm.util.NotCloseToast;
 import com.autochips.avm.util.RearviewToast;
 import com.autochips.avm.util.SystemProperties;
 import com.autochips.avm.viewmode.CameraViewModel;
@@ -173,7 +174,7 @@ public class CameraView extends View implements LifecycleOwner {
     protected ImageView radarSoundIv,radarErrImgId1,radarErrImgId2,radarErrImgId4,cameraIv
             ,cameraLeftFront,cameraRightFront,cameraLeftRear,cameraRightRear,cameraRight
             ,cameraTop,cameraBottom,cameraLift,ivBreakdown,ivSetting,ivBackMirror,cameraIvLift;
-    protected LinearLayout llBackMirror,llSetting,cameraBreakdown,toastBg,layoutShowFull2d,layoutCalibrateId;
+    protected LinearLayout llBackMirror,llSetting,cameraBreakdown,toastBg,toastNcBg,layoutShowFull2d,layoutCalibrateId;
     protected ConstraintLayout layoutWideAngle,cameraImageLayout,radarSoundLayout
             ,parkingAssistLayout,mainAvmViewRootId,cameraImageLayoutLift;
     protected TextView tvBreakdown,manualCalibration,automaticCalibration,infoTitle,infoContent,rearRadarImgId;
@@ -526,6 +527,7 @@ public class CameraView extends View implements LifecycleOwner {
             cameraImageLayout = mViewCameraBinding.cameraImageLayout;
             cameraBreakdown = mViewCameraBinding.cameraBreakdown;
             toastBg = mViewCameraBinding.toastBg;
+            toastNcBg = mViewCameraBinding.toastNcBg;
             cameraLeftFront = mViewCameraBinding.cameraLeftFront;
             cameraRightFront = mViewCameraBinding.cameraRightFront;
             cameraLeftRear = mViewCameraBinding.cameraLeftRear;
@@ -725,10 +727,13 @@ public class CameraView extends View implements LifecycleOwner {
                 radarErrImgId4.setVisibility(value == 0 ? GONE : VISIBLE);
                 break;
         }
-        if (value > 0) {
-            RearviewToast.getInstance().showToast(AvmApp.getInstance().getString(R.string.camera_radar_error));
+        if(mViewCameraBinding.radarErrImgId1.getVisibility() == GONE
+                && mViewCameraBinding.radarErrImgId2.getVisibility() == GONE
+                && mViewCameraBinding.radarErrImgId4.getVisibility() == GONE) {
+            NotCloseToast.getInstance().cancelToast();
+        }else {
+            NotCloseToast.getInstance().showToast(AvmApp.getInstance().getString(R.string.camera_radar_error));
         }
-
     }
 
     /**
@@ -1120,6 +1125,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     private void tabViewInit() {
         RearviewToast.getInstance().init(toastBg);
+        NotCloseToast.getInstance().init(toastNcBg);
         segmentTab.setOnTabSelectListener(tabSelectListener);
         segmentWideAngle.setOnTabSelectListener(onTabSelectListener);
         cameraIv.setOnClickListener(this::onCameraIv);
@@ -2113,6 +2119,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
         settingView.skinView(uiMode);
         rearviewMirrorView.skinView(uiMode);
+        NotCloseToast.getInstance().uiMode(uiMode);
         switch (uiMode) {
             case UiModeManager.MODE_NIGHT_YES:
                 KLog.e("黑夜模式");
