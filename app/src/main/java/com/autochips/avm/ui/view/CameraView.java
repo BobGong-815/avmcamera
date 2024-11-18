@@ -2182,9 +2182,12 @@ public class CameraView extends View implements LifecycleOwner {
                             cameraLift.setImageDrawable(mContext.getDrawable(isCanOpreateBreakDown
                                     ? R.mipmap.ic_camera_fault : R.mipmap.ic_camera_fault_nor));
                             cameraLift.setRotation(270);
+                            int BWAVM_RIGHT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(3);
                             if(isCanOpreateBreakDown) {
                                 mMainHandler.postDelayed(() -> {
-                                    cameraBreakdown.setVisibility(View.VISIBLE);
+                                    if(BWAVM_RIGHT_CAM_ID == -1) {
+                                        cameraBreakdown.setVisibility(View.VISIBLE);
+                                    }
                                 }, 0);
                             }
                         }
