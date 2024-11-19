@@ -1355,7 +1355,7 @@ public class AvmRuntime {
                     syncObj.notify();
                 }
             }
-        } else if (direction == 1) {
+        } else if (direction == 1 || direction == 3) {
             synchronized (syncObj) {
 //                if ((System.currentTimeMillis() - dataSts.turnLampResetTime) > 800) {
 //                    dataSts.events.add(DataDefine.EVT_TURN_LAMP_ACTIVE);
@@ -1372,7 +1372,7 @@ public class AvmRuntime {
 
                 syncObj.notify();
             }
-        } else if (direction == 2) {
+        } else if (direction == 2 || direction == 4) {
             synchronized (syncObj) {
 //                if ((System.currentTimeMillis() - dataSts.turnLampResetTime) > 800) {
 //                    dataSts.events.add(DataDefine.EVT_TURN_LAMP_ACTIVE);
