@@ -841,14 +841,14 @@ public class CameraView extends View implements LifecycleOwner {
 //        if (value > 0) {
 //            RearviewToast.getInstance().showToast(AvmApp.getInstance().getString(R.string.camera_radar_error));
 //        }
-        if(mViewCameraBinding.radarErrImgId1.getVisibility() == GONE
-                && mViewCameraBinding.radarErrImgId2.getVisibility() == GONE
-                && mViewCameraBinding.radarErrImgId3.getVisibility() == GONE
-                && mViewCameraBinding.radarErrImgId4.getVisibility() == GONE
-                && mViewCameraBinding.radarfErrImgId1.getVisibility() == GONE
-                && mViewCameraBinding.radarfErrImgId2.getVisibility() == GONE
-                && mViewCameraBinding.radarfErrImgId3.getVisibility() == GONE
-                && mViewCameraBinding.radarfErrImgId4.getVisibility() == GONE) {
+        if(radarErrImgId1.getVisibility() == GONE
+                && radarErrImgId2.getVisibility() == GONE
+                && radarErrImgId3.getVisibility() == GONE
+                && radarErrImgId4.getVisibility() == GONE
+                && radarfErrImgId1.getVisibility() == GONE
+                && radarfErrImgId2.getVisibility() == GONE
+                && radarfErrImgId3.getVisibility() == GONE
+                && radarfErrImgId4.getVisibility() == GONE) {
             NotCloseToast.getInstance().cancelToast();
         }else {
             NotCloseToast.getInstance().showToast(AvmApp.getInstance().getString(R.string.camera_radar_error));
@@ -874,14 +874,14 @@ public class CameraView extends View implements LifecycleOwner {
 //        if (value > 0) {
 //            RearviewToast.getInstance().showToast(AvmApp.getInstance().getString(R.string.camera_radar_error));
 //        }
-        if(mViewCameraBinding.radarErrImgId1.getVisibility() == GONE
-                && mViewCameraBinding.radarErrImgId2.getVisibility() == GONE
-                && mViewCameraBinding.radarErrImgId3.getVisibility() == GONE
-                && mViewCameraBinding.radarErrImgId4.getVisibility() == GONE
-                && mViewCameraBinding.radarfErrImgId1.getVisibility() == GONE
-                && mViewCameraBinding.radarfErrImgId2.getVisibility() == GONE
-                && mViewCameraBinding.radarfErrImgId3.getVisibility() == GONE
-                && mViewCameraBinding.radarfErrImgId4.getVisibility() == GONE) {
+        if(radarErrImgId1.getVisibility() == GONE
+                && radarErrImgId2.getVisibility() == GONE
+                && radarErrImgId3.getVisibility() == GONE
+                &  radarErrImgId4.getVisibility() == GONE
+                && radarfErrImgId1.getVisibility() == GONE
+                && radarfErrImgId2.getVisibility() == GONE
+                && radarfErrImgId3.getVisibility() == GONE
+                && radarfErrImgId4.getVisibility() == GONE) {
             NotCloseToast.getInstance().cancelToast();
         }else {
             NotCloseToast.getInstance().showToast(AvmApp.getInstance().getString(R.string.camera_radar_error));
