@@ -1401,6 +1401,10 @@ public class AvmRuntime {
 
         if (active) {
             synchronized (syncObj) {
+                if (dataSts.gears[0] == DataDefine.GEAR_P) {
+                    KLog.d("Filter radar active when GEAR_P.");
+                    return;
+                }
 //                if (dataSts.sensors[0] == DataDefine.SENSOR_RADAR || dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP) {
 //                    return;
 //                }
