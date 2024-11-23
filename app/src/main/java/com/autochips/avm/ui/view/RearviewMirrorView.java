@@ -138,14 +138,16 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
             int uiMode = uiModeManager.getNightMode();
             if (uiMode == UiModeManager.MODE_NIGHT_YES) {
-                textView.setTextColor(getResources().getColor(R.color.setting_view_content_color));
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    textView.setTextColor(getResources().getColor(R.color.setting_view_content_color));
                 }
             } else {
-                textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     textView.setTextColor(context.getResources().getColor(R.color.white));
+                }else if(event.getAction() == MotionEvent.ACTION_UP){
+                    textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
                 }
             }
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
