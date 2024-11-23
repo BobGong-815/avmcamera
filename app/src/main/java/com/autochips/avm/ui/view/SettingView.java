@@ -319,7 +319,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 settingBinding.segmentTab.setThumbDrawable3(R.drawable.tab_selector_thumb);
                 settingBinding.segmentTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old);
                 settingBinding.segmentTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
-                settingBinding.segmentTab.setTextSelectColor(R.color.setting_view_title_color,0);
+                settingBinding.segmentTab.setTextSelectColor(R.color.setting_view_select_title_color,0);
                 settingBinding.segmentTab.setTextUnselectColor(R.color.setting_view_content_color);
                 settingBinding.transparentChassis.setTextColor(context.getResources().getColor(R.color.setting_view_title_color));
                 settingBinding.activatedPanorama.setTextColor(context.getResources().getColor(R.color.setting_view_title_color));
@@ -331,7 +331,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 settingBinding.transparentChassisTab.setThumbDrawable3(R.drawable.tab_selector_thumb);
                 settingBinding.transparentChassisTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old);
                 settingBinding.transparentChassisTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
-                settingBinding.transparentChassisTab.setTextSelectColor(R.color.setting_view_title_color,0);
+                settingBinding.transparentChassisTab.setTextSelectColor(R.color.setting_view_select_title_color,0);
                 settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_view_content_color);
 
                 if (AvmApp.ISAY5T) {

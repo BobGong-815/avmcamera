@@ -15,10 +15,10 @@
 <!--    </item>-->
 
     <item
-        android:bottom="4px"
-        android:left="4px"
-        android:right="4px"
-        android:top="4px">
+        android:bottom="2px"
+        android:left="2px"
+        android:right="2px"
+        android:top="2px">
         <shape>
             <solid android:color="#ffffffff" />
             <corners android:radius="8px" />

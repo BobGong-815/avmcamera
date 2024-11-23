@@ -7,6 +7,7 @@
     <color name="close_bg">#4d000000</color>
     <color name="setting_view_bg">#22252E</color>
     <color name="setting_view_title_color">#D9FFFFFF</color>
+    <color name="setting_view_select_title_color">#23282F</color>
     <color name="setting_view_content_color">#99FFFFFF</color>
     <color name="setting_view_info_bg_color">#F0CCE0F0</color>
     <color name="setting_view_btn_bg_color">#F2303542</color>

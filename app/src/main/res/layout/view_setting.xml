@@ -46,11 +46,11 @@
 
             <ImageView
                 android:id="@+id/p_exit_info"
-                android:layout_width="40px"
-                android:layout_height="40px"
+                android:layout_width="36px"
+                android:layout_height="36px"
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
-                android:layout_marginStart="15px"
+                android:layout_marginStart="10.63px"
                 binding:onClickCommand="@{viewModel.pInfoClick}"/>
         </LinearLayout>
 
@@ -97,12 +97,12 @@
 
             <ImageView
                 android:id="@+id/transparentChassis_info"
-                android:layout_width="40px"
-                android:layout_height="40px"
+                android:layout_width="36px"
+                android:layout_height="36px"
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
-                android:layout_marginStart="10px"
+                android:layout_marginStart="12.14px"
                 binding:onClickCommand="@{viewModel.transparentChassisInfoClick}"/>
         </LinearLayout>
 
@@ -155,12 +155,12 @@
 
             <ImageView
                 android:id="@+id/activatedPanoramaInfo"
-                android:layout_width="40px"
-                android:layout_height="40px"
+                android:layout_width="36px"
+                android:layout_height="36px"
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
-                android:layout_marginStart="16.5px"
+                android:layout_marginStart="12.2px"
                 android:layout_marginTop="3px"
                 binding:onClickCommand="@{viewModel.activatedPanoramaInfoClick}"/>
         </LinearLayout>
@@ -193,12 +193,12 @@
 
             <ImageView
                 android:id="@+id/pathLineInfo"
-                android:layout_width="27px"
-                android:layout_height="27px"
+                android:layout_width="36px"
+                android:layout_height="36px"
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
-                android:layout_marginStart="16.5px"
+                android:layout_marginStart="12.11px"
                 android:layout_marginTop="3px"
                 binding:onClickCommand="@{viewModel.pathLineInfoClick}"
                 android:visibility="gone"/>
@@ -232,12 +232,12 @@
 
             <ImageView
                 android:id="@+id/activatesPanoramaInfo"
-                android:layout_width="40px"
-                android:layout_height="40px"
+                android:layout_width="36px"
+                android:layout_height="36px"
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
-                android:layout_marginStart="16.5px"
+                android:layout_marginStart="12.23px"
                 binding:onClickCommand="@{viewModel.activatesPanoramaInfoClick}"/>
         </LinearLayout>
     </LinearLayout>

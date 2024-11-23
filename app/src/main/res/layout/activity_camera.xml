@@ -1055,7 +1055,7 @@
                     android:id="@+id/iv_back_mirror"
                     android:layout_width="48px"
                     android:layout_height="48px"
-                    android:src="@mipmap/ic_camera_setting" />
+                    android:src="@drawable/ic_camera_setting" />
 
             </LinearLayout>
 

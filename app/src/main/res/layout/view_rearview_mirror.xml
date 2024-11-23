@@ -86,7 +86,7 @@
                     android:id="@+id/iv_setting_view"
                     android:layout_width="48px"
                     android:layout_height="48px"
-                    android:src="@mipmap/ic_back_mirror" />
+                    android:src="@drawable/ic_back_mirror" />
 
                 <TextView
                     android:id="@+id/tv_setting_expand"

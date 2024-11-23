@@ -1,5 +1,6 @@
 package com.autochips.avm.ui.view;
 
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.ACU_FOLD_UNFOLD_CTL_REQ;
 import static android.hardware.automotive.vehicle.V2_0.VehicleProperty.SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.REARVIEW_MIRROR_ADJUSTMENT;
 
@@ -137,17 +138,27 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
             int uiMode = uiModeManager.getNightMode();
             if (uiMode == UiModeManager.MODE_NIGHT_YES) {
-                textView.setTextColor(getResources().getColor(R.color.setting_view_content_color));
+                //textView.setTextColor(getResources().getColor(R.color.setting_view_content_color));
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
                 }
             } else {
-                textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
+                //textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     textView.setTextColor(context.getResources().getColor(R.color.white));
                 }
             }
-
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (v.getId() == R.id.ll_setting_expand) {//展开
+                    rearviewMirrorModel.cancleTimer();
+                    Integer[] arrUnfold = {1, 10};
+                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
+                } else if (v.getId() == R.id.ll_setting_fold) {//折叠
+                    rearviewMirrorModel.cancleTimer();
+                    Integer[] arrFold = {1, 9};
+                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
+                }
+            }
             return false;
         }
     }
@@ -210,9 +221,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
 
             rearviewMirrorModel.startTimer();//ACU_ORVMOperationReq
             rearviewMirrorModel.setRunning(true);
-
-            Integer[] arrUnfold = {1, 10};
-
+            Integer[] arrUnfold = {0, 0};
             CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
             if(AvmRuntime.self().getCurrentSped() <= 15) {
                 RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_expand));
@@ -220,7 +229,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         } else if (view.getId() == R.id.ll_setting_fold) {//折叠
             rearviewMirrorModel.startTimer();
             rearviewMirrorModel.setRunning(true);
-            Integer[] arrFold = {1, 9};
+            Integer[] arrFold = {0, 0};
             CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
             if(AvmRuntime.self().getCurrentSped() <= 15) {
                 RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_fold));
