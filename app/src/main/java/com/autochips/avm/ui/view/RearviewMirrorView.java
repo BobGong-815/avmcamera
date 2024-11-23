@@ -150,6 +150,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             }
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 if (v.getId() == R.id.ll_setting_expand) {//展开
+                    rearviewMirrorModel.cancleTimer();
                     Integer[] arrUnfold = {1, 10};
                     //区分3.0平台
                     if (AvmApp.EEA == 2) {
@@ -158,6 +159,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                         CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
                     }
                 } else if (v.getId() == R.id.ll_setting_fold) {//折叠
+                    rearviewMirrorModel.cancleTimer();
                     Integer[] arrFold = {1, 9};
                     if (AvmApp.EEA == 2) {
                         CanManager.getInstance().setIntProperty(ACU_FOLD_UNFOLD_CTL_REQ, 0, 1);

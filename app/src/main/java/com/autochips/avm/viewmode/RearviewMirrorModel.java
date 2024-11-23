@@ -31,6 +31,11 @@ public class RearviewMirrorModel extends BaseCameraViewModel {
         closeTimer.start();
 
     }
+
+    public void cancleTimer() {
+        closeTimer.cancel();
+    }
+    
     //重置消失时间
     public BindingCommand pRearviewClick = new BindingCommand(new BindingAction() {
         @Override
