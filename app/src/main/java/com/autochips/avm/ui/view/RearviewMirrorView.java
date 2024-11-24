@@ -219,6 +219,17 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(true);
                 RearviewToast.getInstance().showToast(getResources().getString(R.string.setting_rearview_mirror_down_open));
             }
+            UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+            int uiMode = uiModeManager.getNightMode();
+            if (uiMode == UiModeManager.MODE_NIGHT_YES) {
+                if(rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected()) {
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                }
+            } else {
+                if(rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected()) {
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.white));
+                }
+            }
         } else if (view.getId() == R.id.ll_setting_expand) {//展开
 
             rearviewMirrorModel.startTimer();//ACU_ORVMOperationReq
