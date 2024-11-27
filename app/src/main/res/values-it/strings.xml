@@ -9,7 +9,7 @@
     <string name="setting_low">Basso</string>
     <string name="setting_centre">Media</string>
     <string name="setting_high">Alto</string>
-    <string name="setting_radar_activated_panorama">Vista panoramica quandoil radar è attivato</string>
+    <string name="setting_radar_activated_panorama">Vista panoramica quando il radar è attivato</string>
     <string name="setting_radar_activated_panorama_content">Entra panorama se velocità meno 15 km/h e radar anteriore allarma</string>
     <string name="setting_path_line">Linea di traiettoria</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
@@ -50,7 +50,7 @@
     <string name="before">Ruote anteriori</string>
     <string name="rear_wheel">Ruote posteriori</string>
     <string name="radar_sound_open">Il tono di richiesta radar è attivato</string>
-    <string name="radar_sound_close">Il tono di richiesta radar è disattivato</string>
+    <string name="radar_sound_close">Tono avviso radar off</string>
     <string name="parking_assist_system_down">Malfunzionamento del sistema di assistenza al parcheggio, controlla!</string>
     <string name="emergency_braking">È stata attivata la frenata di emergenza</string>
 

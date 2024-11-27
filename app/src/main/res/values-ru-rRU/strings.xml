@@ -49,8 +49,8 @@
     <string name="back_wide_angle">Широкий угол сзади</string>
     <string name="before">Пер. колеса</string>
     <string name="rear_wheel">Задн. Колеса</string>
-    <string name="radar_sound_open">Звуковой сигнал подсказки радара включен</string>
-    <string name="radar_sound_close">Звуковой сигнал подсказки радара выключен</string>
+    <string name="radar_sound_open">Звук подсказки радара ON</string>
+    <string name="radar_sound_close">Звук подсказки радара OFF</string>
     <string name="parking_assist_system_down">Ошибка системы помощи при парковке, пожалуйста, проверьте!</string>
     <string name="emergency_braking">Сработало экстренное торможение</string>
 

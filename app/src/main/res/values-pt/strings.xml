@@ -22,8 +22,8 @@
     <string name="setting_fold">Dobrar</string>
     <string name="setting_expand">Expandir</string>
     <string name="setting_rearview_mirror_down">Espelho retrovisor abaixado</string>
-    <string name="setting_rearview_mirror_down_open">O abaixamento do espelho retrovisor está ligado</string>
-    <string name="setting_rearview_mirror_down_close">O abaixamento do espelho retrovisor está desligado</string>
+    <string name="setting_rearview_mirror_down_open">Abaixamento do retrovisor ligado</string>
+    <string name="setting_rearview_mirror_down_close">Abaixamento do retrovisor desligado</string>
     <string name="camera_2d">2D</string>
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">Grande angular</string>
@@ -49,8 +49,8 @@
     <string name="back_wide_angle">Grande tras</string>
     <string name="before">Rodas diant</string>
     <string name="rear_wheel">Rodas tras</string>
-    <string name="radar_sound_open">O tom de alerta do radar está ligado</string>
-    <string name="radar_sound_close">O tom de alerta do radar está desligado</string>
+    <string name="radar_sound_open">Aviso do radar ligado</string>
+    <string name="radar_sound_close">Aviso do radar desligado</string>
     <string name="parking_assist_system_down">Avaria do sistema de assistência ao estacionamento, por favor, verifique!</string>
     <string name="emergency_braking">A travagem de emergência foi ativada</string>
 

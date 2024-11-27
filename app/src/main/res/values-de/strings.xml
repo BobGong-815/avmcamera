@@ -1,7 +1,7 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">(P) Gang raus</string>
-    <string name="setting_p_exit_content">En P, sortie panorama immédiate ou après 30 s</string>
+    <string name="setting_p_exit_content">Im Gang P: Panorama wird nach 30 Sekunden beendet.</string>
     <string name="setting_at_once">Sofort</string>
     <string name="setting_30_seconds">Nach 30 Jahren</string>
     <string name="setting_transparent_chassis">Transparentes Gehäuse</string>
@@ -9,7 +9,7 @@
     <string name="setting_low">Tief</string>
     <string name="setting_centre">Mittel</string>
     <string name="setting_high">Hoch</string>
-    <string name="setting_radar_activated_panorama">Panoramablick, wenn das Radar aktiviert ist</string>
+    <string name="setting_radar_activated_panorama">Panoramablick, wenn Radar aktiviert</string>
     <string name="setting_radar_activated_panorama_content">Panoramablick bei unter 15 km/h und bei Frontradar-Alarm</string>
     <string name="setting_path_line">Fahrtstreck</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
@@ -23,7 +23,7 @@
     <string name="setting_expand">Erweitern Sie</string>
     <string name="setting_rearview_mirror_down">Rückspiegel nach unten</string>
     <string name="setting_rearview_mirror_down_open">Rückspiegel unten ist eingeschaltet.</string>
-    <string name="setting_rearview_mirror_down_close">Radar-Warnton ist ausgeschaltet</string>
+    <string name="setting_rearview_mirror_down_close">Rückspiegel unten ist ausgeschaltet.</string>
     <string name="camera_2d">2D</string>
     <string name="camera_3d">3D</string>
     <string name="camera_wide_angle">Weitwinklig</string>
