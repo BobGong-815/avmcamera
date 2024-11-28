@@ -243,6 +243,7 @@ public class CameraViewModelHelper {
 
     public void setSpeedValue(float speedValue) {
         this.speedValue = speedValue;
+        AvmApp.getInstance().getCameraView().changeRearviewShow(speedValue);
     }
 
     public void setSpeed(float val) {

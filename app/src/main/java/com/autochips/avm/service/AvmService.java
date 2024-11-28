@@ -174,16 +174,16 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             public void onCarPowerWorkModeChangeEvent(CarPowerWorkModeStatus carPowerWorkModeStatus) {
                 if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_DEEP_SLEEP.getVal()) {
                     //进⼊STR
-                    KLog.d("[mCarPowerManager]  进⼊STR");
+                    KLog.v("[mCarPowerManager]  进⼊STR");
                     mHandler.removeMessages(MSG_CR_CAMERA);
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
-                    KLog.d("[mCarPowerManager]  半功能  释放资源,释放摄像头");
+                    KLog.v("[mCarPowerManager]  半功能  释放资源,释放摄像头");
                     mHandler.removeMessages(MSG_CR_CAMERA);
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
-                    KLog.d("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
+                    KLog.v("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
                     if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
                         mHandler.removeMessages(MSG_DEL_CAMERA);
                         mHandler.sendEmptyMessage(MSG_CR_CAMERA);

@@ -2205,6 +2205,10 @@ public class CameraView extends View implements LifecycleOwner {
 
     }
 
+    public void changeRearviewShow(float speedValue){
+        rearviewMirrorView.changeShow(speedValue);
+    }
+
     public void chick2DView(String type) {
         KLog.i("chick2DView ......... " + type);
         int BWAVM_FRONT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(0);

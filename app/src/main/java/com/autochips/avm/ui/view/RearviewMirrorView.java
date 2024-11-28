@@ -323,6 +323,17 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         rearviewMirrorBinding.llSettingRearviewMirrorDown.setEnabled(reverseLightSts == 1);
     }
 
+    public void changeShow(float speedValue){
+        boolean isEnable = speedValue <= 15;//可以点击
+        if(isEnable != rearviewMirrorBinding.llSettingExpand.isEnabled()){
+            rearviewMirrorBinding.llSettingExpand.setAlpha(isEnable ? 1.0f : 0.3f);
+            rearviewMirrorBinding.llSettingExpand.setEnabled(isEnable);
+
+            rearviewMirrorBinding.llSettingFold.setAlpha(isEnable ? 1.0f : 0.3f);
+            rearviewMirrorBinding.llSettingFold.setEnabled(isEnable);
+        }
+    }
+
     public void skinView(int uiMode) {
 //        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
 //        int uiMode = uiModeManager.getNightMode();
