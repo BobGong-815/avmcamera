@@ -9,11 +9,11 @@
     <string name="setting_low">Basso</string>
     <string name="setting_centre">Media</string>
     <string name="setting_high">Alto</string>
-    <string name="setting_radar_activated_panorama">Vista panoramica quando il radar è attivato</string>
+    <string name="setting_radar_activated_panorama">Vista panoramica quando \nil radar è attivato</string>
     <string name="setting_radar_activated_panorama_content">Entra panorama se velocità meno 15 km/h e radar anteriore allarma</string>
     <string name="setting_path_line">Linea di traiettoria</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Vista panoramica quando la lucedegli indicatori di direzione è accesa</string>
+    <string name="setting_signal_activates_panorama">Vista panoramica quando la luce\ndegli indicatori di direzione è accesa</string>
     <string name="setting_signal_activates_panorama_content">Usa indicatore direzione per panorama; esce auto quando velocità superiore 30 km/h</string>
     <string name="setting_transparent_chassis_infobook_title">Telaio trasparente</string>
     <string name="setting_transparent_chassis_infobook_content">Abilita l\'osservazione dellecondizioni stradali del veicolo</string>

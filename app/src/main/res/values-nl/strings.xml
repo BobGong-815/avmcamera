@@ -9,11 +9,11 @@
     <string name="setting_low">Laag</string>
     <string name="setting_centre">Medium</string>
     <string name="setting_high">Hoog</string>
-    <string name="setting_radar_activated_panorama">Panoramisch zicht Als de radar geactiveerd is</string>
+    <string name="setting_radar_activated_panorama">Panoramisch zicht \nAls de radar geactiveerd is</string>
     <string name="setting_radar_activated_panorama_content">Ga naar panorama als snelh. lager dan 15 km/u en alarm voorradar.</string>
     <string name="setting_path_line">Spoorlijn</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Panoramisch zichtals de richtingaanwijzer aan is</string>
+    <string name="setting_signal_activates_panorama">Panoramisch zicht\nals de richtingaanwijzer aan is</string>
     <string name="setting_signal_activates_panorama_content">Gebr richt.aanwijz. om panorama te betreden; verlaat weg autom als snelh. hoger dan 30 km/u.</string>
     <string name="setting_transparent_chassis_infobook_title">Transparant chassis.</string>
     <string name="setting_transparent_chassis_infobook_content">Na het inschakelen, kan de toestand van de wegonder het voertuig worden geobserveerd.</string>

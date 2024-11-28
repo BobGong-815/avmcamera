@@ -9,11 +9,11 @@
     <string name="setting_low">Faible</string>
     <string name="setting_centre">Médium</string>
     <string name="setting_high">Haut</string>
-    <string name="setting_radar_activated_panorama">Vue panoramique quand le radar est activé</string>
+    <string name="setting_radar_activated_panorama">Vue panoramique \nquand le radar est activé</string>
     <string name="setting_radar_activated_panorama_content">Accédez au panorama à moins de 15 km/h lorsque le radar avant émet une alarme.</string>
     <string name="setting_path_line">Ligne de trajectoire</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Vue panoramique quand les clignotants sont allumés</string>
+    <string name="setting_signal_activates_panorama">Vue panoramique \nquand les clignotants sont allumés</string>
     <string name="setting_signal_activates_panorama_content">Clignotant pour entrer dans panorama ; sortie auto si >30 km/h</string>
     <string name="setting_transparent_chassis_infobook_title">Châssis transparent</string>
     <string name="setting_transparent_chassis_infobook_content">Une fois activé, les conditions de la routesous le véhicule peuvent être observées.</string>

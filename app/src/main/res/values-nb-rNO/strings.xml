@@ -9,11 +9,11 @@
     <string name="setting_low">Lav</string>
     <string name="setting_centre">Middels</string>
     <string name="setting_high">Høy</string>
-    <string name="setting_radar_activated_panorama">Panoramavisning aktivertnår radaren er på</string>
+    <string name="setting_radar_activated_panorama">Panoramavisning aktivert\nnår radaren er på</string>
     <string name="setting_radar_activated_panorama_content">Panoramavisning aktiveres i hastigheter under 15 km/t og når den fremre alarmen piper</string>
     <string name="setting_path_line">Sporlinje</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Panoramautsikt aktiveresnår blinklyset er på</string>
+    <string name="setting_signal_activates_panorama">Panoramautsikt aktiveres\nnår blinklyset er på</string>
     <string name="setting_signal_activates_panorama_content">Bruk blinklyset for å gå inn i panoramaet; Går ut automatisk ved hastighet over 30 km/t</string>
     <string name="setting_transparent_chassis_infobook_title">Gjennomsiktig chassis</string>
     <string name="setting_transparent_chassis_infobook_content">Etter at den er aktivertkan veiforholdene under kjøretøyet observeres</string>
