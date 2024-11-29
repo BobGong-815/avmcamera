@@ -1436,7 +1436,12 @@ public class AvmRuntime {
             CameraViewModelHelper.getInstance().setSpeedValue(dataSts.currSpeed);
             CameraViewModelHelper.getInstance().setTransparentIndexTab();
             if (dataSts.overSpeedSts) {
-                if (dataSts.currSpeed < 25/*SPEED_THRESHOLD*/) {
+                boolean isNormalSpeed = dataSts.currSpeed < 30 && !dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) &&
+                        dataSts.fvSts[0] == DataDefine.FV_STATE_NON && dataSts.otherOverSpeedSts;
+                if(dataSts.otherOverSpeedSts){
+                    dataSts.otherOverSpeedSts = false;
+                }
+                if (dataSts.currSpeed < 25 || isNormalSpeed/*SPEED_THRESHOLD*/) {
                     if (getOverExitFlag() == 1) {
                         dataSts.events.add(DataDefine.EVT_REDUCE_SPEED1);
                     } else if (getOverExitFlag() == 2) {
@@ -1446,7 +1451,9 @@ public class AvmRuntime {
                     flag = true;
                 }
             } else {
-                if (dataSts.currSpeed > 35/*SPEED_THRESHOLD*/) {
+                dataSts.otherOverSpeedSts = dataSts.currSpeed > 30 && !dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) &&
+                        dataSts.fvSts[0] == DataDefine.FV_STATE_NON;
+                if (dataSts.currSpeed > 35 || dataSts.otherOverSpeedSts/*SPEED_THRESHOLD*/) {
                     dataSts.events.add(DataDefine.EVT_OVER_SPEED);
                     dataSts.overSpeedSts = true;
                     flag = true;
@@ -2022,6 +2029,7 @@ public class AvmRuntime {
         boolean radarAlive;
         boolean turnLampAlive;
         boolean overSpeedSts; //超速状态
+        boolean otherOverSpeedSts = false;//其他超速状态
         long lastChangeTime; //上次变更时间
         long turnLampResetTime;
         boolean timing30sFlag; // 30s计时标志
@@ -2100,6 +2108,7 @@ public class AvmRuntime {
                     .append("\n, radarAlive = " + radarAlive)
                     .append("\n, turnLampAlive = " + turnLampAlive)
                     .append("\n, overSpeedSts = " + overSpeedSts)
+                    .append("\n, otherOverSpeedSts = " + otherOverSpeedSts)
                     .append("\n, lastChangeTime = " + lastChangeTime);
             for (int i = 0; i < fvSts.length; i++) {
                 stringBuffer.append("\n, fvSts[" + i + "] = " + DataDefine.id2String(fvSts[i]));
