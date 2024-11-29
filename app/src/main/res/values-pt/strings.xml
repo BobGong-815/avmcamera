@@ -1,7 +1,7 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">Saída de marcha (P)</string>
-    <string name="setting_p_exit_content">Ao engatar a marcha P, o panorama sairáimediatamente ou com um atraso de 30s</string>
+    <string name="setting_p_exit_content">Ao engatar a marcha P, o panorama sairá imediatamente ou com um atraso de 30s</string>
     <string name="setting_at_once">Imediatamente</string>
     <string name="setting_30_seconds">Após 30s</string>
     <string name="setting_transparent_chassis">Chassi transparente</string>

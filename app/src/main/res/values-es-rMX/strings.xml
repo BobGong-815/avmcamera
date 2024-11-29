@@ -1,7 +1,7 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">Salir de la posición P</string>
-    <string name="setting_p_exit_content">Al poner la palanca en P, la vista panorámica se desactiva de inmediato o después de un retraso de 30 segundos.</string>
+    <string name="setting_p_exit_content">Al poner la P, la vista panorámica se desactiva de inmediato o tras 30 segundos.</string>
     <string name="setting_at_once">Inmediatamente</string>
     <string name="setting_30_seconds">Después de 30s</string>
     <string name="setting_transparent_chassis">Chasis Transparente</string>
@@ -9,11 +9,11 @@
     <string name="setting_low">Bajo</string>
     <string name="setting_centre">Medio</string>
     <string name="setting_high">Alta</string>
-    <string name="setting_radar_activated_panorama">Vista panorámica activada cuando el radar está encendido</string>
-    <string name="setting_radar_activated_panorama_content">Se activa la vista panorámica cuando la velocidad del vehículo es &lt;15 km/h y el radar delantero emite una alerta.</string>
+    <string name="setting_radar_activated_panorama">Vista panorámica activada \ncuando el radar está encendido</string>
+    <string name="setting_radar_activated_panorama_content">Entra en Vista Panorámica si el radar delantero alerta a &lt;12 km/h.</string>
     <string name="setting_path_line">Línea de vía</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Vista panorámica activada al encender los intermitentes</string>
+    <string name="setting_signal_activates_panorama">Vista panorámica activada \nal encender los intermitentes</string>
     <string name="setting_signal_activates_panorama_content">Active Vista Panorámica con el intermitente; La vista panorámica se autodesactivará a >30 km/h.</string>
     <string name="setting_transparent_chassis_infobook_title">Chasis Transparente</string>
     <string name="setting_transparent_chassis_infobook_content">Activar para observar el estado del camino bajo el auto.</string>
@@ -22,12 +22,12 @@
     <string name="setting_fold">Pliegue</string>
     <string name="setting_expand">Ampliar</string>
     <string name="setting_rearview_mirror_down">El espejo retrovisor se abate</string>
-    <string name="setting_rearview_mirror_down_open">La función de inclinación del espejo retrovisor está activada.</string>
-    <string name="setting_rearview_mirror_down_close">La función de inclinación del espejo retrovisor está desactivada.</string>
+    <string name="setting_rearview_mirror_down_open">Inclinación del espejo retrovisor activada.</string>
+    <string name="setting_rearview_mirror_down_close">Inclinación del espejo retrovisor desactivada.</string>
     <string name="camera_2d">2D</string>
     <string name="camera_3d">3D</string>
-    <string name="camera_wide_angle">Ángulo ancho</string>
-    <string name="desc_rearview_mirror_fold">Los espejos retrovisores están plegados.</string>
+    <string name="camera_wide_angle">Áng. ancho</string>
+    <string name="desc_rearview_mirror_fold">Retrovisores plegados</string>
     <string name="desc_rearview_mirror_expand">Retrovisor ya desplegado</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>
     <string name="desc_rearview_mirror_down_close">外后视镜自动下翻已关闭</string>
@@ -45,12 +45,12 @@
     <string name="translate_left_rear">左后视角</string>
     <string name="translate_right_rear">右后视角</string>
     <string name="automatic_calibration_success">自动标定成功</string>
-    <string name="front_wide_angle">Ángulo ancho frontal</string>
-    <string name="back_wide_angle">Ángulo ancho trasero</string>
-    <string name="before">Ruedas delanteras</string>
-    <string name="rear_wheel">Ruedas traseras</string>
-    <string name="radar_sound_open">El sonido de alerta del radar está activado.</string>
-    <string name="radar_sound_close">El sonido de alerta del radar está desactivado.</string>
+    <string name="front_wide_angle">Ángulo ancho front.</string>
+    <string name="back_wide_angle">Ángulo ancho tras.</string>
+    <string name="before">Ruedas front.</string>
+    <string name="rear_wheel">Ruedas tras.</string>
+    <string name="radar_sound_open">Alerta del radar activada.</string>
+    <string name="radar_sound_close">Alerta del radar desactivada.</string>
     <string name="parking_assist_system_down">Fallo en el sistema de aparcamiento asistido, ¡compruébalo por favor!</string>
     <string name="emergency_braking">Se ha activado el freno de emergencia.</string>
 
@@ -130,6 +130,6 @@
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
     <string name="camera_breakdown">Mal funcionamiento de la cámara</string>
-    <string name="camera_radar_error">Radar ultrasonik rosak, sila periksa!</string>
-    <string name="camera_please_park">Hentikan kenderaan!</string>
+    <string name="camera_radar_error">Fallo del radar de ultrasonido. ¡Verifique!</string>
+    <string name="camera_please_park">¡Deténgase!</string>
 </resources>
