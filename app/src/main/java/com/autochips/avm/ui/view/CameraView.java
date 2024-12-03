@@ -801,10 +801,13 @@ public class CameraView extends View implements LifecycleOwner {
     private void setWindowType() {
         KLog.d("setWindowType()");
         boolean bl = rootView.isAttachedToWindow();
-        mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
+        int newHeight = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
         if (AvmRuntime.self().isRearGearSts()) {
-            mWindowLps.height = 1080;
+            newHeight = 1080;
         }
+        if (mWindowLps.height == newHeight) return;
+        mWindowLps.height = newHeight;
+
         KLog.d("刷新--setWindowType-bl ：" + bl);
 //        CameraGLSurfaceView.glStatus ;
         if (bl && CameraGLSurfaceView.glStatus == 1 && isShowing) {
