@@ -137,7 +137,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     private Handler mHandler;
     public static boolean isCalibration = false;
-    public boolean isActAndWindowMode = false; //act + window 模式
+    public boolean isActAndWindowMode = true; //act + window 模式
 
     private boolean isFirstEnter = true;
     private AvmManager mAvmManager;
@@ -597,13 +597,16 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     angle = 0.0f;
                 }
                 if (angle > 540) {
-                    angle = 540;
+                    angle = 540.0f;
                 } else if (angle < -540) {
-                    angle = -540;
+                    angle = -540.0f;
                 }
                 //angle = (float) (((angle + 540.0) / 1080.0) * 72.0 - 36.0);
 //                bvavmJNI.bwSetWheelAngle(angle * -1);
-                if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) BvAvmJNIHelper.getInstance().bwSetWheelAngle(angle * -1);
+                if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
+                    AvmApp.getInstance().getCameraView().getViewModel().setWheelAngle(angle * -1);
+                }
+                //if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) BvAvmJNIHelper.getInstance().bwSetWheelAngle(angle * -1);
             }
         } else if (vehicleId == MIRROR_FOLD_UNFOLD_STATUS) { // 后视镜折叠
             KLog.d(" 后视镜折叠 ....  ..... " + value);
@@ -615,9 +618,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 int gear = (int) value;// 第一次开机后的默认值
                 if (gear == 0) return;
                 AvmRuntime.self().gearChange(gear);
-                BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
+                AvmApp.getInstance().getCameraView().getViewModel().updateTrajLineStatus(gear);
+                //BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
                 if (gear == 4) {
-                    BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
+                    AvmApp.getInstance().getCameraView().getViewModel().bwClearCarBottomImage();
+                    //BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                 }
             }
         }

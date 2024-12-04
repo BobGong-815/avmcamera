@@ -75,15 +75,15 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         //初始化摄像头画面数据
         //bvavmJNI.avmInit();
         //初始化AVM首页弹窗
-        int[] rvcStatus = new int[1];
-        rvcStatus[0] = 0;
-        bvavmJNI.bwGetRVCStatus(rvcStatus);
-        mAvmRvcState = rvcStatus[0];
-        KLog.d("[onCreate] mAvmRvcState:" + mAvmRvcState);
-        if (mAvmRvcState != 1 && mAvmRvcState != -1) {
-//            bvavmJNI.bwNotifyRVC(0);
-            BvAvmJNIHelper.getInstance().bwNotifyRVC(0);
-        }
+//        int[] rvcStatus = new int[1];
+//        rvcStatus[0] = 0;
+//        bvavmJNI.bwGetRVCStatus(rvcStatus);
+//        mAvmRvcState = rvcStatus[0];
+//        KLog.d("[onCreate] mAvmRvcState:" + mAvmRvcState);
+//        if (mAvmRvcState != 1 && mAvmRvcState != -1) {
+////            bvavmJNI.bwNotifyRVC(0);
+//            BvAvmJNIHelper.getInstance().bwNotifyRVC(0);
+//        }
         //数据埋点
         //DataManager.init(this);
         Thread.setDefaultUncaughtExceptionHandler(this);

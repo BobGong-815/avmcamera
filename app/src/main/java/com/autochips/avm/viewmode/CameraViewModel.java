@@ -85,6 +85,9 @@ public class CameraViewModel extends BaseCameraViewModel {
     private final int MSG_SIM_WHEEL_SPEED = 20;
     private final int MSG_SET_TRAJLINE_ENABLE = 21;
     private final int MSG_TURN_LAMP_CHANGE = 22;
+    private final int MSG_VHEEL_ANGLE = 24;
+    private final int MSG_CLEAR_BOTTOM = 25;
+    private final int MSG_SET_BWSTATUS = 26;
 
     public CameraViewModel() {
         liveDataCamera2DTopUI = new MutableLiveData<>();
@@ -149,6 +152,14 @@ public class CameraViewModel extends BaseCameraViewModel {
                     CameraViewModelHelper.getInstance().showLight3DModel(msg.arg1, msg.arg2);
                 } else if (msg.what == MSG_RADAR_ACTIVE) {
                     CameraViewModelHelper.getInstance().radarActive(msg.arg1);
+                } else if(msg.what == MSG_VHEEL_ANGLE){
+                    if(msg.obj instanceof Float) {
+                        BvAvmJNIHelper.getInstance().bwSetWheelAngle((float)msg.obj);
+                    }
+                } else if(msg.what == MSG_CLEAR_BOTTOM){
+                    BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
+                } else if (msg.what == MSG_SET_BWSTATUS) {
+                    bvavmJNI.bwSetRVCStatus(msg.arg1);
                 } else if (msg.what == MSG_RADAR_EXIT) {
                     CameraViewModelHelper.getInstance().radarExit(msg.arg1);
                 } else if (msg.what == MSG_UPDATE_TRAJ_LINE_STS) {
@@ -855,6 +866,13 @@ public class CameraViewModel extends BaseCameraViewModel {
         threadHandler.sendMessage(message);
     }
 
+    public void setWheelAngle(Object value) {
+        Message message = Message.obtain();
+        message.what = MSG_VHEEL_ANGLE;
+        message.obj = value;
+        threadHandler.sendMessage(message);
+    }
+
     public void setTrajLineEnable(byte value) {
         Message message = Message.obtain();
         message.what = MSG_SET_TRAJLINE_ENABLE;
@@ -876,9 +894,22 @@ public class CameraViewModel extends BaseCameraViewModel {
         threadHandler.sendMessage(message);
     }
 
+    public void bwClearCarBottomImage() {
+        Message message = Message.obtain();
+        message.what = MSG_CLEAR_BOTTOM;
+        threadHandler.sendMessage(message);
+    }
+
     public void setUndistortLevel() {
         Message message = Message.obtain();
         message.what = MSG_SET_UNDISTORT_LEVEL;
+        threadHandler.sendMessage(message);
+    }
+
+    public void setBwSetRVCStatus(int status) {
+        Message message = Message.obtain();
+        message.what = MSG_SET_BWSTATUS;
+        message.arg1 = status;
         threadHandler.sendMessage(message);
     }
 

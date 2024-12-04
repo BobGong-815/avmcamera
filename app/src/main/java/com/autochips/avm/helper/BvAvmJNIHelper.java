@@ -38,6 +38,7 @@ public class BvAvmJNIHelper {
     private boolean isCalibration = false;
 
     public static boolean isAvmDeInit = false;
+    public static boolean isAvmInit = false;
     private View.OnClickListener listener;
 
     public static BvAvmJNIHelper getInstance() {
@@ -110,6 +111,7 @@ public class BvAvmJNIHelper {
             updateTransparentChassis();
 //        bvavmJNI.bwNotifyRVC(0);
             isAvmDeInit = true;
+            isAvmInit = true;
             return res;
         }
     }
