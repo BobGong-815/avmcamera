@@ -289,13 +289,13 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmApp.getInstance().getCameraView().showSmartWin();
                             SystemProperties.setGlobal("avm_state", 1);
                             mAvmManager.sendAvmState(1);
-                            if (isActAndWindowMode) {
-                                if (!AvmRuntime.self().isRearGearSts()) {
-                                    intent = new Intent(AvmService.this, MainActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                }
-                            }
+//                            if (isActAndWindowMode) {
+//                                if (!AvmRuntime.self().isRearGearSts()) {
+//                                    intent = new Intent(AvmService.this, MainActivity.class);
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    startActivity(intent);
+//                                }
+//                            }
                             break;
                         case DataDefine.ACT_PASSIVE_DUAL_CARD:
                             KLog.i("avmService____ ACT_PASSIVE_DUAL_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);
