@@ -1482,6 +1482,7 @@ public class CameraView extends View implements LifecycleOwner {
 //        AvmApp.getInstance().getViewBottom().showSmartWin();
     }
 
+    private boolean isFristShowApp = true;
     /**
      * 显示全屏 页面
      * 如果，全屏显示，则不显示小屏
@@ -1526,7 +1527,10 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.x = 0;
         mWindowLps.y = 0;
         rootView.setVisibility(View.VISIBLE); // 设置了mWindow。flags之后 修复隐藏状态栏
-
+        if(isFristShowApp && BvAvmJNIHelper.isAvmInit) {
+            isFristShowApp = false;
+            viewModel.setBwSetRVCStatus(4);
+        }
         showComm();
         mMainHandler.postDelayed(() -> {
             // 延时隐藏，防止事件冲突

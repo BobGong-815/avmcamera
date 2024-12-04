@@ -188,6 +188,8 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         registry.setCurrentState(Lifecycle.State.DESTROYED);
     }
 
+    private boolean isFirstShow = true;
+    private boolean isVisableLineShow = false;
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
@@ -197,8 +199,15 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             settingBinding.transparentChassisTab.setEnable(true);
             settingBinding.swSettingPathLine.setEnabled(true);
             settingBinding.switchSignalActivates.setEnabled(true);
+            isVisableLineShow = settingBinding.swSettingPathLine.isChecked();
         }else{
             mSegmentTabLayout.setEnable(true);
+            if(isFirstShow || isVisableLineShow != settingBinding.swSettingPathLine.isChecked()){
+                if(isFirstShow) {
+                    isFirstShow = false;
+                }
+                AvmApp.getInstance().getCameraView().getViewModel().setBwSetRVCStatus(2);
+            }
         }
 
     }

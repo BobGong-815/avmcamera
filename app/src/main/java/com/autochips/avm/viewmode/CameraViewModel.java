@@ -85,6 +85,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     private final int MSG_SIM_WHEEL_SPEED = 20;
     private final int MSG_SET_TRAJLINE_ENABLE = 21;
     private final int MSG_TURN_LAMP_CHANGE = 22;
+    private final int MSG_SET_BWSTATUS = 23;
 
     public CameraViewModel() {
         liveDataCamera2DTopUI = new MutableLiveData<>();
@@ -155,6 +156,8 @@ public class CameraViewModel extends BaseCameraViewModel {
                     BvAvmJNIHelper.getInstance().bwSetTrajLineStatus((byte) msg.arg1);
                 } else if (msg.what == MSG_SET_UNDISTORT_LEVEL) {
                     bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                }else if (msg.what == MSG_SET_BWSTATUS) {
+                    bvavmJNI.bwSetRVCStatus(msg.arg1);
                 } else if (msg.what == MSG_TURN_LAMP_CHANGE) {
                     AvmRuntime.self().turnLampChange(msg.arg1);
                 } else if (msg.what == MSG_SIM_WHEEL_SPEED) {
@@ -872,6 +875,13 @@ public class CameraViewModel extends BaseCameraViewModel {
     public void setUndistortLevel() {
         Message message = Message.obtain();
         message.what = MSG_SET_UNDISTORT_LEVEL;
+        threadHandler.sendMessage(message);
+    }
+
+    public void setBwSetRVCStatus(int status) {
+        Message message = Message.obtain();
+        message.what = MSG_SET_BWSTATUS;
+        message.arg1 = status;
         threadHandler.sendMessage(message);
     }
 

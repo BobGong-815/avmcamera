@@ -45,6 +45,7 @@ public class SystemProperties {
         return value;
     }
 
+    private static int lastSettingRadarValue = -100;
     public static int getInt(String key, int defaultValue) {
         Class<?> SysProp = null;
 //        Method method = null;
@@ -57,7 +58,14 @@ public class SystemProperties {
 //            Log.e(TAG,"read SystemProperties error",e);
 //        }
        int value = Settings.System.getInt(AvmApp.getInstance().getContentResolver(), key,defaultValue);
-        KLog.d(TAG,key +"  key获取属性值："+ value);
+       if(!key.equals("settingRadarActivatedPanorama")) {
+           KLog.d(TAG, key + "  key获取属性值：" + value);
+       }else{
+           if(lastSettingRadarValue != value){
+               KLog.d(TAG, key + "  key获取属性值：" + value);
+           }
+           lastSettingRadarValue = value;
+       }
         return value;
     }
 
