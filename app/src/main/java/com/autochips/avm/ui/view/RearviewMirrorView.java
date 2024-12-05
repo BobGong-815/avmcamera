@@ -199,6 +199,10 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
     public void onClick(View view) {
         KLog.d("后视镜11----");
         if (view.getId() == R.id.ll_setting_rearview_mirror_down) {
+            if(!AvmRuntime.self().isRearGearSts()){
+                KLog.d("is not R gear");
+                return;
+            }
             // 外后视镜倒车下翻
             ThreadPoolUtil.getInstance().execute(() -> {
                 int reverseAutoMaticStatus = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
