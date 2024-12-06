@@ -182,7 +182,7 @@ public class BvAvmJNIHelper {
 
     public long bwCreateCamera(String path, String met) {
         synchronized (syncObj) {
-            if (!isActive) return 0;
+            //if (!isActive) return 0;
             if (bwInitValue != -1 && bwInitValue != 0) return bwInitValue;
             KLog.d("创建 bwCreateCamera：" + bwInitValue);
             return bwInitValue = bvavmJNI.bwCreateCamera(path, met);

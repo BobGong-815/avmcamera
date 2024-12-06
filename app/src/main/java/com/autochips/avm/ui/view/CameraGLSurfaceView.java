@@ -175,10 +175,10 @@ public class CameraGLSurfaceView extends GLSurfaceView {
 //                    isOpenCamera = true;
 //                }
 //            }
-            if (BvAvmJNIHelper.getInstance().isCamera2Device()) {
-                BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
-                isOpenCamera = true;
-            }
+//            if (BvAvmJNIHelper.getInstance().isCamera2Device()) {
+//                BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
+//                isOpenCamera = true;
+//            }
 
         }
     }
