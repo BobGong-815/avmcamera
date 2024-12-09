@@ -1433,7 +1433,7 @@ public class AvmRuntime {
     }
 
     public void speedChange(float value) {
-//        KLog.d("speedChange value is " + value);
+        //KLog.d("speedChange value is " + value);
         boolean flag = false;
         synchronized (syncObj) {
             dataSts.currSpeed = CameraViewModelHelper.mpsToKmh((Float) value);
@@ -1442,9 +1442,6 @@ public class AvmRuntime {
             if (dataSts.overSpeedSts) {
                 boolean isNormalSpeed = dataSts.currSpeed < 30 && !dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) &&
                         dataSts.fvSts[0] == DataDefine.FV_STATE_NON && dataSts.otherOverSpeedSts;
-                if(dataSts.otherOverSpeedSts){
-                    dataSts.otherOverSpeedSts = false;
-                }
                 if (dataSts.currSpeed < 25 || isNormalSpeed/*SPEED_THRESHOLD*/) {
                     if (getOverExitFlag() == 1) {
                         dataSts.events.add(DataDefine.EVT_REDUCE_SPEED1);
@@ -1463,6 +1460,7 @@ public class AvmRuntime {
                     flag = true;
                 }
             }
+            //KLog.d("speedChange value is " + dataSts.currSpeed +" flag:"+flag);
             if (flag) {
                 syncObj.notify();
             }
