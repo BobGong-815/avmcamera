@@ -363,9 +363,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             break;
                     }
                 } else if (msg.what == MSG_CR_CAMERA) {
-                    if (!BvAvmJNIHelper.isAvmDeInit) {
-                        BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
-                    }
+                    BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
 //                    if (JNI_IN_THREAD_FLAG) {
 //                        AvmApp.getInstance().getCameraView().getViewModel().createCamera();
 //                    } else {
