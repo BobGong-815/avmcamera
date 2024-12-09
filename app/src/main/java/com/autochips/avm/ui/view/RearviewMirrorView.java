@@ -228,10 +228,14 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             if (uiMode == UiModeManager.MODE_NIGHT_YES) {
                 if(rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected()) {
                     rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                }else {
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(getResources().getColor(R.color.setting_view_content_color));
                 }
             } else {
                 if(rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected()) {
                     rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.white));
+                }else {
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
                 }
             }
         } else if (view.getId() == R.id.ll_setting_expand) {//展开

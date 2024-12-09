@@ -137,7 +137,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     private Handler mHandler;
     public static boolean isCalibration = false;
-    public boolean isActAndWindowMode = true; //act + window 模式
+    public boolean isActAndWindowMode = false; //act + window 模式
 
     private boolean isFirstEnter = true;
     private AvmManager mAvmManager;
