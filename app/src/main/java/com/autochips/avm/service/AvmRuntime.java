@@ -1438,9 +1438,6 @@ public class AvmRuntime {
             if (dataSts.overSpeedSts) {
                 boolean isNormalSpeed = dataSts.currSpeed < 30 && !dataSts.events.contains(DataDefine.EVT_TURN_LAMP_RESET) &&
                         dataSts.fvSts[0] == DataDefine.FV_STATE_NON && dataSts.otherOverSpeedSts;
-                if(dataSts.otherOverSpeedSts){
-                    dataSts.otherOverSpeedSts = false;
-                }
                 if (dataSts.currSpeed < 25 || isNormalSpeed/*SPEED_THRESHOLD*/) {
                     if (getOverExitFlag() == 1) {
                         dataSts.events.add(DataDefine.EVT_REDUCE_SPEED1);
