@@ -45,10 +45,10 @@
     <string name="translate_left_rear">左后视角</string>
     <string name="translate_right_rear">右后视角</string>
     <string name="automatic_calibration_success">自动标定成功</string>
-    <string name="front_wide_angle">Grandangolo ant.</string>
-    <string name="back_wide_angle">Grandangolo post.</string>
-    <string name="before">Ruote anteriori</string>
-    <string name="rear_wheel">Ruote posteriori</string>
+    <string name="front_wide_angle">Grandangolo \nant.</string>
+    <string name="back_wide_angle">Grandangolo \npost.</string>
+    <string name="before">Ruote \nanteriori</string>
+    <string name="rear_wheel">Ruote \nposteriori</string>
     <string name="radar_sound_open">Il tono di richiesta radar è attivato</string>
     <string name="radar_sound_close">Tono avviso radar off</string>
     <string name="parking_assist_system_down">Malfunzionamento del sistema di assistenza al parcheggio, controlla!</string>
