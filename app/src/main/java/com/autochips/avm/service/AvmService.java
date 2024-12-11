@@ -90,6 +90,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -417,18 +418,37 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //        }
         //adb shell am start-service -n com.autochips.avm/.service.AvmService --ei avm_onclick 1
         if (intent != null) {
-            int avm_onclick = intent.getIntExtra("avm_start", -1);
-            int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
-            KLog.d("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);
-            if (avm_onclick != -1) {//-1表示是通过AS启动的
-                if (avm_state == 0) {
-                    AvmRuntime.self().artificialEnter();
-                    if (isFirstEnter) { //avm首次被占用摄像头被释放，onCreate bwDele;后 点击进行创建
-                        mHandler.sendEmptyMessage(MSG_CR_CAMERA);
-                        isFirstEnter = false;
+            if(!TextUtils.isEmpty(intent.getStringExtra("initCam"))){
+                KLog.i("init can");
+                //快速启动
+                mHandler.postDelayed(() -> {
+                    CanManager.getInstance().init(getApplicationContext());
+                    CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
+                    AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
+                    CanManager.getInstance().startConnect((v -> {
+                        KLog.d("注册完成----fishTh ");
+                        CameraViewModelHelper.getInstance().initActive();
+                        //发送avm初始化状态
+                        CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0,0x0);
+                    }));
+                }, 100);
+                mHandler.postDelayed(()->{
+                    AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
+                },500);
+            }else {
+                int avm_onclick = intent.getIntExtra("avm_start", -1);
+                int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
+                KLog.d("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);
+                if (avm_onclick != -1) {//-1表示是通过AS启动的
+                    if (avm_state == 0) {
+                        AvmRuntime.self().artificialEnter();
+                        if (isFirstEnter) { //avm首次被占用摄像头被释放，onCreate bwDele;后 点击进行创建
+                            mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            isFirstEnter = false;
+                        }
+                    } else if (avm_state == 1) {
+                        AvmRuntime.self().artificialExit();
                     }
-                } else if (avm_state == 1) {
-                    AvmRuntime.self().artificialExit();
                 }
             }
         }
