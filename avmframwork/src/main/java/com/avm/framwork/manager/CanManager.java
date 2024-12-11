@@ -469,7 +469,7 @@ public class CanManager implements Handler.Callback {
                     int propertyId = carPropertyValue.getPropertyId();
                     Object value = carPropertyValue.getValue();
                     int status = carPropertyValue.getStatus();
-                    if (propertyId == CLUSTER_VCU_GEAR_LVL_DISP && status == 0) {
+                    if (propertyId == CLUSTER_VCU_GEAR_LVL_DISP && status == 1) {
                         Log.v(TAG, "无效信号 propertyId =" + propertyId);
                         return;
                     }
