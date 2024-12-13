@@ -95,7 +95,7 @@ import me.goldze.mvvmhabit.utils.KLog;
 @SuppressLint("WrongConstant")
 public class CameraView extends View implements LifecycleOwner {
     private BottomDialog bottomDialog;
-    private boolean SHOW_OVERLAY_LAYER = false;
+    private boolean SHOW_OVERLAY_LAYER = true;
     private static final String TAG = CameraView.class.getName();
     private LifecycleRegistry registry = new LifecycleRegistry(this);
 
@@ -1276,13 +1276,21 @@ public class CameraView extends View implements LifecycleOwner {
 
         if (mWindowLps == null) return;
 
-        mWindowLps.y = 0;
-        if (AvmApp.getInstance().isRight) {
-            mWindowLps.x = 1360;
-        }
+        mWindowLps.y = 84;
+        mWindowLps.x = 42;
         isSmartWin = true;
-        mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width_smart) + 142;
-        mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
+        mWindowLps.width = 486;
+        mWindowLps.height = 870;
+        ConstraintLayout.LayoutParams layoutParamsF = (ConstraintLayout.LayoutParams)viewFrame.getLayoutParams();
+        layoutParamsF.height = 870;
+        layoutParamsF.width = 486;
+        layoutParamsF.topMargin = 0;
+        viewFrame.setLayoutParams(layoutParamsF);
+
+        ConstraintLayout.LayoutParams layoutParamsClose = (ConstraintLayout.LayoutParams)mViewCameraBinding.rlClose.getLayoutParams();
+        layoutParamsClose.topMargin = 9;
+        layoutParamsClose.leftMargin = 9;
+        mViewCameraBinding.rlClose.setLayoutParams(layoutParamsClose);
 
         mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
 
@@ -1316,9 +1324,6 @@ public class CameraView extends View implements LifecycleOwner {
      * 如果，全屏显示，则不显示小屏
      */
     public void showFullWin() {
-        if (mWindowLps == null) return;
-        mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | //设置底部可以点击 周边点击添加 2024 08 29
-                WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
         Log.i(TAG, isSmartWin + " valGear showFullWin: 全屏显示  t底部透明 " + isFullWin + " 第一帧CameraGLSurfaceView：" + CameraGLSurfaceView.glStatus);
         if (isFullWin) {
             updateTabViewIndex();
@@ -1340,7 +1345,18 @@ public class CameraView extends View implements LifecycleOwner {
         isFullWin = true;
         mWindowLps.x = 0;
         mWindowLps.y = 0;
-        rootView.setVisibility(View.VISIBLE); // 设置了mWindow。flags之后 修复隐藏状态栏
+        //rootView.setVisibility(View.VISIBLE); // 设置了mWindow。flags之后 修复隐藏状态栏
+
+        ConstraintLayout.LayoutParams layoutParamsF = (ConstraintLayout.LayoutParams)viewFrame.getLayoutParams();
+        layoutParamsF.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParamsF.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParamsF.topMargin = 84;
+        viewFrame.setLayoutParams(layoutParamsF);
+
+        ConstraintLayout.LayoutParams layoutParamsClose = (ConstraintLayout.LayoutParams)mViewCameraBinding.rlClose.getLayoutParams();
+        layoutParamsClose.topMargin = 93;
+        layoutParamsClose.leftMargin = 51;
+        mViewCameraBinding.rlClose.setLayoutParams(layoutParamsClose);
         if(isFristShowApp && BvAvmJNIHelper.isAvmInit) {
             isFristShowApp = false;
             viewModel.setBwSetRVCStatus(4);
@@ -1364,7 +1380,7 @@ public class CameraView extends View implements LifecycleOwner {
     private boolean isSmartWinToFull = false;
 
     public void showComm() {
-
+        setVisibility(VISIBLE);
         Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
 //        isSmartWin = false;
         updateWind();
@@ -1402,16 +1418,6 @@ public class CameraView extends View implements LifecycleOwner {
         Log.i(TAG, isFullWin + "  isFullWin 显示AVM 结束 showComm isSmartWin： " + isSmartWin);
         llSetting.setSelected(false);
         llBackMirror.setSelected(false);
-        if (AvmApp.mAvmRvcState == 1) {
-            KLog.d("rvc isShow");
-            AvmApp.mAvmRvcState = 0;
-            //此时表示正在显示
-            mMainHandler.postDelayed(() -> {
-//                int resRvc = bvavmJNI.bwNotifyRVC(0);
-                int resRvc = BvAvmJNIHelper.getInstance().bwNotifyRVC(0);
-                KLog.d("关闭resRvc  = " + resRvc);
-            }, 2000);
-        }
     }
 
     private void inputViewModel() {
@@ -1476,12 +1482,6 @@ public class CameraView extends View implements LifecycleOwner {
         if (mWindowLps.height == 1080) {
             viewFrame.setPadding(0, 0, 0, 0);
             bottom = 90;
-        } else {
-            if (isSmartWin) {
-                viewFrame.setPadding(40, 0, 105, 40);
-            } else if (isFullWin) {
-                viewFrame.setPadding(0, 0, 0, 0);
-            }
         }
         KLog.i("mWindowLps.height ....1.... left top right bottom : " + left + ", " + top + ", " + right + ", " + bottom);
         mainAvmViewRootId.setPadding(left, top, right, bottom);
@@ -1580,9 +1580,6 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.alpha = 0.0f;
         mWindowLps.width = 1;
         mWindowLps.height = 1;
-
-        mWindowLps.flags = ~WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | ~WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | ~WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | ~WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
-
         if (cameraBinding.getRoot().getParent() != null) {
 //          mWindowManager.removeView(cameraBinding.getRoot());
 //          mWindowManager.removeView(mViewCameraBinding.getRoot());
@@ -1592,9 +1589,8 @@ public class CameraView extends View implements LifecycleOwner {
         Log.d("AvmRuntime", "dismissView() rootView.getParent() is " + rootView.getParent());
         if (rootView.getParent() != null) {
             mWindowManager.updateViewLayout(rootView, mWindowLps);
-            rootView.setVisibility(View.GONE);
         }
-
+        setVisibility(View.GONE);
         //释放摄像头画面数据
 //            BvAvmJNIHelper.getInstance().avmDeInit();
 //        SystemProperties.setGlobal("avm_state", 0);
@@ -2174,7 +2170,7 @@ public class CameraView extends View implements LifecycleOwner {
                 //SkinCompatManager.getInstance().loadSkin("day",null,SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
                 bvavmJNI.bwSetIsDay(1);
                 if (SHOW_OVERLAY_LAYER)
-                    cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
+                    cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg));
                 mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
                 cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg_day);
                 ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_cam_error_day));

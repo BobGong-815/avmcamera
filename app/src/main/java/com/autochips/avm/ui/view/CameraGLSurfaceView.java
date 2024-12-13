@@ -189,7 +189,7 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                     EGL10.EGL_RED_SIZE, 8,
                     EGL10.EGL_GREEN_SIZE, 8,
                     EGL10.EGL_BLUE_SIZE, 8,
-                    EGL10.EGL_ALPHA_SIZE, 0,// 8 改为0  为透字问题
+                    EGL10.EGL_ALPHA_SIZE, 8,// 8 改为0  为透字问题
                     EGL10.EGL_DEPTH_SIZE, 16,
                     EGL10.EGL_SAMPLE_BUFFERS, GL_TRUE,//打开多采样抗锯齿
                     EGL10.EGL_SAMPLES, 4,  // 采样数

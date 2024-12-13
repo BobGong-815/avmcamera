@@ -125,6 +125,8 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         rearviewMirrorBinding.llSettingRearviewMirrorDown.setOnTouchListener(new ItOnTouchListener(rearviewMirrorBinding.tvSettingRearview));
     }
 
+    private boolean isOnTouchFlod = false;//是否触摸了折叠
+    private boolean isOnTouchExpand = false;//是否触摸了展开
     class ItOnTouchListener implements OnTouchListener {
 
         private TextView textView;
@@ -135,31 +137,43 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
-            int uiMode = uiModeManager.getNightMode();
-            if (uiMode == UiModeManager.MODE_NIGHT_YES) {
+            boolean isCheck = v.isPressed();
+            if (mUiMode == UiModeManager.MODE_NIGHT_YES) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                }else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    if(!isCheck) {
+                        textView.setTextColor(getResources().getColor(R.color.setting_view_content_color));
+                    }
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     textView.setTextColor(getResources().getColor(R.color.setting_view_content_color));
                 }
             } else {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     textView.setTextColor(context.getResources().getColor(R.color.white));
+                }else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    if(!isCheck) {
+                        textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
+                    }
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
                 }
             }
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 if (v.getId() == R.id.ll_setting_expand) {//展开
+                    isOnTouchExpand = true;
                     rearviewMirrorModel.cancleTimer();
                     Integer[] arrUnfold = {1, 10};
                     CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
                 } else if (v.getId() == R.id.ll_setting_fold) {//折叠
+                    isOnTouchFlod = true;
                     rearviewMirrorModel.cancleTimer();
                     Integer[] arrFold = {1, 9};
                     CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
                 }
+            }else if(event.getAction() == MotionEvent.ACTION_UP){
+                rearviewMirrorModel.startTimer();//ACU_ORVMOperationReq
+                rearviewMirrorModel.setRunning(true);
             }
             return false;
         }
@@ -239,22 +253,37 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 }
             }
         } else if (view.getId() == R.id.ll_setting_expand) {//展开
-
-            rearviewMirrorModel.startTimer();//ACU_ORVMOperationReq
-            rearviewMirrorModel.setRunning(true);
-            Integer[] arrUnfold = {0, 0};
-            CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
-            if(AvmRuntime.self().getCurrentSped() <= 15) {
-                RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_expand));
+            if(!isOnTouchExpand){
+                rearviewMirrorModel.cancleTimer();
+                Integer[] arrUnfold = {1, 10};
+                CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
             }
+            mHandler.postDelayed(()->{
+                isOnTouchExpand = false;
+                rearviewMirrorModel.startTimer();//ACU_ORVMOperationReq
+                rearviewMirrorModel.setRunning(true);
+                Integer[] arrUnfoldP = {0, 0};
+                CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfoldP);
+                if(AvmRuntime.self().getCurrentSped() <= 15) {
+                    RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_expand));
+                }
+            },isOnTouchExpand ? 0 : 500);
         } else if (view.getId() == R.id.ll_setting_fold) {//折叠
-            rearviewMirrorModel.startTimer();
-            rearviewMirrorModel.setRunning(true);
-            Integer[] arrFold = {0, 0};
-            CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
-            if(AvmRuntime.self().getCurrentSped() <= 15) {
-                RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_fold));
+            if(!isOnTouchFlod){
+                rearviewMirrorModel.cancleTimer();
+                Integer[] arrFold = {1, 9};
+                CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
             }
+            mHandler.postDelayed(() -> {
+                isOnTouchFlod = false;
+                rearviewMirrorModel.startTimer();
+                rearviewMirrorModel.setRunning(true);
+                Integer[] arrFoldP = {0, 0};
+                CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFoldP);
+                if (AvmRuntime.self().getCurrentSped() <= 15) {
+                    RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_fold));
+                }
+            },isOnTouchFlod ? 0 : 500);
         }
 
     }
@@ -342,12 +371,13 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         }
     }
 
+    private int mUiMode = UiModeManager.MODE_NIGHT_NO;
     public void skinView(int uiMode) {
 //        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
 //        int uiMode = uiModeManager.getNightMode();
         KLog.e("换肤模式-切换-后视镜11---:" + uiMode);
         if (rearviewMirrorBinding == null) return;
-
+        mUiMode = uiMode;
         RearviewToast.getInstance().uiMode(uiMode);
         switch (uiMode) {
             case UiModeManager.MODE_NIGHT_YES:
