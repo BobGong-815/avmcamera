@@ -45,8 +45,8 @@
     <string name="translate_left_rear">左后视角</string>
     <string name="translate_right_rear">右后视角</string>
     <string name="automatic_calibration_success">自动标定成功</string>
-    <string name="front_wide_angle">Gran angular frontal</string>
-    <string name="back_wide_angle">Gran angular trasero</string>
+    <string name="front_wide_angle">Gran angular \nfrontal</string>
+    <string name="back_wide_angle">Gran angular \ntrasero</string>
     <string name="before">Ruedas \ndelanteras</string>
     <string name="rear_wheel">Ruedas \ntraseras</string>
     <string name="radar_sound_open">Tono de aviso de radar activado</string>

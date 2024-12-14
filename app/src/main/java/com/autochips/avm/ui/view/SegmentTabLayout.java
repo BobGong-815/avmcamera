@@ -5,10 +5,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -20,7 +17,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +43,11 @@ import com.jakewharton.rxbinding2.view.RxView;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.graphics.drawable.DrawableCompat;
 import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.utils.KLog;
 
@@ -150,8 +151,6 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
         }
         mValueAnimator = ValueAnimator.ofObject(new PointEvaluator(), mLastP, mCurrentP);
         mValueAnimator.addUpdateListener(this);
-
-
     }
 
     private void obtainAttributes(Context context, AttributeSet attrs) {
@@ -274,15 +273,15 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
                     }
                 });
         //if (enable && i == mCurrentTab) {
-            tabView.post(new Runnable() {
-                @Override
-                public void run() {
-                    // 获取当前的布局参数
-                    ViewGroup.LayoutParams params = tabView.getLayoutParams();
-                  if (isBold == 5 && params instanceof MarginLayoutParams) {
+        tabView.post(new Runnable() {
+            @Override
+            public void run() {
+                // 获取当前的布局参数
+                ViewGroup.LayoutParams params = tabView.getLayoutParams();
+                if (isBold == 5 && params instanceof MarginLayoutParams) {
 
-                      // 应用新的边距参数
-                      tabView.setLayoutParams(getTabMarginParams(position,params));
+                    // 应用新的边距参数
+                    tabView.setLayoutParams(getTabMarginParams(position,params));
                     return;
                   }
                     // 修改布局参数中的边距值
@@ -293,16 +292,16 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
                         marginParams.leftMargin = 3; // 左边距
                         marginParams.rightMargin = 3; // 右边距
 
-                        // 应用新的边距参数
-                        tabView.setLayoutParams(marginParams);
-                    }
-
-
-
+                    // 应用新的边距参数
+                    tabView.setLayoutParams(marginParams);
                 }
-            });
 
-      //  }
+
+
+            }
+        });
+
+        //  }
 
         tab_title.setAccessibilityDelegate(new AccessibilityDelegate() {
             @Override
@@ -335,18 +334,6 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
         mTabsContainer.addView(tabView, position, lp_tab);
     }
 
-
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            KLog.d(this + " onReceive : " + intent.getAction());
-            if (intent.getAction().equals(TestDefine.VIEW_MODE)) {
-                int kk = intent.getIntExtra("select", 0);
-                KLog.d("mTabsContainer.child size is " + mTabsContainer.getChildCount() + " , kk is " + kk);
-                mTabsContainer.getChildAt(kk).performClick();
-            }
-        }
-    };
     @Override
     public  void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -360,24 +347,25 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
         }
     }
 
-    @Override
-    public  void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mContext.unregisterReceiver(broadcastReceiver);
-    }
 
     private  MarginLayoutParams  getTabMarginParams(int position,ViewGroup.LayoutParams params){
-      MarginLayoutParams marginParams = (MarginLayoutParams) params;
-      marginParams.topMargin = 1; // 上边距
-      marginParams.bottomMargin = 1; // 下边距
-      if (position == 0){
-        marginParams.leftMargin = 1; // 左边距
-        marginParams.rightMargin = 0; // 右边距
-      }else {
-        marginParams.leftMargin = -38; // 左边距
-        marginParams.rightMargin = 0; // 右边距
-      }
-      return marginParams;
+        MarginLayoutParams marginParams = (MarginLayoutParams) params;
+        marginParams.topMargin = 0; // 上边距
+        marginParams.bottomMargin = 0; // 下边距
+        if (position == 0){
+            marginParams.leftMargin = 0; // 左边距
+            marginParams.rightMargin = 0; // 右边距
+        }else if(position== 3){
+            marginParams.leftMargin = -32; // 左边距
+            marginParams.rightMargin = 0; // 右边距
+        }else if(position == 1){
+            marginParams.leftMargin = -36; // 左边距
+            marginParams.rightMargin = -2; // 右边距
+        }else {
+            marginParams.leftMargin = -34; // 左边距
+            marginParams.rightMargin = -4; // 右边距
+        }
+        return marginParams;
     }
 
 
@@ -503,10 +491,10 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
                         ViewGroup.LayoutParams params = tabView.getLayoutParams();
 
                         // 修改布局参数中的边距值
-                      if (params instanceof MarginLayoutParams) {
-                        // 应用新的边距参数
-                        tabView.setLayoutParams(getTabMarginParams(position,params));
-                      }
+                        if (params instanceof MarginLayoutParams) {
+                            // 应用新的边距参数
+                            tabView.setLayoutParams(getTabMarginParams(position,params));
+                        }
 
                     }
                 });
@@ -521,7 +509,7 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
     }
 
     private void updateTabDrawable(int i, ImageView imageView) {
-//        KLog.d(TAG, "updateTabDrawable:" + i);
+        //        KLog.d(TAG, "updateTabDrawable:" + i);
         if (mTabDrawables == null || mTabDrawables.length <= i) {
             return;
         }
@@ -764,7 +752,6 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
     private void setCurrentTab(int currentTab) {
         KLog.d(TAG, "setCurrentTab: " + currentTab);
         KLog.d(TAG, "lastTab: " + mLastTab);
-//        Log.d("GXB", Log.getStackTraceString(new Throwable()));
 
         if (mCurrentTab >= 0) {
             mLastTab = this.mCurrentTab;

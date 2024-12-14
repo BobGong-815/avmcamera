@@ -125,6 +125,8 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         rearviewMirrorBinding.llSettingRearviewMirrorDown.setOnTouchListener(new ItOnTouchListener(rearviewMirrorBinding.tvSettingRearview));
     }
 
+    private boolean isOnTouchFlod = false;//是否触摸了折叠
+    private boolean isOnTouchExpand = false;//是否触摸了展开
     class ItOnTouchListener implements OnTouchListener {
 
         private TextView textView;
@@ -135,23 +137,33 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            boolean isCheck = v.isPressed();
             UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
             int uiMode = uiModeManager.getNightMode();
             if (uiMode == UiModeManager.MODE_NIGHT_YES) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                }else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    if(!isCheck) {
+                        textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
+                    }
                 }else if(event.getAction() == MotionEvent.ACTION_UP){
-                    textView.setTextColor(getResources().getColor(R.color.setting_view_content_color));
+                    textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
                 }
             } else {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     textView.setTextColor(context.getResources().getColor(R.color.white));
+                }else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    if(!isCheck) {
+                        textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
+                    }
                 }else if(event.getAction() == MotionEvent.ACTION_UP){
                     textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
                 }
             }
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 if (v.getId() == R.id.ll_setting_expand) {//展开
+                    isOnTouchExpand = true;
                     rearviewMirrorModel.cancleTimer();
                     Integer[] arrUnfold = {1, 10};
                     //区分3.0平台
@@ -161,6 +173,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                         CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
                     }
                 } else if (v.getId() == R.id.ll_setting_fold) {//折叠
+                    isOnTouchFlod = true;
                     rearviewMirrorModel.cancleTimer();
                     Integer[] arrFold = {1, 9};
                     if (AvmApp.EEA == 2) {
@@ -241,32 +254,56 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 }
             }
         } else if (view.getId() == R.id.ll_setting_expand) {//展开
-
-            rearviewMirrorModel.startTimer();//ACU_ORVMOperationReq
-            rearviewMirrorModel.setRunning(true);
-
-            Integer[] arrUnfoldP = {0, 0};
-            //区分3.0平台
-            if(AvmApp.EEA == 2){
-                CanManager.getInstance().setIntProperty(ACU_FOLD_UNFOLD_CTL_REQ, 0, 0);
-            }else {
-                CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfoldP);
+            if(!isOnTouchExpand){
+                rearviewMirrorModel.cancleTimer();
+                Integer[] arrUnfold = {1, 10};
+                //区分3.0平台
+                if (AvmApp.EEA == 2) {
+                    CanManager.getInstance().setIntProperty(ACU_FOLD_UNFOLD_CTL_REQ, 0, 2);
+                } else {
+                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
+                }
             }
-            if(AvmRuntime.self().getCurrentSped() <= 15) {
-                RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_expand));
-            }
+            mHandler.postDelayed(()->{
+                isOnTouchExpand = false;
+                rearviewMirrorModel.startTimer();//ACU_ORVMOperationReq
+                rearviewMirrorModel.setRunning(true);
+                Integer[] arrUnfoldP = {0, 0};
+                //区分3.0平台
+                if(AvmApp.EEA == 2){
+                    CanManager.getInstance().setIntProperty(ACU_FOLD_UNFOLD_CTL_REQ, 0, 0);
+                }else {
+                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfoldP);
+                }
+                if(AvmRuntime.self().getCurrentSped() <= 15) {
+                    RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_expand));
+                }
+            },isOnTouchExpand ? 0 : 500);
+
         } else if (view.getId() == R.id.ll_setting_fold) {//折叠
-            rearviewMirrorModel.startTimer();
-            rearviewMirrorModel.setRunning(true);
-            Integer[] arrFoldP = {0, 0};
-            if(AvmApp.EEA == 2){
-                CanManager.getInstance().setIntProperty(ACU_FOLD_UNFOLD_CTL_REQ, 0, 0);
-            }else {
-                CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFoldP);
+            if(!isOnTouchFlod){
+                rearviewMirrorModel.cancleTimer();
+                Integer[] arrFold = {1, 9};
+                if (AvmApp.EEA == 2) {
+                    CanManager.getInstance().setIntProperty(ACU_FOLD_UNFOLD_CTL_REQ, 0, 1);
+                } else {
+                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
+                }
             }
-            if(AvmRuntime.self().getCurrentSped() <= 15) {
-                RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_fold));
-            }
+            mHandler.postDelayed(()->{
+                isOnTouchFlod = false;
+                rearviewMirrorModel.startTimer();
+                rearviewMirrorModel.setRunning(true);
+                Integer[] arrFoldP = {0, 0};
+                if(AvmApp.EEA == 2){
+                    CanManager.getInstance().setIntProperty(ACU_FOLD_UNFOLD_CTL_REQ, 0, 0);
+                }else {
+                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFoldP);
+                }
+                if(AvmRuntime.self().getCurrentSped() <= 15) {
+                    RearviewToast.getInstance().showToast(getResources().getString(R.string.desc_rearview_mirror_fold));
+                }
+            },isOnTouchFlod ? 0 : 500);
         }
 
     }

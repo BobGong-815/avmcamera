@@ -97,7 +97,7 @@ import me.goldze.mvvmhabit.utils.KLog;
 @SuppressLint("WrongConstant")
 public class CameraView extends View implements LifecycleOwner {
     private BottomDialog bottomDialog;
-    private boolean SHOW_OVERLAY_LAYER = false;
+    private boolean SHOW_OVERLAY_LAYER = true;
     private static final String TAG = CameraView.class.getName();
     private LifecycleRegistry registry = new LifecycleRegistry(this);
 
@@ -186,7 +186,7 @@ public class CameraView extends View implements LifecycleOwner {
     protected RelativeLayout rlClose;
     protected View red2dTop,red2dLift,red2dRight,red2dBottom,red3dleftFront,red3dleftFront1,red3drightFront,red3drightFront1,
             red3dleftRear,red3dleftRear1,red3drightRear,red3drightRear1;
-    protected ConstraintLayout clCon,conRadarError;
+    protected ConstraintLayout clCon,conRadarError,conRadar;
     private int cameraShowType = -1;//记录当前显示视角，判断是否要显示故障,0前，1,后，2左，3右，4左右
     private int camera3DShowType = -1;//记录当前显示视角，判断是否要显示故障,-1、无选中、1,左前，2右前，3左后，4右后，
 
@@ -601,6 +601,7 @@ public class CameraView extends View implements LifecycleOwner {
             rlClose = mViewCameraRightBinding.rlClose;
             clCon = mViewCameraRightBinding.clCon;
             conRadarError = mViewCameraRightBinding.conRadarError;
+            conRadar = mViewCameraRightBinding.conRadar;
         }else {
             rearRadarViewId = mViewCameraBinding.rearRadarViewId;
             rearRadarFrontViewId = mViewCameraBinding.rearRadarFrontViewId;
@@ -680,6 +681,9 @@ public class CameraView extends View implements LifecycleOwner {
             cameraImageLayoutLift = mViewCameraBinding.cameraImageLayoutLift;
             cameraIvLift = mViewCameraBinding.cameraIvLift;
             rlClose = mViewCameraBinding.rlClose;
+            clCon = mViewCameraBinding.clCon;
+            conRadarError = mViewCameraBinding.conRadarError;
+            conRadar = mViewCameraBinding.conRadar;
         }
     }
 
@@ -1435,25 +1439,53 @@ public class CameraView extends View implements LifecycleOwner {
 
         if (mWindowLps == null) return;
 
-        mWindowLps.y = 0;
-        if (AvmApp.getInstance().isRight) {
-            mWindowLps.x = 1360;
-        }
+        mWindowLps.y = 84;
+        mWindowLps.x = AvmApp.getInstance().isRight ? 1392 : 42;
         isSmartWin = true;
-        mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width_smart) + 142;
-        mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
+        mWindowLps.width = 486;
+        mWindowLps.height = 870;
+        ConstraintLayout.LayoutParams layoutParamsF = (ConstraintLayout.LayoutParams)viewFrame.getLayoutParams();
+        layoutParamsF.height = 870;
+        layoutParamsF.width = 486;
+        layoutParamsF.topMargin = 0;
+        viewFrame.setLayoutParams(layoutParamsF);
         if(mViewCameraRightBinding != null){
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
-            layoutParams.setMarginEnd(115);
+            layoutParams.topMargin = 9;
+            layoutParams.setMarginEnd(9);
             rlClose.setLayoutParams(layoutParams);
             ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
-            layoutParamsRl.setMarginEnd(515);
+            layoutParamsRl.topMargin = 9;
+            layoutParamsRl.setMarginEnd(411);
             radarSoundLayout.setLayoutParams(layoutParamsRl);
-            ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
-            layoutParamsCl.setMarginEnd(64);
-            clCon.setLayoutParams(layoutParamsCl);
+            ConstraintLayout.LayoutParams layoutParamsClCon = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
+            layoutParamsClCon.topMargin = 0;
+            clCon.setLayoutParams(layoutParamsClCon);
+            ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)conRadar.getLayoutParams();
+            layoutParamsCl.setMarginEnd(0);
+            conRadar.setLayoutParams(layoutParamsCl);
             ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
-            layoutParamsCl.setMarginEnd(64);
+            layoutParamsCr.setMarginEnd(0);
+            layoutParamsCr.topMargin = 0;
+            conRadarError.setLayoutParams(layoutParamsCr);
+        }else {
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
+            layoutParams.topMargin = 9;
+            layoutParams.setMarginStart(51);
+            rlClose.setLayoutParams(layoutParams);
+            ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
+            layoutParamsRl.topMargin = 9;
+            layoutParamsRl.setMarginStart(411);
+            radarSoundLayout.setLayoutParams(layoutParamsRl);
+            ConstraintLayout.LayoutParams layoutParamsClCon = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
+            layoutParamsClCon.topMargin = 0;
+            clCon.setLayoutParams(layoutParamsClCon);
+            ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)conRadar.getLayoutParams();
+            layoutParamsCl.setMarginStart(0);
+            conRadar.setLayoutParams(layoutParamsCl);
+            ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
+            layoutParamsCr.setMarginStart(0);
+            layoutParamsCr.topMargin = 0;
             conRadarError.setLayoutParams(layoutParamsCr);
         }
         mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
@@ -1501,16 +1533,41 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
         if(mViewCameraRightBinding != null){
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
+            layoutParams.topMargin = 93;
             layoutParams.setMarginEnd(51);
             rlClose.setLayoutParams(layoutParams);
             ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
+            layoutParamsRl.topMargin = 93;
             layoutParamsRl.setMarginEnd(453);
             radarSoundLayout.setLayoutParams(layoutParamsRl);
-            ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
-            layoutParamsCl.setMarginEnd(0);
-            clCon.setLayoutParams(layoutParamsCl);
+            ConstraintLayout.LayoutParams layoutParamsClCon = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
+            layoutParamsClCon.topMargin = 84;
+            clCon.setLayoutParams(layoutParamsClCon);
+            ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)conRadar.getLayoutParams();
+            layoutParamsCl.setMarginEnd(42);
+            conRadar.setLayoutParams(layoutParamsCl);
             ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
-            layoutParamsCl.setMarginEnd(0);
+            layoutParamsCr.setMarginEnd(42);
+            layoutParamsCr.topMargin = 84;
+            conRadarError.setLayoutParams(layoutParamsCr);
+        }else{
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
+            layoutParams.topMargin = 93;
+            layoutParams.setMarginStart(51);
+            rlClose.setLayoutParams(layoutParams);
+            ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
+            layoutParamsRl.topMargin = 93;
+            layoutParamsRl.setMarginStart(453);
+            radarSoundLayout.setLayoutParams(layoutParamsRl);
+            ConstraintLayout.LayoutParams layoutParamsClCon = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
+            layoutParamsClCon.topMargin = 84;
+            clCon.setLayoutParams(layoutParamsClCon);
+            ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)conRadar.getLayoutParams();
+            layoutParamsCl.setMarginStart(42);
+            conRadar.setLayoutParams(layoutParamsCl);
+            ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
+            layoutParamsCr.setMarginStart(42);
+            layoutParamsCr.topMargin = 84;
             conRadarError.setLayoutParams(layoutParamsCr);
         }
         if (AvmRuntime.self().isRearGearSts()) {
@@ -1526,6 +1583,11 @@ public class CameraView extends View implements LifecycleOwner {
         isFullWin = true;
         mWindowLps.x = 0;
         mWindowLps.y = 0;
+        ConstraintLayout.LayoutParams layoutParamsF = (ConstraintLayout.LayoutParams)viewFrame.getLayoutParams();
+        layoutParamsF.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParamsF.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParamsF.topMargin = 84;
+        viewFrame.setLayoutParams(layoutParamsF);
         rootView.setVisibility(View.VISIBLE); // 设置了mWindow。flags之后 修复隐藏状态栏
         if(isFristShowApp && BvAvmJNIHelper.isAvmInit) {
             isFristShowApp = false;
@@ -1588,16 +1650,6 @@ public class CameraView extends View implements LifecycleOwner {
         Log.i(TAG, isFullWin + "  isFullWin 显示AVM 结束 showComm isSmartWin： " + isSmartWin);
         llSetting.setSelected(false);
         llBackMirror.setSelected(false);
-        if (AvmApp.mAvmRvcState == 1) {
-            KLog.d("rvc isShow");
-            AvmApp.mAvmRvcState = 0;
-            //此时表示正在显示
-            mMainHandler.postDelayed(() -> {
-//                int resRvc = bvavmJNI.bwNotifyRVC(0);
-                int resRvc = BvAvmJNIHelper.getInstance().bwNotifyRVC(0);
-                KLog.d("关闭resRvc  = " + resRvc);
-            }, 2000);
-        }
         CameraViewModelHelper.getInstance().setIsRadarActiveTow();
     }
 
@@ -1661,14 +1713,7 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.i("mWindowLps.height....... " + mWindowLps.height + "mWindowLps.wight...  " + mWindowLps.width);
         KLog.i("mWindowLps.height.......isSmartWin " + isSmartWin);
         if (mWindowLps.height == 1080) {
-            viewFrame.setPadding(0, 0, 0, 0);
             bottom = 90;
-        } else {
-            if (isSmartWin) {
-                viewFrame.setPadding(40, 0, 105, 40);
-            } else if (isFullWin) {
-                viewFrame.setPadding(0, 0, 0, 0);
-            }
         }
         KLog.i("mWindowLps.height ....1.... left top right bottom : " + left + ", " + top + ", " + right + ", " + bottom);
         mainAvmViewRootId.setPadding(left, top, right, bottom);
@@ -1695,11 +1740,10 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
     }
 
-    public View getRootView() {
-        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return null;
-
-        return rootView;
-    }
+//    public View getRootView() {
+//        if (mViewCameraBinding == null && mViewCameraRightBinding == null) return null;
+//        return rootView;
+//    }
 
     //R档时如果是2D状态，默认显示倒车视角及显示2D切换图标
     public void show2DView() {
@@ -1759,16 +1803,13 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.width = 1;
         mWindowLps.height = 1;
 
-        mWindowLps.flags = ~WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | ~WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | ~WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | ~WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
-
         if (cameraBinding.getRoot().getParent() != null) {
 //          mWindowManager.removeView(cameraBinding.getRoot());
 //          mWindowManager.removeView(mViewCameraBinding.getRoot());
             if (SHOW_OVERLAY_LAYER)
                 mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
         }
-        Log.d("AvmRuntime", "dismissView() rootView.getParent() is " + rootView.getParent());
-        if (rootView.getParent() != null) {
+        if(rootView.getParent() != null){
             mWindowManager.updateViewLayout(rootView, mWindowLps);
             rootView.setVisibility(View.GONE);
         }
@@ -2365,7 +2406,7 @@ public class CameraView extends View implements LifecycleOwner {
                 //SkinCompatManager.getInstance().loadSkin("day",null,SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
                 bvavmJNI.bwSetIsDay(1);
                 if (SHOW_OVERLAY_LAYER)
-                    cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
+                    cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg));
                 mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
                 cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg_day);
                 ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_cam_error_day));

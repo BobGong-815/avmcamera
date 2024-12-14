@@ -32,6 +32,8 @@
             android:id="@+id/viewFrame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="84px">
 
             <com.autochips.avm.ui.view.CameraGLSurfaceView
@@ -61,8 +63,8 @@
             android:id="@+id/con_radar_error"
             android:layout_width="486px"
             android:layout_height="870px"
-            android:layout_marginEnd="8px"
-            android:layout_marginTop="79px"
+            android:layout_marginEnd="42px"
+            android:layout_marginTop="84px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -70,18 +72,16 @@
                 android:id="@+id/radarfErrImgId1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="35px"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_f1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/radarfErrImgId2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="35px"
                 android:src="@mipmap/radar_fault_f2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -91,7 +91,6 @@
                 android:id="@+id/radarfErrImgId3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="35px"
                 android:src="@mipmap/radar_fault_f3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -101,7 +100,6 @@
                 android:id="@+id/radarfErrImgId4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="35px"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_f4"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -112,7 +110,6 @@
                 android:id="@+id/radarErrImgId1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="35px"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_1"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -123,7 +120,6 @@
                 android:id="@+id/radarErrImgId2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="35px"
                 android:src="@mipmap/radar_fault_2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -133,7 +129,6 @@
                 android:id="@+id/radarErrImgId3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="35px"
                 android:src="@mipmap/radar_fault_3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -143,7 +138,6 @@
                 android:id="@+id/radarErrImgId4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="35px"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_4"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -230,14 +224,16 @@
             android:id="@+id/cl_con"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="80px"
+            android:layout_marginTop="84dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--雷达警示图-->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="570px"
+                android:id="@+id/con_radar"
+                android:layout_width="486px"
                 android:layout_height="850px"
+                android:layout_marginEnd="42px"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -245,7 +241,7 @@
                     android:id="@+id/rearRadarFrontViewId"
                     android:layout_width="366px"
                     android:layout_height="174px"
-                    android:layout_marginTop="108px"
+                    android:layout_marginTop="104px"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
