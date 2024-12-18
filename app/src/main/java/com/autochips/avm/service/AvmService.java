@@ -627,7 +627,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         } else if (vehicleId == MIRROR_FOLD_UNFOLD_STATUS) { // 后视镜折叠
             KLog.d(" 后视镜折叠 ....  ..... " + value);
         } else if (vehicleId == SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE) { // 后视下翻
-
+            CameraViewModelHelper.getInstance().mirrorAutomaticStatus();
         } else if (vehicleId == CLUSTER_VCU_GEAR_LVL_DISP) {// 挡位
             KLog.d(" 挡位 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
