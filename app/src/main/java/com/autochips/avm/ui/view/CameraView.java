@@ -65,6 +65,8 @@ import androidx.lifecycle.Observer;
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.data.DataConstant;
+import com.autochips.avm.data.DataManager;
 import com.autochips.avm.databinding.ViewBottomBinding;
 import com.autochips.avm.databinding.ViewCameraBinding;
 import com.autochips.avm.databinding.ViewCameraRightBinding;
@@ -1138,6 +1140,7 @@ public class CameraView extends View implements LifecycleOwner {
             hidViewButtonTimer.start(position);
 //            bvavmJNI.bwSet3DfreeFlag(0);//复位3D
             if (position == 0) {
+                DataManager.writeFault(DataConstant.Code.ST_2D);
                 layout2d.setEnabled(true);
                 layout3d.setEnabled(false);
                 KLog.d(" layout2d tab ");
@@ -1154,6 +1157,7 @@ public class CameraView extends View implements LifecycleOwner {
 //                camera3DDirection = bvavmJNI.BW_2D_FRONT;
                 chick2DView(ViewSwitchManager.CAMERA_2_D_TOP);
             } else if (position == 1) {
+                DataManager.writeFault(DataConstant.Code.ST_3D);
                 layout3d.setEnabled(true);
                 layout2d.setEnabled(false);
                 layout2d.setVisibility(View.GONE);
@@ -1172,6 +1176,7 @@ public class CameraView extends View implements LifecycleOwner {
                 cameraBreakdown.setVisibility(View.GONE);
                 chick3DView(ViewSwitchManager.CAMERA_3_D);
             } else {
+                DataManager.writeFault(DataConstant.Code.ST_ANGLE);
                 cameraShowType = 0;
                 //setAngleStatus();
                 KLog.d("tabSelectListener isSmartWin = " + isSmartWin);
@@ -1616,7 +1621,9 @@ public class CameraView extends View implements LifecycleOwner {
         Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
 //        isSmartWin = false;
         updateWind();
-
+        DataManager.writeFault(DataConstant.Code.COMMING_APP);
+        DataManager.writeFault(DataConstant.Code.APK_OPEN);
+        DataManager.writeFault(DataConstant.Code.BP_SHOW);
         isShowing = true;
         hidViewButtonTimer.start(viewPosition);
         smartGroupId.setVisibility(VISIBLE);
@@ -1790,7 +1797,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
 //        bottomDialog.dismiss();
         if (SHOW_OVERLAY_LAYER) cameraBinding.frameLayoutId.setVisibility(GONE);
-
+        DataManager.writeFault(DataConstant.Code.BP_HIDE);
         isFullWin = false;
         isSmartWin = false;
         isShowing = false;
@@ -2120,6 +2127,12 @@ public class CameraView extends View implements LifecycleOwner {
 //        at android.opengl.GLSurfaceView$GLThread.guardedRun(GLSurfaceView.java:1574)
 //        at android.opengl.GLSurfaceView$GLThread.run(GLSurfaceView.java:1273)
         CallBackHelper.getInstance().setup(msg, param1, param2);
+    }
+
+    //埋点
+    public static void bAvmFault(int code, int param1, int param2) {
+        KLog.i("bAvmFault code:"+code);
+        DataManager.writeFault(code);
     }
 
     public void setRadar(int model, int len) {

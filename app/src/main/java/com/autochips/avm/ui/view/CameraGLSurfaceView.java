@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.data.DataConstant;
+import com.autochips.avm.data.DataManager;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.service.AvmService;
@@ -134,14 +136,22 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                 if (doCalibrateNum > 0) {
                     KLog.d("doCalibrateNum = " + doCalibrateNum);
                     if (doCalibrateNum == 1) {
-                        BvAvmJNIHelper.getInstance().avmRender2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+                        int renderResult1 = BvAvmJNIHelper.getInstance().avmRender2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
                         AvmApp.getInstance().getCameraView().getViewModel().callCalibrate(1);
+                        if(renderResult1 == -1){
+                            DataManager.writeFault(DataConstant.Code.SF_FAIL);
+                            DataManager.writeFault(DataConstant.Code.TX_FAIL);
+                        }
                     }
 
                     doCalibrateNum--;
                 } else {
                     if (CameraView.isIsShowing() && sCameraDirection != bvavmJNI.BW_VIEW_POWER_OFF) {
-                        BvAvmJNIHelper.getInstance().avmRender2(sCameraDirection);
+                        int renderResult2 = BvAvmJNIHelper.getInstance().avmRender2(sCameraDirection);
+                        if(renderResult2 == -1){
+                            DataManager.writeFault(DataConstant.Code.SF_FAIL);
+                            DataManager.writeFault(DataConstant.Code.TX_FAIL);
+                        }
                     }
                 }
                 Thread.sleep(30);

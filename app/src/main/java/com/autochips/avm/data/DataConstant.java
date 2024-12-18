@@ -205,6 +205,172 @@ public class DataConstant {
          */
         public static final String RENDER_FAILURE_RETRY    = getFaultCode(0x69);
 
+        /**
+         * 进入App
+         * */
+        public static final int COMMING_APP = 0x01;
+        /**
+         * 初始化成功
+         * */
+        public static final int INIT_SUCCESS = 0x02;
+        /**
+         * 初始化失败
+         * */
+        public static final int INIT_FAIL = 0x03;
+
+        /**
+         * 触发事件_硬按键
+         * */
+        public static final int CLICK_IN_FK = 0x1C;
+        /**
+         * 触发事件_软按键
+         * */
+        public static final int CLICK_IN_SUI = 0x1D;
+        /**
+         * 触发事件_语音
+         * */
+        public static final int CLICK_IN_SPEECH = 0x1E;
+        /**
+         * 触发事件_雷达
+         * */
+        public static final int ACTIVI_RADAR = 0x1F;
+        /**
+         * 触发事件_转向灯
+         * */
+        public static final int ACTIVI_LIGHT = 0x20;
+        /**
+         * 触发事件_*按键自定义
+         * */
+        public static final int ACTIVI_AJ = 0x21;
+        /**
+         * 触发事件_R档
+         * */
+        public static final int ACTIVI_RGEAR = 0x22;
+        /**
+         * 触发事件_N档溜车
+         * */
+        public static final int ACTIVI_NGEAR = 0x23;
+        /**
+         * 触发事件_地图
+         * */
+        public static final int ACTIVI_MAP = 0x24;
+
+        /**
+         * 霸屏信号显示
+         * */
+        public static final int BP_SHOW = 0x2d;
+        /**
+         * 霸屏信号隐藏
+         * */
+        public static final int BP_HIDE = 0x2e;
+        /**
+         * 视图切换到2D
+         * */
+        public static final int ST_2D = 0x33;
+        /**
+         * 视图切换到3D
+         * */
+        public static final int ST_3D = 0x34;
+        /**
+         * 视图切换到广角
+         * */
+        public static final int ST_ANGLE = 0x35;
+
+        /**
+         * 进入下线标定
+         * */
+        public static final int BD_IN = 0x36;
+        /**
+         * 请求进入下线标定结果
+         * */
+        public static final int BD_IN_RESULE = 0x37;
+        /**
+         * 标定预检查
+         * */
+        public static final int BD_CHECK = 0x38;
+        /**
+         * 请求标定预检查结果
+         * */
+        public static final int BD_CHECK_RESULT = 0x39;
+        /**
+         * 开始标定
+         * */
+        public static final int BD_START = 0x3A;
+        /**
+         * 请求开始标定的结果
+         * */
+        public static final int BD_START_RESULT = 0x3B;
+        /**
+         * 读取标定失败的原因
+         * */
+        public static final int BD_FALUT = 0x3C;
+        /**
+         * 请求读取失败原因结果
+         * */
+        public static final int BD_FALUT_RESULT = 0x3D;
+        /**
+         * 进入下线标定检查
+         * */
+        public static final int BD_IN_CHECK = 0x3E;
+        /**
+         * 请求下线标定检查的结果
+         * */
+        public static final int BD_IN_CHECK_RESULT = 0x3F;
+        /**
+         *标定成功
+         * */
+        public static final int BD_SUCCESS = 0x40;
+        /**
+         *标定失败
+         * */
+        public static final int BD_FAIL = 0x41;
+
+        /**
+         *雷达声音开
+         * */
+        public static final int RADAR_SOUND_OPEN = 0x42;
+        /**
+         *雷达声音关
+         * */
+        public static final int RADAR_SOUND_CLOSE = 0x43;
+
+        /**
+         *后视镜下翻开
+         * */
+        public static final int REARM_OPEN = 0x44;
+        /**
+         *后视镜下翻关
+         * */
+        public static final int REARM_CLOSE = 0x45;
+        /**
+         *收到"进STR消息"
+         * */
+        public static final int GET_IN_STR = 0x59;
+        /**
+         *收到"退STR消息"
+         * */
+        public static final int GET_OUT_STR = 0x5A;
+        /**
+         * APK打开信号
+         * */
+        public static final int APK_OPEN = 0x94;
+
+        /**
+         * 算法处理失败
+         * */
+        public static final int SF_FAIL = 0x10;
+        /**
+         * 图像渲染失败
+         * */
+        public static final int TX_FAIL = 0x11;
+        /**
+         * 数据保存成功(只诊断标定数据)
+         * */
+        public static final int SJ_SAVE_SUCCESS = 0x31;
+        /**
+         * 数据保存失败(只诊断标定数据)
+         * */
+        public static final int SJ_SAVE_FAIL = 0x32;
 
         private static final String getFaultCode(int type){
             return "0x" + Integer.toHexString((0x03 << 24) + (0x12 << 16) + (type << 4) + 0x02);

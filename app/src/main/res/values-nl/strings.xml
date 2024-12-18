@@ -9,7 +9,7 @@
     <string name="setting_low">Laag</string>
     <string name="setting_centre">Medium</string>
     <string name="setting_high">Hoog</string>
-    <string name="setting_radar_activated_panorama">Panoramisch zicht Als de \nradar geactiveerd is</string>
+    <string name="setting_radar_activated_panorama">Panoramisch zicht \nAls de radar geactiveerd is</string>
     <string name="setting_radar_activated_panorama_content">Ga naar panorama als snelh. lager dan 15 km/u en alarm voorradar.</string>
     <string name="setting_path_line">Spoorlijn</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
@@ -26,7 +26,7 @@
     <string name="setting_rearview_mirror_down_close">Achteruitkijkspiegel omlaag is uit.</string>
     <string name="camera_2d">2D</string>
     <string name="camera_3d">3D</string>
-    <string name="camera_wide_angle">Groothoek</string>
+    <string name="camera_wide_angle">Grooth.</string>
     <string name="desc_rearview_mirror_fold">Achteruitkijkspiegel al ingeklapt.</string>
     <string name="desc_rearview_mirror_expand">Achteruitkijkspiegel uitgeklapt</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>

@@ -26,7 +26,7 @@
     <string name="setting_rearview_mirror_down_close">Bajada del retrovisor desactivada</string>
     <string name="camera_2d">2D</string>
     <string name="camera_3d">3D</string>
-    <string name="camera_wide_angle">Gran angular</string>
+    <string name="camera_wide_angle">Angular</string>
     <string name="desc_rearview_mirror_fold">Retrovisor ya plegado</string>
     <string name="desc_rearview_mirror_expand">Espejo retrovisor abierto</string>
     <string name="desc_rearview_mirror_down_open">外后视镜自动下翻已开启</string>

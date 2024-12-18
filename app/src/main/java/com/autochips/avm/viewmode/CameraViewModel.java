@@ -29,6 +29,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.data.DataConstant;
+import com.autochips.avm.data.DataManager;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.info.CameraInfo;
@@ -479,8 +481,8 @@ public class CameraViewModel extends BaseCameraViewModel {
         }*/
 
         if (isCaliStatus == -1) {//未收到反馈
-            //byte[] arrBack = {0x02, 0x02,0x00,0x00};
-            //CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP, 0, arrBack);
+            byte[] arrBack = {0x02, 0x00,0x00,0x00};
+            CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
             KLog.d("标定-DIAG_31 app 未收到反馈：isCaliStatus " + isCaliStatus);
         } else if (isCaliStatus == 0) {//成功
             //byte[] arrBack = {0x00, 0x02,0x00,0x00};
@@ -491,6 +493,8 @@ public class CameraViewModel extends BaseCameraViewModel {
 //            isCaliStatus = -1;
             isDIAGCalibration = false;
             KLog.d("标定-DIAG_31 app 标定成功：isCaliStatus " + isCaliStatus);
+            DataManager.writeFault(DataConstant.Code.BD_SUCCESS);
+            DataManager.writeFault(DataConstant.Code.SJ_SAVE_SUCCESS);
             calibrationInspect(1);
         } else {//标定失败
             //byte[] arrBack = {0x01, 0x02,0x00,0x00};
@@ -499,6 +503,8 @@ public class CameraViewModel extends BaseCameraViewModel {
             CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
             isDIAGCalibration = false;
             KLog.d("标定-DIAG_31 app 标定失败：isCaliStatus " + isCaliStatus);
+            DataManager.writeFault(DataConstant.Code.BD_FAIL);
+            DataManager.writeFault(DataConstant.Code.SJ_SAVE_FAIL);
             calibrationInspect(0);
         }
     }
@@ -795,6 +801,10 @@ public class CameraViewModel extends BaseCameraViewModel {
         message.what = MSG_TURN_LAMP_CHANGE;
         message.arg1 = direction;
         threadHandler.sendMessageDelayed(message, delay);
+    }
+
+    public void removeCloseMsg() {
+        threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
     }
 
     public void simWheelSpeed() {

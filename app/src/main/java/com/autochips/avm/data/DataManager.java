@@ -2,6 +2,7 @@ package com.autochips.avm.data;
 
 
 import android.content.Context;
+import android.util.EventLog;
 
 import com.gxatek.cockpit.datamining.client.DataMiningClientManager;
 import com.gxatek.cockpit.datamining.client.reporter.CommonReporter;
@@ -213,6 +214,20 @@ public final class DataManager {
         getCommonReporter().reportAppEvent(new AppEvent(event, hashMap));
     }
 
+    /**
+     * 埋点
+     * */
+    public static void writeFault(int code){
+        FaultInfo faultInfo = new FaultInfo();
+        faultInfo.faultCode = code;
+        int tag = EventLog.getTagCode("data_mining");
+        faultInfo.timestamp = System.currentTimeMillis();
+        KLog.i("faultInfo code:"+code+" time:"+faultInfo.timestamp);
+        if(tag < 0){
+            tag = FaultInfo.DEFAULT_TAG;
+        }
+        EventLog.writeEvent(tag,faultInfo.tag,faultInfo.sysId,faultInfo.appId,faultInfo.timestamp,faultInfo.faultCode,faultInfo.faultString,faultInfo.faultReason,faultInfo.faultDetail);
+    }
 
     private static  HashMap getParameter(String code,String str,String reason,String detail){
         final HashMap<String, String> hashMap = new HashMap<>();

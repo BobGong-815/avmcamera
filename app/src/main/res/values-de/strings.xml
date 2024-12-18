@@ -45,8 +45,8 @@
     <string name="translate_left_rear">左后视角</string>
     <string name="translate_right_rear">右后视角</string>
     <string name="automatic_calibration_success">自动标定成功</string>
-    <string name="front_wide_angle">Front-Weitwinkel</string>
-    <string name="back_wide_angle">Rück-Weitwinkel</string>
+    <string name="front_wide_angle">Front\nWeitwinkel</string>
+    <string name="back_wide_angle">Rück\nWeitwinkel</string>
     <string name="before">Vorderräder</string>
     <string name="rear_wheel">Hinterräder</string>
     <string name="radar_sound_open">Radar-Warnton ist eingeschaltet</string>
