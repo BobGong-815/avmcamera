@@ -155,7 +155,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                     }
                 } else {
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
+                        textView.setTextColor(context.getResources().getColor(R.color.white));
                     } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
                         if (!isCheck) {
                             textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
@@ -252,7 +252,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 }
             } else {
                 if(rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected()) {
-                    rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.white));
                 }else {
                     rearviewMirrorBinding.tvSettingRearview.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
                 }
@@ -348,7 +348,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 if (uiMode == UiModeManager.MODE_NIGHT_YES){
                     rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
                 }else {
-                    rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.white));
                 }
             } else if (reverseLightSts == 1) {
                 rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(false);
@@ -431,7 +431,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 rearviewMirrorBinding.tvSettingFold.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
                 rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(
                         (rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected() && rearviewMirrorBinding.llSettingRearviewMirrorDown.isEnabled()) ?
-                                R.color.setting_view_content_color :  R.color.setting_view_content_color_day));
+                                R.color.white :  R.color.setting_view_content_color_day));
                 rearviewMirrorBinding.tvSettingExpand.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
                 rearviewMirrorBinding.ivSettingFold.setImageDrawable(context.getDrawable(R.drawable.button_select_setting_fold_day));
                 rearviewMirrorBinding.ivSettingView.setImageDrawable(context.getDrawable(R.drawable.button_select_iv_mirror_day));
