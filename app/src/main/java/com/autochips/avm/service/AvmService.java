@@ -535,67 +535,49 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d(" 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
                 int intValue = (int) value;
-//                turnLampSwSts = intValue;
-//                turnLampChangeTime = System.currentTimeMillis();
-                KLog.d(" 转向 vehicleId = intValue = " + intValue);
+                turnLampSwSts = intValue;
+                //                turnLampChangeTime = System.currentTimeMillis();
                 if (intValue == 0) {
-                    //AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
-                    leftTurnLChangeTime = 0;
-                    rightTurnLChangeTime = 0;
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0,false);
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0);
                 }
             }
         } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
-            if (value instanceof Integer) {
-                KLog.d(" 转向 左边转向灯闪 , value = " + value +"leftTurnLChangeTime:"+leftTurnLChangeTime
-                        +"rightTurnLChangeTime:"+rightTurnLChangeTime+" , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime - rightTurnLChangeTime));
-                long delay = 500;
-                turnLampSwSts = (int) value;
-                if (turnLampSwSts == 0) {
-                    if (leftTurnLChangeTime != 0 && rightTurnLChangeTime != 0 && (leftTurnLChangeTime - rightTurnLChangeTime) < 10) { //双闪
-                        delay = 0;
-                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,false);
-                    }
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,false);
-                }else{
-                    if (leftTurnLChangeTime != 0)
-                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,true);
+            leftTurnLChangeTime = System.currentTimeMillis();
+            KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime));
+            long delay = 800;
+            if (turnLampSwSts == 0) {
+                if ((leftTurnLChangeTime-rightTurnLChangeTime) < 500) { //双闪
+                    delay = 0;
                 }
-                leftTurnLChangeTime = System.currentTimeMillis();
-                AvmRuntime.self().updateChangeTime();
+                AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
             }
-//            if (value instanceof Integer) {
-//                int intValue = (int) value;
-//                if (intValue == 0) {
-//                    if (CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, 0) == 0
-//                            && CanManager.getInstance().getIntStatus(CLUSTER_RIGHT_TURN_LAMP, 0) == 0) {
-//                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 500);
-//                    }
-//                } else {
-////                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
-//                    AvmRuntime.self().updateChangeTime();
-//                }
-//            }
-//            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_LEFT);
+            AvmRuntime.self().updateChangeTime();
+            //            if (value instanceof Integer) {
+            //                int intValue = (int) value;
+            //                if (intValue == 0) {
+            //                    if (CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, 0) == 0
+            //                            && CanManager.getInstance().getIntStatus(CLUSTER_RIGHT_TURN_LAMP, 0) == 0) {
+            //                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 500);
+            //                    }
+            //                } else {
+            ////                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
+            //                    AvmRuntime.self().updateChangeTime();
+            //                }
+            //            }
+            //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_LEFT);
         } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
-            if (value instanceof Integer) {
-                KLog.d(" 右边转向灯闪 , value = " + value+"leftTurnLChangeTime:"+leftTurnLChangeTime
-                        +"rightTurnLChangeTime:"+rightTurnLChangeTime + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime - leftTurnLChangeTime));
-                long delay = 500;
-                turnLampSwSts = (int) value;
-                if (turnLampSwSts == 0) {
-                    if (leftTurnLChangeTime != 0 && rightTurnLChangeTime != 0 && (rightTurnLChangeTime - leftTurnLChangeTime) < 10) { //双闪
-                        delay = 0;
-                    }
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,false);
-                }else {
-                    if (rightTurnLChangeTime != 0)
-                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,true);
+            rightTurnLChangeTime = System.currentTimeMillis();
+            KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime));
+            long delay = 800;
+            if (turnLampSwSts == 0) {
+                if ((rightTurnLChangeTime-leftTurnLChangeTime) < 500) { //双闪
+                    delay = 0;
                 }
-                rightTurnLChangeTime = System.currentTimeMillis();
-                AvmRuntime.self().updateChangeTime();
+                AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
             }
+            AvmRuntime.self().updateChangeTime();
 //            if (value instanceof Integer) {
 //                int intValue = (int) value;
 //                if (intValue == 0) {
