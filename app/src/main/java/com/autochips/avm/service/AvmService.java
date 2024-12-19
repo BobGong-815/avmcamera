@@ -94,6 +94,8 @@ import androidx.annotation.Nullable;
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.data.DataConstant;
+import com.autochips.avm.data.DataManager;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.ui.activity.MainActivity;
@@ -179,11 +181,13 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.v("[mCarPowerManager]  半功能  释放资源,释放摄像头");
+                    DataManager.writeFault(DataConstant.Code.GET_IN_STR);
                     mHandler.removeMessages(MSG_CR_CAMERA);
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     KLog.v("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
+                    DataManager.writeFault(DataConstant.Code.GET_OUT_STR);
                     if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
                         mHandler.removeMessages(MSG_DEL_CAMERA);
                         mHandler.sendEmptyMessage(MSG_CR_CAMERA);
@@ -284,6 +288,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                             }
+                            if(AvmRuntime.self().isTurnActiveSts()) {
+                                DataManager.writeFault(DataConstant.Code.ACTIVI_LIGHT);
+                            }
                             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
                             AvmApp.getInstance().getCameraView().showSmartWin();
                             SystemProperties.setGlobal("avm_state", 1);
@@ -301,6 +308,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            }
+                            if(AvmRuntime.self().isRearGearSts()){
+                                DataManager.writeFault(DataConstant.Code.ACTIVI_RGEAR);
                             }
                             AvmRuntime.self().setRadarPauseFlag(false);
                             AvmApp.getInstance().getCameraView().showFullWin();
@@ -436,6 +446,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                         isFirstEnter = false;
                     }
+                    DataManager.writeFault(avm_onclick == 1 ? DataConstant.Code.CLICK_IN_SUI :
+                            avm_onclick == 2 ? DataConstant.Code.CLICK_IN_FK : DataConstant.Code.CLICK_IN_SPEECH);
                 } else if (avm_state == 1) {
                     AvmRuntime.self().artificialExit();
                 }
@@ -523,25 +535,36 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d(" 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
                 int intValue = (int) value;
-                turnLampSwSts = intValue;
+//                turnLampSwSts = intValue;
 //                turnLampChangeTime = System.currentTimeMillis();
+                KLog.d(" 转向 vehicleId = intValue = " + intValue);
                 if (intValue == 0) {
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+                    //AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                 } else {
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0);
+                    leftTurnLChangeTime = 0;
+                    rightTurnLChangeTime = 0;
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0,false);
                 }
             }
         } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
-            leftTurnLChangeTime = System.currentTimeMillis();
-            KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime));
-            long delay = 800;
-            if (turnLampSwSts == 0) {
-                if ((leftTurnLChangeTime-rightTurnLChangeTime) < 500) { //双闪
-                    delay = 0;
+            if (value instanceof Integer) {
+                KLog.d(" 转向 左边转向灯闪 , value = " + value +"leftTurnLChangeTime:"+leftTurnLChangeTime
+                        +"rightTurnLChangeTime:"+rightTurnLChangeTime+" , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime - rightTurnLChangeTime));
+                long delay = 500;
+                turnLampSwSts = (int) value;
+                if (turnLampSwSts == 0) {
+                    if (leftTurnLChangeTime != 0 && rightTurnLChangeTime != 0 && (leftTurnLChangeTime - rightTurnLChangeTime) < 10) { //双闪
+                        delay = 0;
+                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,false);
+                    }
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,false);
+                }else{
+                    if (leftTurnLChangeTime != 0)
+                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,true);
                 }
-                AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
+                leftTurnLChangeTime = System.currentTimeMillis();
+                AvmRuntime.self().updateChangeTime();
             }
-            AvmRuntime.self().updateChangeTime();
 //            if (value instanceof Integer) {
 //                int intValue = (int) value;
 //                if (intValue == 0) {
@@ -556,16 +579,23 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //            }
 //            AvmRuntime.self().turnLampChange(DataDefine.TURN_DIRECT_LEFT);
         } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
-            rightTurnLChangeTime = System.currentTimeMillis();
-            KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime));
-            long delay = 800;
-            if (turnLampSwSts == 0) {
-                if ((rightTurnLChangeTime-leftTurnLChangeTime) < 500) { //双闪
-                    delay = 0;
+            if (value instanceof Integer) {
+                KLog.d(" 右边转向灯闪 , value = " + value+"leftTurnLChangeTime:"+leftTurnLChangeTime
+                        +"rightTurnLChangeTime:"+rightTurnLChangeTime + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime - leftTurnLChangeTime));
+                long delay = 500;
+                turnLampSwSts = (int) value;
+                if (turnLampSwSts == 0) {
+                    if (leftTurnLChangeTime != 0 && rightTurnLChangeTime != 0 && (rightTurnLChangeTime - leftTurnLChangeTime) < 10) { //双闪
+                        delay = 0;
+                    }
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,false);
+                }else {
+                    if (rightTurnLChangeTime != 0)
+                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay,true);
                 }
-                AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
+                rightTurnLChangeTime = System.currentTimeMillis();
+                AvmRuntime.self().updateChangeTime();
             }
-            AvmRuntime.self().updateChangeTime();
 //            if (value instanceof Integer) {
 //                int intValue = (int) value;
 //                if (intValue == 0) {
@@ -609,7 +639,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         } else if (vehicleId == MIRROR_FOLD_UNFOLD_STATUS) { // 后视镜折叠
             KLog.d(" 后视镜折叠 ....  ..... " + value);
         } else if (vehicleId == SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE) { // 后视下翻
-
+            CameraViewModelHelper.getInstance().mirrorAutomaticStatus();
         } else if (vehicleId == CLUSTER_VCU_GEAR_LVL_DISP) {// 挡位
             KLog.d(" 挡位 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
@@ -799,7 +829,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 break;
             case ASSIST_DRIVE_PAS_BUTTON_PRESS:// 雷达报警声
             case CLUSTER_CHIME_PAS_WARNTONE://雷达报警音状态
-                AvmApp.getInstance().getCameraView().showRadarSoundView(status);
+                //AvmApp.getInstance().getCameraView().showRadarSoundView(status);
                 break;
             case AVM_RADAR_ALARM_ACOUSTIC_SWITCH:// 雷达故障报警
                 //AvmApp.getInstance().getCameraView().showParkingAssistView(status);
@@ -870,7 +900,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                    CameraViewModelHelper.getInstance().showView(true);
                     byte[] finalArrBack = arrBack;
                     CanManager.getInstance().setByteArray(DIAG_31_3801_AVM_ENTER_CALIBRATION_RESP, 0, finalArrBack);
-//                    mHandler.postDelayed(() -> {
+                    DataManager.writeFault(DataConstant.Code.BD_IN);
+                    //                    mHandler.postDelayed(() -> {
 //                                CameraViewModelHelper.getInstance().dismissView(false, 0, "DIAG_31 标定关闭");
 //                            }
 //                            , 2000);
@@ -889,6 +920,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     isInt3801_2 = true;
 
                     CanManager.getInstance().setByteArray(DIAG_31_3801_AVM_ENTER_CALIBRATION_RESULT_RESP, 0, arrBack);
+                    DataManager.writeFault(DataConstant.Code.BD_IN_RESULE);
                     break;
                 case DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_REQ://标定预检查请求
                     KLog.i("步骤 3  标定-标定预检查请求:DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_REQ:" + Arrays.toString(arr));
@@ -904,6 +936,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         arrBack = new byte[]{0x01, 0x01, 0x00, 0x00};
                     }
                     CanManager.getInstance().setByteArray(DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_RESP, 0, arrBack);
+                    DataManager.writeFault(DataConstant.Code.BD_CHECK);
                     break;
                 case DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_RESULT_REQ://标定预结果结果请求
                     KLog.i("步骤 4 标定-标定预结果结果请求:DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_RESULT_REQ:" + Arrays.toString(arr));
@@ -914,6 +947,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     if (getCalStatus(vehicleId, "查询结果") != 4) {
                     }
                     CanManager.getInstance().setByteArray(DIAG_31_3802_AVM_CALIBRATION_PRE_CHECK_RESULT_RESP, 0, arrBack);
+                    DataManager.writeFault(DataConstant.Code.BD_CHECK_RESULT);
                     break;
                 case DIAG_31_3803_AVM_START_CALIBRATION_REQ://开始标定请求
                     KLog.i("步骤 5  标定-开始标定请求:DIAG_31_3803_AVM_START_CALIBRATION_REQ:" + Arrays.toString(arr));
@@ -934,6 +968,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     } else {
                         AvmApp.getInstance().getCameraView().startCalibration();
                     }
+                    DataManager.writeFault(DataConstant.Code.BD_START);
                     break;
                 case DIAG_31_3803_AVM_START_CALIBRATION_RESULT_REQ://开始标定结果请求
                     KLog.i("步骤 6 标定-开始标定结果请求:DIAG_31_3803_AVM_START_CALIBRATION_RESULT_REQ:" + Arrays.toString(arr));
@@ -948,6 +983,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     } else {
                         AvmApp.getInstance().getCameraView().calibrationBack();
                     }
+                    DataManager.writeFault(DataConstant.Code.BD_START_RESULT);
                     break;
                 case DIAG_31_3806_AVM_CALIBRATION_CHECK_REQ://下线标定检查
 
@@ -957,6 +993,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     }
 
                     CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESP, 0, arrBack);
+                    DataManager.writeFault(DataConstant.Code.BD_IN_CHECK);
                     break;
                 case DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_REQ://下线标定检查结果请求
                     KLog.i("步骤 8 标定-下线标定检查结果请求:DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_REQ:" + Arrays.toString(arr));
@@ -967,6 +1004,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
                     CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP, 0, arrBack);
                     //AvmApp.getInstance().getCameraView().calibrationBack();
+                    DataManager.writeFault(DataConstant.Code.BD_IN_CHECK_RESULT);
                     break;
                 case DIAG_31_380D_AVM_READ_FAIL_REASON_REQ://读取标定失败原因请求
                     KLog.i(" 步骤 9 标定-读取标定失败原因请求:DIAG_31_380D_AVM_READ_FAIL_REASON_REQ:" + Arrays.toString(arr));
@@ -978,6 +1016,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     }
 
                     CanManager.getInstance().setByteArray(DIAG_31_380D_AVM_READ_FAIL_REASON_RESP, 0, arrBack);
+                    DataManager.writeFault(DataConstant.Code.BD_FALUT);
                     break;
                 case DIAG_31_380D_AVM_READ_FAIL_REASON_RESULT_REQ://读取标定失败原因结果请求
                     KLog.i("步骤 10 标定-读取标定失败原因结果请求:DIAG_31_380D_AVM_READ_FAIL_REASON_RESULT_REQ:" + Arrays.toString(arr));
@@ -989,6 +1028,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         }
                     }
                     AvmApp.getInstance().getCameraView().calibrationError();
+                    DataManager.writeFault(DataConstant.Code.BD_FALUT_RESULT);
                     break;
             }
         }

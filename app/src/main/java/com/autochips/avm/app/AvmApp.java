@@ -57,6 +57,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         super.onCreate();
         initConfig(this);
         KLog.d("AVM app 启动 ActivityLifecycleCallbacks onCreate");
+        //数据埋点
+        bvavmJNI.bwDataEmbedding("com/autochips/avm/ui/view/CameraView","bAvmFault");
         mAvmApp = this;
         //是否开启打印日志
         KLog.init(true);

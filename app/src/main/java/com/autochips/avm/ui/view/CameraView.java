@@ -64,6 +64,8 @@ import androidx.lifecycle.Observer;
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.data.DataConstant;
+import com.autochips.avm.data.DataManager;
 import com.autochips.avm.databinding.ViewBottomBinding;
 import com.autochips.avm.databinding.ViewCameraBinding;
 import com.autochips.avm.helper.BvAvmJNIHelper;
@@ -976,6 +978,7 @@ public class CameraView extends View implements LifecycleOwner {
             KLog.d("AvmRuntime viewPosition set to " + position);
             hidViewButtonTimer.start(position);
             if (position == 0) {
+                DataManager.writeFault(DataConstant.Code.ST_2D);
                 layout2d.setEnabled(true);
                 layout3d.setEnabled(false);
                 KLog.d(" layout2d tab ");
@@ -992,6 +995,7 @@ public class CameraView extends View implements LifecycleOwner {
 //                camera3DDirection = bvavmJNI.BW_2D_FRONT;
                 chick2DView(ViewSwitchManager.CAMERA_2_D_TOP);
             } else if (position == 1) {
+                DataManager.writeFault(DataConstant.Code.ST_3D);
                 layout3d.setEnabled(true);
                 layout2d.setEnabled(false);
                 layout2d.setVisibility(View.GONE);
@@ -1010,6 +1014,7 @@ public class CameraView extends View implements LifecycleOwner {
                 cameraBreakdown.setVisibility(View.GONE);
                 chick3DView(ViewSwitchManager.CAMERA_3_D);
             } else {
+                DataManager.writeFault(DataConstant.Code.ST_ANGLE);
                 cameraShowType = 0;
                 //setAngleStatus();
                 KLog.d("tabSelectListener isSmartWin = " + isSmartWin);
@@ -1345,7 +1350,7 @@ public class CameraView extends View implements LifecycleOwner {
         isFullWin = true;
         mWindowLps.x = 0;
         mWindowLps.y = 0;
-        //rootView.setVisibility(View.VISIBLE); // 设置了mWindow。flags之后 修复隐藏状态栏
+        rootView.setVisibility(View.VISIBLE); // 设置了mWindow。flags之后 修复隐藏状态栏
 
         ConstraintLayout.LayoutParams layoutParamsF = (ConstraintLayout.LayoutParams)viewFrame.getLayoutParams();
         layoutParamsF.height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -1380,11 +1385,12 @@ public class CameraView extends View implements LifecycleOwner {
     private boolean isSmartWinToFull = false;
 
     public void showComm() {
-        setVisibility(VISIBLE);
         Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
 //        isSmartWin = false;
         updateWind();
-
+        DataManager.writeFault(DataConstant.Code.COMMING_APP);
+        DataManager.writeFault(DataConstant.Code.APK_OPEN);
+        DataManager.writeFault(DataConstant.Code.BP_SHOW);
         isShowing = true;
         hidViewButtonTimer.start(viewPosition);
         smartGroupId.setVisibility(VISIBLE);
@@ -1480,7 +1486,6 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.i("mWindowLps.height....... " + mWindowLps.height + "mWindowLps.wight...  " + mWindowLps.width);
         KLog.i("mWindowLps.height.......isSmartWin " + isSmartWin);
         if (mWindowLps.height == 1080) {
-            viewFrame.setPadding(0, 0, 0, 0);
             bottom = 90;
         }
         KLog.i("mWindowLps.height ....1.... left top right bottom : " + left + ", " + top + ", " + right + ", " + bottom);
@@ -1508,11 +1513,11 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
     }
 
-    public View getRootView() {
-        if (mViewCameraBinding == null) return null;
-
-        return rootView;
-    }
+//    public View getRootView() {
+//        if (mViewCameraBinding == null) return null;
+//
+//        return rootView;
+//    }
 
     //R档时如果是2D状态，默认显示倒车视角及显示2D切换图标
     public void show2DView() {
@@ -1569,7 +1574,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
 //        bottomDialog.dismiss();
         if (SHOW_OVERLAY_LAYER) cameraBinding.frameLayoutId.setVisibility(GONE);
-
+        DataManager.writeFault(DataConstant.Code.BP_HIDE);
         isFullWin = false;
         isSmartWin = false;
         isShowing = false;
@@ -1589,8 +1594,8 @@ public class CameraView extends View implements LifecycleOwner {
         Log.d("AvmRuntime", "dismissView() rootView.getParent() is " + rootView.getParent());
         if (rootView.getParent() != null) {
             mWindowManager.updateViewLayout(rootView, mWindowLps);
+            rootView.setVisibility(View.GONE);
         }
-        setVisibility(View.GONE);
         //释放摄像头画面数据
 //            BvAvmJNIHelper.getInstance().avmDeInit();
 //        SystemProperties.setGlobal("avm_state", 0);
@@ -1892,6 +1897,12 @@ public class CameraView extends View implements LifecycleOwner {
         CallBackHelper.getInstance().setup(msg, param1, param2);
     }
 
+    //埋点
+    public static void bAvmFault(int code, int param1, int param2) {
+        KLog.i("bAvmFault code:"+code);
+        DataManager.writeFault(code);
+    }
+
     public void setRadar(int model, int len) {
         rearRadarViewId.status(model, len);
     }
@@ -2126,6 +2137,27 @@ public class CameraView extends View implements LifecycleOwner {
         settingView.skinView(uiMode);
         rearviewMirrorView.skinView(uiMode);
         NotCloseToast.getInstance().uiMode(uiMode);
+        if(segmentTab.getCurrentTab() != 2){
+            int BWAVM_FRONT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(0);
+            int BWAVM_REAR_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(1);
+            int BWAVM_LEFT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(2);
+            int BWAVM_RIGHT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(3);
+            if(segmentTab.getCurrentTab() == 0) {
+                showCameraImgStatus(cameraTop, 0, BWAVM_FRONT_CAM_ID, 0, true);
+                showCameraImgStatus(cameraBottom, 180, BWAVM_REAR_CAM_ID, 1, true);
+                showCameraImgStatus(cameraLift, 270, BWAVM_LEFT_CAM_ID, 2, true);
+                showCameraImgStatus(cameraRight, 90, BWAVM_RIGHT_CAM_ID, 3, true);
+            }else {
+                int leftFrontStatus = (BWAVM_FRONT_CAM_ID == 0 && BWAVM_LEFT_CAM_ID == 0) ? 0 : -1;
+                int rightFrontStatus = (BWAVM_FRONT_CAM_ID == 0 && BWAVM_RIGHT_CAM_ID == 0) ? 0 : -1;
+                int leftRearStatus = (BWAVM_REAR_CAM_ID == 0 && BWAVM_LEFT_CAM_ID == 0) ? 0 : -1;
+                int rightRearStatus = (BWAVM_REAR_CAM_ID == 0 && BWAVM_RIGHT_CAM_ID == 0) ? 0 : -1;
+                showCameraImgStatus(cameraLeftFront,135,leftFrontStatus,1,false);
+                showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
+                showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
+                showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
+            }
+        }
         switch (uiMode) {
             case UiModeManager.MODE_NIGHT_YES:
                 KLog.e("黑夜模式");

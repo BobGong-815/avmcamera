@@ -209,7 +209,6 @@ public class CanManager implements Handler.Callback {
 
         //后视镜
         mRegisterId.add(SETTINGS_OUTER_REARVIEW_MIRROR_FOLDS_AUTOMATIC);//外后视镜自动折叠
-        mRegisterId.add(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE);// 外后视镜倒车下翻 ，收到
 
         // 车速
         mRegisterId.add(VEHICLE_SPEED);//  dbc发送 验证通过

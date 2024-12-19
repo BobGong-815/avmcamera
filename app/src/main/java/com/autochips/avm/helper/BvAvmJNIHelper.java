@@ -11,6 +11,8 @@ import android.view.View;
 
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.app.AvmApp;
+import com.autochips.avm.data.DataConstant;
+import com.autochips.avm.data.DataManager;
 import com.autochips.avm.util.SystemProperties;
 import com.avm.framwork.manager.CanManager;
 
@@ -86,6 +88,7 @@ public class BvAvmJNIHelper {
             isActive = true;
             int res = bvavmJNI.avmInit();
             UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+            DataManager.writeFault(res == 1 ? DataConstant.Code.INIT_SUCCESS : DataConstant.Code.INIT_FAIL);
             int uiMode = uiModeManager.getNightMode();
             switch (uiMode) {
                 case UiModeManager.MODE_NIGHT_YES:

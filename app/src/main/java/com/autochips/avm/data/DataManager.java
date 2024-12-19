@@ -2,6 +2,7 @@ package com.autochips.avm.data;
 
 
 import android.content.Context;
+import android.util.EventLog;
 
 import com.gxatek.cockpit.datamining.client.DataMiningClientManager;
 import com.gxatek.cockpit.datamining.client.reporter.CommonReporter;
@@ -206,6 +207,21 @@ public final class DataManager {
                 DataConstant.Resources.CALIBRATION_FAILURE_STRING,
                 DataConstant.Resources.CALIBRATION_FAILURE_REASON,
                 DataConstant.Resources.CALIBRATION_FAILURE_REASON);
+    }
+
+    /**
+     * 埋点
+     * */
+    public static void writeFault(int code){
+        FaultInfo faultInfo = new FaultInfo();
+        faultInfo.faultCode = code;
+        int tag = EventLog.getTagCode("data_mining");
+        faultInfo.timestamp = System.currentTimeMillis();
+        KLog.i("faultInfo code:"+code+" time:"+faultInfo.timestamp);
+        if(tag < 0){
+            tag = FaultInfo.DEFAULT_TAG;
+        }
+        EventLog.writeEvent(tag,faultInfo.tag,faultInfo.sysId,faultInfo.appId,faultInfo.timestamp,faultInfo.faultCode,faultInfo.faultString,faultInfo.faultReason,faultInfo.faultDetail);
     }
 
     private static void realReport(String code, String event, String str, String reason, String detail){

@@ -1639,6 +1639,11 @@ public class AvmRuntime {
         return dataSts.gears[0] == DataDefine.GEAR_R;
     }
 
+    public boolean isTurnActiveSts() {
+        if (dataSts == null) return false;
+        return dataSts.lastSensorSrc == 1;
+    }
+
     public boolean isParkGearSts() {
         return dataSts.gears[0] == DataDefine.GEAR_P;
     }
