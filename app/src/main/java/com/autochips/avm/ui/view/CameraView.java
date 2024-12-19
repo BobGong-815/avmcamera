@@ -1476,7 +1476,7 @@ public class CameraView extends View implements LifecycleOwner {
         }else {
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
             layoutParams.topMargin = 9;
-            layoutParams.setMarginStart(51);
+            layoutParams.setMarginStart(9);
             rlClose.setLayoutParams(layoutParams);
             ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
             layoutParamsRl.topMargin = 9;
