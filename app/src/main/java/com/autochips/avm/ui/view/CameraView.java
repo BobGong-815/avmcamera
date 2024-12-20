@@ -1016,6 +1016,7 @@ public class CameraView extends View implements LifecycleOwner {
             } else {
                 DataManager.writeFault(DataConstant.Code.ST_ANGLE);
                 cameraShowType = 0;
+                segmentWideAngle.setTabSelect();
                 //setAngleStatus();
                 KLog.d("tabSelectListener isSmartWin = " + isSmartWin);
                 if (!isSmartWin) {//三分之一屏不显示
