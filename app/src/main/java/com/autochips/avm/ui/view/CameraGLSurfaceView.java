@@ -98,8 +98,8 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                 return;
             }
             //修改摄像头画面数据
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // 设置清除颜色为透明
+//            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+//            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // 设置清除颜色为透明
             if (glStatus == 0) {
                 handler.sendEmptyMessageDelayed(SHOW_BOTTOM, 0);
             }

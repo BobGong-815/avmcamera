@@ -390,8 +390,10 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
         }
     }
 
+    private boolean mIsOnclick = false;
     private void onClick(View view) {
         KLog.d(TAG, "CLICK enable :" + enable + "isUse:" + isUse);
+        mIsOnclick = true;
         int position = (Integer) view.getTag();
 
         if (!enable) {
@@ -421,6 +423,10 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
                 mListener.onTabSameSelect(position, true);
             }
         }
+    }
+
+    public void setTabSelect(){
+        mIsOnclick = true;
     }
 
     private void updateTabStyles() {
@@ -745,7 +751,10 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
             calcIndicatorRect();
         }
 
-        updateTabStyles();
+        if(mIsOnclick) {
+            mIsOnclick = false;
+            updateTabStyles();
+        }
     }
 
     //setter and getter
