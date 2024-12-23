@@ -3,6 +3,6 @@
     <item  android:state_focused="true" android:drawable="@drawable/ic_camera_setting"/>
     <item android:state_pressed="true"  android:drawable="@drawable/ic_camera_setting"/>
     <item android:state_selected="true"  android:drawable="@drawable/ic_camera_setting"/>
-    <item android:drawable="@mipmap/ic_camera_setting_day"/>
+    <item android:drawable="@drawable/ic_camera_setting_gray_day"/>
 
 </selector>

@@ -3,6 +3,6 @@
     <item  android:state_focused="true" android:drawable="@drawable/ic_back_mirror"/>
     <item android:state_pressed="true"  android:drawable="@drawable/ic_back_mirror"/>
     <item android:state_selected="true"  android:drawable="@drawable/ic_back_mirror"/>
-    <item android:drawable="@mipmap/ic_back_mirror_day"/>
+    <item android:drawable="@drawable/ic_back_mirror_gray_day"/>
 
 </selector>

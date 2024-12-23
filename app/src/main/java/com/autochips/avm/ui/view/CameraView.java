@@ -430,7 +430,9 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowManager.updateViewLayout(rootView, mWindowLps);
             if (SHOW_OVERLAY_LAYER)
                 mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
-            if (SHOW_OVERLAY_LAYER) cameraBinding.frameLayoutId.setVisibility(VISIBLE);
+            mMainHandler.postDelayed(()->{
+                if (SHOW_OVERLAY_LAYER) cameraBinding.frameLayoutId.setVisibility(VISIBLE);
+            },200);
             setCameraViewLayer();
         } else {
             mWindowLps.alpha = 0.0f;
@@ -1455,6 +1457,7 @@ public class CameraView extends View implements LifecycleOwner {
         layoutParamsF.width = 486;
         layoutParamsF.topMargin = 0;
         viewFrame.setLayoutParams(layoutParamsF);
+        cameraBinding.frameLayoutId.setVisibility(GONE);
         if(mViewCameraRightBinding != null){
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
             layoutParams.topMargin = 9;
