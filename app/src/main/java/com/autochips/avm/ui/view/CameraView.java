@@ -1528,7 +1528,7 @@ public class CameraView extends View implements LifecycleOwner {
     public void showFullWin() {
         if (mWindowLps == null) return;
         mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | //设置底部可以点击 周边点击添加 2024 08 29
-                WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
+                WindowManager.LayoutParams.FLAG_SPLIT_TOUCH | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         Log.i(TAG, isSmartWin + " valGear showFullWin: 全屏显示  t底部透明 " + isFullWin + " 第一帧CameraGLSurfaceView：" + CameraGLSurfaceView.glStatus);
         if (isFullWin) {
             updateTabViewIndex();

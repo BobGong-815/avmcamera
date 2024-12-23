@@ -418,7 +418,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                                 R.color.setting_view_content_color_day : R.color.setting_view_content_color));
                 rearviewMirrorBinding.tvSettingExpand.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
                 rearviewMirrorBinding.ivSettingFold.setImageDrawable(context.getDrawable(R.drawable.button_select_setting_fold));
-                rearviewMirrorBinding.ivSettingView.setImageDrawable(context.getDrawable(R.drawable.button_select_iv_mirror));
+                rearviewMirrorBinding.ivSettingView.setImageDrawable(context.getDrawable(R.drawable.button_select_mirror));
                 break;
             case UiModeManager.MODE_NIGHT_NO:
                 KLog.e("白天模式");
