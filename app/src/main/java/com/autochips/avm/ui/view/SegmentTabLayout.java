@@ -761,7 +761,7 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
     private void setCurrentTab(int currentTab) {
         KLog.d(TAG, "setCurrentTab: " + currentTab);
         KLog.d(TAG, "lastTab: " + mLastTab);
-
+        mIsOnclick = true;
         if (mCurrentTab >= 0) {
             mLastTab = this.mCurrentTab;
         }
