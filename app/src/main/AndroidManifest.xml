@@ -40,6 +40,7 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true"
+            android:configChanges="uiMode"
             android:theme="@style/Theme.Transparent" />
         <!-- 启动mockactivity的adb指令 -->
         <!-- adb shell am start -n com.autochips.avm/.ui.activity.MockActivity -->
