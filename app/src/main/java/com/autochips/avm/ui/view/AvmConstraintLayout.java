@@ -28,6 +28,8 @@ public class AvmConstraintLayout extends ConstraintLayout {
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) AvmRuntime.self().userTap();
+        KLog.i("event.getAction:"+motionEvent.getAction()+"event x:"+ motionEvent.getX() +"event rx:"+ motionEvent.getRawX()
+                + "event y:"+ motionEvent.getY() +"event ry:"+ motionEvent.getRawY());
         return super.onInterceptTouchEvent(motionEvent);
     }
 

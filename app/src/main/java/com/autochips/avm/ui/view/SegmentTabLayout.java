@@ -264,7 +264,7 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
             iv_tab_title.setImageDrawable(mContext.getDrawable(mTitles[position]));
         }
         RxView.clicks(tabView)
-                .throttleFirst(800L, TimeUnit.MILLISECONDS)
+                .throttleFirst(500L, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
@@ -772,7 +772,7 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
         KLog.d(TAG, "setCurrentTab: " + currentTab);
         KLog.d(TAG, "lastTab: " + mLastTab);
 //        Log.d("GXB", Log.getStackTraceString(new Throwable()));
-
+        mIsOnclick = true;
         if (mCurrentTab >= 0) {
             mLastTab = this.mCurrentTab;
         }

@@ -66,7 +66,6 @@ import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.data.DataConstant;
 import com.autochips.avm.data.DataManager;
-import com.autochips.avm.databinding.ViewBottomBinding;
 import com.autochips.avm.databinding.ViewCameraBinding;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
@@ -97,7 +96,6 @@ import me.goldze.mvvmhabit.utils.KLog;
 @SuppressLint("WrongConstant")
 public class CameraView extends View implements LifecycleOwner {
     private BottomDialog bottomDialog;
-    private boolean SHOW_OVERLAY_LAYER = true;
     private static final String TAG = CameraView.class.getName();
     private LifecycleRegistry registry = new LifecycleRegistry(this);
 
@@ -140,7 +138,6 @@ public class CameraView extends View implements LifecycleOwner {
     //    protected WindowManager.LayoutParams mWindowLpsBottom;//window的属性
 //    protected WindowManager.LayoutParams mFullWindowLps;//全面的窗口参数
     protected ViewCameraBinding mViewCameraBinding;//总windowManager界面
-    private ViewBottomBinding cameraBinding;
     protected CameraViewModel viewModel;
     private SettingView settingView;
     private RearviewMirrorView rearviewMirrorView;
@@ -191,7 +188,6 @@ public class CameraView extends View implements LifecycleOwner {
         super(context);
         KLog.d("BaseCameraView");
         this.mContext = context;
-        cameraBinding = ViewBottomBinding.inflate(LayoutInflater.from(mContext), null, false);
         initWindow();
         initView();
         initData();
@@ -411,17 +407,13 @@ public class CameraView extends View implements LifecycleOwner {
     @SuppressLint("WrongConstant")
     private void showBottomView() {
 
-        KLog.d(cameraBinding.frameLayoutId + "窗口层级 mWindowLpsBottom：" + mWindowLps);
-        if (SHOW_OVERLAY_LAYER) cameraBinding.frameLayoutId.setVisibility(GONE);
+        KLog.d("窗口层级 mWindowLpsBottom：" + mWindowLps);
         if (isShowing) {
             mWindowLps.alpha = 1.0f;
             if (isSmartWin) mWindowLps.format = PixelFormat.TRANSLUCENT;
             else mWindowLps.format = PixelFormat.UNKNOWN;
             KLog.d(isSmartWin + " isSmartWin bottom_view-isFullWin=" + isFullWin + " mWindowLpsBottom=" + mWindowLps);
             mWindowManager.updateViewLayout(rootView, mWindowLps);
-            if (SHOW_OVERLAY_LAYER)
-                mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
-            if (SHOW_OVERLAY_LAYER) cameraBinding.frameLayoutId.setVisibility(VISIBLE);
             setCameraViewLayer();
         } else {
             mWindowLps.alpha = 0.0f;
@@ -429,13 +421,6 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowLps.width = 0;
             mWindowLps.height = 0;
             mWindowManager.updateViewLayout(rootView, mWindowLps);
-            if (SHOW_OVERLAY_LAYER)
-                mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
-
-//        if (cameraBinding.getRoot().getParent() != null){
-//          mWindowManager.removeView(cameraBinding.getRoot());
-//          mWindowManager.removeView(mViewCameraBinding.getRoot());
-//        }
         }
 
     }
@@ -700,9 +685,6 @@ public class CameraView extends View implements LifecycleOwner {
         if (bl && CameraGLSurfaceView.glStatus == 1 && isShowing) {
             mWindowManager.updateViewLayout(rootView, mWindowLps);
             mWindowLps.format = PixelFormat.UNKNOWN;
-            if (SHOW_OVERLAY_LAYER)
-                mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
-            if (SHOW_OVERLAY_LAYER) cameraBinding.frameLayoutId.setVisibility(VISIBLE);
             setCameraViewLayer();
         }
 
@@ -1336,7 +1318,6 @@ public class CameraView extends View implements LifecycleOwner {
             setWindowType();
             return;
         }
-        cameraBinding.frameLayoutId.setVisibility(GONE);
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
         if (AvmRuntime.self().isRearGearSts()) {
             mWindowLps.height = 1080;
@@ -1503,22 +1484,17 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.alpha = 0.0f;
         //      KLog.d("窗口层级 mWindowLpsBottom："+mWindowLpsBottom);
 
-        cameraBinding.frameLayoutId.setVisibility(GONE);
         if (rootView.getParent() == null && !attachedToWindow) {
-            if (SHOW_OVERLAY_LAYER) mWindowManager.addView(cameraBinding.getRoot(), mWindowLps);
             mWindowManager.addView(rootView, mWindowLps);
             return;
         }
         mWindowManager.updateViewLayout(rootView, mWindowLps);
-        if (SHOW_OVERLAY_LAYER)
-            mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
     }
 
-//    public View getRootView() {
-//        if (mViewCameraBinding == null) return null;
-//
-//        return rootView;
-//    }
+    public View getRootView() {
+        if (mViewCameraBinding == null) return null;
+        return rootView;
+    }
 
     //R档时如果是2D状态，默认显示倒车视角及显示2D切换图标
     public void show2DView() {
@@ -1574,24 +1550,16 @@ public class CameraView extends View implements LifecycleOwner {
             return;
         }
 //        bottomDialog.dismiss();
-        if (SHOW_OVERLAY_LAYER) cameraBinding.frameLayoutId.setVisibility(GONE);
         DataManager.writeFault(DataConstant.Code.BP_HIDE);
         isFullWin = false;
         isSmartWin = false;
         isShowing = false;
         isDismissView = true;
         boolean attachedToWindow = rootView.isAttachedToWindow();
-        boolean attachedToWindowcameraBinding = cameraBinding.getRoot().isAttachedToWindow();
-        KLog.d(attachedToWindowcameraBinding + " attachedToWindowcameraBinding dismissView attached = " + attachedToWindow);
+        KLog.d(" attachedToWindowcameraBinding dismissView attached = " + attachedToWindow);
         mWindowLps.alpha = 0.0f;
         mWindowLps.width = 1;
         mWindowLps.height = 1;
-        if (cameraBinding.getRoot().getParent() != null) {
-//          mWindowManager.removeView(cameraBinding.getRoot());
-//          mWindowManager.removeView(mViewCameraBinding.getRoot());
-            if (SHOW_OVERLAY_LAYER)
-                mWindowManager.updateViewLayout(cameraBinding.getRoot(), mWindowLps);
-        }
         Log.d("AvmRuntime", "dismissView() rootView.getParent() is " + rootView.getParent());
         if (rootView.getParent() != null) {
             mWindowManager.updateViewLayout(rootView, mWindowLps);
@@ -1622,7 +1590,6 @@ public class CameraView extends View implements LifecycleOwner {
         boolean attachedToWindow = rootView.isAttachedToWindow();
         if (attachedToWindow) {
             mWindowManager.removeView(rootView);
-            if (SHOW_OVERLAY_LAYER) mWindowManager.removeView(cameraBinding.getRoot());
         }
     }
 
@@ -1932,12 +1899,12 @@ public class CameraView extends View implements LifecycleOwner {
 
         KLog.e("msg: = " + msg + "  param1: = " + param1 + "   param2: = " + param2);
 //      param2 = bvavmJNI.CAMERA2_ERR_OK；
-        if (cameraBinding.getRoot().getParent() != null && cameraBinding.getRoot().isAttachedToWindow()){
-            mWindowLps.alpha = 1.0f;
-            mWindowLps.format = isSmartWin ? PixelFormat.TRANSLUCENT : PixelFormat.UNKNOWN;
-            mWindowManager.updateViewLayout(cameraBinding.getRoot(),mWindowLps);
-            KLog.e(" setAVMBreakdown mWindowLps: = " + mWindowLps);
-        }
+//        if (cameraBinding.getRoot().getParent() != null && cameraBinding.getRoot().isAttachedToWindow()){
+//            mWindowLps.alpha = 1.0f;
+//            mWindowLps.format = isSmartWin ? PixelFormat.TRANSLUCENT : PixelFormat.UNKNOWN;
+//            mWindowManager.updateViewLayout(cameraBinding.getRoot(),mWindowLps);
+//            KLog.e(" setAVMBreakdown mWindowLps: = " + mWindowLps);
+//        }
         if(isSmartWin){
             return;
         }
@@ -2165,8 +2132,6 @@ public class CameraView extends View implements LifecycleOwner {
                 //CustomToast.showToast("黑夜模式");
                 //SkinCompatManager.getInstance().restoreDefaultTheme();
                 bvavmJNI.bwSetIsDay(0);
-                if (SHOW_OVERLAY_LAYER)
-                    cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg));
                 mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg));
                 cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg);
                 ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_cam_error_day));
@@ -2202,8 +2167,6 @@ public class CameraView extends View implements LifecycleOwner {
                 // CustomToast.showToast("白天模式");
                 //SkinCompatManager.getInstance().loadSkin("day",null,SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
                 bvavmJNI.bwSetIsDay(1);
-                if (SHOW_OVERLAY_LAYER)
-                    cameraBinding.frameLayoutId.setBackground(mContext.getDrawable(R.color.avm_bg));
                 mainAvmViewRootId.setBackground(mContext.getDrawable(R.color.avm_bg_day));
                 cameraBreakdown.setBackgroundResource(R.drawable.selector_breakdown_bg_day);
                 ivBreakdown.setImageDrawable(mContext.getDrawable(R.mipmap.info_cam_error_day));

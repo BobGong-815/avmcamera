@@ -959,12 +959,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     if (arr.length != 4) {
                         return;
                     }
-
-                    if (AvmService.JNI_IN_THREAD_FLAG) {
-                        AvmApp.getInstance().getCameraView().getViewModel().callCalibrateResp();
-                    } else {
-                        AvmApp.getInstance().getCameraView().calibrationBack();
-                    }
+                    AvmApp.getInstance().getCameraView().calibrationBack();
                     DataManager.writeFault(DataConstant.Code.BD_START_RESULT);
                     break;
                 case DIAG_31_3806_AVM_CALIBRATION_CHECK_REQ://下线标定检查
