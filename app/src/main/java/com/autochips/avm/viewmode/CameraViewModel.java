@@ -105,13 +105,13 @@ public class CameraViewModel extends BaseCameraViewModel {
         threadHandler = new Handler(handlerThread.getLooper()) {
             @Override
             public void handleMessage(Message msg) {
-                if (msg.what != MSG_WHEEL_SPEED) KLog.d("handleMessage : " + msg.what + " , " + msg.arg1 + " , " + msg.arg2);
+                if (msg.what != MSG_WHEEL_SPEED) KLog.i("handleMessage : " + msg.what + " , " + msg.arg1 + " , " + msg.arg2);
                 if (msg.what == MSG_CALIBRATE) {
-                    KLog.d("标定 handle MSG_CALIBRATE.");
+                    KLog.i("标定 handle MSG_CALIBRATE.");
                     threadHandler.sendEmptyMessage(MSG_CALIBRATING);
                     isCaliStatus = -1;
                     isCaliStatus = bvavmJNI.bwStartCalibrate(msg.arg1);
-                    KLog.d("标定 bwStartCalibrate ret is " + isCaliStatus);
+                    KLog.i("标定 bwStartCalibrate ret is " + isCaliStatus);
                     // isCaliStatus 返回值
                     // 0 成功
                     // 2 后视图标定失败
@@ -123,14 +123,14 @@ public class CameraViewModel extends BaseCameraViewModel {
                             Thread.sleep(5000);
                             CanManager.getInstance().setIntProperty(NFS_SYNC,  0, 1);
                             int nfs_sts = CanManager.getInstance().getIntStatus(NFS_SYNC_STATUS, 0);
-                            KLog.d("标定 Read NFS STATUS is " + nfs_sts);
+                            KLog.i("标定 Read NFS STATUS is " + nfs_sts);
                         } catch (InterruptedException exception) {
                             KLog.e(exception.toString());
                         }
                     }
                     threadHandler.removeMessages(MSG_CALIBRATING);
                 } else if (msg.what == MSG_CALIBRATE_RESP) {
-                    KLog.d("标定 handle MSG_CALIBRATE_RESP.");
+                    KLog.i("标定 handle MSG_CALIBRATE_RESP.");
                     AvmApp.getInstance().getCameraView().calibrationBack();
                 } else if (msg.what == MSG_CREATE_CAMERA) {
                     BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
@@ -230,7 +230,7 @@ public class CameraViewModel extends BaseCameraViewModel {
      * 关闭AVM首页
      */
     public void closeAvm() {// 手动关闭
-        KLog.d("closeAvm");
+        KLog.i("closeAvm");
         AvmRuntime.self().artificialExit();
 //        setRunning(false);
 //        CameraViewModelHelper.getInstance().setRadarActiveTow(true);
@@ -267,7 +267,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     private boolean isOpenSettingDialog = false;
 
     public void openSettingDialog() {
-        KLog.d("openSettingDialog");
+        KLog.i("openSettingDialog");
         mICameraViewListener.setBtnSettingSelect(isOpenSettingDialog = !isOpenSettingDialog);
         setRunning(true);
     }
@@ -278,7 +278,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     private boolean isOpenBackMirrorDialog = false;
 
     public void openBackMirrorDialog() {
-        KLog.d("openBackMirrorDialog");
+        KLog.i("openBackMirrorDialog");
         mICameraViewListener.setBtnRearMirrorSelect(isOpenBackMirrorDialog = !isOpenBackMirrorDialog);
         setRunning(true);
     }
@@ -287,7 +287,7 @@ public class CameraViewModel extends BaseCameraViewModel {
      * 获取版本号
      */
     public String getVersionName() {
-        KLog.d("getVersionName");
+        KLog.i("getVersionName");
         String versionName = "";
         try {
             PackageManager packageManager = AvmApp.getInstance().getPackageManager();
@@ -309,7 +309,7 @@ public class CameraViewModel extends BaseCameraViewModel {
 
     //手动标记
     public void setManualCalibration() {
-        KLog.d("setManualCalibration");
+        KLog.i("setManualCalibration");
         Log.d("Cal", "setManualCalibration()");
 
         if (AvmService.JNI_IN_THREAD_FLAG) {
@@ -329,7 +329,7 @@ public class CameraViewModel extends BaseCameraViewModel {
 
     //自动标定
     public void setManualCalibration1() {
-        KLog.d("setManualCalibration");
+        KLog.i("setManualCalibration");
         Log.d("Cal", "setManualCalibration1()");
         if (AvmService.JNI_IN_THREAD_FLAG) {
             callCalibrate(1);
@@ -358,28 +358,28 @@ public class CameraViewModel extends BaseCameraViewModel {
 
 
     public void setCalibration1() {
-        KLog.d("setManualCalibration");
+        KLog.i("setManualCalibration");
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_MANUAL_FRONT);
         CustomToast.showToast("标定-前");
         setRunning(true);
     }
 
     public void setCalibration2() {
-        KLog.d("setManualCalibration");
+        KLog.i("setManualCalibration");
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_MANUAL_REAR);
         CustomToast.showToast("标定-后");
         setRunning(true);
     }
 
     public void setCalibration3() {
-        KLog.d("setManualCalibration");
+        KLog.i("setManualCalibration");
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_MANUAL_LEFT);
         CustomToast.showToast("标定-左");
         setRunning(true);
     }
 
     public void setCalibration4() {
-        KLog.d("setManualCalibration");
+        KLog.i("setManualCalibration");
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_MANUAL_RIGHT);
         CustomToast.showToast("标定-右");
         setRunning(true);
@@ -389,7 +389,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     public void setAutomaticCalibration() {
         setRunning(true);
         setCalibrateRunning(true);
-        KLog.d("setAutomaticCalibration");
+        KLog.i("setAutomaticCalibration");
         //int value = bvavmJNI.bwStartCalibrate(1);
         //延迟一秒去获取这个value
         if (AvmService.JNI_IN_THREAD_FLAG) {
@@ -436,31 +436,31 @@ public class CameraViewModel extends BaseCameraViewModel {
             KLog.i("DIAG_31 正在标定中。。。。。");
             return;
         }
-        KLog.d("DIAG_31 标定----setStartCalibration 准备标定 " + isDIAGCalibration);
+        KLog.i("DIAG_31 标定----setStartCalibration 准备标定 " + isDIAGCalibration);
 //        ThreadPoolUtil.getInstance().runOnSubThreadDelayed(() -> {
         isDIAGCalibration = true;
 
-        KLog.d("DIAG_31 标定----setStartCalibration 进入正在标定中 " + isDIAGCalibration);
+        KLog.i("DIAG_31 标定----setStartCalibration 进入正在标定中 " + isDIAGCalibration);
 //        mHandler.postDelayed(() -> {
 //            if (isCaliStatus != -1) {
-//                KLog.d("标定 DIAG_31 app mHandler 结束-标定完成。  " + isCaliStatus);
+//                KLog.i("标定 DIAG_31 app mHandler 结束-标定完成。  " + isCaliStatus);
 //                mHandler.removeCallbacksAndMessages("token12345");
 //            } else {
-//                KLog.d("标定 DIAG_31 app mHandler 正在标定中。。。。  " + isCaliStatus);
+//                KLog.i("标定 DIAG_31 app mHandler 正在标定中。。。。  " + isCaliStatus);
 //            }
 //        }, "token12345", 300);
-        KLog.d("DIAG_31 标定----setStartCalibration 进入正在标定中-bwStartCalibrate  " + isDIAGCalibration);
+        KLog.i("DIAG_31 标定----setStartCalibration 进入正在标定中-bwStartCalibrate  " + isDIAGCalibration);
         byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
         CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESP, 0, arrBack);
 
         isCaliStatus = bvavmJNI.bwStartCalibrate(1);
-        KLog.d("标定 DIAG_31 000 app bwStartCalibrate 结束-标定完成。  " + isCaliStatus);
+        KLog.i("标定 DIAG_31 000 app bwStartCalibrate 结束-标定完成。  " + isCaliStatus);
         if (isCaliStatus == 0) {
             try {
                 Thread.sleep(2000);
                 CanManager.getInstance().setIntProperty(NFS_SYNC,  0, 1);
                 int nfs_sts = CanManager.getInstance().getIntStatus(NFS_SYNC_STATUS, 0);
-                KLog.d("Read NFS STATUS is " + nfs_sts);
+                KLog.i("Read NFS STATUS is " + nfs_sts);
             } catch (InterruptedException exception) {
                 KLog.e(exception.toString());
             }
@@ -470,20 +470,20 @@ public class CameraViewModel extends BaseCameraViewModel {
 
     //收到请求，看是否标定成功
     public void calibrationBack() {
-        Log.d("AVM", Log.getStackTraceString(new Throwable()));
+        Log.i("AVM", Log.getStackTraceString(new Throwable()));
         /*if (!BvAvmJNIHelper.getInstance().isActive()){
             return;
         }*/
-        KLog.d("DIAG_31_ isCaliStatus: " + isCaliStatus);
+        KLog.i("DIAG_31_ isCaliStatus: " + isCaliStatus);
        /* if (!isDIAGCalibration){
-            KLog.d("DIAG_31_标定未开始isCaliStatus:calibrationBack ");
+            KLog.i("DIAG_31_标定未开始isCaliStatus:calibrationBack ");
             return;
         }*/
 
         if (isCaliStatus == -1) {//未收到反馈
             byte[] arrBack = {0x02, 0x00,0x00,0x00};
             CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
-            KLog.d("标定-DIAG_31 app 未收到反馈：isCaliStatus " + isCaliStatus);
+            KLog.i("标定-DIAG_31 app 未收到反馈：isCaliStatus " + isCaliStatus);
         } else if (isCaliStatus == 0) {//成功
             //byte[] arrBack = {0x00, 0x02,0x00,0x00};
             byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
@@ -492,7 +492,7 @@ public class CameraViewModel extends BaseCameraViewModel {
             CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
 //            isCaliStatus = -1;
             isDIAGCalibration = false;
-            KLog.d("标定-DIAG_31 app 标定成功：isCaliStatus " + isCaliStatus);
+            KLog.i("标定-DIAG_31 app 标定成功：isCaliStatus " + isCaliStatus);
             DataManager.writeFault(DataConstant.Code.BD_SUCCESS);
             DataManager.writeFault(DataConstant.Code.SJ_SAVE_SUCCESS);
             calibrationInspect(1);
@@ -502,7 +502,7 @@ public class CameraViewModel extends BaseCameraViewModel {
             //CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP, 0, arrBack);
             CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
             isDIAGCalibration = false;
-            KLog.d("标定-DIAG_31 app 标定失败：isCaliStatus " + isCaliStatus);
+            KLog.i("标定-DIAG_31 app 标定失败：isCaliStatus " + isCaliStatus);
             DataManager.writeFault(DataConstant.Code.BD_FAIL);
             DataManager.writeFault(DataConstant.Code.SJ_SAVE_FAIL);
             calibrationInspect(0);
@@ -513,7 +513,7 @@ public class CameraViewModel extends BaseCameraViewModel {
      * 标定流程第二部，标定检测
      */
     private void calibrationInspect(int value) {
-        KLog.d("标定-0305 标定监测结果：value " + value);
+        KLog.i("标定-0305 标定监测结果：value " + value);
         if (value == 1) {//标定成功
             byte[] arrBack = new byte[]{0x01, 0x00, 0x00, 0x00, 0x00};
             KLog.i("全景标定状态检查-成功: DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_RESP" + Arrays.toString(arrBack));
@@ -537,10 +537,10 @@ public class CameraViewModel extends BaseCameraViewModel {
             return;
         }*/
 //        if (isCaliStatus == -1){
-//            KLog.d("calibrationBackError:标定未完成 ");
+//            KLog.i("calibrationBackError:标定未完成 ");
 //            return;
 //        }
-        KLog.d("calibrationBackError: " + isCaliStatus);
+        KLog.i("calibrationBackError: " + isCaliStatus);
         CameraViewModelHelper.getInstance().setAutomaticCalibration(isCaliStatus);
     }
 
@@ -567,7 +567,7 @@ public class CameraViewModel extends BaseCameraViewModel {
 
         @Override
         public void onFinish() {
-            KLog.d("自定关闭标定页面");
+            KLog.i("自定关闭标定页面");
             mICameraViewListener.setCalibrationSelect(false);
 
         }
@@ -585,7 +585,7 @@ public class CameraViewModel extends BaseCameraViewModel {
         bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
         liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_TOP);
         setRunning(true);
-        KLog.d("上视角：" + CameraGLSurfaceView.getCameraDirection());
+        KLog.i("上视角：" + CameraGLSurfaceView.getCameraDirection());
     }
 
     //2D 左视角
@@ -603,7 +603,7 @@ public class CameraViewModel extends BaseCameraViewModel {
             chick2DView = ViewSwitchManager.CAMERA_2_D_LIFT;
             liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_LIFT);
         }*/
-        KLog.d("左边视角：" + CameraGLSurfaceView.getCameraDirection());
+        KLog.i("左边视角：" + CameraGLSurfaceView.getCameraDirection());
 
 
     }
@@ -621,7 +621,7 @@ public class CameraViewModel extends BaseCameraViewModel {
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_REAR_UNDISTORT);
         bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
         liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_BOTTOM);
-        KLog.d("下视角：" + CameraGLSurfaceView.getCameraDirection());
+        KLog.i("下视角：" + CameraGLSurfaceView.getCameraDirection());
 
         //判断轨迹线有没有打开，打开就显示2D轨迹线
 
@@ -647,7 +647,7 @@ public class CameraViewModel extends BaseCameraViewModel {
             CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_RIGHT;
             liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_RIGHT);
         }*/
-        KLog.d("右视角：" + CameraGLSurfaceView.getCameraDirection());
+        KLog.i("右视角：" + CameraGLSurfaceView.getCameraDirection());
     }
 
     //3D 左前
@@ -776,7 +776,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     }
 
     public void callCalibrate(int value) {
-        KLog.d("标定 callCalibrate().");
+        KLog.i("标定 callCalibrate().");
         if (threadHandler.hasMessages(MSG_CALIBRATING)) {
             KLog.e("标定 now is in calibrating.");
         } else {
@@ -788,7 +788,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     }
 
     public void callCalibrateResp() {
-        KLog.d("标定 callCalibrateResp().");
+        KLog.i("标定 callCalibrateResp().");
         Message message = Message.obtain();
         message.what = MSG_CALIBRATE_RESP;
         threadHandler.sendMessage(message);

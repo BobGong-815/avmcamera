@@ -143,7 +143,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     private Handler mHandler;
     public static boolean isCalibration = false;
-    public boolean isActAndWindowMode = false; //act + window 模式
+    public boolean isActAndWindowMode = true; //act + window 模式
 
     private boolean isFirstEnter = true;
     private AvmManager mAvmManager;
@@ -1015,11 +1015,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         return;
                     }
 
-                    if (AvmService.JNI_IN_THREAD_FLAG) {
-                        AvmApp.getInstance().getCameraView().getViewModel().callCalibrateResp();
-                    } else {
-                        AvmApp.getInstance().getCameraView().calibrationBack();
-                    }
+//                    if (AvmService.JNI_IN_THREAD_FLAG) {
+//                        AvmApp.getInstance().getCameraView().getViewModel().callCalibrateResp();
+//                    } else {
+                    AvmApp.getInstance().getCameraView().calibrationBack();
+//                    }
                     DataManager.writeFault(DataConstant.Code.BD_START_RESULT);
                     break;
                 case DIAG_31_3806_AVM_CALIBRATION_CHECK_REQ://下线标定检查
