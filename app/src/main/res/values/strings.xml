@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AVMCamera</string>
-    <string name="setting_p_exit">P挡退出</string>
-    <string name="setting_p_exit_content">挂入P挡，全景立刻退出或\n延迟30秒退出全景</string>
+    <string name="setting_p_exit">P档退出</string>
+    <string name="setting_p_exit_content">挂入P档，全景立刻退出或\n延迟30秒退出全景</string>
     <string name="setting_at_once">立刻</string>
     <string name="setting_30_seconds">30秒后</string>
     <string name="setting_transparent_chassis">透明底盘</string>
