@@ -1020,7 +1020,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/info_title"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10px"
+                    android:layout_margin="10px"
                     android:gravity="center"
                     android:lineSpacingExtra="5px"
                     android:text="@string/setting_transparent_chassis_infobook_content"
