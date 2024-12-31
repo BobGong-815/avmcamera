@@ -21,7 +21,7 @@
         <item name="android:checkable">false</item>
         <item name="android:thumb">@null</item>
         <item name="android:track">@null</item>
-        <item name="android:layout_width">76px</item>
+        <item name="android:layout_width">72px</item>
         <item name="android:layout_height">36px</item>
         <item name="android:background">@drawable/selector_switch_track</item>
     </style>
