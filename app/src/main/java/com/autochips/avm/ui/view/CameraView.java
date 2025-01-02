@@ -556,10 +556,6 @@ public class CameraView extends View implements LifecycleOwner {
             cameraIvLift = mViewCameraBinding.cameraIvLift;
     }
 
-    public void hidenMirrowView(){
-        mViewCameraBinding.rearviewMirrorView.hidenMirrowView();
-    }
-
     public void viewRearStatus(int status) {
         rearviewMirrorView.reverseLight(status);
     }
@@ -1128,7 +1124,7 @@ public class CameraView extends View implements LifecycleOwner {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(segmentTab.getLayoutParams());
         //layoutParams.width = (304*getDescValueArray().length);
         layoutParams.leftMargin = 18;
-        segmentTab.setTabWidth(134.5f);
+        segmentTab.setTabWidth(138f);
         segmentTab.setBackground(mContext.getResources().getDrawable(R.drawable.tab_selector_thumb));
         segmentTab.setLayoutParams(layoutParams);
         segmentTab.setTabData(getDescValueArray());

@@ -363,18 +363,24 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
         mContext.unregisterReceiver(broadcastReceiver);
     }
 
-    private  MarginLayoutParams  getTabMarginParams(int position,ViewGroup.LayoutParams params){
-      MarginLayoutParams marginParams = (MarginLayoutParams) params;
-      marginParams.topMargin = 1; // 上边距
-      marginParams.bottomMargin = 1; // 下边距
-      if (position == 0){
-        marginParams.leftMargin = 1; // 左边距
-        marginParams.rightMargin = 0; // 右边距
-      }else {
-        marginParams.leftMargin = -38; // 左边距
-        marginParams.rightMargin = 0; // 右边距
-      }
-      return marginParams;
+    private  ViewGroup.MarginLayoutParams  getTabMarginParams(int position,ViewGroup.LayoutParams params){
+        ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) params;
+        marginParams.topMargin = 0; // 上边距
+        marginParams.bottomMargin = 0; // 下边距
+        if (position == 0){
+            marginParams.leftMargin = 0; // 左边距
+            marginParams.rightMargin = 0; // 右边距
+        }else if(position== 3){
+            marginParams.leftMargin = -32; // 左边距
+            marginParams.rightMargin = 0; // 右边距
+        }else if(position == 1){
+            marginParams.leftMargin = -36; // 左边距
+            marginParams.rightMargin = -2; // 右边距
+        }else {
+            marginParams.leftMargin = -34; // 左边距
+            marginParams.rightMargin = -4; // 右边距
+        }
+        return marginParams;
     }
 
 
