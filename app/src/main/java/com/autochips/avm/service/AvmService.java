@@ -274,14 +274,19 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         case DataDefine.ACT_EXIT:
                             KLog.i("avmService____ ACT_EXIT_CARD........0");
                             //CameraShowTypeHelper.getInstance().exitActivity();
-                            AvmApp.getInstance().getCameraView().dismissView(null);
-                            SystemProperties.setGlobal("avm_state", 0);
-                            mAvmManager.sendAvmState(0);
-                            BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
-                            if (DELETE_CAMERA_FLAG) {
-                                mHandler.removeMessages(MSG_CR_CAMERA);
-                                mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 500);
-                            }
+                            mHandler.postDelayed(()->{
+                                if(AvmRuntime.self().isPREixt()) {
+                                    AvmRuntime.self().setResetPREixt();
+                                }
+                                AvmApp.getInstance().getCameraView().dismissView(null);
+                                SystemProperties.setGlobal("avm_state", 0);
+                                mAvmManager.sendAvmState(0);
+                                BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
+                                if (DELETE_CAMERA_FLAG) {
+                                    mHandler.removeMessages(MSG_CR_CAMERA);
+                                    mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 500);
+                                }
+                            },AvmRuntime.self().isPREixt() ? 500 : 0);
                             break;
                         case DataDefine.ACT_LEFT_CARD:
                             KLog.i("avmService____ ACT_LEFT_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);

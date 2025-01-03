@@ -1484,6 +1484,7 @@ public class AvmRuntime {
             } else if (gear == 4) {// P
                 dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
                 dataSts.events.add(DataDefine.EVT_SHIFT_P);
+                dataSts.pRExit = SystemProperties.get("pExit").equals("0") && isRearGearSts();
             }
             setOverExitFlag(0);
             dataSts.sensorBlockPExit = false;
@@ -1647,6 +1648,18 @@ public class AvmRuntime {
     public boolean isTurnActiveSts() {
         if (dataSts == null) return false;
         return dataSts.lastSensorSrc == 1;
+    }
+
+    public boolean isPREixt() {
+        if (dataSts == null) return false;
+        return dataSts.pRExit;
+    }
+
+    public void setResetPREixt() {
+        if (dataSts != null) {
+            KLog.d("setResetPREixt : " + dataSts.pRExit);
+            dataSts.pRExit = false;
+        }
     }
 
     public boolean isParkGearSts() {
@@ -2041,6 +2054,7 @@ public class AvmRuntime {
         long turnLampResetTime;
         boolean timing30sFlag; // 30s计时标志
         int lastSensorSrc = 0; // 0 none, 1 turn lamp, 2 radar
+        boolean pRExit = false;//记录是否R挡后 p挡立即退出
 
         int[] fvSts; // 全景状态
         int[] gears; // 档位
