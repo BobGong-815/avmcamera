@@ -622,10 +622,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 int gear = (int) value;
                 if (gear == 0) return;
                 AvmRuntime.self().gearChange(gear);
-                BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
-                if (gear == 4) {
-                    BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
-                }
+                mHandler.postDelayed(()->{
+                    BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
+                    if (gear == 4) {
+                        BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
+                    }
+                },AvmRuntime.self().isPREixt() ? 500 : 0);
             }
         }
 
