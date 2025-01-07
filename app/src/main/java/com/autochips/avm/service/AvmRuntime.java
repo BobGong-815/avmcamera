@@ -1639,6 +1639,11 @@ public class AvmRuntime {
         return dataSts.gears[0] == DataDefine.GEAR_R;
     }
 
+    public boolean isActiveExit() {
+        if (dataSts == null) return false;
+        return dataSts.extEvents.contains(DataDefine.EVT_ACTIVE_EXIT);
+    }
+
     public boolean isTurnActiveSts() {
         if (dataSts == null) return false;
         return dataSts.lastSensorSrc == 1;

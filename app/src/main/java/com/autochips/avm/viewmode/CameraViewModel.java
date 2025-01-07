@@ -810,17 +810,11 @@ public class CameraViewModel extends BaseCameraViewModel {
     }
 
     public void turnLampChange(int direction, long delay) {
-//        if(isRemoveMsg) {
-//            KLog.i("标定 removeCloseMsg 移除了动作");
-//            threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
-//        }else {
-//            KLog.i("turnLampChange direction:"+ direction +" delay:"+delay);
-            threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
-            Message message = Message.obtain();
-            message.what = MSG_TURN_LAMP_CHANGE;
-            message.arg1 = direction;
-            threadHandler.sendMessageDelayed(message, delay);
-       // }
+        threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
+        Message message = Message.obtain();
+        message.what = MSG_TURN_LAMP_CHANGE;
+        message.arg1 = direction;
+        threadHandler.sendMessageDelayed(message, delay);
     }
 
     public void simWheelSpeed() {
