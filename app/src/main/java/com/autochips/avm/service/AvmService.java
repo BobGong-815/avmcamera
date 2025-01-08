@@ -545,6 +545,13 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //    long turnLampChangeTime = 0;
     long leftTurnLChangeTime = 0;
     long rightTurnLChangeTime = 0;
+    private long rlTurnTime = 0;
+    private int leftLightSt = 0;//左转灯光 0表示不亮 1表示亮起
+    private int rightLightSt = 0;//右转灯光 0表示不亮 1表示亮起
+    private boolean isStartRlTime = false;//记录是否有执行双闪时间记录
+    private boolean isCanShowCard = false;//是否允许显示小卡片
+    private boolean isCanDismissCard = false;//是否允许双闪关闭全景
+    private boolean isChangeFx = false;//是否是改变方向
     private final CanManager.onSignalValueChangedListener mOnSignalValueChangedListener = (vehicleId, value) -> {
         if(AvmApp.getInstance().getCameraView() == null){
             KLog.d("AvmApp", "avm is null ");
@@ -555,26 +562,118 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (value instanceof Integer) {
                 int intValue = (int) value;
                 turnLampSwSts = intValue;
-                if (intValue == 0) {
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+                if (AvmApp.getInstance().getCameraView().isFullWin || isChangeFx) {
+                    isChangeFx = true;
+                    KLog.d("lightChange 执行切换");
+                    if (intValue == 0) {
+                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
+                    } else {
+                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0);
+                    }
                 } else {
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0);
+                    isChangeFx = false;
+                    KLog.d("lightChange 执行转向激活");
+                    leftTurnLChangeTime = 0;
+                    rightTurnLChangeTime = 0;
+                    isCanDismissCard = false;
+                    rlTurnTime = 0;
+                    if (intValue != 0) {
+                        isCanShowCard = true;
+                    }
                 }
             }
-        } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
-            leftTurnLChangeTime = System.currentTimeMillis();
-            KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime));
-            long delay = 800;
-            if (turnLampSwSts == 0) {
-                if ((leftTurnLChangeTime-rightTurnLChangeTime) < 500) { //双闪
-                    delay = 0;
+        } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP || vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//左边转向灯闪s //右边转向灯闪
+            if(isChangeFx){
+                KLog.d("lightChange 执行切换视角的逻辑不处理灯光逻辑");
+                return;
+            }
+            if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {
+                if (value instanceof Integer) {
+                    leftLightSt = (int) value;
+                    if (leftLightSt == 1)
+                        leftTurnLChangeTime = System.currentTimeMillis();
+                    KLog.d("lightChange 转向 左边转向灯闪 , value = " + value + " , leftTurnLChangeTime:" + leftTurnLChangeTime
+                            + " rightTurnLChangeTime:" + rightTurnLChangeTime + " rlTime:" + rlTurnTime + " isCanShowCard:"
+                            + isCanShowCard);
                 }
-                AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
+            } else {
+                if (value instanceof Integer) {
+                    rightLightSt = (int) value;
+                    if (rightLightSt == 1)
+                        rightTurnLChangeTime = System.currentTimeMillis();
+                    KLog.d("lightChange 右边转向灯闪 , value = " + value + " , rightTurnLChangeTime" + rightTurnLChangeTime
+                            + " leftTurnLChangeTime:" + leftTurnLChangeTime + " rlTime:" + rlTurnTime + "isCanShowCard:"
+                            + isCanShowCard);
+                }
+            }
+            if (vehicleId == CLUSTER_LEFT_TURN_LAMP && leftLightSt == 1 && rightLightSt == 0 && isCanShowCard) {
+                //左转亮起，判断延迟100
+                if (rlTurnTime == 0) {
+                    mHandler.postDelayed(() -> {
+                        mHandler.removeCallbacksAndMessages("closeWin");
+                        isCanShowCard = false;
+                        KLog.d("lightChange 执行了左闪");
+                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
+                    }, 100);
+                }
+            } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP && leftLightSt == 0 && rightLightSt == 1 && isCanShowCard) {
+                //右转亮起，判断延迟100
+                if (rlTurnTime == 0) {
+                    mHandler.postDelayed(() -> {
+                        mHandler.removeCallbacksAndMessages("closeWin");
+                        isCanShowCard = false;
+                        KLog.d("lightChange 执行了右闪");
+                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
+                    }, 100);
+                }
+            } else if (leftLightSt == 0 && rightLightSt == 0) {
+                if (rlTurnTime != 0) {
+                    KLog.d("lightChange 记录双闪同时为0的时间: " + System.currentTimeMillis());
+                } else {
+                    mHandler.removeCallbacksAndMessages("closeWin");
+                    mHandler.postDelayed(() -> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0), "closeWin", 1000);
+                }
+            } else if (leftLightSt == 1 && rightLightSt == 1) {
+                //都是1时出现了双闪，此时这段时间需要计时累计1秒
+                if (rlTurnTime == 0 && AvmRuntime.self().getFullSceneSts() == DataDefine.FV_STATE_LEFT_CARD) {
+                    //记录双闪开始准备退出左卡片的时间
+                    rlTurnTime = System.currentTimeMillis();
+                    KLog.d("lightChange 记录双闪开始时间: " + rlTurnTime);
+                } else {
+                    //记录为了关闭
+                    isCanDismissCard = true;
+                    KLog.d("lightChange 记录双闪同时为1的时间: " + System.currentTimeMillis());
+                }
+            }
+
+            if (rlTurnTime != 0 && !isStartRlTime) {
+                isStartRlTime = true;
+                mHandler.postDelayed(() -> {
+                    if (rlTurnTime == 0) {
+                        KLog.d("lightChange 二次检验是否在开始双闪");
+                        return;
+                    }
+                    if (!isCanDismissCard) {
+                        KLog.d("lightChange 不允许关闭双闪");
+                        return;
+                    }
+                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0);
+                    KLog.d("lightChange 执行双闪动作，需要重置双闪时间");
+                    isCanDismissCard = false;
+                    leftTurnLChangeTime = 0;
+                    rightTurnLChangeTime = 0;
+                    rlTurnTime = 0;
+                }, "rlCloseWin", 1000);
+            } else if (rlTurnTime == 0) {
+                if (isStartRlTime) {
+                    isStartRlTime = false;
+                    KLog.d("lightChange 被清除了双闪时间");
+                    mHandler.removeCallbacksAndMessages("rlCloseWin");
+                }
             }
             AvmRuntime.self().updateChangeTime();
-        } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
-            rightTurnLChangeTime = System.currentTimeMillis();
-            KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime));
+        }/* else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
+
             long delay = 800;
             if (turnLampSwSts == 0) {
                 if ((rightTurnLChangeTime-leftTurnLChangeTime) < 500) { //双闪
@@ -583,7 +682,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
             }
             AvmRuntime.self().updateChangeTime();
-        } else if (vehicleId == VEHICLE_SPEED) {// 车速
+        } */ else if (vehicleId == VEHICLE_SPEED) {// 车速
             //KLog.d(" 车速 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Float) {
                 AvmRuntime.self().speedChange((Float) value);
