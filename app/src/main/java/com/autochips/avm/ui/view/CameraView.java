@@ -1432,6 +1432,7 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.y = 84;
         mWindowLps.x = AvmApp.getInstance().isRight ? 1392 : 42;
         isSmartWin = true;
+        isFullWin = false;
         mWindowLps.width = 486;
         mWindowLps.height = 870;
         ConstraintLayout.LayoutParams layoutParamsF = (ConstraintLayout.LayoutParams)viewFrame.getLayoutParams();
