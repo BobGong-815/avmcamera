@@ -794,13 +794,21 @@ public class CameraViewModel extends BaseCameraViewModel {
         threadHandler.sendMessage(message);
     }
 
+    private int mDirection = -1;
     public void turnLampChange(int direction, long delay) {
         threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
-
         Message message = Message.obtain();
         message.what = MSG_TURN_LAMP_CHANGE;
         message.arg1 = direction;
         threadHandler.sendMessageDelayed(message, delay);
+        mDirection = direction;
+    }
+
+    public void turnResetChange() {
+        if(mDirection == 0) {
+            KLog.d("lightChange 重置退出逻辑");
+            threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
+        }
     }
 
     public void removeCloseMsg() {
