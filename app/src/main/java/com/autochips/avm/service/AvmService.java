@@ -691,6 +691,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 leftLightSt = (int) value;
                 if (leftLightSt == 1) {
                     leftTurnLChangeTime = System.currentTimeMillis();
+                    //灯亮起时，有退出动作需要移除
+                    AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
                 }
                 KLog.d("lightChange 转向 左边转向灯闪 , value = " + value + " , leftTurnLChangeTime:" + leftTurnLChangeTime
                         + " rightTurnLChangeTime:" + rightTurnLChangeTime + " rlTime:" + rlTurnTime + " isCanShowCard:"
@@ -701,6 +703,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 rightLightSt = (int) value;
                 if (rightLightSt == 1) {
                     rightTurnLChangeTime = System.currentTimeMillis();
+                    //灯亮起时，有退出动作需要移除
+                    AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
                 }
                 KLog.d("lightChange 右边转向灯闪 , value = " + value + " , rightTurnLChangeTime" + rightTurnLChangeTime
                         + " leftTurnLChangeTime:" + leftTurnLChangeTime + " rlTime:" + rlTurnTime + "isCanShowCard:"
