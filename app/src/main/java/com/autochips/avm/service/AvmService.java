@@ -745,8 +745,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 //记录为了关闭
                 isCanDismissCard = true;
                 KLog.d("lightChange 记录双闪同时为1的时间: " + System.currentTimeMillis());
+                mHandler.removeCallbacksAndMessages("showCard");
                 if (AvmApp.getInstance().getCameraView().isFullWin) {
-                    mHandler.removeCallbacksAndMessages("showCard");
                     AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 100);
                 }
             }
