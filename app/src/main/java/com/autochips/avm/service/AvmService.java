@@ -286,7 +286,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                     mHandler.removeMessages(MSG_CR_CAMERA);
                                     mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 500);
                                 }
-                            },AvmRuntime.self().isPREixt() ? 500 : 0);
+                            },"pDelayDismiss",AvmRuntime.self().isPREixt() ? 500 : 0);
                             break;
                         case DataDefine.ACT_LEFT_CARD:
                             KLog.i("avmService____ ACT_LEFT_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);
@@ -314,6 +314,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            }
+                            if(AvmRuntime.self().isPREixt()) {
+                                AvmRuntime.self().setResetPREixt();
+                                mHandler.removeCallbacksAndMessages("pDelayDismiss");
                             }
                             if(AvmRuntime.self().isRearGearSts()){
                                 DataManager.writeFault(DataConstant.Code.ACTIVI_RGEAR);
