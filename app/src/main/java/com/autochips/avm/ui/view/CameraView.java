@@ -7,6 +7,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CL
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RLMidDistance;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRDistance;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRMidDistance;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_VCU_GEAR_LVL_DISP;
 import static com.avm.framwork.constant.CameraContracts.ROW_1_LEFT;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_2_D;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_2_D_BOTTOM;
@@ -795,7 +796,8 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.d("setWindowType()");
         boolean bl = rootView.isAttachedToWindow();
         int newHeight = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
-        if (AvmRuntime.self().isRearGearSts()) {
+        int gear = CanManager.getInstance().getIntStatus(CLUSTER_VCU_GEAR_LVL_DISP, 0);
+        if (gear == 3) {
             newHeight = 1080;
         }
         if (mWindowLps.height == newHeight) return;
