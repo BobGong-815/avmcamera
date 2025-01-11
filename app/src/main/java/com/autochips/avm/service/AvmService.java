@@ -691,8 +691,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 leftLightSt = (int) value;
                 if (leftLightSt == 1) {
                     leftTurnLChangeTime = System.currentTimeMillis();
-                    //灯亮起时，有退出动作需要移除
-                    AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
                 }
                 KLog.d("lightChange 转向 左边转向灯闪 , value = " + value + " , leftTurnLChangeTime:" + leftTurnLChangeTime
                         + " rightTurnLChangeTime:" + rightTurnLChangeTime + " rlTime:" + rlTurnTime + " isCanShowCard:"
@@ -703,32 +701,37 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 rightLightSt = (int) value;
                 if (rightLightSt == 1) {
                     rightTurnLChangeTime = System.currentTimeMillis();
-                    //灯亮起时，有退出动作需要移除
-                    AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
                 }
                 KLog.d("lightChange 右边转向灯闪 , value = " + value + " , rightTurnLChangeTime" + rightTurnLChangeTime
                         + " leftTurnLChangeTime:" + leftTurnLChangeTime + " rlTime:" + rlTurnTime + "isCanShowCard:"
                         + isCanShowCard + " leftLightSt:" + leftLightSt);
             }
         }
-        if (vehicleId == CLUSTER_LEFT_TURN_LAMP && leftLightSt == 1 && rightLightSt == 0 && isCanShowCard) {
+        if (vehicleId == CLUSTER_LEFT_TURN_LAMP && leftLightSt == 1 && rightLightSt == 0) {
             //左转亮起，判断延迟100
-            if (rlTurnTime == 0) {
+            if (rlTurnTime == 0 && isCanShowCard) {
                 mHandler.postDelayed(() -> {
                     isCanShowCard = false;
                     KLog.d("lightChange 执行了左闪");
                     AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
                 }, "showCard", 100);
             } else {
+                //灯亮起时，有退出动作需要移除
+                KLog.d("lightChange 灯亮起时，有退出动作需要移除");
+                AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
             }
-        } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP && leftLightSt == 0 && rightLightSt == 1 && isCanShowCard) {
+        } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP && leftLightSt == 0 && rightLightSt == 1) {
             //右转亮起，判断延迟100
-            if (rlTurnTime == 0) {
+            if (rlTurnTime == 0 && isCanShowCard) {
                 mHandler.postDelayed(() -> {
                     isCanShowCard = false;
                     KLog.d("lightChange 执行了右闪");
                     AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
                 }, "showCard", 100);
+            } else {
+                //灯亮起时，有退出动作需要移除
+                KLog.d("lightChange 灯亮起时，有退出动作需要移除");
+                AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
             }
         } else if (leftLightSt == 0 && rightLightSt == 0) {
             if (rlTurnTime != 0) {
