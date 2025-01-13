@@ -720,9 +720,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(1, 0);
                 }, "showCard", 100);
             } else {
-                //灯亮起时，有退出动作需要移除
-                KLog.d("lightChange 灯亮起时，有退出动作需要移除");
-                AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
+                if(AvmApp.getInstance().getCameraView().isFullWin) {
+                    //灯亮起时，有退出动作需要移除
+                    KLog.d("lightChange 灯亮起时，有退出动作需要移除");
+                    AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
+                }
             }
         } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP && leftLightSt == 0 && rightLightSt == 1) {
             //右转亮起，判断延迟100
@@ -733,9 +735,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(2, 0);
                 }, "showCard", 100);
             } else {
-                //灯亮起时，有退出动作需要移除
-                KLog.d("lightChange 灯亮起时，有退出动作需要移除");
-                AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
+                if(AvmApp.getInstance().getCameraView().isFullWin) {
+                    //灯亮起时，有退出动作需要移除
+                    KLog.d("lightChange 灯亮起时，有退出动作需要移除");
+                    AvmApp.getInstance().getCameraView().getViewModel().turnResetChange();
+                }
             }
         } else if (leftLightSt == 0 && rightLightSt == 0) {
             if (rlTurnTime != 0) {
