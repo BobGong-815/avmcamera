@@ -556,7 +556,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private boolean isStartRlTime = false;//记录是否有执行双闪时间记录
     private boolean isCanShowCard = false;//是否允许显示小卡片
     private boolean isCanDismissCard = false;//是否允许双闪关闭全景
-    private boolean isChangeFx = false;//区分是否是改变方向，还是灯光激活
+
+    private int leftLightStPt = 0;//左转灯光 0表示不亮 1表示亮起,控制2.5处理
+    private int rightLightStpt = 0;//右转灯光 0表示不亮 1表示亮起,控制2.5处理
     private final CanManager.onSignalValueChangedListener mOnSignalValueChangedListener = (vehicleId, value) -> {
         if(AvmApp.getInstance().getCameraView() == null){
             KLog.d("AvmApp", "avm is null ");
@@ -600,6 +602,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 lightEeaThree(vehicleId, value);
             }else {
                 if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
+                    if(value instanceof Integer){
+                        leftLightStPt = (int) value;
+                    }
                     leftTurnLChangeTime = System.currentTimeMillis();
                     KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime));
                     long delay = 800;
@@ -608,9 +613,17 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             delay = 0;
                         }
                         AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
+                    }else {
+                        //转向未回正也会双闪，处理转向未回正的双闪逻辑
+                        if ((leftTurnLChangeTime-rightTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) { //双闪
+                            AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0);
+                        }
                     }
                     AvmRuntime.self().updateChangeTime();
                 } else{//右边转向灯闪
+                    if(value instanceof Integer){
+                        rightLightStpt = (int) value;
+                    }
                     rightTurnLChangeTime = System.currentTimeMillis();
                     KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime));
                     long delay = 800;
@@ -619,6 +632,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             delay = 0;
                         }
                         AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
+                    }else {
+                        //转向未回正也会双闪，处理转向未回正的双闪逻辑
+                        if ((rightTurnLChangeTime-leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) { //双闪
+                            AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0);
+                        }
                     }
                     AvmRuntime.self().updateChangeTime();
                 }
@@ -745,10 +763,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (rlTurnTime != 0) {
                 KLog.d("lightChange 记录双闪同时为0的时间: " + System.currentTimeMillis());
             } else {
-                if (!isCanShowCard) {
-                    KLog.d("lightChange 允许开始执行延迟1s退出 ");
-                    AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 1000);
-                }
+                KLog.d("lightChange 允许开始执行延迟1s退出 ");
+                AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 1000);
             }
         } else if (leftLightSt == 1 && rightLightSt == 1) {
             //都是1时出现了双闪，此时这段时间需要计时累计1秒
