@@ -438,6 +438,7 @@ public class CameraView extends View implements LifecycleOwner {
     }
 
     //初始化view
+    @SuppressLint("ClickableViewAccessibility")
     protected void initView() {
         CallBackHelper.getInstance().setCallBackInterface(callBackInterface);
         registry.setCurrentState(Lifecycle.State.CREATED);
@@ -495,12 +496,10 @@ public class CameraView extends View implements LifecycleOwner {
                 setViewDialog();
             }
         });
-        layoutSettingId.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                KLog.i(" onClick: "+4);
-                setViewDialog();
-            }
+        layoutSettingId.setOnTouchListener((v, event) -> {
+            KLog.i(" onClick: "+4);
+            setViewDialog();
+            return true;
         });
         viewRedChick();
         tabView();
