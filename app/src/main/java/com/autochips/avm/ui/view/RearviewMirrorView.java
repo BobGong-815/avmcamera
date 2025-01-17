@@ -420,8 +420,12 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                         (rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected() && rearviewMirrorBinding.llSettingRearviewMirrorDown.isEnabled()) ?
                                 R.color.white : R.color.setting_view_content_color));
                 rearviewMirrorBinding.tvSettingExpand.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
-                rearviewMirrorBinding.ivSettingFold.setImageDrawable(context.getDrawable(R.drawable.button_select_setting_fold));
-                rearviewMirrorBinding.ivSettingView.setImageDrawable(context.getDrawable(R.drawable.button_select_mirror));
+                //rearviewMirrorBinding.ivSettingFold.setImageDrawable(context.getDrawable(R.drawable.button_select_setting_fold));
+                //rearviewMirrorBinding.ivSettingView.setImageDrawable(context.getDrawable(R.drawable.button_select_mirror));
+                rearviewMirrorBinding.tvSettingFold.setCompoundDrawablesRelativeWithIntrinsicBounds(getResources().getDrawable(R.drawable.button_select_setting_fold, null),
+                        null, null, null);
+                rearviewMirrorBinding.tvSettingExpand.setCompoundDrawablesRelativeWithIntrinsicBounds(getResources().getDrawable(R.drawable.button_select_mirror, null)
+                        , null, null, null);
                 break;
             case UiModeManager.MODE_NIGHT_NO:
                 KLog.e("白天模式");
@@ -436,8 +440,12 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                         (rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected() && rearviewMirrorBinding.llSettingRearviewMirrorDown.isEnabled()) ?
                                 R.color.white :  R.color.setting_view_content_color_day));
                 rearviewMirrorBinding.tvSettingExpand.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
-                rearviewMirrorBinding.ivSettingFold.setImageDrawable(context.getDrawable(R.drawable.button_select_setting_fold_day));
-                rearviewMirrorBinding.ivSettingView.setImageDrawable(context.getDrawable(R.drawable.button_select_iv_mirror_day));
+                //rearviewMirrorBinding.ivSettingFold.setImageDrawable(context.getDrawable(R.drawable.button_select_setting_fold_day));
+                //rearviewMirrorBinding.ivSettingView.setImageDrawable(context.getDrawable(R.drawable.button_select_iv_mirror_day));
+                rearviewMirrorBinding.tvSettingFold.setCompoundDrawablesRelativeWithIntrinsicBounds(getResources().getDrawable(R.drawable.button_select_setting_fold_day, null),
+                        null, null, null);
+                rearviewMirrorBinding.tvSettingExpand.setCompoundDrawablesRelativeWithIntrinsicBounds(getResources().getDrawable(R.drawable.button_select_iv_mirror_day, null)
+                        , null, null, null);
                 break;
         }
     }
@@ -447,5 +455,9 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         rearviewMirrorBinding.tvSettingFold.setText(R.string.setting_fold);
         rearviewMirrorBinding.tvSettingExpand.setText(R.string.setting_expand);
         rearviewMirrorBinding.tvRearview.setText(R.string.setting_rearview_mirror);
+    }
+
+    public void setViewRefresh(int style){
+        rearviewMirrorBinding.llRearviewMirror.setLayoutDirection(style);
     }
 }

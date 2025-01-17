@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <data>
 
@@ -18,7 +19,8 @@
         android:id="@+id/mainAvmViewRootId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent">
+        android:background="@color/transparent"
+        android:layoutDirection="ltr">
 
         <!--<TextureView
             android:id="@+id/camera_textureView"
@@ -27,22 +29,22 @@
             android:layout_gravity="center"
             android:layout_marginTop="56px" />-->
 
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:cardCornerRadius="15px"-->
-<!--            android:background="@color/transparent"-->
-<!--            android:layout_marginTop="84px">-->
+        <!--        <androidx.cardview.widget.CardView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:cardCornerRadius="15px"-->
+        <!--            android:background="@color/transparent"-->
+        <!--            android:layout_marginTop="84px">-->
 
-<!--        </androidx.cardview.widget.CardView>-->
+        <!--        </androidx.cardview.widget.CardView>-->
 
         <FrameLayout
             android:id="@+id/viewFrame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="84px">
 
@@ -62,7 +64,7 @@
             android:layout_marginLeft="570px"
             android:layout_marginTop="81px"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
 
@@ -76,7 +78,7 @@
             android:layout_marginRight="100px"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintRight_toRightOf="parent" />
 
         <!--        雷达故障显示图标 -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,7 +87,7 @@
             android:layout_height="870px"
             android:layout_marginLeft="42px"
             android:layout_marginTop="84px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -94,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_f1"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"
                 />
@@ -104,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/radar_fault_f2"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -113,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/radar_fault_f3"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -123,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_f4"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -134,7 +136,7 @@
                 android:rotation="0"
                 android:visibility="gone"
                 android:src="@mipmap/radar_fault_1"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -143,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:src="@mipmap/radar_fault_2"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -152,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:src="@mipmap/radar_fault_3"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -162,7 +164,7 @@
                 android:rotation="0"
                 android:visibility="gone"
                 android:src="@mipmap/radar_fault_4"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -171,8 +173,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -184,8 +186,8 @@
                 android:paddingTop="50px"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -195,8 +197,8 @@
                     android:text="@string/calibration"
                     android:textColor="@color/white"
                     android:textSize="30px"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -212,7 +214,7 @@
                     android:text="@string/manual_calibration"
                     android:textColor="@color/setting_view_bg"
                     android:textSize="@dimen/text_size_20px"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/calibration_title" />
 
                 <TextView
@@ -229,7 +231,7 @@
                     android:text="@string/automatic_calibration"
                     android:textColor="@color/setting_view_bg"
                     android:textSize="@dimen/text_size_20px"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/calibration_title" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -246,7 +248,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="84px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--雷达警示图-->
@@ -255,7 +257,7 @@
                 android:layout_width="486px"
                 android:layout_height="850px"
                 android:layout_marginLeft="42px"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.autochips.avm.ui.view.RadarStatusFrontView
@@ -264,8 +266,8 @@
                     android:layout_height="174px"
                     android:layout_marginTop="104px"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
                 <TextView
                     android:id="@+id/rearRadarFrontId"
@@ -283,8 +285,8 @@
                     android:text="@{viewModel.info.radarFrontDistance}"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     android:textSize="20px" />
 
                 <LinearLayout
@@ -295,8 +297,8 @@
                     android:gravity="center"
                     android:visibility="@{TextUtils.isEmpty(viewModel.info.radarDistance)?View.GONE:View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent">
 
                     <TextView
                         android:id="@+id/rearRadarImgId"
@@ -319,8 +321,8 @@
                     android:layout_height="174px"
                     android:layout_marginBottom="68px"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -333,7 +335,7 @@
                 android:minWidth="480px"
                 android:minHeight="800px"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
 
@@ -350,7 +352,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="20px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -360,7 +362,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="245px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -370,7 +372,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="605px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -380,7 +382,7 @@
                     android:layout_marginTop="245px"
                     android:layout_marginRight="20px"
                     android:background="@color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -394,7 +396,7 @@
                     android:onClick="@{()->viewModel.camera2dTop()}"
                     android:rotation="0"
                     android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -407,7 +409,7 @@
                     android:onClick="@{()->viewModel.camera2dLift()}"
                     android:rotation="270"
                     android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -420,7 +422,7 @@
                     android:onClick="@{()->viewModel.camera2dBottom()}"
                     android:rotation="180"
                     android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -433,7 +435,7 @@
                     android:onClick="@{()->viewModel.camera2dRight()}"
                     android:rotation="90"
                     android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -446,7 +448,7 @@
                 android:minWidth="480px"
                 android:minHeight="850px"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.Group
@@ -462,7 +464,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="20px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -472,7 +474,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="245px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
                 <!--右前-->
                 <View
@@ -482,7 +484,7 @@
                     android:layout_marginLeft="280px"
                     android:layout_marginTop="20px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -492,7 +494,7 @@
                     android:layout_marginLeft="380px"
                     android:layout_marginTop="245px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
                 <!--左后-->
                 <View
@@ -502,7 +504,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="445px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -512,7 +514,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="626px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
                 <!--右后-->
                 <View
@@ -522,7 +524,7 @@
                     android:layout_marginLeft="380px"
                     android:layout_marginTop="445px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -532,7 +534,7 @@
                     android:layout_marginLeft="280px"
                     android:layout_marginTop="626px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -546,7 +548,7 @@
                     android:onClick="@{()->viewModel.camera3dLeftFront()}"
                     android:rotation="150"
                     android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -559,7 +561,7 @@
                     android:onClick="@{()->viewModel.camera3dRightFront()}"
                     android:rotation="210"
                     android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -572,7 +574,7 @@
                     android:onClick="@{()->viewModel.camera3dLeftRear()}"
                     android:rotation="30"
                     android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
@@ -585,7 +587,7 @@
                     android:onClick="@{()->viewModel.camera3dRightRear()}"
                     android:rotation="320"
                     android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -598,13 +600,13 @@
                 android:layout_marginRight="355px"
                 android:layout_marginBottom="60px"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintRight_toRightOf="parent">
 
                 <com.autochips.avm.ui.view.SegmentTabLayout
                     android:id="@+id/segment_wide_angle"
                     android:layout_width="wrap_content"
                     android:layout_height="84px"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tl_indicator_anim_enable="true"
                     app:tl_textSelectColor="@color/setting_view_title_color"
@@ -627,7 +629,7 @@
                 android:layout_marginLeft="191px"
                 android:layout_marginTop="255px"
                 android:background="@color/transparent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!--3D车模背景-->
@@ -638,7 +640,7 @@
                 android:layout_marginLeft="191px"
                 android:layout_marginTop="255px"
                 android:background="@color/transparent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!--摄像头右视角-->
@@ -648,7 +650,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="42px"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -656,7 +658,7 @@
                     android:layout_width="72px"
                     android:layout_height="72px"
                     android:src="@mipmap/ic_camera_card_front"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -668,7 +670,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="546px"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -676,7 +678,7 @@
                     android:layout_width="72px"
                     android:layout_height="72px"
                     android:src="@mipmap/ic_camera_card_front"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -693,8 +695,8 @@
                 android:paddingRight="66dp"
                 android:paddingBottom="10dp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -703,7 +705,7 @@
                     android:text="@string/parking_assist_system_down"
                     android:textColor="@color/white"
                     android:textSize="24sp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -719,7 +721,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="@{viewModel.info.showCaliDemo ?View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -730,7 +732,7 @@
                 android:gravity="center"
                 android:onClick="@{()->viewModel.setManualCalibration()}"
                 android:text="手动标定"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -742,7 +744,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.setCalibration1()}"
                 android:text="前"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -754,7 +756,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.setCalibration2()}"
                 android:text="后"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -766,7 +768,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.setCalibration3()}"
                 android:text="左"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -777,14 +779,14 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.setCalibration4()}"
                 android:text="右"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
             <!--            <androidx.appcompat.widget.AppCompatButton-->
             <!--                android:layout_marginTop="@dimen/text_size_20px"-->
             <!--                android:layout_width="wrap_content"-->
             <!--                android:layout_height="wrap_content"-->
             <!--                android:background="@color/colorPrimary"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintLeft_toLeftOf="parent"-->
             <!--                android:minWidth="150px"-->
             <!--                android:gravity="center"-->
             <!--                app:layout_constraintTop_toTopOf="parent"-->
@@ -802,7 +804,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="@{viewModel.info.showCaliDemo ?View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -814,7 +816,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.bwSetIRKeyPOINT()}"
                 android:text="POINT"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -826,7 +828,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.bwSetIRKeyUp()}"
                 android:text="UP"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -838,7 +840,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.bwSetIRKeyOK()}"
                 android:text="OK"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -850,7 +852,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.bwSetIRKeyExit()}"
                 android:text="exit"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -868,8 +870,8 @@
             android:paddingBottom="10dp"
             android:visibility="@{viewModel.info.showCaliView ?View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -882,7 +884,7 @@
                 android:text="@{viewModel.info.showCaliBtnText,default=`标定中`}"
                 android:textColor="#FFFFFF"
                 android:textSize="32px"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -893,7 +895,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="546px"
             android:layout_marginTop="84px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <!--infobook 摄像头故障-->
 
@@ -929,7 +931,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--设置页面-->
@@ -939,7 +941,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -948,7 +950,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="528px"
 
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--后视镜调节页面-->
@@ -958,7 +960,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -968,7 +970,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="546px"
             android:layout_marginTop="84px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <!--infobook 蒙版-->
 
@@ -985,7 +987,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="969px"
             android:layout_marginTop="399px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--infobook-->
@@ -997,8 +999,8 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -1052,9 +1054,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_toast_bg"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             android:layout_marginLeft="460px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:orientation="vertical"
             android:visibility="gone"
@@ -1080,8 +1082,8 @@
             android:background="@drawable/shape_toast_bg"
             android:orientation="vertical"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -1099,7 +1101,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--左边卡片蒙版 蒙版-->
@@ -1118,7 +1120,7 @@
             android:layout_marginLeft="546px"
             android:layout_marginTop="12dp"
             android:gravity="center_vertical"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -1194,7 +1196,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="80px"
             android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <!--雷达提示音-->
@@ -1207,7 +1209,7 @@
             android:onClick="@{()->viewModel.cameraRadarSound()}"
             android:background="@drawable/shape_bg_nor_12"
             android:contentDescription="雷达提示音::parkimage_home_warningTone"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -1215,8 +1217,8 @@
                 android:layout_width="48px"
                 android:layout_height="48px"
                 android:src="@drawable/ic_radar_sound_open"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -1232,7 +1234,7 @@
             android:background="@drawable/shape_bg_nor_12"
             android:contentDescription="关闭360影像卡片|关闭全景影像卡片|关闭360全景影像卡片::parkimage_home_close360"
             android:onClick="@{() -> viewModel.closeAvm()}"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageButton

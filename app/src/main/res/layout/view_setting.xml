@@ -23,13 +23,14 @@
         android:layout_marginTop="84px"
         android:layout_marginLeft="546px"
         binding:onClickCommand="@{viewModel.pSettingClick}"
+        android:layoutDirection="locale"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="27px"
-            android:layout_marginLeft="36px"
+            android:layout_marginStart="36px"
             android:layout_marginBottom="15px"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -40,6 +41,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:text="@string/setting_p_exit"
                 android:textColor="@color/setting_view_title_color"
                 android:textSize="@dimen/text_size_23px" />
@@ -49,16 +53,11 @@
                 android:layout_width="40px"
                 android:layout_height="40px"
                 android:src="@mipmap/info_default_56_day"
-                android:gravity="center_vertical"
                 android:layout_marginStart="15px"
+                app:layout_constraintStart_toEndOf="@id/tv_setting_p_exit"
+                app:layout_constraintTop_toTopOf="parent"
                 binding:onClickCommand="@{viewModel.pInfoClick}"/>
-        </LinearLayout>
-
-
-        <Switch
-            style="@style/SwitchStyle"
-            android:layout_marginLeft="36px"
-            android:visibility="gone"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.autochips.avm.ui.view.SegmentTabLayout
             android:id="@+id/segment_tab"
@@ -75,11 +74,11 @@
             app:tl_thumb_drawable_3="@drawable/tab_selector_thumb"/>
 
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="57px"
-            android:layout_marginLeft="36px"
+            android:layout_marginStart="36px"
             android:layout_marginBottom="15px"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -90,7 +89,9 @@
                 android:contentDescription="透明底盘::parkimage_set_transparentChassis"
                 android:text="@string/setting_transparent_chassis"
                 android:layout_gravity="center"
-                android:gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:textColor="@color/setting_view_title_color"
                 android:textSize="@dimen/text_size_23px" />
 
@@ -102,17 +103,11 @@
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
+                app:layout_constraintStart_toEndOf="@id/transparentChassis"
+                app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="10px"
                 binding:onClickCommand="@{viewModel.transparentChassisInfoClick}"/>
-        </LinearLayout>
-
-
-        <Switch
-            style="@style/SwitchStyle"
-            android:layout_marginLeft="36px"
-            android:visibility="gone"/>
-
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.autochips.avm.ui.view.SegmentTabLayout
             android:id="@+id/transparent_chassis_tab"
@@ -128,17 +123,18 @@
             app:tl_thumb_drawable_2="@drawable/tab_selector_thumb_old"
             app:tl_thumb_drawable_3="@drawable/tab_selector_thumb"/>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="57px"
-            android:orientation="horizontal"
-            android:layout_marginLeft="36px">
+            android:layout_marginStart="36px">
 
             <Switch
                 android:id="@+id/sw_ctivatedPanorama"
                 style="@style/SwitchStyle"
                 android:layout_gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:contentDescription="雷达激活全景影像::parkimage_set_radarActivated360"
                 android:onCheckedChanged="@{viewModel::switchActivatedPanorama}"/>
 
@@ -146,8 +142,11 @@
                 android:id="@+id/activatedPanorama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18px"
+                android:layout_marginStart="18px"
                 android:text="@string/setting_radar_activated_panorama"
+                app:layout_constraintStart_toEndOf="@id/sw_ctivatedPanorama"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:textColor="@color/setting_view_title_color"
                 android:textSize="@dimen/text_size_23px"
                 android:gravity="center_vertical"
@@ -160,17 +159,19 @@
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
+                app:layout_constraintStart_toEndOf="@id/activatedPanorama"
+                app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="16.5px"
                 android:layout_marginTop="3px"
                 binding:onClickCommand="@{viewModel.activatedPanoramaInfoClick}"/>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="57px"
             android:orientation="horizontal"
-            android:layout_marginLeft="36px">
+            android:layout_marginStart="36px">
 
             <Switch
                 android:id="@+id/sw_setting_path_line"
@@ -178,16 +179,21 @@
                 android:layout_gravity="center_vertical"
                 android:contentDescription="轨迹线::parkimage_set_trajectories"
                 android:onCheckedChanged="@{viewModel::switchPanorama}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:checked="true"/>
 
             <TextView
                 android:id="@+id/pathLine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18px"
+                android:layout_marginStart="18px"
                 android:layout_gravity="center"
                 android:text="@string/setting_path_line"
                 android:textColor="@color/setting_view_title_color"
+                app:layout_constraintStart_toEndOf="@id/sw_setting_path_line"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:textSize="@dimen/text_size_23px"
                 android:gravity="center_vertical" />
 
@@ -198,24 +204,28 @@
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
+                app:layout_constraintStart_toEndOf="@id/pathLine"
+                app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="16.5px"
                 android:layout_marginTop="3px"
                 binding:onClickCommand="@{viewModel.pathLineInfoClick}"
                 android:visibility="gone"/>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="57px"
             android:orientation="horizontal"
-            android:layout_marginLeft="36px">
+            android:layout_marginStart="36px">
 
             <Switch
                 android:id="@+id/switchSignalActivates"
                 style="@style/SwitchStyle"
                 android:layout_gravity="center_vertical"
                 android:onCheckedChanged="@{viewModel::switchSignalActivates}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:contentDescription="转向灯激活全景影像::parkimage_set_turnLampActivated360"
                 android:checked="true"/>
 
@@ -223,9 +233,12 @@
                 android:id="@+id/tv_activatesPanorama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18px"
+                android:layout_marginStart="18px"
                 android:layout_gravity="center"
                 android:text="@string/setting_signal_activates_panorama"
+                app:layout_constraintStart_toEndOf="@id/switchSignalActivates"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:textColor="@color/setting_view_title_color"
                 android:textSize="@dimen/text_size_23px"
                 android:gravity="center_vertical" />
@@ -237,9 +250,11 @@
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
+                app:layout_constraintStart_toEndOf="@id/tv_activatesPanorama"
+                app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="16.5px"
                 binding:onClickCommand="@{viewModel.activatesPanoramaInfoClick}"/>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 </layout>

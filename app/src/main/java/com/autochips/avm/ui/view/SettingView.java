@@ -27,11 +27,9 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
 
-import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.databinding.ViewSettingBinding;
-import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.listener.OnTabSelectListener;
 import com.autochips.avm.util.SystemProperties;
@@ -412,5 +410,10 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         settingBinding.pathLine.setText(R.string.setting_path_line);
         settingBinding.transparentChassis.setText(R.string.setting_transparent_chassis);
         settingBinding.transparentChassisTab.setTabData(getTransparentChassisDescValueArray());
+    }
+
+    public void setViewRefresh(int style){
+        KLog.v("setViewRefresh 当前language："+style);
+        settingBinding.settingView.setLayoutDirection(style);
     }
 }

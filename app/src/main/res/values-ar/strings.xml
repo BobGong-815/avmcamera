@@ -13,7 +13,7 @@
     <string name="setting_radar_activated_panorama_content">الدخول في المنظر البانورامي عندما تكون سرعة السيارة أقل من 15 كم/ساعة وعندما يصدر الرادار الأمامي تنبيهًا</string>
     <string name="setting_path_line">خط المسار</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">يتم تفعيل العرض البانورامي عند تشغيل إشارة الانعطاف</string>
+    <string name="setting_signal_activates_panorama">يتم تفعيل العرض البانورامي\n عند تشغيل إشارة الانعطاف</string>
     <string name="setting_signal_activates_panorama_content">تشغيل إشارة الانعطاف والدخول في المنظر البانورامي، الخروج التلقائي عندما تكون سرعة السيارة أكبر من 30 كم/ساعة</string>
     <string name="setting_transparent_chassis_infobook_title">شاسيه شفاف</string>
     <string name="setting_transparent_chassis_infobook_content">تفعيل ملاحظة حالة الطريق للسيارة</string>

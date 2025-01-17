@@ -476,7 +476,8 @@ public class CameraView extends View implements LifecycleOwner {
             layoutParams.height = 270;
             infobook.setLayoutParams(layoutParams);
         }
-
+        settingView.setViewRefresh(language.equals("ar") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+        rearviewMirrorView.setViewRefresh(language.equals("ar") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
 //        settingView.setOnClickListener((v) -> {
 //        });
         layout2d.setOnClickListener((view) -> {
@@ -697,8 +698,6 @@ public class CameraView extends View implements LifecycleOwner {
 
     /**
      * 激活类型
-     *
-     * @param model
      */
 //    private ViewType hisModel = ViewType.gear_D;
 //    private ViewType hisModelTurn = ViewType.gear_D;// 转向退出的时候的模式
@@ -1444,39 +1443,39 @@ public class CameraView extends View implements LifecycleOwner {
         if(mViewCameraRightBinding != null){
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
             layoutParams.topMargin = 9;
-            layoutParams.setMarginEnd(9);
+            layoutParams.rightMargin = 9;
             rlClose.setLayoutParams(layoutParams);
             ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
             layoutParamsRl.topMargin = 9;
-            layoutParamsRl.setMarginEnd(411);
+            layoutParamsRl.rightMargin = 411;
             radarSoundLayout.setLayoutParams(layoutParamsRl);
             ConstraintLayout.LayoutParams layoutParamsClCon = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
             layoutParamsClCon.topMargin = 0;
             clCon.setLayoutParams(layoutParamsClCon);
             ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)conRadar.getLayoutParams();
-            layoutParamsCl.setMarginEnd(0);
+            layoutParamsCl.rightMargin = 0;
             conRadar.setLayoutParams(layoutParamsCl);
             ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
-            layoutParamsCr.setMarginEnd(0);
+            layoutParamsCr.rightMargin = 0;
             layoutParamsCr.topMargin = 0;
             conRadarError.setLayoutParams(layoutParamsCr);
         }else {
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
             layoutParams.topMargin = 9;
-            layoutParams.setMarginStart(9);
+            layoutParams.leftMargin = 9;
             rlClose.setLayoutParams(layoutParams);
             ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
             layoutParamsRl.topMargin = 9;
-            layoutParamsRl.setMarginStart(411);
+            layoutParamsRl.leftMargin = 411;
             radarSoundLayout.setLayoutParams(layoutParamsRl);
             ConstraintLayout.LayoutParams layoutParamsClCon = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
             layoutParamsClCon.topMargin = 0;
             clCon.setLayoutParams(layoutParamsClCon);
             ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)conRadar.getLayoutParams();
-            layoutParamsCl.setMarginStart(0);
+            layoutParamsCl.leftMargin = 0;
             conRadar.setLayoutParams(layoutParamsCl);
             ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
-            layoutParamsCr.setMarginStart(0);
+            layoutParamsCr.leftMargin = 0;
             layoutParamsCr.topMargin = 0;
             conRadarError.setLayoutParams(layoutParamsCr);
         }
@@ -1525,39 +1524,39 @@ public class CameraView extends View implements LifecycleOwner {
         if(mViewCameraRightBinding != null){
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
             layoutParams.topMargin = 93;
-            layoutParams.setMarginEnd(51);
+            layoutParams.rightMargin = 51;
             rlClose.setLayoutParams(layoutParams);
             ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
             layoutParamsRl.topMargin = 93;
-            layoutParamsRl.setMarginEnd(453);
+            layoutParamsRl.rightMargin = 453;
             radarSoundLayout.setLayoutParams(layoutParamsRl);
             ConstraintLayout.LayoutParams layoutParamsClCon = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
             layoutParamsClCon.topMargin = 84;
             clCon.setLayoutParams(layoutParamsClCon);
             ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)conRadar.getLayoutParams();
-            layoutParamsCl.setMarginEnd(42);
+            layoutParamsCl.rightMargin = 42;
             conRadar.setLayoutParams(layoutParamsCl);
             ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
-            layoutParamsCr.setMarginEnd(42);
+            layoutParamsCr.rightMargin = 42;
             layoutParamsCr.topMargin = 84;
             conRadarError.setLayoutParams(layoutParamsCr);
         }else{
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)rlClose.getLayoutParams();
             layoutParams.topMargin = 93;
-            layoutParams.setMarginStart(51);
+            layoutParams.leftMargin = 51;
             rlClose.setLayoutParams(layoutParams);
             ConstraintLayout.LayoutParams layoutParamsRl = (ConstraintLayout.LayoutParams)radarSoundLayout.getLayoutParams();
             layoutParamsRl.topMargin = 93;
-            layoutParamsRl.setMarginStart(453);
+            layoutParamsRl.leftMargin = 453;
             radarSoundLayout.setLayoutParams(layoutParamsRl);
             ConstraintLayout.LayoutParams layoutParamsClCon = (ConstraintLayout.LayoutParams)clCon.getLayoutParams();
             layoutParamsClCon.topMargin = 84;
             clCon.setLayoutParams(layoutParamsClCon);
             ConstraintLayout.LayoutParams layoutParamsCl = (ConstraintLayout.LayoutParams)conRadar.getLayoutParams();
-            layoutParamsCl.setMarginStart(42);
+            layoutParamsCl.leftMargin = 42;
             conRadar.setLayoutParams(layoutParamsCl);
             ConstraintLayout.LayoutParams layoutParamsCr = (ConstraintLayout.LayoutParams)conRadarError.getLayoutParams();
-            layoutParamsCr.setMarginStart(42);
+            layoutParamsCr.leftMargin = 42;
             layoutParamsCr.topMargin = 84;
             conRadarError.setLayoutParams(layoutParamsCr);
         }
@@ -2442,6 +2441,8 @@ public class CameraView extends View implements LifecycleOwner {
                 || language.equals("sv") || language.equals("pt") || language.equals("ptrBR")? 270 : 240;
         infobook.setLayoutParams(layoutParams);
         tvBreakdown.setText(R.string.camera_breakdown);
+        settingView.setViewRefresh(language.equals("ar") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+        rearviewMirrorView.setViewRefresh(language.equals("ar") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
     }
 
     public void chick2DView(String type) {
@@ -2581,7 +2582,7 @@ public class CameraView extends View implements LifecycleOwner {
         if(AvmApp.getInstance().isRight){
             boolean isVisibleLift = cameraImageLayoutLift.getVisibility() == VISIBLE;
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)cameraImageLayout.getLayoutParams();
-            layoutParams.setMarginEnd(isVisibleLift ? 546 : 1806);
+            layoutParams.rightMargin = isVisibleLift ? 546 : 1806;
             cameraImageLayout.setLayoutParams(layoutParams);
         }
     }
@@ -2602,7 +2603,7 @@ public class CameraView extends View implements LifecycleOwner {
         boolean isAy5T = AvmApp.ISAY5T;
         if(AvmApp.getInstance().isRight){
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)cameraImageLayout.getLayoutParams();
-            layoutParams.setMarginEnd(1806);
+            layoutParams.rightMargin = 1806;
             cameraImageLayout.setLayoutParams(layoutParams);
         }
         switch (type) {

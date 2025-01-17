@@ -31,27 +31,19 @@ import android.widget.TextView;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.autochips.avm.R;
 import com.autochips.avm.listener.OnTabInvalidSelectListener;
 import com.autochips.avm.listener.OnTabSelectListener;
-import com.autochips.avm.util.TestDefine;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.graphics.drawable.DrawableCompat;
 import io.reactivex.functions.Consumer;
 import me.goldze.mvvmhabit.utils.KLog;
 
-@RequiresApi(api = Build.VERSION_CODES.R)
 public class SegmentTabLayout extends FrameLayout implements ValueAnimator.AnimatorUpdateListener {
     private static final String TAG = SegmentTabLayout.class.getSimpleName();
     private final Context mContext;
@@ -145,7 +137,7 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
         } else if (height.equals(ViewGroup.LayoutParams.WRAP_CONTENT + "")) {
         } else {
             int[] systemAttrs = {android.R.attr.layout_height};
-            TypedArray a = context.obtainStyledAttributes(attrs, systemAttrs);
+            @SuppressLint("ResourceType") TypedArray a = context.obtainStyledAttributes(attrs, systemAttrs);
             mHeight = a.getDimensionPixelSize(0, ViewGroup.LayoutParams.WRAP_CONTENT);
             a.recycle();
         }
@@ -210,7 +202,6 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
     /**
      * 更新数据
      */
-    @RequiresApi(api = Build.VERSION_CODES.R)
     public void notifyDataSetChanged() {
         mTabsContainer.removeAllViews();
         this.mTabCount = mTitles.length;
@@ -236,7 +227,6 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
     /**
      * 创建并添加tab
      */
-    @RequiresApi(api = Build.VERSION_CODES.R)
     @SuppressLint("CheckResult")
     private void addTab(final int position, View tabView) {
         View tab_title = tabView.findViewById(R.id.tab_title);
@@ -259,7 +249,9 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
             } else if (mTitles[position] == R.string.setting_30_seconds) {
                 sequence = "30秒后::parkimage_set_30s";
             }
-            tv_tab_title.setStateDescription(sequence);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                tv_tab_title.setStateDescription(sequence);
+            }
         } else if (tab_title instanceof ImageView) {
             ImageView iv_tab_title = (ImageView) tab_title;
             iv_tab_title.setImageDrawable(mContext.getDrawable(mTitles[position]));

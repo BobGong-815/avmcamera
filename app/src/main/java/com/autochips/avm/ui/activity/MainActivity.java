@@ -72,21 +72,24 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
 
     protected void onStop() {
         super.onStop();
+        Log.d("AvmRuntime", "MainActivity::onStop()");
+        if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
+            AvmRuntime.self().artificialExit();
+        }
+
         finish();
     }
 
     protected void onDestroy() {
         super.onDestroy();
         Log.d("AvmRuntime", "onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
-        if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
-            AvmRuntime.self().artificialExit();
-        }
-        if (AvmApp.getInstance().getCameraView().getRootView() != null) {
-            Log.d("AvmRuntime", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
-            if (CameraView.windowSurfaceControl != null) {
-                setSCLayer(CameraView.windowSurfaceControl, 0);
-            }
-        }
+
+//        if (AvmApp.getInstance().getCameraView().getRootView() != null) {
+//            Log.d("AvmRuntime", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
+//            if (CameraView.windowSurfaceControl != null) {
+//                setSCLayer(CameraView.windowSurfaceControl, 0);
+//            }
+//        }
     }
 
     @Override
