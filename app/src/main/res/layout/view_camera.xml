@@ -212,6 +212,7 @@
                     android:gravity="center"
                     android:onClick="@{() -> viewModel.setManualCalibration()}"
                     android:text="@string/manual_calibration"
+                    android:visibility="gone"
                     android:textColor="@color/setting_view_bg"
                     android:textSize="@dimen/text_size_20px"
                     app:layout_constraintLeft_toLeftOf="parent"
