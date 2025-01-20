@@ -482,8 +482,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         if (!isExitAction) {
             BvAvmJNIHelper.getInstance().avmDeInit();
         }
-
         AvmApp.getInstance().getCameraView().removeView();
+        SystemProperties.setGlobal("avm_state", 0);
+        mAvmManager.sendAvmState(0);
         ThreadPoolUtil.getInstance().removeAllHandlerAndShutdownThreadPool();
         CanManager.getInstance().unRegisterSignalListener(mOnSignalValueChangedListener);
 //        if (!isExitAction)

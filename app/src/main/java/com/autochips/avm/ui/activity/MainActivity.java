@@ -84,12 +84,12 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         super.onDestroy();
         Log.d("AvmRuntime", "onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
 
-//        if (AvmApp.getInstance().getCameraView().getRootView() != null) {
-//            Log.d("AvmRuntime", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
-//            if (CameraView.windowSurfaceControl != null) {
-//                setSCLayer(CameraView.windowSurfaceControl, 0);
-//            }
-//        }
+        if (AvmApp.getInstance().getCameraView().getRootView() != null) {
+            Log.d("AvmRuntime", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
+            if (CameraView.windowSurfaceControl != null) {
+                setSCLayer(CameraView.windowSurfaceControl, 0);
+            }
+        }
     }
 
     @Override
@@ -254,6 +254,11 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     @SuppressLint("SoonBlockedPrivateApi")
     private void setSCLayer(SurfaceControl windowSC, int z) {
         try {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             // 获取SurfaceControl类
             Class<?> surfaceControlClass = Class.forName("android.view.SurfaceControl$Transaction");
 
