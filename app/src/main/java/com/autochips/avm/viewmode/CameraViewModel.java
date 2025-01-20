@@ -121,17 +121,6 @@ public class CameraViewModel extends BaseCameraViewModel {
                     // 2 后视图标定失败
                     // 4 左视图标定失败
                     // 8 右视图标定失败
-
-                    if (isCaliStatus == 0) {
-                        try {
-                            Thread.sleep(5000);
-                            CanManager.getInstance().setIntProperty(NFS_SYNC,  0, 1);
-                            int nfs_sts = CanManager.getInstance().getIntStatus(NFS_SYNC_STATUS, 0);
-                            KLog.i("标定 Read NFS STATUS is " + nfs_sts);
-                        } catch (InterruptedException exception) {
-                            KLog.e(exception.toString());
-                        }
-                    }
                     threadHandler.removeMessages(MSG_CALIBRATING);
                 } else if (msg.what == MSG_CALIBRATE_RESP) {
                     KLog.i("标定 handle MSG_CALIBRATE_RESP.");
@@ -499,6 +488,14 @@ public class CameraViewModel extends BaseCameraViewModel {
             KLog.i("标定-DIAG_31 app 未收到反馈：isCaliStatus " + isCaliStatus);
         } else if (isCaliStatus == 0) {//成功
             //byte[] arrBack = {0x00, 0x02,0x00,0x00};
+            try {
+                Thread.sleep(500);
+                CanManager.getInstance().setIntProperty(NFS_SYNC, 0, 1);
+                int nfs_sts = CanManager.getInstance().getIntStatus(NFS_SYNC_STATUS, 0);
+                KLog.i("标定 Read NFS STATUS is " + nfs_sts);
+            } catch (InterruptedException exception) {
+                KLog.e(exception.toString());
+            }
             byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
             //CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP, 0, arrBack);
             CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
