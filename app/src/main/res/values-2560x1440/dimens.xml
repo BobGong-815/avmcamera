@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_16px">16px</dimen>
+    <dimen name="text_size_18px">18px</dimen>
+    <dimen name="text_size_20px">20px</dimen>
+    <dimen name="text_size_22px">22px</dimen>
+    <dimen name="text_size_24px">24px</dimen>
+
+    <dimen name="screen_width">2560px</dimen>
+    <dimen name="screen_height">1440px</dimen>
+    <dimen name="screen_width_smart">648px</dimen>
+    <dimen name="screen_height_smart">1160px</dimen>
+    <dimen name="setting_text_image_width">10px</dimen>
+</resources>

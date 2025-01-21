@@ -1,0 +1,60 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!--将ActionBar隐藏,这里使用ToolBar-->
+        <item name="windowActionBar">false</item>
+        <!-- 使用 API Level 22以上编译的话，要拿掉前綴字 -->
+        <item name="windowNoTitle">true</item>
+        <!--colorPrimary 对应ToolBar的颜色-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!--colorPrimaryDark对应状态栏的颜色-->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--colorAccent 对应EditText编辑时、RadioButton选中、CheckBox等选中时的颜色。-->
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="SwitchStyle">
+
+        <item name="android:checkable">false</item>
+        <item name="android:thumb">@null</item>
+        <item name="android:track">@null</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/selector_switch_track</item>
+    </style>
+
+    <declare-styleable name="SegmentTabLayout">
+        <attr name="tl_indicator_height" format="dimension" />
+        <attr name="tl_indicator_anim_enable" format="boolean" />
+        <attr name="tl_indicator_start_color" format="color" />
+        <attr name="tl_indicator_end_color" format="color" />
+        <attr name="tl_drawable_start" format="reference"/>
+        <attr name="tl_tab_is_vertical" format="boolean" />
+        <attr name="tl_tab_is_plain_text" format="boolean" />
+        <attr name="tl_tab_space_equal" format="boolean" />
+        <attr name="tl_tab_width" format="dimension" />
+        <attr name="tl_textsize" format="dimension" />
+        <attr name="tl_textSelectColor" format="color" />
+        <attr name="tl_textUnselectColor" format="color" />
+        <attr name="tl_textUnClickColor" format="color" />
+        <attr name="tl_textUnableColor" format="color"/>
+        <attr name="tl_thumb_drawable" format="reference" />
+        <attr name="tl_thumb_drawable_bg" format="reference" />
+        <attr name="tl_thumb_drawable_2" format="reference" />
+        <attr name="tl_thumb_drawable_3" format="reference" />
+    </declare-styleable>
+
+    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowElevation">0px</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+</resources>
