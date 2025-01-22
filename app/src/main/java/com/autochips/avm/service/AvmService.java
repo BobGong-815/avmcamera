@@ -112,6 +112,7 @@ import com.autochips.avm.util.SystemProperties;
 import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
+import com.gxa.lib.car.VehicleVendorProperty;
 import com.gxa.service.camera.AvmManager;
 import com.gxa.service.camera.AvmStateListener;
 
@@ -122,6 +123,7 @@ import gxa.car.power.data.CarPowerSignalStatus;
 import gxa.car.power.data.CarPowerWorkModeStatus;
 import gxa.car.power.listener.CarPowerEventListener;
 import gxa.car.power.manager.CarPowerManager;
+import gxa.car.utils.VehicleHelper;
 import me.goldze.mvvmhabit.utils.KLog;
 
 public class AvmService extends Service implements AvmRuntime.ActionListener {
@@ -147,6 +149,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
     private boolean isFirstEnter = true;
     private AvmManager mAvmManager;
+    public static final int ID_POWER_EXIT_BOOT_ANIMATION_REQ = 0x0C01;
+    public static final int POWER_EXIT_BOOT_ANIMATION_REQ_ID = ID_POWER_EXIT_BOOT_ANIMATION_REQ |
+    VehicleVendorProperty.VehiclePropertyGroup.VENDOR |
+            VehicleVendorProperty.VehiclePropertyType.INT32 |
+            VehicleVendorProperty.VehicleArea.GLOBAL;
 
     public AvmService() { }
 
@@ -336,6 +343,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             if(CameraViewModelHelper.getInstance().mRvcState == 0x0){
                                 //rvc 开启状态
                                 CameraViewModelHelper.getInstance().mRvcState = 0x4;
+                                CanManager.getInstance().setIntProperty(POWER_EXIT_BOOT_ANIMATION_REQ_ID, VehicleHelper.VEHICLE_AREA_TYPE_GLOBAL, 1);
                                 mHandler.sendEmptyMessageDelayed(MSG_CLOSE_RVC,2000);
                             }
                             break;
@@ -435,7 +443,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //            KLog.d("AvmApp", "avm is not init");
 //            return START_STICKY;
 //        }
-        //adb shell am start-service -n com.autochips.avm/.service.AvmService --ei avm_onclick 1
         if (intent != null) {
             if(!TextUtils.isEmpty(intent.getStringExtra("initCam"))){
                 KLog.i("init can");
