@@ -206,7 +206,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 if(isFirstShow) {
                     isFirstShow = false;
                 }
-                AvmApp.getInstance().getCameraView().getViewModel().setBwSetRVCStatus(2);
+                //AvmApp.getInstance().getCameraView().getViewModel().setBwSetRVCStatus(2);
             }
         }
 

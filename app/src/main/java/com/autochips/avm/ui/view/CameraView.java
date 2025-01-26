@@ -1342,7 +1342,7 @@ public class CameraView extends View implements LifecycleOwner {
         mViewCameraBinding.rlClose.setLayoutParams(layoutParamsClose);
         if(isFristShowApp && BvAvmJNIHelper.isAvmInit) {
             isFristShowApp = false;
-            viewModel.setBwSetRVCStatus(4);
+            //viewModel.setBwSetRVCStatus(4);
         }
         showComm();
         mMainHandler.postDelayed(() -> {
