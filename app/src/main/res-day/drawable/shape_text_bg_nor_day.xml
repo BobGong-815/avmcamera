@@ -20,8 +20,8 @@
         android:right="4px"
         android:top="4px">
         <shape>
-            <solid android:color="#140A1532" />
-            <corners android:radius="18px" />
+            <solid android:color="#ffffffff" />
+            <corners android:radius="8px" />
         </shape>
 
     </item>

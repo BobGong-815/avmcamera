@@ -100,6 +100,7 @@ import com.autochips.avm.data.DataManager;
 import com.autochips.avm.data.Monitor;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
+import com.autochips.avm.ui.activity.MockActivity;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
@@ -325,6 +326,7 @@ public class AvmService extends Service {
 
 
                 case 11://启动调试activity页面
+                    openMockActivity();
                     break;
             }
         } else {
@@ -363,6 +365,16 @@ public class AvmService extends Service {
         unregisterReceiver(broadcastReceiver);
 
 
+    }
+
+    /**
+     * 启动调试activity页面
+     */
+    private void openMockActivity() {
+        KLog.d("openMockActivity");
+        Intent intent = new Intent(this, MockActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     private  int  count = 0;
@@ -708,7 +720,7 @@ public class AvmService extends Service {
                 break;
             case ASSIST_DRIVE_PAS_BUTTON_PRESS:// 雷达报警声
             case CLUSTER_CHIME_PAS_WARNTONE://雷达报警音状态
-                 //AvmApp.getInstance().getCameraView().showRadarSoundView(status);
+                 AvmApp.getInstance().getCameraView().showRadarSoundView(status);
                 break;
             case AVM_RADAR_ALARM_ACOUSTIC_SWITCH:// 雷达故障报警
                 AvmApp.getInstance().getCameraView().showParkingAssistView(status);

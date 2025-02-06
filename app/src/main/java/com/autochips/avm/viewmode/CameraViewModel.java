@@ -30,6 +30,7 @@ import com.autochips.avm.em.ViewType;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.info.CameraInfo;
+import com.autochips.avm.ui.activity.MockActivity;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
@@ -569,6 +570,26 @@ public class CameraViewModel extends BaseCameraViewModel {
     public void bwClose() {
         setRunning(true);
         setCalibrateRunning(false);
+    }
+
+
+    /**
+     * 重启app
+     */
+    public void bwStartActivity() {
+
+        info.setShowCaliView(false);
+        if (isCaliStatus != 0) {
+            CustomToast.showToast("标定-bwSetIRKeyPOINT-失败");
+            return;
+        }
+
+        Intent mStartActivity = new Intent(AvmApp.getInstance(), MockActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(AvmApp.getInstance(), mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager) AvmApp.getInstance().getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
     }
 
     /**

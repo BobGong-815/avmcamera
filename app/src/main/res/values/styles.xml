@@ -21,8 +21,8 @@
         <item name="android:checkable">false</item>
         <item name="android:thumb">@null</item>
         <item name="android:track">@null</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">72px</item>
+        <item name="android:layout_height">36px</item>
         <item name="android:background">@drawable/selector_switch_track</item>
     </style>
 
@@ -46,15 +46,5 @@
         <attr name="tl_thumb_drawable_2" format="reference" />
         <attr name="tl_thumb_drawable_3" format="reference" />
     </declare-styleable>
-
-    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowElevation">0px</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-    </style>
 
 </resources>

@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/toast_text"
         android:layout_width="456px"
-        android:layout_height="62px"
+        android:layout_height="60px"
         android:text="Custom Toast Message"
         android:textColor="#FFFFFF"
         android:textSize="24sp"

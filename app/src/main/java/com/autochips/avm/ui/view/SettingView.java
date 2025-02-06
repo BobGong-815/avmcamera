@@ -7,6 +7,7 @@ import static com.avm.framwork.manager.ViewSwitchManager.ACTION_INFO_PATH_LINE;
 import static com.avm.framwork.manager.ViewSwitchManager.ACTION_INFO_P_EXIT;
 import static com.avm.framwork.manager.ViewSwitchManager.ACTION_INFO_TRANSPARENT_CHASSIS;
 
+import android.annotation.SuppressLint;
 import android.app.UiModeManager;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -21,27 +22,23 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
-import androidx.lifecycle.Observer;
 
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
 import com.autochips.avm.databinding.ViewSettingBinding;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.listener.OnTabSelectListener;
-import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.SystemProperties;
 import com.autochips.avm.viewmode.SettingViewModel;
-import com.avm.framwork.helper.ThreadPoolUtil;
 
 import me.goldze.mvvmhabit.utils.KLog;
 
 public class SettingView extends LinearLayout implements LifecycleOwner {
-    private Context context;
+    private final Context context;
     private LifecycleRegistry registry;
     private SettingViewModel viewModel;
 
@@ -49,7 +46,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
 
     private OnVisibilityListener listener;
 
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private RelativeLayout mInfoView;
     private SegmentTabLayout mSegmentTabLayout;
     private View infoBg;
@@ -83,14 +80,11 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             settingBinding.setViewModel(viewModel);
             addView(settingBinding.getRoot());
             viewModel.getLiveDataCloseUI().observe(this, this::closeUI);
-            viewModel.getLiveDataPUI().observe(this, new Observer<String>() {
-                @Override
-                public void onChanged(String aBoolean) {
-                    if(infoBg.getVisibility()==GONE){
-                        infoBookView(aBoolean);
-                    }
-
+            viewModel.getLiveDataPUI().observe(this, aBoolean -> {
+                if(infoBg.getVisibility()==GONE){
+                    infoBookView(aBoolean);
                 }
+
             });
             initTab();
         }
@@ -107,14 +101,14 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
 
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void initTab() {
         String position = SystemProperties.get("pExit");
         KLog.d("position: " + position);
         LayoutParams layoutParams = new LayoutParams(settingBinding.segmentTab.getLayoutParams());
         //layoutParams.width = (304*getDescValueArray().length);
-        layoutParams.leftMargin = 30;
-        layoutParams.rightMargin = 30;
-        settingBinding.segmentTab.setTabWidth(305);
+        layoutParams.leftMargin = 54;
+        settingBinding.segmentTab.setTabWidth(186);
         settingBinding.segmentTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
         settingBinding.segmentTab.setLayoutParams(layoutParams);
         settingBinding.segmentTab.setTabData(getDescValueArray());
@@ -139,10 +133,8 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         });
 
         LayoutParams transparentChassisParams = new LayoutParams(settingBinding.transparentChassisTab.getLayoutParams());
-        //layoutParams.width = (304*getDescValueArray().length);
-        transparentChassisParams.leftMargin = 30;
-        transparentChassisParams.rightMargin = 30;
-        settingBinding.transparentChassisTab.setTabWidth(150);
+        transparentChassisParams.leftMargin = 54;
+        settingBinding.transparentChassisTab.setTabWidth(126);
         settingBinding.transparentChassisTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
         settingBinding.transparentChassisTab.setLayoutParams(transparentChassisParams);
         settingBinding.transparentChassisTab.setTabData(getTransparentChassisDescValueArray());
@@ -240,26 +232,18 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         mInfoView.setVisibility(View.VISIBLE);
         infoBg.setVisibility(VISIBLE);
         viewModel.cancelTimer();
-//        mSegmentTabLayout.setEnable(false);
-//        settingBinding.segmentTab.setEnable(false);
-//        settingBinding.transparentChassisTab.setEnable(false);
-//        settingBinding.swSettingPathLine.setEnabled(false);
-//        settingBinding.switchSignalActivates.setEnabled(false);
         TextView title = mInfoView.findViewById(R.id.info_title);
         TextView content = mInfoView.findViewById(R.id.info_content);
         TextView ok = mInfoView.findViewById(R.id.info_ok);
-        ok.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mInfoView.setVisibility(View.GONE);
-                infoBg.setVisibility(GONE);
-                viewModel.startTimer();
-                mSegmentTabLayout.setEnable(true);
-                settingBinding.segmentTab.setEnable(true);
-                settingBinding.transparentChassisTab.setEnable(true);
-                settingBinding.swSettingPathLine.setEnabled(true);
-                settingBinding.switchSignalActivates.setEnabled(true);
-            }
+        ok.setOnClickListener(v -> {
+            mInfoView.setVisibility(View.GONE);
+            infoBg.setVisibility(GONE);
+            viewModel.startTimer();
+            mSegmentTabLayout.setEnable(true);
+            settingBinding.segmentTab.setEnable(true);
+            settingBinding.transparentChassisTab.setEnable(true);
+            settingBinding.swSettingPathLine.setEnabled(true);
+            settingBinding.switchSignalActivates.setEnabled(true);
         });
         switch (type) {
             case ACTION_INFO_P_EXIT:
@@ -312,60 +296,60 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         switch (uiMode) {
             case UiModeManager.MODE_NIGHT_YES:
 
-                settingBinding.settingView.setBackgroundResource(R.drawable.shape_bg_fae1e3e6_24);
+                settingBinding.settingView.setBackgroundResource(R.mipmap.setting_bg);
                 settingBinding.tvSettingPExit.setTextColor(context.getResources().getColor(R.color.setting_view_title_color));
-                settingBinding.segmentTab.setThumbDrawable(R.drawable.tab_selector_thumb_nor);
-                settingBinding.segmentTab.setThumbDrawable3(R.drawable.tab_selector_thumb_nor);
+                settingBinding.segmentTab.setThumbDrawable(R.drawable.tab_selector_thumb);
+                settingBinding.segmentTab.setThumbDrawable3(R.drawable.tab_selector_thumb);
                 settingBinding.segmentTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old);
                 settingBinding.segmentTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
-                settingBinding.segmentTab.setTextSelectColor(R.color.setting_tab_select_color,1);
-                settingBinding.segmentTab.setTextUnselectColor(R.color.setting_tab_unselect_color);
+                settingBinding.segmentTab.setTextSelectColor(R.color.setting_view_title_color,0);
+                settingBinding.segmentTab.setTextUnselectColor(R.color.setting_view_content_color);
                 settingBinding.transparentChassis.setTextColor(context.getResources().getColor(R.color.setting_view_title_color));
                 settingBinding.activatedPanorama.setTextColor(context.getResources().getColor(R.color.setting_view_title_color));
                 settingBinding.pathLine.setTextColor(context.getResources().getColor(R.color.setting_view_title_color));
                 settingBinding.tvActivatesPanorama.setTextColor(context.getResources().getColor(R.color.setting_view_title_color));
 
 
-                settingBinding.transparentChassisTab.setThumbDrawable(R.drawable.tab_selector_thumb_nor);
-                settingBinding.transparentChassisTab.setThumbDrawable3(R.drawable.tab_selector_thumb_nor);
-                settingBinding.transparentChassisTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old);
+                settingBinding.transparentChassisTab.setThumbDrawable(R.drawable.tab_selector_thumb);
+                settingBinding.transparentChassisTab.setThumbDrawable3(R.drawable.tab_selector_thumb);
+                settingBinding.transparentChassisTab.setThumbDrawable2(R.drawable.tab_selector_seg);
                 settingBinding.transparentChassisTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
-                settingBinding.transparentChassisTab.setTextSelectColor(R.color.setting_tab_select_color,1);
-                settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_tab_unselect_color);
+                settingBinding.transparentChassisTab.setTextSelectColor(R.color.setting_view_title_color,0);
+                settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_view_content_color);
 
                 settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track);
                 settingBinding.swSettingPathLine.setBackgroundResource(R.drawable.selector_switch_track);
                 settingBinding.switchSignalActivates.setBackgroundResource(R.drawable.selector_switch_track);
+
+
 
                 settingBinding.pExitInfo.setImageDrawable(context.getDrawable(R.mipmap.info_default_56));
                 settingBinding.transparentChassisInfo.setImageDrawable(context.getDrawable(R.mipmap.info_default_56));
                 settingBinding.activatedPanoramaInfo.setImageDrawable(context.getDrawable(R.mipmap.info_default_56));
                 settingBinding.pathLineInfo.setImageDrawable(context.getDrawable(R.mipmap.info_default_56));
                 settingBinding.activatesPanoramaInfo.setImageDrawable(context.getDrawable(R.mipmap.info_default_56));
-                settingBinding.viewLine.setBackgroundResource(R.color.line_color);
-                settingBinding.viewLine1.setBackgroundResource(R.color.line_color);
                 break;
             case UiModeManager.MODE_NIGHT_NO:
                 KLog.e("白天模式");
-                settingBinding.settingView.setBackgroundResource(R.drawable.shape_bg_fae1e3e6_24_day);
-                settingBinding.tvSettingPExit.setTextColor(context.getResources().getColor(R.color.setting_view_title_second_color_day));
-                settingBinding.segmentTab.setThumbDrawable(R.drawable.tab_selector_thumb_nor);
-                settingBinding.segmentTab.setThumbDrawable3(R.drawable.tab_selector_thumb_nor);
-                settingBinding.segmentTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old_day);
+                settingBinding.settingView.setBackgroundResource(R.mipmap.setting_bg_day);
+                settingBinding.tvSettingPExit.setTextColor(context.getResources().getColor(R.color.setting_view_title_color_day));
+                settingBinding.segmentTab.setThumbDrawable(R.drawable.tab_setting_selector_thumb_day);
+                settingBinding.segmentTab.setThumbDrawable3(R.drawable.tab_setting_selector_thumb_day);
+                settingBinding.segmentTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old);
                 settingBinding.segmentTab.setBackground(context.getResources().getDrawable(R.drawable.tab_setting_selector_thumb_day));
-                settingBinding.segmentTab.setTextSelectColor(R.color.setting_view_content_color_day,1);
-                settingBinding.segmentTab.setTextUnselectColor(R.color.setting_tab_unselect_color_day);
-                settingBinding.transparentChassis.setTextColor(context.getResources().getColor(R.color.setting_view_title_second_color_day));
-                settingBinding.activatedPanorama.setTextColor(context.getResources().getColor(R.color.setting_view_title_second_color_day));
-                settingBinding.pathLine.setTextColor(context.getResources().getColor(R.color.setting_view_title_second_color_day));
-                settingBinding.tvActivatesPanorama.setTextColor(context.getResources().getColor(R.color.setting_view_title_second_color_day));
+                settingBinding.segmentTab.setTextSelectColor(R.color.setting_tab_color_day,0);
+                settingBinding.segmentTab.setTextUnselectColor(R.color.setting_view_content_color_day);
+                settingBinding.transparentChassis.setTextColor(context.getResources().getColor(R.color.setting_view_title_color_day));
+                settingBinding.activatedPanorama.setTextColor(context.getResources().getColor(R.color.setting_view_title_color_day));
+                settingBinding.pathLine.setTextColor(context.getResources().getColor(R.color.setting_view_title_color_day));
+                settingBinding.tvActivatesPanorama.setTextColor(context.getResources().getColor(R.color.setting_view_title_color_day));
 
-                settingBinding.transparentChassisTab.setThumbDrawable(R.drawable.tab_selector_thumb_nor);
-                settingBinding.transparentChassisTab.setThumbDrawable3(R.drawable.tab_selector_thumb_nor);
-                settingBinding.transparentChassisTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old_day);
+                settingBinding.transparentChassisTab.setThumbDrawable(R.drawable.tab_setting_selector_thumb_day);
+                settingBinding.transparentChassisTab.setThumbDrawable3(R.drawable.tab_setting_selector_thumb_day);
+                settingBinding.transparentChassisTab.setThumbDrawable2(R.drawable.tab_selector_thumb_old);
                 settingBinding.transparentChassisTab.setBackground(context.getResources().getDrawable(R.drawable.tab_setting_selector_thumb_day));
-                settingBinding.transparentChassisTab.setTextSelectColor(R.color.setting_view_content_color_day,1);
-                settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_tab_unselect_color_day);
+                settingBinding.transparentChassisTab.setTextSelectColor(R.color.setting_tab_color_day,0);
+                settingBinding.transparentChassisTab.setTextUnselectColor(R.color.setting_view_content_color_day);
 
 
                 settingBinding.swCtivatedPanorama.setBackgroundResource(R.drawable.selector_switch_track_day);
@@ -378,9 +362,6 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 settingBinding.activatedPanoramaInfo.setImageDrawable(context.getDrawable(R.mipmap.info_default_56_day));
                 settingBinding.pathLineInfo.setImageDrawable(context.getDrawable(R.mipmap.info_default_56_day));
                 settingBinding.activatesPanoramaInfo.setImageDrawable(context.getDrawable(R.mipmap.info_default_56_day));
-
-                settingBinding.viewLine.setBackgroundResource(R.color.line_color_day);
-                settingBinding.viewLine1.setBackgroundResource(R.color.line_color_day);
                 break;
         }
     }

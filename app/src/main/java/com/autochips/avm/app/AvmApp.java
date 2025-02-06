@@ -23,11 +23,6 @@ import gxa.car.engineModeSdk.ConfigManager;
 import me.goldze.mvvmhabit.base.BaseApplication;
 import me.goldze.mvvmhabit.crash.CaocConfig;
 import me.goldze.mvvmhabit.utils.KLog;
-//import skin.support.SkinCompatManager;
-//import skin.support.app.SkinAppCompatViewInflater;
-//import skin.support.app.SkinCardViewInflater;
-//import skin.support.constraint.app.SkinConstraintViewInflater;
-//import skin.support.design.app.SkinMaterialViewInflater;
 
 public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionHandler {
     private CameraView mCameraView;
@@ -35,19 +30,14 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static int mAvmRvcState;//0隐藏 ，1、显示,-1、异常
     public static int OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = 1;//0、无配置后视镜下翻 ，1、有配置后视镜下翻
     public static int OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = 1;//0、无配置后视镜折叠 ，1、有配置后视镜折叠
-//    private CameraViewBottom viewBottom;
-    private int IS_AY5 = 0x67;
-    private int IS_AY3 = 0x66;
+    private final int IS_AY5 = 0x67;
+    private final int IS_AY3 = 0x66;
     public static boolean ISAY5 = true;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     public static AvmApp getInstance() {
         return mAvmApp;
     }
-
-//    public CameraViewBottom getViewBottom() {
-//        return viewBottom;
-//    }
 
     @Override
     public void onCreate() {
@@ -81,23 +71,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         if(mAvmRvcState != 1 && mAvmRvcState != -1){
             bvavmJNI.bwNotifyRVC(0);
         }
-//        SkinCompatManager.withoutActivity(this)
-//                .addInflater(new SkinAppCompatViewInflater())           // 基础控件换肤初始化
-//                .addInflater(new SkinMaterialViewInflater())            // material design 控件换肤初始化[可选]
-//                .addInflater(new SkinConstraintViewInflater())          // ConstraintLayout 控件换肤初始化[可选]
-//                .addInflater(new SkinCardViewInflater())                // CardView v7 控件换肤初始化[可选]
-//                .setSkinStatusBarColorEnable(false)                     // 关闭状态栏换肤，默认打开[可选]
-//                .setSkinWindowBackgroundEnable(true)                   // 关闭windowBackground换肤，默认打开[可选]
-//                .loadSkin();
         Thread.setDefaultUncaughtExceptionHandler(this);
         ServiceUtils.startCaptureService(this,AvmService.class);
-//        mHandler.postDelayed(()->{
-//
-//            mCameraView.updateWind(0.0f,2);
-//        },3000);
-
-
-
     }
 
     private void initConfig(Context context) {

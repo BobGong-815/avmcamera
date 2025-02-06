@@ -47,6 +47,8 @@ public class CameraGLSurfaceView extends GLSurfaceView {
 
     public static volatile int sCameraDirection = bvavmJNI.BW_FRONT_3D;
     private int nowShowDirection = -1;//当前显示视图
+    private boolean isShowBg = false;//记录是否设置了背景
+    private boolean isOnSurfaceChanged = false;//是否有视图变化
      Renderer renderer;
     {
         renderer = new Renderer();
@@ -113,8 +115,7 @@ public class CameraGLSurfaceView extends GLSurfaceView {
             if(!isOpenCamera){
                 return;
             }
-            //修改摄像头画面数据
-            //GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
 
 
             if(BvAvmJNIHelper.getInstance().isCloseingCamrea){
@@ -138,6 +139,10 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                     KLog.d("sCameraDirection 视图=" + sCameraDirection);
                     nowShowDirection = sCameraDirection;
                 }
+                if(!isShowBg && isOnSurfaceChanged){
+                    isShowBg = true;
+                    AvmApp.getInstance().getCameraView().showBg();
+                }
                 int renderResult = BvAvmJNIHelper.getInstance().avmRender2(sCameraDirection);
                 if(renderResult == -1){
                     DataManager.writeFault(DataConstant.Code.SF_FAIL);
@@ -152,6 +157,11 @@ public class CameraGLSurfaceView extends GLSurfaceView {
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
             KLog.d("sCameraDirection width=" +width+ " height=" + height);
+            isOnSurfaceChanged = true;
+            if(nowShowDirection != -1 && !isShowBg) {
+                isShowBg = true;
+                AvmApp.getInstance().getCameraView().showBg();
+            }
         }
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {

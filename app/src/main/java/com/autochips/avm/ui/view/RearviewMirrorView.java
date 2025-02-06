@@ -32,8 +32,6 @@ import com.autochips.avm.viewmode.RearviewMirrorModel;
 import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
 
-import java.util.Arrays;
-
 import me.goldze.mvvmhabit.utils.KLog;
 
 public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, View.OnClickListener {
@@ -107,10 +105,50 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         reverseLight(reverseLightSts);
 
         // 设置点击事件
-//        rearviewMirrorBinding.llSettingRearviewMirrorDown.setOnClickListener(this);
-//        rearviewMirrorBinding.llFold.setOnClickListener(this);
-        rearviewMirrorBinding.swRearviewMirrorDown.setOnClickListener(this);
-        rearviewMirrorBinding.swFold.setOnClickListener(this);
+        rearviewMirrorBinding.llSettingRearviewMirrorDown.setOnClickListener(this);
+        rearviewMirrorBinding.llSettingExpand.setOnClickListener(this);
+        rearviewMirrorBinding.llSettingFold.setOnClickListener(this);
+        rearviewMirrorBinding.llSettingExpand.setOnTouchListener(new ItOnTouchListener(rearviewMirrorBinding.tvSettingExpand));
+        rearviewMirrorBinding.llSettingFold.setOnTouchListener(new ItOnTouchListener(rearviewMirrorBinding.tvSettingFold));
+        //rearviewMirrorBinding.llSettingRearviewMirrorDown.setOnTouchListener(new ItOnTouchListener(rearviewMirrorBinding.tvSettingRearview));
+    }
+
+    class  ItOnTouchListener implements  OnTouchListener{
+
+        private TextView textView;
+
+        public ItOnTouchListener(TextView textView) {
+            this.textView = textView;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+            int uiMode = uiModeManager.getNightMode();
+            boolean isCheck = v.isPressed();
+            if (uiMode == UiModeManager.MODE_NIGHT_YES) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                }else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    if (!isCheck) {
+                        textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
+                    }
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
+                }
+            } else {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    textView.setTextColor(context.getResources().getColor(R.color.white));
+                }else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    if (!isCheck) {
+                        textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                    }
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                }
+            }
+            return false;
+        }
     }
 
     @Override
@@ -135,6 +173,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 listener.Visibility(true);
             }
         });
+
     }
 
     public void setListener(OnVisibilityListener listener) {
@@ -145,76 +184,74 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
     @Override
     public void onClick(View view) {
       KLog.d("后视镜11----");
-        if (view.getId() == R.id.sw_rearview_mirror_down) {
+        if (view.getId() == R.id.ll_setting_rearview_mirror_down) {
             if(CameraViewModelHelper.valGear != 3) {
                 KLog.d("is not R gear");
                 return;
             }
             rearviewMirrorModel.startTimer();
             rearviewMirrorModel.setRunning(true);
-            int reverseAutoMaticStatus = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
             // 外后视镜倒车下翻
-            ThreadPoolUtil.getInstance().execute(() -> {
-                KLog.d("后视镜11----当前reverseAutoMaticStatus：" + reverseAutoMaticStatus);
-                CanManager.getInstance().setIntProperty(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0, reverseAutoMaticStatus == 4 ? 1 : 4);
-            });
-            if(reverseAutoMaticStatus == 4){
+          ThreadPoolUtil.getInstance().execute(()->{
+            int reverseAutoMaticStatus = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
+              KLog.d("后视镜11----当前reverseAutoMaticStatus："+reverseAutoMaticStatus);
+            CanManager.getInstance().setIntProperty(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0, reverseAutoMaticStatus == 4 ? 1 : 4);
+          });
+
+            if(rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected()==true){
                 KLog.d("后视镜11----设置false 1");
                 rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(false);
-                rearviewMirrorBinding.swRearviewMirrorDown.setChecked(false);
                 RearviewToast.getInstance().showToast("后视镜下翻已关闭");
                 DataManager.writeFault(DataConstant.Code.REARM_CLOSE);
             }else{
                 rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(true);
-                rearviewMirrorBinding.swRearviewMirrorDown.setChecked(true);
                 RearviewToast.getInstance().showToast("后视镜下翻已开启");
                 DataManager.writeFault(DataConstant.Code.REARM_OPEN);
             }
-        } else if (view.getId() == R.id.sw_fold) {//折叠
-            rearviewMirrorModel.startTimer();
-            rearviewMirrorModel.setRunning(true);
-            if(view.getId() == R.id.sw_fold) {
-                if (rearviewMirrorBinding.swFold.isChecked()) {
-                    Integer[] arrFold = {1, 9};
-                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
-                    RearviewToast.getInstance().showToast("后视镜已折叠");
-                } else {
-                    Integer[] arrUnfold = {1, 10};
-                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
-                    RearviewToast.getInstance().showToast("后视镜已展开");
+            UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+            int uiMode = uiModeManager.getNightMode();
+            if (uiMode == UiModeManager.MODE_NIGHT_YES) {
+                if(rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected()) {
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                }else {
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(getResources().getColor(R.color.setting_view_content_color));
                 }
-            }else {
-                if (rearviewMirrorBinding.swFold.isChecked()) {
-                    rearviewMirrorBinding.swFold.setChecked(false);
-                    Integer[] arrUnfold = {1, 10};
-                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
-                    RearviewToast.getInstance().showToast("后视镜已展开");
-                } else {
-                    rearviewMirrorBinding.swFold.setChecked(true);
-                    Integer[] arrFold = {1, 9};
-                    CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
-                    RearviewToast.getInstance().showToast("后视镜已折叠");
+            } else {
+                if(rearviewMirrorBinding.llSettingRearviewMirrorDown.isSelected()) {
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.white));
+                }else {
+                    rearviewMirrorBinding.tvSettingRearview.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
                 }
             }
+        } else if (view.getId() == R.id.ll_setting_expand) {//展开
+
+            rearviewMirrorModel.startTimer();//ACU_ORVMOperationReq
+            rearviewMirrorModel.setRunning(true);
+
+            Integer[] arrUnfold = {1, 10};
+
+            CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
+            RearviewToast.getInstance().showToast("后视镜已展开");
+        } else if (view.getId() == R.id.ll_setting_fold) {//折叠
+            rearviewMirrorModel.startTimer();
+            rearviewMirrorModel.setRunning(true);
+            Integer[] arrFold= {1, 9};
+            CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
+            RearviewToast.getInstance().showToast("后视镜已折叠");
         }
 
     }
 
     public interface OnVisibilityListener {
         void Visibility(boolean isVisibility);
+
     }
 
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-        if (visibility == VISIBLE) {
+        if (visibility == VISIBLE)
             rearviewMirrorModel.startTimer();
-            int[] mirrorArr = CanManager.getInstance().getIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0);
-            KLog.v("后视镜折叠展开状态：mirrorArr.length:"+ mirrorArr.length +" string:"+ Arrays.toString(mirrorArr));
-            if(mirrorArr.length > 1) {
-                rearviewMirrorBinding.swFold.setChecked(mirrorArr[1] == 9);
-            }
-        }
         rearviewMirrorBinding.llSettingRearviewMirrorDown.setVisibility(AvmApp.OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH==1?VISIBLE:GONE);
         rearviewMirrorBinding.llFold.setVisibility(AvmApp.OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH==1?VISIBLE:GONE);
     }
@@ -227,11 +264,23 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         }
         if(reverseLightSts==4){
             rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(true);
-            rearviewMirrorBinding.swRearviewMirrorDown.setChecked(true);
+            UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+            int uiMode = uiModeManager.getNightMode();
+            if (uiMode == UiModeManager.MODE_NIGHT_YES){
+                rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+            }else {
+                rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.white));
+            }
         }else if(reverseLightSts==1){
             KLog.d("后视镜11----设置false 2");
             rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(false);
-            rearviewMirrorBinding.swRearviewMirrorDown.setChecked(false);
+            UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+            int uiMode = uiModeManager.getNightMode();
+            if (uiMode == UiModeManager.MODE_NIGHT_YES){
+                rearviewMirrorBinding.tvSettingRearview.setTextColor(getResources().getColor(R.color.setting_view_content_color));
+            }else {
+                rearviewMirrorBinding.tvSettingRearview.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
+            }
         }
     }
 
@@ -244,34 +293,52 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         }else{
             KLog.d("后视镜11----设置false 3");
             rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(false);
-            rearviewMirrorBinding.swRearviewMirrorDown.setChecked(false);
+            UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+            int uiMode = uiModeManager.getNightMode();
+            if (uiMode == UiModeManager.MODE_NIGHT_YES){
+                rearviewMirrorBinding.tvSettingRearview.setTextColor(getResources().getColor(R.color.setting_view_content_color));
+            }else {
+                rearviewMirrorBinding.tvSettingRearview.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
+            }
         }
         rearviewMirrorBinding.llSettingRearviewMirrorDown.setAlpha(reverseLightSts == 1 ? 1.0f : 0.3f);
         rearviewMirrorBinding.llSettingRearviewMirrorDown.setEnabled(reverseLightSts == 1);
-        rearviewMirrorBinding.swRearviewMirrorDown.setEnabled(reverseLightSts == 1);
         rearviewMirrorBinding.llSettingRearviewMirrorDown.setClickable(reverseLightSts == 1);
-        rearviewMirrorBinding.swRearviewMirrorDown.setClickable(reverseLightSts == 1);
     }
 
     public void skinView(int uiMode) {
+//        UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
+//        int uiMode = uiModeManager.getNightMode();
         KLog.e("换肤模式-切换-后视镜11---:"+uiMode);
         RearviewToast.getInstance().uiMode(uiMode);
         switch (uiMode) {
             case UiModeManager.MODE_NIGHT_YES:
                 KLog.e("黑夜模式");
-                rearviewMirrorBinding.llRearviewMirror.setBackgroundResource(R.drawable.shape_bg_fae1e3e6_24);
-                rearviewMirrorBinding.tvRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
-                rearviewMirrorBinding.tvFlod.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
+                rearviewMirrorBinding.llRearviewMirror.setBackgroundResource((AvmApp.OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH==1 && AvmApp.OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH == 1)?
+                        R.mipmap.rearview_setting_bg : R.mipmap.rearview_setting_short_bg);
+                rearviewMirrorBinding.llSettingFold.setBackgroundResource(R.drawable.button_select);
+                rearviewMirrorBinding.llSettingExpand.setBackgroundResource(R.drawable.button_select);
+                rearviewMirrorBinding.llSettingRearviewMirrorDown.setBackgroundResource(R.drawable.button_select_down);
+                rearviewMirrorBinding.tvRearview.setTextColor(context.getResources().getColor(R.color.setting_view_title_color));
+                rearviewMirrorBinding.tvSettingFold.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
                 rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
-                rearviewMirrorBinding.viewLine.setBackgroundResource(R.color.line_color);
+                rearviewMirrorBinding.tvSettingExpand.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
+                rearviewMirrorBinding.ivSettingFold.setImageDrawable(context.getDrawable(R.drawable.button_select_setting_fold));
+                rearviewMirrorBinding.ivSettingView.setImageDrawable(context.getDrawable(R.drawable.button_select_mirror));
                 break;
             case UiModeManager.MODE_NIGHT_NO:
                 KLog.e("白天模式");
-                rearviewMirrorBinding.llRearviewMirror.setBackgroundResource(R.drawable.shape_bg_fae1e3e6_24_day);
-                rearviewMirrorBinding.tvRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
-                rearviewMirrorBinding.tvFlod.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                rearviewMirrorBinding.llRearviewMirror.setBackgroundResource((AvmApp.OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH==1 && AvmApp.OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH ==1)?
+                        R.mipmap.rearview_setting_bg_day : R.mipmap.rearview_setting_short_bg_day);
+                rearviewMirrorBinding.llSettingFold.setBackgroundResource(R.drawable.button_rearview_select_day);
+                rearviewMirrorBinding.llSettingExpand.setBackgroundResource(R.drawable.button_rearview_select_day);
+                rearviewMirrorBinding.llSettingRearviewMirrorDown.setBackgroundResource(R.drawable.button_rearview_select_down_day);
+                rearviewMirrorBinding.tvRearview.setTextColor(context.getResources().getColor(R.color.setting_view_title_color_day));
+                rearviewMirrorBinding.tvSettingFold.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
                 rearviewMirrorBinding.tvSettingRearview.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
-                rearviewMirrorBinding.viewLine.setBackgroundResource(R.color.line_color_day);
+                rearviewMirrorBinding.tvSettingExpand.setTextColor(context.getResources().getColor(R.color.setting_view_content_color_day));
+                rearviewMirrorBinding.ivSettingFold.setImageDrawable(context.getDrawable(R.drawable.button_select_setting_fold_day));
+                rearviewMirrorBinding.ivSettingView.setImageDrawable(context.getDrawable(R.drawable.button_select_iv_mirror_day));
                 break;
         }
     }

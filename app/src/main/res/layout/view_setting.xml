@@ -16,22 +16,22 @@
 
     <LinearLayout
         android:id="@+id/setting_view"
-        android:layout_width="683px"
-        android:layout_height="809px"
-        android:background="@drawable/shape_bg_fae1e3e6_24"
-        android:layout_marginTop="126px"
-        android:layout_marginStart="702px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_nor"
+        android:layout_marginTop="66px"
+        android:layout_marginLeft="528px"
         binding:onClickCommand="@{viewModel.pSettingClick}"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="36px"
-            android:layout_marginStart="33px"
-            android:layout_marginBottom="15px"
-            android:layout_marginEnd="30dp"
-            android:gravity="center_vertical">
+            android:layout_marginTop="45px"
+            android:layout_marginLeft="54px"
+            android:layout_marginBottom="18px"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_setting_p_exit"
@@ -39,44 +39,47 @@
                 android:layout_height="36px"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
-                android:layout_marginTop="8dp"
                 android:text="@string/setting_p_exit"
                 android:textColor="@color/setting_view_title_color"
-                android:textSize="@dimen/text_size_27px" />
+                android:textSize="@dimen/text_size_24px" />
 
             <ImageView
                 android:id="@+id/p_exit_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="36px"
+                android:layout_height="36px"
                 android:src="@mipmap/info_default_56_day"
-                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:layout_marginStart="10.5px"
                 binding:onClickCommand="@{viewModel.pInfoClick}"/>
-        </RelativeLayout>
+        </LinearLayout>
+
+
+        <Switch
+            style="@style/SwitchStyle"
+            android:layout_marginLeft="54px"
+            android:visibility="gone"/>
 
         <com.autochips.avm.ui.view.SegmentTabLayout
             android:id="@+id/segment_tab"
-            android:layout_width="match_parent"
-            android:layout_height="72px"
-            android:layout_marginStart="30px"
-            android:layout_marginEnd="30px"
+            android:layout_width="wrap_content"
+            android:layout_height="60px"
             app:tl_indicator_anim_enable="true"
             app:tl_textSelectColor="@color/setting_view_title_color"
             app:tl_textUnClickColor="@color/setting_view_content_color"
             app:tl_textUnselectColor="@color/setting_view_content_color"
             app:tl_textUnableColor="@color/setting_view_content_color"
-            app:tl_textsize="@dimen/text_size_27px"
+            app:tl_textsize="@dimen/text_size_24px"
             app:tl_thumb_drawable="@drawable/tab_selector_thumb"
             app:tl_thumb_drawable_2="@drawable/tab_selector_thumb_old"
             app:tl_thumb_drawable_3="@drawable/tab_selector_thumb"/>
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30px"
-            android:layout_marginStart="33px"
-            android:layout_marginBottom="15px"
-            android:layout_marginEnd="30px"
+            android:layout_marginTop="60px"
+            android:layout_marginLeft="54px"
+            android:layout_marginBottom="18px"
             android:gravity="center_vertical"
             android:orientation="horizontal">
             <TextView
@@ -86,34 +89,40 @@
                 android:contentDescription="透明底盘::parkimage_set_transparentChassis"
                 android:text="@string/setting_transparent_chassis"
                 android:layout_gravity="center"
-                android:layout_marginTop="8px"
                 android:gravity="center_vertical"
                 android:textColor="@color/setting_view_title_color"
-                android:textSize="@dimen/text_size_27px" />
+                android:textSize="@dimen/text_size_24px" />
 
 
             <ImageView
                 android:id="@+id/transparentChassis_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="36px"
+                android:layout_height="36px"
                 android:src="@mipmap/info_default_56_day"
-                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:layout_marginStart="12px"
                 binding:onClickCommand="@{viewModel.transparentChassisInfoClick}"/>
-        </RelativeLayout>
+        </LinearLayout>
+
+
+        <Switch
+            style="@style/SwitchStyle"
+            android:layout_marginLeft="54px"
+            android:visibility="gone"/>
+
 
 
         <com.autochips.avm.ui.view.SegmentTabLayout
             android:id="@+id/transparent_chassis_tab"
-            android:layout_width="match_parent"
-            android:layout_height="72px"
-            android:layout_marginStart="30px"
-            android:layout_marginEnd="30px"
+            android:layout_width="wrap_content"
+            android:layout_height="60px"
             app:tl_indicator_anim_enable="true"
             app:tl_textSelectColor="@color/setting_view_title_color"
             app:tl_textUnClickColor="@color/setting_view_content_color"
             app:tl_textUnselectColor="@color/setting_view_content_color"
             app:tl_textUnableColor="@color/setting_view_content_color"
-            app:tl_textsize="@dimen/text_size_27px"
+            app:tl_textsize="@dimen/text_size_24px"
             app:tl_thumb_drawable="@drawable/tab_selector_thumb"
             app:tl_thumb_drawable_2="@drawable/tab_selector_thumb_old"
             app:tl_thumb_drawable_3="@drawable/tab_selector_thumb"/>
@@ -123,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="57px"
             android:orientation="horizontal"
-            android:layout_marginStart="33px"
+            android:layout_marginLeft="54px"
             android:visibility="gone">
 
             <Switch
@@ -137,31 +146,31 @@
                 android:id="@+id/activatedPanorama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18px"
+                android:layout_marginLeft="18px"
                 android:text="@string/setting_radar_activated_panorama"
                 android:textColor="@color/setting_view_title_color"
-                android:textSize="@dimen/text_size_27px"
+                android:textSize="@dimen/text_size_24px"
                 android:gravity="center_vertical"
                 android:layout_gravity="center_vertical" />
 
             <ImageView
                 android:id="@+id/activatedPanoramaInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="27px"
+                android:layout_height="27px"
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
+                android:layout_marginStart="16.5px"
+                android:layout_marginTop="3px"
                 binding:onClickCommand="@{viewModel.activatedPanoramaInfoClick}"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="126px"
-            android:layout_marginTop="27px"
-            android:layout_marginEnd="30px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="63px"
             android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="30px">
+            android:layout_marginLeft="54px">
 
             <Switch
                 android:id="@+id/sw_setting_path_line"
@@ -175,42 +184,32 @@
                 android:id="@+id/pathLine"
                 android:layout_width="wrap_content"
                 android:layout_height="36px"
-                android:layout_marginStart="24px"
+                android:layout_marginLeft="27px"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:text="@string/setting_path_line"
                 android:textColor="@color/setting_view_title_color"
-                android:textSize="@dimen/text_size_27px"
+                android:textSize="@dimen/text_size_24px"
                 android:gravity="center_vertical" />
 
             <ImageView
                 android:id="@+id/pathLineInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="27px"
+                android:layout_height="27px"
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
-                android:layout_marginStart="24px"
+                android:layout_marginStart="16.5px"
                 android:layout_marginTop="3px"
                 binding:onClickCommand="@{viewModel.pathLineInfoClick}"
                 android:visibility="gone"/>
         </LinearLayout>
 
-        <View
-            android:id="@+id/view_line"
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_marginStart="30px"
-            android:layout_marginEnd="30px"
-            />
-
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="126px"
-            android:layout_marginEnd="30px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55px"
             android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginStart="30px">
+            android:layout_marginLeft="54px">
 
             <Switch
                 android:id="@+id/switchSignalActivates"
@@ -224,32 +223,23 @@
                 android:id="@+id/tv_activatesPanorama"
                 android:layout_width="wrap_content"
                 android:layout_height="36px"
-                android:layout_marginStart="24px"
-                android:layout_weight="1"
+                android:layout_marginLeft="27px"
                 android:layout_gravity="center"
                 android:text="@string/setting_signal_activates_panorama"
                 android:textColor="@color/setting_view_title_color"
-                android:textSize="@dimen/text_size_27px"
+                android:textSize="@dimen/text_size_24px"
                 android:gravity="center_vertical" />
 
             <ImageView
                 android:id="@+id/activatesPanoramaInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40px"
+                android:layout_height="40px"
                 android:src="@mipmap/info_default_56_day"
                 android:gravity="center_vertical"
-                android:layout_marginStart="24px"
                 android:layout_gravity="center"
+                android:layout_marginStart="16.5px"
                 binding:onClickCommand="@{viewModel.activatesPanoramaInfoClick}"/>
         </LinearLayout>
-
-        <View
-            android:id="@+id/view_line1"
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:layout_marginStart="30px"
-            android:layout_marginEnd="30px"
-            />
     </LinearLayout>
 
 </layout>

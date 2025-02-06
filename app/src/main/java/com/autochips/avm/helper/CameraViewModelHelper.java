@@ -485,7 +485,6 @@ public class CameraViewModelHelper {
         }else {
             isPGear = false;
         }
-        setGearChange(value);
         isRvcAndRgear = false;
         valGear = value;
         if (valGear == 1 && isRadarActiveTow == 1) isRadarActiveTow = 2;
@@ -1200,25 +1199,4 @@ public class CameraViewModelHelper {
         }
     };
 
-    private ChangeListener mChangeListener;
-    public void setChangeListener(ChangeListener changeListener) {
-        this.mChangeListener = changeListener;
-    }
-
-    public void setGearChange(int gear){
-        if(mChangeListener != null){
-            mChangeListener.gearChange(gear);
-        }
-    }
-
-    public void setViewChange(){
-        if(mChangeListener != null){
-            mChangeListener.viewChange();
-        }
-    }
-
-    public interface ChangeListener{
-        void gearChange(int gear);
-        void viewChange();
-    }
 }

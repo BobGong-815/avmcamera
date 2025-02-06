@@ -270,17 +270,17 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
             public void run() {
                 // 获取当前的布局参数
                 ViewGroup.LayoutParams params = tabView.getLayoutParams();
-//                if (isBold == 5 && params instanceof ViewGroup.MarginLayoutParams) {
-//
-//                    // 应用新的边距参数
-//                    tabView.setLayoutParams(getTabMarginParams(position,params));
-//                    return;
-//                }
+                if (isBold == 5 && params instanceof MarginLayoutParams) {
+
+                    // 应用新的边距参数
+                    tabView.setLayoutParams(getTabMarginParams(position,params));
+                    return;
+                }
                 // 修改布局参数中的边距值
                 if (params instanceof MarginLayoutParams) {
                     MarginLayoutParams marginParams = (MarginLayoutParams) params;
-                    marginParams.topMargin = 3; // 上边距
-                    marginParams.bottomMargin = 3; // 下边距
+                    marginParams.topMargin = 4; // 上边距
+                    marginParams.bottomMargin = 2; // 下边距
                     marginParams.leftMargin = 3; // 左边距
                     marginParams.rightMargin = 3; // 右边距
 
@@ -368,10 +368,11 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
         }
     }
 
+    private boolean mIsOnclick = false;
     private void onClick(View view) {
         KLog.d(TAG, "CLICK enable :" + enable + "isUse:" + isUse);
         int position = (Integer) view.getTag();
-
+        mIsOnclick = true;
         if (!enable) {
             if (mInvalidSelectListener != null) {
                 mInvalidSelectListener.onTabInvalidSelect(position);
@@ -399,6 +400,10 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
                 mListener.onTabSameSelect(position, true);
             }
         }
+    }
+
+    public void setTabSelect(){
+        mIsOnclick = true;
     }
 
     private void updateTabStyles() {
@@ -474,7 +479,7 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
                         // 修改布局参数中的边距值
                         if (params instanceof MarginLayoutParams) {
                             // 应用新的边距参数
-                            //tabView.setLayoutParams(getTabMarginParams(position,params));
+                            tabView.setLayoutParams(getTabMarginParams(position,params));
                         }
 
                     }
@@ -725,15 +730,17 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
             //            Log.d(TAG, "mIndicatorAnimEnable--" + 2);
             calcIndicatorRect();
         }
-
-        updateTabStyles();
+        if(mIsOnclick) {
+            mIsOnclick = false;
+            updateTabStyles();
+        }
     }
 
     //setter and getter
     private void setCurrentTab(int currentTab) {
         KLog.d(TAG, "setCurrentTab: " + currentTab);
         KLog.d(TAG, "lastTab: " + mLastTab);
-
+        mIsOnclick = true;
         if (mCurrentTab >= 0) {
             mLastTab = this.mCurrentTab;
         }
