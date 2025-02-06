@@ -222,9 +222,7 @@
                     android:id="@+id/automatic_calibration"
                     android:layout_width="150px"
                     android:layout_height="50px"
-                    android:layout_marginLeft="50px"
                     android:layout_marginTop="80px"
-                    android:layout_marginRight="50px"
                     android:layout_marginBottom="30px"
                     android:background="@drawable/shape_text_bg_nor"
                     android:gravity="center"
@@ -233,6 +231,7 @@
                     android:textColor="@color/setting_view_bg"
                     android:textSize="@dimen/text_size_20px"
                     app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/calibration_title" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
