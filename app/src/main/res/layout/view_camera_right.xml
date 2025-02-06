@@ -33,7 +33,7 @@
             android:id="@+id/viewFrame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="84px">
 
@@ -53,7 +53,7 @@
             android:layout_marginTop="81px"
             android:layout_marginRight="570px"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
 
@@ -66,7 +66,7 @@
             android:layout_height="870px"
             android:layout_marginRight="42px"
             android:layout_marginTop="84px"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_f1"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone" />
 
@@ -84,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/radar_fault_f2"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/radar_fault_f3"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_f4"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_1"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -122,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/radar_fault_2"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -131,7 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/radar_fault_3"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -141,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:rotation="0"
                 android:src="@mipmap/radar_fault_4"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:visibility="gone"/>
 
@@ -151,8 +151,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -164,8 +164,8 @@
                 android:paddingTop="50px"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -175,8 +175,8 @@
                     android:text="@string/calibration"
                     android:textColor="@color/white"
                     android:textSize="30px"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -193,7 +193,7 @@
                     android:visibility="gone"
                     android:textColor="@color/setting_view_bg"
                     android:textSize="@dimen/text_size_20px"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/calibration_title" />
 
                 <TextView
@@ -210,7 +210,7 @@
                     android:text="@string/automatic_calibration"
                     android:textColor="@color/setting_view_bg"
                     android:textSize="@dimen/text_size_20px"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/calibration_title" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -227,7 +227,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="84dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--雷达警示图-->
@@ -236,7 +236,7 @@
                 android:layout_width="486px"
                 android:layout_height="850px"
                 android:layout_marginRight="42px"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.autochips.avm.ui.view.RadarStatusFrontView
@@ -245,8 +245,8 @@
                     android:layout_height="174px"
                     android:layout_marginTop="104px"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
                 <TextView
                     android:id="@+id/rearRadarFrontId"
@@ -264,8 +264,8 @@
                     android:text="@{viewModel.info.radarFrontDistance}"
                     android:textColor="@color/white"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     android:textSize="20px" />
 
                 <LinearLayout
@@ -276,8 +276,8 @@
                     android:gravity="center"
                     android:visibility="@{TextUtils.isEmpty(viewModel.info.radarDistance)?View.GONE:View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent">
 
                     <TextView
                         android:id="@+id/rearRadarImgId"
@@ -300,8 +300,8 @@
                     android:layout_height="174px"
                     android:layout_marginBottom="68px"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -315,7 +315,7 @@
                 android:minWidth="480px"
                 android:minHeight="800px"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
 
@@ -323,7 +323,7 @@
                     android:id="@+id/viewShow2dGroupId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="camera_top,camera_lift,camera_bottom,camera_right" />
+                    app:constraint_referenced_ids="fl_camera_top,fl_camera_lift,fl_camera_bottom,fl_camera_right" />
 
                 <View
                     android:id="@+id/red_2d_top"
@@ -332,7 +332,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="20px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -342,7 +342,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="245px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -352,7 +352,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="605px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -362,61 +362,117 @@
                     android:layout_marginTop="245px"
                     android:layout_marginRight="20px"
                     android:background="@color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-                <ImageView
-                    android:id="@+id/camera_top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <FrameLayout
+                    android:id="@+id/fl_camera_top"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="247.5px"
                     android:layout_marginTop="114px"
-                    android:contentDescription="前视角|前摄像头|前面视角|前面摄像头|前面的摄像头::parkimage_2DImage_frontView"
-                    android:onClick="@{()->viewModel.camera2dTop()}"
-                    android:rotation="0"
-                    android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_lift"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_top"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="前视角|前摄像头|前面视角|前面摄像头|前面的摄像头::parkimage_2DImage_frontView"
+                        android:onClick="@{()->viewModel.camera2dTop()}"
+                        android:rotation="0"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_top"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_lift"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="57px"
                     android:layout_marginTop="397.5px"
-                    android:contentDescription="左视角|左摄像头|左面视角|左边摄像头|左边的摄像头::parkimage_2DImage_leftView"
-                    android:onClick="@{()->viewModel.camera2dLift()}"
-                    android:rotation="270"
-                    android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_bottom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_lift"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="左视角|左摄像头|左面视角|左边摄像头|左边的摄像头::parkimage_2DImage_leftView"
+                        android:onClick="@{()->viewModel.camera2dLift()}"
+                        android:rotation="270"
+                        android:src="@mipmap/ic_camera_default"/>
+
+                    <View
+                        android:id="@+id/view_left"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_bottom"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="247.5px"
                     android:layout_marginTop="703px"
-                    android:contentDescription="后视角|后摄像头|后面视角|后面摄像头|后的摄像头::parkimage_2DImage_backView"
-                    android:onClick="@{()->viewModel.camera2dBottom()}"
-                    android:rotation="180"
-                    android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_bottom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="后视角|后摄像头|后面视角|后面摄像头|后的摄像头::parkimage_2DImage_backView"
+                        android:onClick="@{()->viewModel.camera2dBottom()}"
+                        android:rotation="180"
+                        android:src="@mipmap/ic_camera_default"/>
+
+                    <View
+                        android:id="@+id/view_bottom"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_right"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="438px"
                     android:layout_marginTop="397.5px"
-                    android:contentDescription="右视角|右摄像头|右面视角|右边摄像头|右边的摄像头::parkimage_2DImage_rightView"
-                    android:onClick="@{()->viewModel.camera2dRight()}"
-                    android:rotation="90"
-                    android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/camera_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="右视角|右摄像头|右面视角|右边摄像头|右边的摄像头::parkimage_2DImage_rightView"
+                        android:onClick="@{()->viewModel.camera2dRight()}"
+                        android:rotation="90"
+                        android:src="@mipmap/ic_camera_default"/>
+
+                    <View
+                        android:id="@+id/view_right"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -429,14 +485,14 @@
                 android:minWidth="480px"
                 android:minHeight="850px"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.Group
                     android:id="@+id/viewShow3dGroupId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="camera_left_front,camera_left_rear,camera_right_front,camera_right_rear" />
+                    app:constraint_referenced_ids="fl_camera_left_front,fl_camera_left_rear,fl_camera_right_front,fl_camera_right_rear" />
                 <!--左前-->
                 <View
                     android:id="@+id/red_3dleftFront"
@@ -445,7 +501,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="20px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -455,7 +511,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="245px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
                 <!--右前-->
                 <View
@@ -465,7 +521,7 @@
                     android:layout_marginLeft="280px"
                     android:layout_marginTop="20px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -475,7 +531,7 @@
                     android:layout_marginLeft="380px"
                     android:layout_marginTop="245px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
                 <!--左后-->
                 <View
@@ -485,7 +541,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="445px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -495,7 +551,7 @@
                     android:layout_marginLeft="54px"
                     android:layout_marginTop="626px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
                 <!--右后-->
                 <View
@@ -505,7 +561,7 @@
                     android:layout_marginLeft="380px"
                     android:layout_marginTop="445px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
@@ -515,61 +571,119 @@
                     android:layout_marginLeft="280px"
                     android:layout_marginTop="626px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-                <ImageView
-                    android:id="@+id/camera_left_front"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <FrameLayout
+                    android:id="@+id/fl_camera_left_front"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="93px"
                     android:layout_marginTop="84px"
-                    android:contentDescription="左前视角|左前摄像头|左边前面视角|左边前面摄像头|左边前面的摄像头::parkimage_2DImage_frontLeftView"
-                    android:onClick="@{()->viewModel.camera3dLeftFront()}"
-                    android:rotation="150"
-                    android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_right_front"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_left_front"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="左前视角|左前摄像头|左边前面视角|左边前面摄像头|左边前面的摄像头::parkimage_2DImage_frontLeftView"
+                        android:onClick="@{()->viewModel.camera3dLeftFront()}"
+                        android:rotation="150"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_left_front"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_right_front"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="402px"
                     android:layout_marginTop="84px"
-                    android:contentDescription="右前视角|右前摄像头|右边前面视角|右边前面摄像头|右边前面的摄像头::parkimage_2DImage_frontRightView"
-                    android:onClick="@{()->viewModel.camera3dRightFront()}"
-                    android:rotation="210"
-                    android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_left_rear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_right_front"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="右前视角|右前摄像头|右边前面视角|右边前面摄像头|右边前面的摄像头::parkimage_2DImage_frontRightView"
+                        android:onClick="@{()->viewModel.camera3dRightFront()}"
+                        android:rotation="210"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_right_front"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_left_rear"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="93px"
                     android:layout_marginTop="753px"
-                    android:contentDescription="左后视角|左后摄像头|左边后面视角|左边后面摄像头|左边后面的摄像头::parkimage_2DImage_backLeftView"
-                    android:onClick="@{()->viewModel.camera3dLeftRear()}"
-                    android:rotation="30"
-                    android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_right_rear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_left_rear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="左后视角|左后摄像头|左边后面视角|左边后面摄像头|左边后面的摄像头::parkimage_2DImage_backLeftView"
+                        android:onClick="@{()->viewModel.camera3dLeftRear()}"
+                        android:rotation="30"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_left_rear"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_right_rear"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="402px"
                     android:layout_marginTop="753px"
-                    android:contentDescription="右后视角|右后摄像头|右边后面视角|右边后面摄像头|右边后面的摄像头::parkimage_2DImage_backRightView"
-                    android:onClick="@{()->viewModel.camera3dRightRear()}"
-                    android:rotation="320"
-                    android:src="@mipmap/ic_camera_default"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/camera_right_rear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="右后视角|右后摄像头|右边后面视角|右边后面摄像头|右边后面的摄像头::parkimage_2DImage_backRightView"
+                        android:onClick="@{()->viewModel.camera3dRightRear()}"
+                        android:rotation="320"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_right_rear"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -581,13 +695,13 @@
                 android:layout_marginLeft="355px"
                 android:layout_marginBottom="60px"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintLeft_toLeftOf="parent">
 
                 <com.autochips.avm.ui.view.SegmentTabLayout
                     android:id="@+id/segment_wide_angle"
                     android:layout_width="wrap_content"
                     android:layout_height="84px"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tl_indicator_anim_enable="true"
                     app:tl_textSelectColor="@color/setting_view_title_color"
@@ -610,7 +724,7 @@
                 android:layout_marginRight="191px"
                 android:layout_marginTop="255px"
                 android:background="@color/transparent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!--3D车模背景-->
@@ -621,7 +735,7 @@
                 android:layout_marginRight="191px"
                 android:layout_marginTop="255px"
                 android:background="@color/transparent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -634,7 +748,7 @@
                 android:layout_marginLeft="42px"
                 android:layout_marginRight="1806px"
                 android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -642,7 +756,7 @@
                     android:layout_width="72px"
                     android:layout_height="72px"
                     android:src="@mipmap/ic_camera_card_front"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -654,7 +768,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="42px"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
@@ -662,7 +776,7 @@
                     android:layout_width="72px"
                     android:layout_height="72px"
                     android:src="@mipmap/ic_camera_card_front"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -679,8 +793,8 @@
                 android:paddingRight="66dp"
                 android:paddingBottom="10dp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -689,7 +803,7 @@
                     android:text="@string/parking_assist_system_down"
                     android:textColor="@color/white"
                     android:textSize="24sp"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -705,7 +819,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="@{viewModel.info.showCaliDemo ?View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -716,7 +830,7 @@
                 android:gravity="center"
                 android:onClick="@{()->viewModel.setManualCalibration()}"
                 android:text="手动标定"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -728,7 +842,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.setCalibration1()}"
                 android:text="前"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -740,7 +854,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.setCalibration2()}"
                 android:text="后"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -752,7 +866,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.setCalibration3()}"
                 android:text="左"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -763,14 +877,14 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.setCalibration4()}"
                 android:text="右"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
             <!--            <androidx.appcompat.widget.AppCompatButton-->
             <!--                android:layout_marginTop="@dimen/text_size_20px"-->
             <!--                android:layout_width="wrap_content"-->
             <!--                android:layout_height="wrap_content"-->
             <!--                android:background="@color/colorPrimary"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintLeft_toLeftOf="parent"-->
             <!--                android:minWidth="150px"-->
             <!--                android:gravity="center"-->
             <!--                app:layout_constraintTop_toTopOf="parent"-->
@@ -788,7 +902,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="@{viewModel.info.showCaliDemo ?View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -800,7 +914,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.bwSetIRKeyPOINT()}"
                 android:text="POINT"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -812,7 +926,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.bwSetIRKeyUp()}"
                 android:text="UP"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -824,7 +938,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.bwSetIRKeyOK()}"
                 android:text="OK"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -836,7 +950,7 @@
                 android:minWidth="150px"
                 android:onClick="@{()->viewModel.bwSetIRKeyExit()}"
                 android:text="exit"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -854,8 +968,8 @@
             android:paddingBottom="10dp"
             android:visibility="@{viewModel.info.showCaliView ?View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -868,7 +982,7 @@
                 android:text="@{viewModel.info.showCaliBtnText,default=`标定中`}"
                 android:textColor="#FFFFFF"
                 android:textSize="32px"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -879,7 +993,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="84px"
             android:layout_marginLeft="42px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <!--infobook 摄像头故障-->
 
@@ -915,7 +1029,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--设置页面-->
@@ -926,7 +1040,7 @@
                 android:layout_marginLeft="228px"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -934,7 +1048,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="834px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--后视镜调节页面-->
@@ -944,7 +1058,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -954,7 +1068,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="42px"
             android:layout_marginTop="84px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <!--infobook 蒙版-->
 
@@ -971,7 +1085,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="399px"
             android:layout_marginRight="969px"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--infobook-->
@@ -983,8 +1097,8 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -1038,9 +1152,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_toast_bg"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             android:layout_marginRight="460px"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:orientation="vertical"
             android:visibility="gone"
@@ -1066,8 +1180,8 @@
             android:background="@drawable/shape_toast_bg"
             android:orientation="vertical"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -1085,7 +1199,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--左边卡片蒙版 蒙版-->
@@ -1104,10 +1218,10 @@
             android:layout_marginTop="12dp"
             android:layout_marginRight="546px"
             android:gravity="center_vertical|right"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/ll_setting"
                 android:layout_width="96px"
                 android:layout_height="60px"
@@ -1121,11 +1235,20 @@
                     android:id="@+id/iv_setting"
                     android:layout_width="48px"
                     android:layout_height="48px"
+                    android:layout_centerInParent="true"
                     android:src="@drawable/button_select_iv_setting" />
 
-            </LinearLayout>
+                <View
+                    android:id="@+id/view_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_bg_nor_view_12"
+                    android:visibility="gone"
+                    />
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/ll_back_mirror"
                 android:layout_width="96px"
                 android:layout_height="60px"
@@ -1138,9 +1261,18 @@
                     android:id="@+id/iv_back_mirror"
                     android:layout_width="48px"
                     android:layout_height="48px"
+                    android:layout_centerInParent="true"
                     android:src="@mipmap/ic_camera_setting" />
 
-            </LinearLayout>
+                <View
+                    android:id="@+id/view_back_mirror"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_bg_nor_view_12"
+                    android:visibility="gone"
+                    />
+
+            </RelativeLayout>
 
 
             <com.autochips.avm.ui.view.SegmentTabLayout
@@ -1180,7 +1312,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="80px"
             android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 <!--        <androidx.appcompat.widget.AppCompatImageButton-->
@@ -1192,7 +1324,7 @@
 <!--            android:contentDescription="关闭360影像卡片|关闭全景影像卡片|关闭360全景影像卡片::parkimage_home_close360"-->
 <!--            android:onClick="@{() -> viewModel.closeAvm()}"-->
 <!--            android:src="@mipmap/close_default"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintRight_toRightOf="parent"-->
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <!--雷达提示音-->
@@ -1205,7 +1337,7 @@
             android:onClick="@{()->viewModel.cameraRadarSound()}"
             android:background="@drawable/shape_bg_nor_12"
             android:contentDescription="雷达提示音::parkimage_home_warningTone"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -1213,10 +1345,18 @@
                 android:layout_width="48px"
                 android:layout_height="48px"
                 android:src="@drawable/ic_radar_sound_open"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view_sound"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_bg_nor_view_12"
+                android:visibility="gone"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -1229,7 +1369,7 @@
             android:background="@drawable/shape_bg_nor_12"
             android:contentDescription="关闭360影像卡片|关闭全景影像卡片|关闭360全景影像卡片::parkimage_home_close360"
             android:onClick="@{() -> viewModel.closeAvm()}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -1237,6 +1377,14 @@
                 android:layout_height="48px"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_close_default"
+                />
+
+            <View
+                android:id="@+id/view_close"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_bg_nor_view_12"
+                android:visibility="gone"
                 />
         </RelativeLayout>
 

@@ -344,7 +344,7 @@
                     android:id="@+id/viewShow2dGroupId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="camera_top,camera_lift,camera_bottom,camera_right" />
+                    app:constraint_referenced_ids="fl_camera_top,fl_camera_lift,fl_camera_bottom,fl_camera_right" />
 
                 <View
                     android:id="@+id/red_2d_top"
@@ -387,57 +387,113 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-                <ImageView
-                    android:id="@+id/camera_top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <FrameLayout
+                    android:id="@+id/fl_camera_top"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="247.5px"
                     android:layout_marginTop="114px"
-                    android:contentDescription="前视角|前摄像头|前面视角|前面摄像头|前面的摄像头::parkimage_2DImage_frontView"
-                    android:onClick="@{()->viewModel.camera2dTop()}"
-                    android:rotation="0"
-                    android:src="@mipmap/ic_camera_default"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_lift"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_top"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="前视角|前摄像头|前面视角|前面摄像头|前面的摄像头::parkimage_2DImage_frontView"
+                        android:onClick="@{()->viewModel.camera2dTop()}"
+                        android:rotation="0"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_top"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_lift"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="57px"
                     android:layout_marginTop="397.5px"
-                    android:contentDescription="左视角|左摄像头|左面视角|左边摄像头|左边的摄像头::parkimage_2DImage_leftView"
-                    android:onClick="@{()->viewModel.camera2dLift()}"
-                    android:rotation="270"
-                    android:src="@mipmap/ic_camera_default"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_bottom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_lift"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="左视角|左摄像头|左面视角|左边摄像头|左边的摄像头::parkimage_2DImage_leftView"
+                        android:onClick="@{()->viewModel.camera2dLift()}"
+                        android:rotation="270"
+                        android:src="@mipmap/ic_camera_default"/>
+
+                    <View
+                        android:id="@+id/view_left"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_bottom"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="247.5px"
                     android:layout_marginTop="703px"
-                    android:contentDescription="后视角|后摄像头|后面视角|后面摄像头|后的摄像头::parkimage_2DImage_backView"
-                    android:onClick="@{()->viewModel.camera2dBottom()}"
-                    android:rotation="180"
-                    android:src="@mipmap/ic_camera_default"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_bottom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="后视角|后摄像头|后面视角|后面摄像头|后的摄像头::parkimage_2DImage_backView"
+                        android:onClick="@{()->viewModel.camera2dBottom()}"
+                        android:rotation="180"
+                        android:src="@mipmap/ic_camera_default"/>
+
+                    <View
+                        android:id="@+id/view_bottom"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_right"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="438px"
                     android:layout_marginTop="397.5px"
-                    android:contentDescription="右视角|右摄像头|右面视角|右边摄像头|右边的摄像头::parkimage_2DImage_rightView"
-                    android:onClick="@{()->viewModel.camera2dRight()}"
-                    android:rotation="90"
-                    android:src="@mipmap/ic_camera_default"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/camera_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="右视角|右摄像头|右面视角|右边摄像头|右边的摄像头::parkimage_2DImage_rightView"
+                        android:onClick="@{()->viewModel.camera2dRight()}"
+                        android:rotation="90"
+                        android:src="@mipmap/ic_camera_default"/>
+
+                    <View
+                        android:id="@+id/view_right"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -456,7 +512,7 @@
                     android:id="@+id/viewShow3dGroupId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:constraint_referenced_ids="camera_left_front,camera_left_rear,camera_right_front,camera_right_rear" />
+                    app:constraint_referenced_ids="fl_camera_left_front,fl_camera_left_rear,fl_camera_right_front,fl_camera_right_rear" />
                 <!--左前-->
                 <View
                     android:id="@+id/red_3dleftFront"
@@ -538,58 +594,115 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
-                <ImageView
-                    android:id="@+id/camera_left_front"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <FrameLayout
+                    android:id="@+id/fl_camera_left_front"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="93px"
                     android:layout_marginTop="84px"
-                    android:contentDescription="左前视角|左前摄像头|左边前面视角|左边前面摄像头|左边前面的摄像头::parkimage_2DImage_frontLeftView"
-                    android:onClick="@{()->viewModel.camera3dLeftFront()}"
-                    android:rotation="150"
-                    android:src="@mipmap/ic_camera_default"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_right_front"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_left_front"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="左前视角|左前摄像头|左边前面视角|左边前面摄像头|左边前面的摄像头::parkimage_2DImage_frontLeftView"
+                        android:onClick="@{()->viewModel.camera3dLeftFront()}"
+                        android:rotation="150"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_left_front"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_right_front"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="402px"
                     android:layout_marginTop="84px"
-                    android:contentDescription="右前视角|右前摄像头|右边前面视角|右边前面摄像头|右边前面的摄像头::parkimage_2DImage_frontRightView"
-                    android:onClick="@{()->viewModel.camera3dRightFront()}"
-                    android:rotation="210"
-                    android:src="@mipmap/ic_camera_default"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_left_rear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_right_front"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="右前视角|右前摄像头|右边前面视角|右边前面摄像头|右边前面的摄像头::parkimage_2DImage_frontRightView"
+                        android:onClick="@{()->viewModel.camera3dRightFront()}"
+                        android:rotation="210"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_right_front"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_left_rear"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="93px"
                     android:layout_marginTop="753px"
-                    android:contentDescription="左后视角|左后摄像头|左边后面视角|左边后面摄像头|左边后面的摄像头::parkimage_2DImage_backLeftView"
-                    android:onClick="@{()->viewModel.camera3dLeftRear()}"
-                    android:rotation="30"
-                    android:src="@mipmap/ic_camera_default"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/camera_right_rear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/camera_left_rear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="左后视角|左后摄像头|左边后面视角|左边后面摄像头|左边后面的摄像头::parkimage_2DImage_backLeftView"
+                        android:onClick="@{()->viewModel.camera3dLeftRear()}"
+                        android:rotation="30"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_left_rear"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+
+                <FrameLayout
+                    android:id="@+id/fl_camera_right_rear"
+                    android:layout_width="75px"
+                    android:layout_height="75px"
                     android:layout_marginLeft="402px"
                     android:layout_marginTop="753px"
-                    android:contentDescription="右后视角|右后摄像头|右边后面视角|右边后面摄像头|右边后面的摄像头::parkimage_2DImage_backRightView"
-                    android:onClick="@{()->viewModel.camera3dRightRear()}"
-                    android:rotation="320"
-                    android:src="@mipmap/ic_camera_default"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/camera_right_rear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="右后视角|右后摄像头|右边后面视角|右边后面摄像头|右边后面的摄像头::parkimage_2DImage_backRightView"
+                        android:onClick="@{()->viewModel.camera3dRightRear()}"
+                        android:rotation="320"
+                        android:src="@mipmap/ic_camera_default" />
+
+                    <View
+                        android:id="@+id/view_right_rear"
+                        android:layout_width="75px"
+                        android:layout_height="75px"
+                        android:background="@color/color_view_bg"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -1124,7 +1237,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/ll_setting"
                 android:layout_width="96px"
                 android:layout_height="60px"
@@ -1138,11 +1251,20 @@
                     android:id="@+id/iv_setting"
                     android:layout_width="48px"
                     android:layout_height="48px"
+                    android:layout_centerInParent="true"
                     android:src="@drawable/button_select_iv_setting" />
 
-            </LinearLayout>
+                <View
+                    android:id="@+id/view_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_bg_nor_view_12"
+                    android:visibility="gone"
+                    />
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/ll_back_mirror"
                 android:layout_width="96px"
                 android:layout_height="60px"
@@ -1155,9 +1277,18 @@
                     android:id="@+id/iv_back_mirror"
                     android:layout_width="48px"
                     android:layout_height="48px"
+                    android:layout_centerInParent="true"
                     android:src="@mipmap/ic_camera_setting" />
 
-            </LinearLayout>
+                <View
+                    android:id="@+id/view_back_mirror"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_bg_nor_view_12"
+                    android:visibility="gone"
+                    />
+
+            </RelativeLayout>
 
 
             <com.autochips.avm.ui.view.SegmentTabLayout
@@ -1223,6 +1354,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
+            <View
+                android:id="@+id/view_sound"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_bg_nor_view_12"
+                android:visibility="gone"
+                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -1243,6 +1382,14 @@
                 android:layout_height="48px"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_close_default"
+                />
+
+            <View
+                android:id="@+id/view_close"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_bg_nor_view_12"
+                android:visibility="gone"
                 />
         </RelativeLayout>
     </com.autochips.avm.ui.view.AvmConstraintLayout>

@@ -3,6 +3,8 @@ package com.autochips.avm.ui.activity;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceControl;
@@ -80,14 +82,16 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         finish();
     }
 
+    @SuppressLint("SuspiciousIndentation")
     protected void onDestroy() {
         super.onDestroy();
         Log.d("AvmRuntime", "onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
-
+        if (AvmApp.getInstance().getCameraView() != null)
+            AvmApp.getInstance().getCameraView().setVisibility(View.GONE);
         if (AvmApp.getInstance().getCameraView().getRootView() != null) {
             Log.d("AvmRuntime", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
             if (CameraView.windowSurfaceControl != null) {
-                setSCLayer(CameraView.windowSurfaceControl, 0);
+                setSCLayer(CameraView.windowSurfaceControl, 0,true);
             }
         }
     }
@@ -120,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
                 CameraView.windowSurfaceControl = getSurfaceControl(AvmApp.getInstance().getCameraView().getRootView());
             Log.d("AvmRuntime", "widnowSurfaceControl is " + CameraView.windowSurfaceControl);
             if (CameraView.windowSurfaceControl != null) {
-                setSCLayer(CameraView.windowSurfaceControl, 0); //取消绑定
+                setSCLayer(CameraView.windowSurfaceControl, 0,false); //取消绑定
                 return true;
             } else {
                 return false;
@@ -134,7 +138,9 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
             Log.d("AvmRuntime", "mySurfaceControl is " + mySurfaceControl);
 
             if (CameraView.windowSurfaceControl != null && mySurfaceControl != null) {
-                setRelativeLayer(CameraView.windowSurfaceControl, mySurfaceControl);//设置层级与act同级
+                mHandler.postDelayed(()-> {
+                    setRelativeLayer(CameraView.windowSurfaceControl, mySurfaceControl);//设置层级与act同级
+                },300);
                 return true;
             } else {
                 return false;
@@ -251,47 +257,45 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
 
     }
 
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     @SuppressLint("SoonBlockedPrivateApi")
-    private void setSCLayer(SurfaceControl windowSC, int z) {
-        try {
+    private void setSCLayer(SurfaceControl windowSC, int z,boolean isDelay) {
+        mHandler.postDelayed(()->{
             try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
+                // 获取SurfaceControl类
+                Class<?> surfaceControlClass = Class.forName("android.view.SurfaceControl$Transaction");
+
+                // 获取setRelativeLayer方法
+                Method setRelativeLayerMethod = null;
+                setRelativeLayerMethod = surfaceControlClass.getDeclaredMethod("setLayer",
+                        SurfaceControl.class, int.class);
+                // 设置setRelativeLayer方法的可访问性（如果是私有方法）
+                setRelativeLayerMethod.setAccessible(true);
+
+                //构建SurfaceControl$Transactio对象
+                Class<?> transactionClass = Class.forName("android.view.SurfaceControl$Transaction");
+                Object transactionObject = transactionClass.newInstance();
+
+                SurfaceControl.Transaction transaction = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    // 调用setRelativeLayer方法
+                    transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
+                            windowSC, z);
+                    transaction.apply();
+                }
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
                 e.printStackTrace();
             }
-            // 获取SurfaceControl类
-            Class<?> surfaceControlClass = Class.forName("android.view.SurfaceControl$Transaction");
-
-            // 获取setRelativeLayer方法
-            Method setRelativeLayerMethod = null;
-            setRelativeLayerMethod = surfaceControlClass.getDeclaredMethod("setLayer",
-                    SurfaceControl.class, int.class);
-            // 设置setRelativeLayer方法的可访问性（如果是私有方法）
-            setRelativeLayerMethod.setAccessible(true);
-
-            //构建SurfaceControl$Transactio对象
-            Class<?> transactionClass = Class.forName("android.view.SurfaceControl$Transaction");
-            Object transactionObject = transactionClass.newInstance();
-
-            SurfaceControl.Transaction transaction = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // 调用setRelativeLayer方法
-                transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
-                        windowSC, z);
-                transaction.apply();
-            }
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
+        },isDelay ? 300 : 0);
     }
 
 }

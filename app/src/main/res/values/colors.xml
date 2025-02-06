@@ -19,6 +19,6 @@
 
     <color name="transparent">#00000000</color>
     <color name="angle_btn_E8EEF6">#E8EEF6</color>
-
+    <color name="color_view_bg">#1FCCE0FF</color>
 
 </resources>

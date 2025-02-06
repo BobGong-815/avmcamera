@@ -52,12 +52,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
@@ -85,6 +81,7 @@ import com.autochips.avm.util.DataDefine;
 import com.autochips.avm.util.NotCloseToast;
 import com.autochips.avm.util.RearviewToast;
 import com.autochips.avm.util.SystemProperties;
+import com.autochips.avm.util.TouchViewUtils;
 import com.autochips.avm.viewmode.CameraViewModel;
 import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.manager.CanManager;
@@ -179,7 +176,8 @@ public class CameraView extends View implements LifecycleOwner {
             radarErrImgId1,radarErrImgId2,radarErrImgId3,radarErrImgId4,cameraIv
             ,cameraLeftFront,cameraRightFront,cameraLeftRear,cameraRightRear,cameraRight
             ,cameraTop,cameraBottom,cameraLift,ivBreakdown,ivSetting,ivBackMirror,cameraIvLift;
-    protected LinearLayout llBackMirror,llSetting,cameraBreakdown,toastBg,toastNcBg,layoutShowFull2d,layoutCalibrateId;
+    protected LinearLayout cameraBreakdown,toastBg,toastNcBg,layoutShowFull2d,layoutCalibrateId;
+    protected RelativeLayout llBackMirror,llSetting;
     protected ConstraintLayout layoutWideAngle,cameraImageLayout,radarSoundLayout
             ,parkingAssistLayout,mainAvmViewRootId,cameraImageLayoutLift;
     protected TextView tvBreakdown,manualCalibration,automaticCalibration,infoTitle,infoContent,rearRadarImgId,rearRadarFrontId;
@@ -190,6 +188,8 @@ public class CameraView extends View implements LifecycleOwner {
     protected ConstraintLayout clCon,conRadarError,conRadar;
     private int cameraShowType = -1;//记录当前显示视角，判断是否要显示故障,0前，1,后，2左，3右，4左右
     private int camera3DShowType = -1;//记录当前显示视角，判断是否要显示故障,-1、无选中、1,左前，2右前，3左后，4右后，
+    private View viewClose,viewSound,viewSetting,viewBackMirror;
+    private View viewTop,viewBottom, viewLeft, viewRight, viewLeftFront, viewRightFront, viewLeftRear, viewRightRear;
 
 
     public CameraView(Context context) {
@@ -348,6 +348,18 @@ public class CameraView extends View implements LifecycleOwner {
             }
         });
 
+        TouchViewUtils.setTouchViewListener("viewClose",rlClose,viewClose);
+        TouchViewUtils.setTouchViewListener("viewSound",radarSoundLayout,viewSound);
+        TouchViewUtils.setTouchViewListener("viewSetting",llSetting,viewSetting);
+        TouchViewUtils.setTouchViewListener("viewBackMirror",llBackMirror,viewBackMirror);
+        TouchViewUtils.setTouchViewListener("viewTop",cameraTop,viewTop);
+        TouchViewUtils.setTouchViewListener("viewBottom",cameraBottom,viewBottom);
+        TouchViewUtils.setTouchViewListener("viewLeft",cameraLift,viewLeft);
+        TouchViewUtils.setTouchViewListener("viewRight",cameraRight,viewRight);
+        TouchViewUtils.setTouchViewListener("viewLeftFront",cameraLeftFront,viewLeftFront);
+        TouchViewUtils.setTouchViewListener("viewRightFront",cameraRightFront,viewRightFront);
+        TouchViewUtils.setTouchViewListener("viewLeftRear",cameraLeftRear,viewLeftRear);
+        TouchViewUtils.setTouchViewListener("viewRightRear",cameraRightRear,viewRightRear);
     }
 
     /**
@@ -592,6 +604,18 @@ public class CameraView extends View implements LifecycleOwner {
             clCon = mViewCameraRightBinding.clCon;
             conRadarError = mViewCameraRightBinding.conRadarError;
             conRadar = mViewCameraRightBinding.conRadar;
+            viewClose = mViewCameraRightBinding.viewClose;
+            viewSound = mViewCameraRightBinding.viewSound;
+            viewSetting = mViewCameraRightBinding.viewSetting;
+            viewBackMirror = mViewCameraRightBinding.viewBackMirror;
+            viewTop = mViewCameraRightBinding.viewTop;
+            viewBottom = mViewCameraRightBinding.viewBottom;
+            viewLeft = mViewCameraRightBinding.viewLeft;
+            viewRight = mViewCameraRightBinding.viewRight;
+            viewLeftFront = mViewCameraRightBinding.viewLeftFront;
+            viewRightFront = mViewCameraRightBinding.viewRightFront;
+            viewLeftRear = mViewCameraRightBinding.viewLeftRear;
+            viewRightRear = mViewCameraRightBinding.viewRightRear;
         }else {
             rearRadarViewId = mViewCameraBinding.rearRadarViewId;
             rearRadarFrontViewId = mViewCameraBinding.rearRadarFrontViewId;
@@ -674,6 +698,18 @@ public class CameraView extends View implements LifecycleOwner {
             clCon = mViewCameraBinding.clCon;
             conRadarError = mViewCameraBinding.conRadarError;
             conRadar = mViewCameraBinding.conRadar;
+            viewClose = mViewCameraBinding.viewClose;
+            viewSound = mViewCameraBinding.viewSound;
+            viewSetting = mViewCameraBinding.viewSetting;
+            viewBackMirror = mViewCameraBinding.viewBackMirror;
+            viewTop = mViewCameraBinding.viewTop;
+            viewBottom = mViewCameraBinding.viewBottom;
+            viewLeft = mViewCameraBinding.viewLeft;
+            viewRight = mViewCameraBinding.viewRight;
+            viewLeftFront = mViewCameraBinding.viewLeftFront;
+            viewRightFront = mViewCameraBinding.viewRightFront;
+            viewLeftRear = mViewCameraBinding.viewLeftRear;
+            viewRightRear = mViewCameraBinding.viewRightRear;
         }
     }
 
@@ -1494,8 +1530,6 @@ public class CameraView extends View implements LifecycleOwner {
         cameraImageLayout.setVisibility(GONE);
         cameraImageLayoutLift.setVisibility(GONE);
         layoutShowFull2d.setVisibility(VISIBLE);
-        cameraRight.setVisibility(GONE);
-        cameraLeftFront.setVisibility(GONE);
         viewShow3dGroupId.setVisibility(GONE);
         cameraBreakdown.setVisibility(GONE);
         calibration.setVisibility(GONE);
@@ -1581,7 +1615,7 @@ public class CameraView extends View implements LifecycleOwner {
         rootView.setVisibility(View.VISIBLE); // 设置了mWindow。flags之后 修复隐藏状态栏
         if(isFristShowApp && BvAvmJNIHelper.isAvmInit) {
             isFristShowApp = false;
-            viewModel.setBwSetRVCStatus(4);
+            //viewModel.setBwSetRVCStatus(4);
         }
         showComm();
         mMainHandler.postDelayed(() -> {
@@ -1602,7 +1636,7 @@ public class CameraView extends View implements LifecycleOwner {
     private boolean isSmartWinToFull = false;
 
     public void showComm() {
-
+        setVisibility(VISIBLE);
         Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
 //        isSmartWin = false;
         updateWind();
@@ -1776,6 +1810,7 @@ public class CameraView extends View implements LifecycleOwner {
         if (!isShowing) {
             return;
         }
+        // 停止Trace
 //        bottomDialog.dismiss();
         DataManager.writeFault(DataConstant.Code.BP_HIDE);
         isFullWin = false;
@@ -2331,6 +2366,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     }
 
+    @SuppressLint("ResourceType")
     public void skinView() {
         UiModeManager uiModeManager = (UiModeManager) mContext.getSystemService(Context.UI_MODE_SERVICE);
         int uiMode = uiModeManager.getNightMode();
@@ -2374,7 +2410,18 @@ public class CameraView extends View implements LifecycleOwner {
                 infoOk.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color));
                 infoOk.setBackgroundResource(R.drawable.shape_text_bg_nor);
                 //rearRadarImgId.setBackgroundResource(R.mipmap.rada_distance_30);
-
+                viewClose.setBackgroundResource(R.drawable.shape_bg_nor_view_12);
+                viewSound.setBackgroundResource(R.drawable.shape_bg_nor_view_12);
+                viewSetting.setBackgroundResource(R.drawable.shape_bg_nor_view_12);
+                viewBackMirror.setBackgroundResource(R.drawable.shape_bg_nor_view_12);
+                viewTop.setBackgroundResource(R.drawable.shape_bg_nor_view_37);
+                viewBottom.setBackgroundResource(R.drawable.shape_bg_nor_view_37);
+                viewLeft.setBackgroundResource(R.drawable.shape_bg_nor_view_37);
+                viewRight.setBackgroundResource(R.drawable.shape_bg_nor_view_37);
+                viewLeftFront.setBackgroundResource(R.drawable.shape_bg_nor_view_37);
+                viewRightFront.setBackgroundResource(R.drawable.shape_bg_nor_view_37);
+                viewLeftRear.setBackgroundResource(R.drawable.shape_bg_nor_view_37);
+                viewRightRear.setBackgroundResource(R.drawable.shape_bg_nor_view_37);
                 if (AvmApp.ISAY5T) {
                     segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle);
                     segmentWideAngle.setBackground(mContext.getResources().getDrawable(R.mipmap.gj_bg));
@@ -2410,7 +2457,18 @@ public class CameraView extends View implements LifecycleOwner {
                 infoOk.setTextColor(mContext.getResources().getColor(R.color.setting_view_title_color_day));
                 infoOk.setBackgroundResource(R.drawable.shape_text_bg_nor_day);
                 //rearRadarImgId.setImageDrawable(mContext.getDrawable(R.mipmap.rada_distance_30_day));
-
+                viewClose.setBackgroundResource(R.drawable.shape_bg_nor_view_12_day);
+                viewSound.setBackgroundResource(R.drawable.shape_bg_nor_view_12_day);
+                viewSetting.setBackgroundResource(R.drawable.shape_bg_nor_view_12_day);
+                viewBackMirror.setBackgroundResource(R.drawable.shape_bg_nor_view_12_day);
+                viewTop.setBackgroundResource(R.drawable.shape_bg_nor_view_37_day);
+                viewBottom.setBackgroundResource(R.drawable.shape_bg_nor_view_37_day);
+                viewLeft.setBackgroundResource(R.drawable.shape_bg_nor_view_37_day);
+                viewRight.setBackgroundResource(R.drawable.shape_bg_nor_view_37_day);
+                viewLeftFront.setBackgroundResource(R.drawable.shape_bg_nor_view_37_day);
+                viewRightFront.setBackgroundResource(R.drawable.shape_bg_nor_view_37_day);
+                viewLeftRear.setBackgroundResource(R.drawable.shape_bg_nor_view_37_day);
+                viewRightRear.setBackgroundResource(R.drawable.shape_bg_nor_view_37_day);
 
                 if (AvmApp.ISAY5T) {
                     segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle_day);

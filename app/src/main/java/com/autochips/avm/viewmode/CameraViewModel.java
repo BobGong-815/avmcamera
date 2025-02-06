@@ -893,12 +893,12 @@ public class CameraViewModel extends BaseCameraViewModel {
         threadHandler.sendMessage(message);
     }
 
-    public void setBwSetRVCStatus(int status) {
-        Message message = Message.obtain();
-        message.what = MSG_SET_BWSTATUS;
-        message.arg1 = status;
-        threadHandler.sendMessage(message);
-    }
+//    public void setBwSetRVCStatus(int status) {
+//        Message message = Message.obtain();
+//        message.what = MSG_SET_BWSTATUS;
+//        message.arg1 = status;
+//        threadHandler.sendMessage(message);
+//    }
 
     /**
      * 测试透明底盘传入假数据

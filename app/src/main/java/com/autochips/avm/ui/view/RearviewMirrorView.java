@@ -32,6 +32,7 @@ import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.RearviewToast;
+import com.autochips.avm.util.TouchViewUtils;
 import com.autochips.avm.viewmode.RearviewMirrorModel;
 import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
@@ -125,6 +126,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         rearviewMirrorBinding.llSettingExpand.setOnTouchListener(new ItOnTouchListener(rearviewMirrorBinding.tvSettingExpand));
         rearviewMirrorBinding.llSettingFold.setOnTouchListener(new ItOnTouchListener(rearviewMirrorBinding.tvSettingFold));
         //rearviewMirrorBinding.llSettingRearviewMirrorDown.setOnTouchListener(new ItOnTouchListener(rearviewMirrorBinding.tvSettingRearview));
+        TouchViewUtils.setTouchViewListener("viewSettingRearview",rearviewMirrorBinding.llSettingRearviewMirrorDown,rearviewMirrorBinding.viewSettingRearview);
     }
 
     private boolean isOnTouchFlod = false;//是否触摸了折叠
@@ -167,6 +169,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             }
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 if (v.getId() == R.id.ll_setting_expand) {//展开
+                    rearviewMirrorBinding.viewSettingExpand.setVisibility(VISIBLE);
                     isOnTouchExpand = true;
                     rearviewMirrorModel.cancleTimer();
                     Integer[] arrUnfold = {1, 10};
@@ -177,6 +180,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                         CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrUnfold);
                     }
                 } else if (v.getId() == R.id.ll_setting_fold) {//折叠
+                    rearviewMirrorBinding.viewSettingFold.setVisibility(VISIBLE);
                     isOnTouchFlod = true;
                     rearviewMirrorModel.cancleTimer();
                     Integer[] arrFold = {1, 9};
@@ -186,9 +190,28 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                         CanManager.getInstance().setIntArray(REARVIEW_MIRROR_ADJUSTMENT, 0, arrFold);
                     }
                 }
+            }else if(event.getAction() == MotionEvent.ACTION_MOVE){
+                if(!isCheck) {
+                    if (v.getId() == R.id.ll_setting_expand) {
+                        rearviewMirrorBinding.viewSettingExpand.setVisibility(GONE);
+                    } else {
+                        rearviewMirrorBinding.viewSettingFold.setVisibility(GONE);
+                    }
+                }
             }else if (event.getAction() == MotionEvent.ACTION_UP) {
                 rearviewMirrorModel.startTimer();
                 rearviewMirrorModel.setRunning(true);
+                if (v.getId() == R.id.ll_setting_expand) {
+                    rearviewMirrorBinding.viewSettingExpand.setVisibility(GONE);
+                } else {
+                    rearviewMirrorBinding.viewSettingFold.setVisibility(GONE);
+                }
+            }else {
+                if (v.getId() == R.id.ll_setting_expand) {
+                    rearviewMirrorBinding.viewSettingExpand.setVisibility(GONE);
+                }else {
+                    rearviewMirrorBinding.viewSettingFold.setVisibility(GONE);
+                }
             }
             return false;
         }

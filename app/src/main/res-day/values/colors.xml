@@ -18,4 +18,5 @@
     <color name="test_color_D9">#D9ffffff</color>
     <color name="close_bg">#4d000000</color>
     <color name="shape_bule_bg">#0082F5</color>
+    <color name="color_view_bg_day">#1F0A1532</color>
 </resources>
