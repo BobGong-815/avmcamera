@@ -29,6 +29,7 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -1637,6 +1638,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void showComm() {
         setVisibility(VISIBLE);
+        //Debug.startMethodTracing("my_trace");
         Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
 //        isSmartWin = false;
         updateWind();
@@ -1811,6 +1813,7 @@ public class CameraView extends View implements LifecycleOwner {
             return;
         }
         // 停止Trace
+        //Debug.stopMethodTracing();
 //        bottomDialog.dismiss();
         DataManager.writeFault(DataConstant.Code.BP_HIDE);
         isFullWin = false;

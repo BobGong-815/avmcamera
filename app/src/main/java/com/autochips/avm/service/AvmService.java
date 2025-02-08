@@ -598,6 +598,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 if (value instanceof Integer) {
                     int intValue = (int) value;
                     turnLampSwSts = intValue;
+                    mHandler.removeCallbacksAndMessages("turnReset");
                     if (intValue == 0) {
                         AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                     } else {
@@ -618,13 +619,14 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     long delay = 800;
                     if (turnLampSwSts == 0) {
                         if ((leftTurnLChangeTime-rightTurnLChangeTime) < 500) { //双闪
-                            delay = 0;
+                            mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0),"turnReset",1000);
+                        }else {
+                            AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
                         }
-                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
                     }else {
                         //转向未回正也会双闪，处理转向未回正的双闪逻辑
                         if ((leftTurnLChangeTime-rightTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) { //双闪
-                            AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0);
+                            mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0),"turnReset",1000);
                         }
                     }
                     AvmRuntime.self().updateChangeTime();
@@ -637,13 +639,14 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     long delay = 800;
                     if (turnLampSwSts == 0) {
                         if ((rightTurnLChangeTime-leftTurnLChangeTime) < 500) { //双闪
-                            delay = 0;
+                            mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0),"turnReset",1000);
+                        }else {
+                            AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
                         }
-                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
                     }else {
                         //转向未回正也会双闪，处理转向未回正的双闪逻辑
                         if ((rightTurnLChangeTime-leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) { //双闪
-                            AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0);
+                            mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0),"turnReset",1000);
                         }
                     }
                     AvmRuntime.self().updateChangeTime();
