@@ -48,7 +48,6 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CL
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_RIGHT_TURN_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_VCU_GEAR_LVL_DISP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_RESP;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.MIRROR_FOLD_UNFOLD_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.POWER_PARKING_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE;
@@ -74,7 +73,6 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_380D_AVM_READ_FAIL_REASON_RESULT_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ;
-import static com.avm.framwork.constant.CameraContracts.ROW_1_LEFT;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -86,13 +84,13 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.android.bvavm.bvavmJNI;
-import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.data.DataConstant;
 import com.autochips.avm.data.DataManager;
@@ -100,8 +98,6 @@ import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.ui.activity.MainActivity;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
-import com.autochips.avm.ui.view.CameraView;
-import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.DataDefine;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
@@ -110,9 +106,13 @@ import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
 import com.gxa.lib.car.VehicleVendorProperty;
 import com.gxa.service.camera.AvmManager;
-import com.gxa.service.camera.AvmStateListener;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import gxa.car.power.data.CarPowerData;
 import gxa.car.power.data.CarPowerSignalStatus;
@@ -141,7 +141,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     private Handler mHandler;
     public static boolean isCalibration = false;
-    public boolean isActAndWindowMode = true; //act + window 模式
+    public boolean isActAndWindowMode = false; //act + window 模式
 
     private boolean isFirstEnter = true;
     private AvmManager mAvmManager;
@@ -151,15 +151,26 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             VehicleVendorProperty.VehiclePropertyType.INT32 |
             VehicleVendorProperty.VehicleArea.GLOBAL;
 
+    private static final String TAG = "checkFileTask";
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private boolean isFirstTimeOut = false;//第一个任务是否已超时
+    private boolean isSecondTimeOut = false;//第二个任务是否已超时
+
     public AvmService() { }
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
     public void onCreate() {
         super.onCreate();
+        //启动加载读写文件任务
+        startTask();
+    }
+
+    private void initAvm() {
         isExitAction = false;
         KLog.d("AVM服务 [onCreate]");
-
+        AvmApp.getInstance().createCameraView();
         Log.d("AVM", "Board : " + Build.BOARD);
         initDefault();
         AvmRuntime.self().init(this);
@@ -417,9 +428,58 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0,0x0);
             }));
         }, 0);
-
         mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 15 * 1000);
+    }
 
+    private void startTask() {
+        // 第一个子线程任务
+        Future<?> firstTaskFuture = executorService.submit(() -> {
+            try {
+                bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,0);
+                KLog.i(TAG+"第一个任务完成:");
+                if(!isFirstTimeOut) {
+                    mainHandler.post(this::initAvm);
+                }
+            } catch (Exception e) {
+                KLog.e(TAG+"第一个任务被中断"+e);
+            }
+        });
+
+        // 设置第一个任务的超时时间为500毫秒
+        try {
+            firstTaskFuture.get(200, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            KLog.i(TAG+"第一个任务超时，开始执行第二个任务");
+            isFirstTimeOut = true;
+            firstTaskFuture.cancel(true); // 取消第一个任务
+
+            // 第二个子线程任务
+            Future<?> secondTaskFuture = executorService.submit(() -> {
+                try {
+                    bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
+                    KLog.i(TAG+"第二个任务完成");
+                    if(!isSecondTimeOut) {
+                        mainHandler.post(this::initAvm);
+                    }
+                } catch (Exception ex) {
+                    KLog.e(TAG+"第二个任务被中断");
+                }
+            });
+
+            // 设置第二个任务的超时时间为500毫秒
+            try {
+                secondTaskFuture.get(200, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException ex) {
+                KLog.e(TAG+"第二个任务超时，转为主线程执行操作");
+                isSecondTimeOut = true;
+                secondTaskFuture.cancel(true); // 取消第二个任务
+                mainHandler.post(this::initAvm);
+            } catch (Exception ex) {
+                KLog.e(TAG+"第二个任务异常"+ ex);
+            }
+        } catch (Exception e) {
+            KLog.e(TAG+"第一个任务异常"+e);
+        }
     }
 
     @Nullable
@@ -471,7 +531,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         if (!isExitAction) {
             BvAvmJNIHelper.getInstance().avmDeInit();
         }
-
+        executorService.shutdown();
         AvmApp.getInstance().getCameraView().removeView();
         ThreadPoolUtil.getInstance().removeAllHandlerAndShutdownThreadPool();
         CanManager.getInstance().unRegisterSignalListener(mOnSignalValueChangedListener);

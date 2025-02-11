@@ -63,7 +63,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         //是否开启打印日志
         KLog.init(true);
         BvAvmJNIHelper.getInstance().bwSetProjectID(BvAvmJNIHelper.CAMERA_TYPE);
-        mCameraView = new CameraView(this);
+
         // 暂时废弃
 //        viewBottom = new CameraViewBottom(this);
 //        viewBottom.showInit();
@@ -147,6 +147,10 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
 
     public CameraView getCameraView() {
         return mCameraView;
+    }
+
+    public void createCameraView(){
+        mCameraView = new CameraView(this);
     }
 
     private void initCrash() {
