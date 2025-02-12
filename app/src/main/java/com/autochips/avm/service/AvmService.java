@@ -89,6 +89,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -117,6 +118,11 @@ import com.gxa.service.camera.AvmManager;
 import com.gxa.service.camera.AvmStateListener;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import gxa.car.power.data.CarPowerData;
 import gxa.car.power.data.CarPowerSignalStatus;
@@ -155,13 +161,22 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             VehicleVendorProperty.VehiclePropertyType.INT32 |
             VehicleVendorProperty.VehicleArea.GLOBAL;
 
+    private static final String TAG = "checkFileTask";
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private boolean isFirstTimeOut = false;//第一个任务是否已超时
+    private boolean isSecondTimeOut = false;//第二个任务是否已超时
+
     public AvmService() { }
 
-    @SuppressLint("InvalidWakeLockTag")
     @Override
     public void onCreate() {
         super.onCreate();
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void initAvm() {
         isExitAction = false;
+        AvmApp.getInstance().createCameraView();
         KLog.d("AVM服务 [onCreate]");
         Log.d("AVM", "Board : " + Build.BOARD);
         initDefault();
@@ -178,6 +193,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         filter.addAction(first_open_act);
         filter.addAction(init_cam);
         registerReceiver(broadcastReceiver, filter);
+        CanManager.getInstance().init(getApplicationContext());
+        CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
 
         CarPowerManager mCarPowerManager = CarPowerManager.getInstance(this, new CarPowerEventListener() {
             @Override
@@ -413,9 +430,70 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 }
             }
         };
-
+        //快速启动
+        AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
+        mHandler.postDelayed(() -> {
+            AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
+            CanManager.getInstance().startConnect((v -> {
+                KLog.d("注册完成----fishTh ");
+                CameraViewModelHelper.getInstance().initActive();
+                //发送avm初始化状态
+                CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0,0x0);
+            }));
+        }, 0);
         mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 15 * 1000);
+    }
 
+
+    private void startTask() {
+        // 第一个子线程任务
+        Future<?> firstTaskFuture = executorService.submit(() -> {
+            try {
+                bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,0);
+                KLog.i(TAG+"第一个任务完成:");
+                if(!isFirstTimeOut) {
+                    mHandler.post(this::initAvm);
+                }
+            } catch (Exception e) {
+                KLog.e(TAG+"第一个任务被中断"+e);
+            }
+        });
+
+        // 设置第一个任务的超时时间为500毫秒
+        try {
+            firstTaskFuture.get(200, TimeUnit.MILLISECONDS);
+        } catch (TimeoutException e) {
+            KLog.i(TAG+"第一个任务超时，开始执行第二个任务");
+            isFirstTimeOut = true;
+            firstTaskFuture.cancel(true); // 取消第一个任务
+
+            // 第二个子线程任务
+            Future<?> secondTaskFuture = executorService.submit(() -> {
+                try {
+                    bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
+                    KLog.i(TAG+"第二个任务完成");
+                    if(!isSecondTimeOut) {
+                        mHandler.post(this::initAvm);
+                    }
+                } catch (Exception ex) {
+                    KLog.e(TAG+"第二个任务被中断");
+                }
+            });
+
+            // 设置第二个任务的超时时间为500毫秒
+            try {
+                secondTaskFuture.get(200, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException ex) {
+                KLog.e(TAG+"第二个任务超时，转为主线程执行操作");
+                isSecondTimeOut = true;
+                secondTaskFuture.cancel(true); // 取消第二个任务
+                mHandler.post(this::initAvm);
+            } catch (Exception ex) {
+                KLog.e(TAG+"第二个任务异常"+ ex);
+            }
+        } catch (Exception e) {
+            KLog.e(TAG+"第一个任务异常"+e);
+        }
     }
 
     @Nullable
@@ -435,33 +513,15 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         KLog.d(flags + "[onStartCommand]" + startId + ", version is " + ServiceUtils.getVersionName());
         //adb指令模拟启动service带参数调试功能
-        if(AvmApp.getInstance().getCameraView() == null){
-            KLog.d("AvmApp", "avm is null ");
-            return START_STICKY;
-        }
-//        if(!BvAvmJNIHelper.isAvmInit){
-//            KLog.d("AvmApp", "avm is not init");
-//            return START_STICKY;
-//        }
         if (intent != null) {
             if(!TextUtils.isEmpty(intent.getStringExtra("initCam"))){
                 KLog.i("init can");
-                //快速启动
-                mHandler.postDelayed(() -> {
-                    CanManager.getInstance().init(getApplicationContext());
-                    CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
-                    AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
-                    CanManager.getInstance().startConnect((v -> {
-                        KLog.d("注册完成----fishTh ");
-                        CameraViewModelHelper.getInstance().initActive();
-                        //发送avm初始化状态
-                        CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0,0x0);
-                    }));
-                }, 100);
-                mHandler.postDelayed(()->{
-                    AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
-                },500);
+                startTask();
             }else {
+                if(AvmApp.getInstance().getCameraView() == null){
+                    KLog.d("AvmApp", "avm is null ");
+                    return START_STICKY;
+                }
                 int avm_onclick = intent.getIntExtra("avm_start", -1);
                 int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
                 KLog.d("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);

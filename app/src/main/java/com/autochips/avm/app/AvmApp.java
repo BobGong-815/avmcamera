@@ -64,22 +64,6 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         //是否开启打印日志
         KLog.init(true);
 
-//        if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
-//            ISAY5T = true;
-//            isRight = false;
-//        } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_G_ID) {
-//            ISAY5T = false;
-//            isRight = false;
-//        } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_GR_ID) {
-//            ISAY5G_R = true;
-//            isRight = true;
-//        }
-//        BvAvmJNIHelper.getInstance().bwSetProjectID(BvAvmJNIHelper.CAMERA_TYPE);
-//
-//        mCameraView = new CameraView(this);
-        // 暂时废弃
-//        viewBottom = new CameraViewBottom(this);
-//        viewBottom.showInit();
         KLog.d("[onCreate]");
         //连接信号服务
         SystemProperties.setGlobal("avm_state", 0);
@@ -137,10 +121,6 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
                 OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
                 //AY5T AY5G左陀  AY5右陀
-//                if (vehicalplatform == IS_AY5T) {
-//                    ISAY5T = true;
-//                    //BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
-//                }else
                 if (mCameraView == null) {
                     if (rudderCfg == 1) {
                         isRight = true;
@@ -149,7 +129,6 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                         isRight = false;
                         BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_G_ID);
                     }
-                    mHandler.post(() -> mCameraView = new CameraView(this));
                     Intent intentService =  new Intent(context, AvmService.class);
                     intentService.putExtra("initCam","init");
                     context.startService(intentService);
@@ -164,6 +143,9 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         return mCameraView;
     }
 
+    public void createCameraView(){
+        mCameraView = new CameraView(this);
+    }
     private void initCrash() {
         CaocConfig.Builder.create().backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT) //背景模式,开启沉浸式
                 .enabled(true) //是否启动全局异常捕获
