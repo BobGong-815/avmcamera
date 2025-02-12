@@ -435,7 +435,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         // 第一个子线程任务
         Future<?> firstTaskFuture = executorService.submit(() -> {
             try {
-                bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,0);
+                int i = bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE, 0);
                 KLog.i(TAG+"第一个任务完成:");
                 if(!isFirstTimeOut) {
                     mainHandler.post(this::initAvm);
