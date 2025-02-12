@@ -440,6 +440,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 if(!isFirstTimeOut) {
                     mainHandler.post(this::initAvm);
                 }
+                if(i == -1){
+                    KLog.i(TAG+"第一个任务读取不到文件，执行第二个文件查询");
+                    bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
+                }
             } catch (Exception e) {
                 KLog.e(TAG+"第一个任务被中断"+e);
             }
@@ -447,7 +451,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
         // 设置第一个任务的超时时间为500毫秒
         try {
-            firstTaskFuture.get(200, TimeUnit.MILLISECONDS);
+            firstTaskFuture.get(300, TimeUnit.MILLISECONDS);
         } catch (TimeoutException e) {
             KLog.i(TAG+"第一个任务超时，开始执行第二个任务");
             isFirstTimeOut = true;
