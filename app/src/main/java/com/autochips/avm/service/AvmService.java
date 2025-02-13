@@ -165,6 +165,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private final ExecutorService executorService = Executors.newCachedThreadPool();
     private boolean isFirstTimeOut = false;//第一个任务是否已超时
     private boolean isSecondTimeOut = false;//第二个任务是否已超时
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public AvmService() { }
 
@@ -449,10 +450,14 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         // 第一个子线程任务
         Future<?> firstTaskFuture = executorService.submit(() -> {
             try {
-                bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,0);
-                KLog.i(TAG+"第一个任务完成:");
-                if(!isFirstTimeOut) {
-                    mHandler.post(this::initAvm);
+                int i = bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE, 0);
+                KLog.i(TAG+"第一个任务完成:"+i);
+                if(i == -1){
+                    KLog.i(TAG+"第一个任务读取不到文件，执行第二个文件查询");
+                    bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
+                }
+                if(!isFirstTimeOut && AvmApp.getInstance().getCameraView() == null) {
+                    mainHandler.post(this::initAvm);
                 }
             } catch (Exception e) {
                 KLog.e(TAG+"第一个任务被中断"+e);
@@ -472,8 +477,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 try {
                     bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
                     KLog.i(TAG+"第二个任务完成");
-                    if(!isSecondTimeOut) {
-                        mHandler.post(this::initAvm);
+                    if(!isSecondTimeOut && AvmApp.getInstance().getCameraView() == null) {
+                        mainHandler.post(this::initAvm);
                     }
                 } catch (Exception ex) {
                     KLog.e(TAG+"第二个任务被中断");
@@ -487,7 +492,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.e(TAG+"第二个任务超时，转为主线程执行操作");
                 isSecondTimeOut = true;
                 secondTaskFuture.cancel(true); // 取消第二个任务
-                mHandler.post(this::initAvm);
+                if(AvmApp.getInstance().getCameraView() == null) {
+                    mainHandler.post(this::initAvm);
+                }
             } catch (Exception ex) {
                 KLog.e(TAG+"第二个任务异常"+ ex);
             }

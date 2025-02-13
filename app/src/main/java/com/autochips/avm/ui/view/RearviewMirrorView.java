@@ -142,31 +142,6 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             boolean isCheck = v.isPressed();
-            if(v.getId() != R.id.ll_setting_rearview_mirror_down) {
-                UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
-                int uiMode = uiModeManager.getNightMode();
-                if (uiMode == UiModeManager.MODE_NIGHT_YES) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        textView.setTextColor(context.getResources().getColor(R.color.white));
-                    } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                        if (!isCheck) {
-                            textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
-                        }
-                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                        textView.setTextColor(context.getResources().getColor(R.color.setting_view_content_color));
-                    }
-                } else {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        textView.setTextColor(context.getResources().getColor(R.color.white));
-                    } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                        if (!isCheck) {
-                            textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
-                        }
-                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                        textView.setTextColor(getResources().getColor(R.color.setting_view_content_color_day));
-                    }
-                }
-            }
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
                 if (v.getId() == R.id.ll_setting_expand) {//展开
                     rearviewMirrorBinding.viewSettingExpand.setVisibility(VISIBLE);
