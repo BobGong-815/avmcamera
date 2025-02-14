@@ -424,6 +424,9 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                         null, null, null);
                 rearviewMirrorBinding.tvSettingExpand.setCompoundDrawablesRelativeWithIntrinsicBounds(getResources().getDrawable(R.drawable.button_select_mirror, null)
                         , null, null, null);
+                rearviewMirrorBinding.viewSettingFold.setBackgroundResource(R.drawable.shape_bg_nor_view_12);
+                rearviewMirrorBinding.viewSettingExpand.setBackgroundResource(R.drawable.shape_bg_nor_view_12);
+                rearviewMirrorBinding.viewSettingRearview.setBackgroundResource(R.drawable.shape_bg_nor_view_12);
                 break;
             case UiModeManager.MODE_NIGHT_NO:
                 KLog.e("白天模式");
@@ -444,6 +447,9 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                         null, null, null);
                 rearviewMirrorBinding.tvSettingExpand.setCompoundDrawablesRelativeWithIntrinsicBounds(getResources().getDrawable(R.drawable.button_select_iv_mirror_day, null)
                         , null, null, null);
+                rearviewMirrorBinding.viewSettingFold.setBackgroundResource(R.drawable.shape_bg_nor_view_12_day);
+                rearviewMirrorBinding.viewSettingExpand.setBackgroundResource(R.drawable.shape_bg_nor_view_12_day);
+                rearviewMirrorBinding.viewSettingRearview.setBackgroundResource(R.drawable.shape_bg_nor_view_12_day);
                 break;
         }
     }
