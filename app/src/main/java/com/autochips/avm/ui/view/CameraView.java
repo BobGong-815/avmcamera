@@ -1372,7 +1372,7 @@ public class CameraView extends View implements LifecycleOwner {
         isShowing = true;
         hidViewButtonTimer.start(viewPosition);
         smartGroupId.setVisibility(VISIBLE);
-
+        //Debug.startMethodTracing("my_trace");
         tabView();
         skinView();
         //初始化进来也要显示上一次设置的透明度的车模
@@ -1545,6 +1545,7 @@ public class CameraView extends View implements LifecycleOwner {
         if (!isShowing) {
             return;
         }
+        //Debug.stopMethodTracing();
 //        bottomDialog.dismiss();
         DataManager.writeFault(DataConstant.Code.BP_HIDE);
         isFullWin = false;

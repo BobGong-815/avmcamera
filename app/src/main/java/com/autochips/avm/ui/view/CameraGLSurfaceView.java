@@ -34,14 +34,12 @@ import me.goldze.mvvmhabit.utils.KLog;
  */
 public class CameraGLSurfaceView extends GLSurfaceView {
 
-    public static int doCalibrateNum = 0;
     public static volatile int lastCeameraDirection = bvavmJNI.BW_VIEW_POWER_OFF;
     private static volatile int sCameraDirection = bvavmJNI.BW_VIEW_POWER_OFF;
 
-    Renderer renderer;
-    {
-        renderer = new Renderer();
-    }
+    private Renderer renderer;
+    private static final int MSG_RENDER = 1;
+    private static final long FRAME_INTERVAL_MS = 30;
 
     private static final int SHOW_BOTTOM = 2;
     private Handler handler = new Handler(Looper.getMainLooper()) {
@@ -53,10 +51,36 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                 case SHOW_BOTTOM:
                     BvAvmJNIHelper.getInstance().onClick();
                     break;
-
+                case MSG_RENDER:
+                    // 触发onDrawFrame
+                    requestRender();
+                    break;
             }
         }
     };
+
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        startFrameCallback();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopFrameCallback();
+    }
+
+    private void startFrameCallback() {
+        //启动渲染循环
+        handler.sendEmptyMessage(MSG_RENDER);
+    }
+
+    private void stopFrameCallback() {
+        //停止渲染循环
+        handler.removeMessages(MSG_RENDER);
+    }
 
     public CameraGLSurfaceView(Context context) {
         super(context);
@@ -78,7 +102,8 @@ public class CameraGLSurfaceView extends GLSurfaceView {
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         setEGLContextClientVersion(3);
         setEGLConfigChooser(new MyConfigChooser());
-        setRenderer(renderer);
+        setRenderer(renderer = new Renderer());
+        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY); // 手动控制渲染
     }
 
     public void stopSurface() {
@@ -87,7 +112,6 @@ public class CameraGLSurfaceView extends GLSurfaceView {
 
     public static int glStatus = 0;
 
-    private int cnt = 0;
     private class Renderer implements GLSurfaceView.Renderer {
 
         public void onDrawFrame(GL10 gl) {
@@ -102,61 +126,14 @@ public class CameraGLSurfaceView extends GLSurfaceView {
             if (glStatus == 0) {
                 handler.sendEmptyMessageDelayed(SHOW_BOTTOM, 0);
             }
-
-            /*
-            cnt++;
-            if (cnt == 50) {
-                KLog.d("bwSetLampStatus2() null.");
-                bvavmJNI.bwSetLampStatus2(null);
-            } else if (cnt == 100) {
-                KLog.d("bwSetLampStatus2() int[].");
-                bvavmJNI.bwSetLampStatus2(new int[] {});
-            } else if (cnt == 150) {
-                KLog.d("bwSetCarDoorStatus() null.");
-                bvavmJNI.bwSetCarDoorStatus(null);
-            } else if (cnt == 200) {
-                KLog.d("bwSetCarDoorStatus() int[].");
-                bvavmJNI.bwSetCarDoorStatus(new int[] {});
-            } else if (cnt == 250) {
-                KLog.d("bwGetRVCStatus() null.");
-                bvavmJNI.bwGetRVCStatus(null);
-            } else if (cnt == 300) {
-                KLog.d("bwGetRVCStatus() int[].");
-                bvavmJNI.bwGetRVCStatus(null);
-            }
-
-             */
-
-            try {
-
-                if (doCalibrateNum > 0) {
-                    KLog.d("doCalibrateNum = " + doCalibrateNum);
-                    if (doCalibrateNum == 1) {
-                        int renderResult1 = BvAvmJNIHelper.getInstance().avmRender2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
-                        AvmApp.getInstance().getCameraView().getViewModel().callCalibrate(1);
-                        if(renderResult1 == -1){
-                            DataManager.writeFault(DataConstant.Code.SF_FAIL);
-                            DataManager.writeFault(DataConstant.Code.TX_FAIL);
-                        }
-                    }
-
-                    doCalibrateNum--;
-                } else {
-                    if (CameraView.isIsShowing() && sCameraDirection != bvavmJNI.BW_VIEW_POWER_OFF) {
-                        int renderResult2 = BvAvmJNIHelper.getInstance().avmRender2(sCameraDirection);
-                        if(renderResult2 == -1){
-                            DataManager.writeFault(DataConstant.Code.SF_FAIL);
-                            DataManager.writeFault(DataConstant.Code.TX_FAIL);
-                        }
-                    }
+            if (CameraView.isIsShowing() && sCameraDirection != bvavmJNI.BW_VIEW_POWER_OFF) {
+                int renderResult2 = BvAvmJNIHelper.getInstance().avmRender2(sCameraDirection);
+                if (renderResult2 == -1) {
+                    DataManager.writeFault(DataConstant.Code.SF_FAIL);
+                    DataManager.writeFault(DataConstant.Code.TX_FAIL);
                 }
-
-
-                Thread.sleep(30);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
-
+            handler.sendEmptyMessageDelayed(MSG_RENDER, AvmApp.getInstance().getCameraView().isSmartWin ? 66 : FRAME_INTERVAL_MS); // 继续下一帧
             glStatus = 1;
         }
 
@@ -170,24 +147,7 @@ public class CameraGLSurfaceView extends GLSurfaceView {
             BvAvmJNIHelper.getInstance().avmInit(getContext());
             KLog.d("ActivityLifecycleCallbacks onSurfaceCreated 创建画布结束");
             int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
-//            bvavmJNI.bwSetTrajLineStatus((byte) settingPathLine);
             if (AvmApp.getInstance().getCameraView() != null) AvmApp.getInstance().getCameraView().getViewModel().setTrajLineEnable((byte) settingPathLine);
-//            setIndexTab();
-//            bvavmJNI.bwNotifyRVC(0);
-            KLog.d(" valGear 结束RVC-1 resRvc  handler：了");
-//          handler.postDelayed(()->  bvavmJNI.bwNotifyRVC(0),2000);
-            // CameraViewModelHelper.getInstance().setTransparentIndexTab();
-//            if (!AvmService.JNI_IN_THREAD_FLAG) {
-//                if (BvAvmJNIHelper.getInstance().isCamera2Device()) {
-//                    BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
-//                    isOpenCamera = true;
-//                }
-//            }
-//            if (BvAvmJNIHelper.getInstance().isCamera2Device()) {
-//                BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
-//                isOpenCamera = true;
-//            }
-
         }
     }
 
