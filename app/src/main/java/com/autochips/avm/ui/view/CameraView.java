@@ -1141,7 +1141,7 @@ public class CameraView extends View implements LifecycleOwner {
 
 
         mWindowLps.y = 86;
-        mWindowLps.x = 50;
+        mWindowLps.x = AvmService.mIsStartStatus ? 810 : 50;
         isSmartWin = true;
         mWindowLps.width = 455;
         mWindowLps.height = 623;
@@ -1579,6 +1579,15 @@ public class CameraView extends View implements LifecycleOwner {
     @Override
     public Lifecycle getLifecycle() {
         return registry;
+    }
+
+    //移动小窗口
+    public void moveView() {
+        KLog.v("moveView now position:"+ mWindowLps.x);
+        if(mWindowLps.x < 810 ){
+            mWindowLps.x = 810;
+        }
+        mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(),mWindowLps);
     }
 
     /**

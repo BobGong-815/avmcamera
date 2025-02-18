@@ -105,6 +105,10 @@ import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
 import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
+import com.google.gson.Gson;
+import com.iflytek.autofly.mapsdk.BlJsonProtocolManager;
+import com.iflytek.autofly.mapsdk.IJsonProtocolReceive;
+import com.iflytek.autofly.mapsdk.bean.infotransmit.AutoStatusRequBean;
 
 import java.util.Arrays;
 
@@ -123,6 +127,7 @@ public class AvmService extends Service {
     public Monitor sMonitor;
     public boolean IS_AY5 = false;
     private CarPowerManager mCarPowerManager;
+    public static boolean mIsStartStatus = false;//记录是否开始导航
     @SuppressLint("InvalidWakeLockTag")
     @Override
     public void onCreate() {
@@ -212,8 +217,38 @@ public class AvmService extends Service {
             KLog.d("注册完成--55 --service_123 "+fishTh);
             fishTh = 1;
         },11*1000);
+        Gson gson = new Gson();
+        BlJsonProtocolManager.getInstance().init(this, new IJsonProtocolReceive() {
+            @Override
+            public void received(String result, int aidlBindState) {
+                KLog.d("BlJsonProtocolManager  result:"+result);
+                AutoStatusRequBean autoStatusRequBean = gson.fromJson(result, AutoStatusRequBean.class);
+                if(autoStatusRequBean != null){
+                    int autoStatus = autoStatusRequBean.getAutoStatus();
+                    KLog.v("BlJsonProtocolManager  autoStatusRequBean:"+autoStatus);
+                    if(autoStatus == 16) {
+                        mIsStartStatus = true;
+                    }else if(autoStatus == 17){
+                        mIsStartStatus = false;
+                    }
+                    if(mIsStartStatus){
+                        //开始导航
+                        if(AvmApp.getInstance().getCameraView() != null && AvmApp.getInstance().getCameraView().isSmartWin){
+                            //小卡片显示中，需要小卡片移动
+                            mHandler.post(()->AvmApp.getInstance().getCameraView().moveView());
+                        }
+                    }
+                }
+            }
 
+            @Override
+            public void notifyState() {
+
+            }
+        });
     }
+
+
 
     public   static  boolean isCalibration = false;
 
