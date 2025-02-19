@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import gxa.car.power.data.CarPowerWorkModeStatus;
 import me.goldze.mvvmhabit.utils.KLog;
 
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SELECT_STATE;
@@ -1824,16 +1825,17 @@ public class AvmRuntime {
                         && (dataSts.sensors[0] == DataDefine.SENSOR_RADAR || (dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP && dataSts.lastSensorSrc == 2))) {
                     if (!dataSts.events.contains(DataDefine.EVT_SHIFT_P)) setRadarPauseFlag(true);
                 }
-                if (cfgItem.actions[0] == DataDefine.ACT_PASSIVE_DUAL_CARD) {
+                boolean isNotDisplayOff = AvmService.mCarPowerWorkModeStatus != CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal();
+                if (cfgItem.actions[0] == DataDefine.ACT_PASSIVE_DUAL_CARD && isNotDisplayOff) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_PASSIVE_DUAL_CARD;
                     dataSts.fvSts[1] = DataDefine.INVALID;
-                } else if (cfgItem.actions[0] == DataDefine.ACT_ACTIVE_DUAL_CARD) {
+                } else if (cfgItem.actions[0] == DataDefine.ACT_ACTIVE_DUAL_CARD && isNotDisplayOff) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_ACTIVE_DUAL_CARD;
                     dataSts.fvSts[1] = DataDefine.INVALID;
                 } else if (cfgItem.actions[0] == DataDefine.ACT_EXIT) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_NON;
                     dataSts.fvSts[1] = DataDefine.INVALID;
-                } else if (cfgItem.actions[0] == DataDefine.ACT_LEFT_CARD) {
+                } else if (cfgItem.actions[0] == DataDefine.ACT_LEFT_CARD && isNotDisplayOff) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_LEFT_CARD;
                     dataSts.fvSts[1] = DataDefine.INVALID;
                 }
