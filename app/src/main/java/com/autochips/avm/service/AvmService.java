@@ -156,6 +156,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private boolean isFirstTimeOut = false;//第一个任务是否已超时
     private boolean isSecondTimeOut = false;//第二个任务是否已超时
+    public static int mCarPowerWorkModeStatus = CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal();//默认是全功能
 
     public AvmService() { }
 
@@ -167,6 +168,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         startTask();
     }
 
+    @SuppressLint("HandlerLeak")
     private void initAvm() {
         isExitAction = false;
         KLog.d("AVM服务 [onCreate]");
@@ -192,17 +194,22 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         CarPowerManager mCarPowerManager = CarPowerManager.getInstance(this, new CarPowerEventListener() {
             @Override
             public void onCarPowerWorkModeChangeEvent(CarPowerWorkModeStatus carPowerWorkModeStatus) {
-                if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_DEEP_SLEEP.getVal()) {
+
+                mCarPowerWorkModeStatus = carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal();
+                KLog.v("[mCarPowerManager]  mCarPowerWorkModeStatus:"+mCarPowerWorkModeStatus);
+                if (mCarPowerWorkModeStatus == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_DEEP_SLEEP.getVal()) {
                     //进⼊STR
                     KLog.v("[mCarPowerManager]  进⼊STR");
                     mHandler.removeMessages(MSG_CR_CAMERA);
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
-                } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
+                } else if (mCarPowerWorkModeStatus == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.v("[mCarPowerManager]  半功能  释放资源,释放摄像头");
                     DataManager.writeFault(DataConstant.Code.GET_IN_STR);
                     mHandler.removeMessages(MSG_CR_CAMERA);
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
-                } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
+                    //半功能需要退出全景
+                    AvmRuntime.self().artificialExit();
+                } else if (mCarPowerWorkModeStatus == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     KLog.v("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
                     DataManager.writeFault(DataConstant.Code.GET_OUT_STR);
@@ -301,6 +308,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             }
                             break;
                         case DataDefine.ACT_LEFT_CARD:
+                            if(mCarPowerWorkModeStatus == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()){
+                                KLog.v("ACT_LEFT_CARD 半功能不启动全景");
+                                return;
+                            }
                             KLog.i("avmService____ ACT_LEFT_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
@@ -322,6 +333,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                            }
                             break;
                         case DataDefine.ACT_PASSIVE_DUAL_CARD:
+                            if(mCarPowerWorkModeStatus == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()){
+                                KLog.v("ACT_PASSIVE_DUAL_CARD 半功能不启动全景");
+                                return;
+                            }
                             KLog.i("avmService____ ACT_PASSIVE_DUAL_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
@@ -349,6 +364,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             }
                             break;
                         case DataDefine.ACT_ACTIVE_DUAL_CARD:
+                            if(mCarPowerWorkModeStatus == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()){
+                                KLog.v("ACT_ACTIVE_DUAL_CARD 半功能不启动全景");
+                                return;
+                            }
                             KLog.i("avmService____ ACT_ACTVE_DUAL_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);
                             AvmRuntime.self().setRadarPauseFlag(false);
                             AvmApp.getInstance().getCameraView().showFullWin();
@@ -514,6 +533,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);
             if (avm_onclick != -1) {//-1表示是通过AS启动的
                 if (avm_state == 0) {
+                    if(mCarPowerWorkModeStatus == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()){
+                        KLog.v("[onStartCommand] 半功能不启动全景");
+                        return START_STICKY;
+                    }
                     AvmRuntime.self().artificialEnter();
                     if (isFirstEnter) { //avm首次被占用摄像头被释放，onCreate bwDele;后 点击进行创建
                         mHandler.sendEmptyMessage(MSG_CR_CAMERA);
