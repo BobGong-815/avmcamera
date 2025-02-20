@@ -479,7 +479,14 @@ public class CameraView extends View implements LifecycleOwner {
         viewRedChick();
         tabView();
         tabViewInit();
-
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            if(AvmService.mCanSendAvmState) {
+                AvmService.mCanSendAvmState = false;
+                KLog.d(" addOnGlobalLayoutListener mWindowLps.height： " + mWindowLps.height);
+                SystemProperties.setGlobal("avm_state", 1);
+                AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
+            }
+        });
     }
 
     //初始化控件id
@@ -1360,7 +1367,6 @@ public class CameraView extends View implements LifecycleOwner {
         showComm();
     }
 
-    private boolean isSmartWinToFull = false;
 
     public void showComm() {
         Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
