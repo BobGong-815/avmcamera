@@ -1815,6 +1815,8 @@ public class CameraView extends View implements LifecycleOwner {
         // 停止Trace
         //Debug.stopMethodTracing();
 //        bottomDialog.dismiss();
+        setVisibility(GONE);
+        rootView.setVisibility(View.GONE);
         DataManager.writeFault(DataConstant.Code.BP_HIDE);
         isFullWin = false;
         isSmartWin = false;
@@ -1828,7 +1830,6 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.height = 1;
         if(rootView.getParent() != null){
             mWindowManager.updateViewLayout(rootView, mWindowLps);
-            rootView.setVisibility(View.GONE);
         }
 
         //释放摄像头画面数据
@@ -2072,6 +2073,10 @@ public class CameraView extends View implements LifecycleOwner {
     };
 
     private HidViewButtonTimer hidViewButtonTimer = new HidViewButtonTimer(5000);
+
+    public void hideView() {
+        rootView.setVisibility(GONE);
+    }
 
     /**
      * 设置列表关闭倒计时

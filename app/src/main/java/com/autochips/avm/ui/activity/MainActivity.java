@@ -27,6 +27,7 @@ import me.goldze.mvvmhabit.utils.KLog;
 
 public class MainActivity extends AppCompatActivity implements AvmRuntime.ActionListener {
 
+    private static final String TAG = "MainActivityAVM";
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -62,34 +63,37 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d("AvmRuntime", "MainActivity::onRestart()");
+        Log.d(TAG, "MainActivity::onRestart()");
     }
 
     protected void onResume() {
         super.onResume();
-        Log.d("AvmRuntime", "MainActivity::onResume()");
+        Log.d(TAG, "MainActivity::onResume()");
         AvmRuntime.self().registerActionListener(MainActivity.this);
         getWindow().getDecorView().postDelayed(runnable, 0);
     }
 
+    @Override
+    protected void onPause() {
+         super.onPause();
+        Log.d(TAG, "MainActivity::onPause()");
+    }
+
     protected void onStop() {
         super.onStop();
-        Log.d("AvmRuntime", "MainActivity::onStop()");
+        Log.d(TAG, "MainActivity::onStop()");
         if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
             AvmRuntime.self().artificialExit();
         }
-
         finish();
     }
 
     @SuppressLint("SuspiciousIndentation")
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("AvmRuntime", "onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
-        if (AvmApp.getInstance().getCameraView() != null)
-            AvmApp.getInstance().getCameraView().setVisibility(View.GONE);
+        Log.d(TAG, "new onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
         if (AvmApp.getInstance().getCameraView().getRootView() != null) {
-            Log.d("AvmRuntime", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
+            Log.d(TAG, "123 CameraView.windowSurfaceControl is 123" + CameraView.windowSurfaceControl);
             if (CameraView.windowSurfaceControl != null) {
                 setSCLayer(CameraView.windowSurfaceControl, 0,true);
             }
@@ -117,12 +121,12 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     }
 
     private boolean updateLayer() {
-        Log.d("AvmRuntime", "isRearGearSts : " + AvmRuntime.self().isRearGearSts() + " , getFullSceneSts is " + AvmRuntime.self().getFullSceneSts());
+        Log.d(TAG, "isRearGearSts : " + AvmRuntime.self().isRearGearSts() + " , getFullSceneSts is " + AvmRuntime.self().getFullSceneSts());
         if (AvmRuntime.self().isRearGearSts() || AvmRuntime.self().getFullSceneSts() == DataDefine.FV_STATE_LEFT_CARD) {
-            Log.d("AvmRuntime", "start read Surface control.");
+            Log.d(TAG, "start read Surface control.");
             if (CameraView.windowSurfaceControl == null)
                 CameraView.windowSurfaceControl = getSurfaceControl(AvmApp.getInstance().getCameraView().getRootView());
-            Log.d("AvmRuntime", "widnowSurfaceControl is " + CameraView.windowSurfaceControl);
+            Log.d(TAG, "widnowSurfaceControl is " + CameraView.windowSurfaceControl);
             if (CameraView.windowSurfaceControl != null) {
                 setSCLayer(CameraView.windowSurfaceControl, 0,false); //取消绑定
                 return true;
@@ -130,12 +134,12 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
                 return false;
             }
         } else {
-            Log.d("AvmRuntime", "start read Surface control.");
+            Log.d(TAG, "start read Surface control.");
             if (CameraView.windowSurfaceControl == null)
                 CameraView.windowSurfaceControl = getSurfaceControl(AvmApp.getInstance().getCameraView().getRootView());
-            Log.d("AvmRuntime", "widnowSurfaceControl is " + CameraView.windowSurfaceControl);
+            Log.d(TAG, "widnowSurfaceControl is " + CameraView.windowSurfaceControl);
             SurfaceControl mySurfaceControl = getSurfaceControl();
-            Log.d("AvmRuntime", "mySurfaceControl is " + mySurfaceControl);
+            Log.d(TAG, "mySurfaceControl is " + mySurfaceControl);
 
             if (CameraView.windowSurfaceControl != null && mySurfaceControl != null) {
                 mHandler.postDelayed(()-> {
@@ -148,53 +152,95 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         }
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     private SurfaceControl getSurfaceControl(View overlayView) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            // 在 Android P 之前的版本可能不支持这种方式，直接返回 null
+            Log.w(TAG, "This method may not be supported on Android versions below P.");
+            return null;
+        }
         Class<?> viewClassOvelay = null;
         try {
-            //拿到window
+            // 拿到 window
             viewClassOvelay = Class.forName("android.view.View");
-            Log.d("AvmRuntime", "viewClassOvelay is " + viewClassOvelay);
-            // 反射获取ViewRootImpl对象
+            Log.d(TAG, "viewClassOvelay is " + viewClassOvelay);
+            // 反射获取 ViewRootImpl 对象
             @SuppressLint("DiscouragedPrivateApi") Method getViewRootImplMethod =
                     viewClassOvelay.getDeclaredMethod("getViewRootImpl");
             getViewRootImplMethod.setAccessible(true);
             Object viewRootImpl = getViewRootImplMethod.invoke(overlayView);
-            Log.d("AvmRuntime", "viewRootImpl is " + viewRootImpl);
+            Log.d(TAG, "viewRootImpl is " + viewRootImpl);
             if (viewRootImpl == null) return null;
-            // 反射获取反射获取ViewRootImpl对象的SurfaceControl对象
-            Class<?> viewRootImplclass = Class.forName("android.view.ViewRootImpl");
-            Log.d("AvmRuntime", "viewRootImplclass is " + viewRootImplclass);
+            // 反射获取反射获取 ViewRootImpl 对象的 SurfaceControl 对象
+            @SuppressLint("PrivateApi") Class<?> viewRootImplclass = Class.forName("android.view.ViewRootImpl");
+            Log.d(TAG, "viewRootImplclass is " + viewRootImplclass);
             @SuppressLint("BlockedPrivateApi") Method getSurfaceControlMethod =
                     viewRootImplclass.getDeclaredMethod("getSurfaceControl");
             getSurfaceControlMethod.setAccessible(true);
-            SurfaceControl overlaySurfaceControl = (SurfaceControl) getSurfaceControlMethod.invoke(viewRootImpl);
-            return overlaySurfaceControl;
+            return (SurfaceControl) getSurfaceControlMethod.invoke(viewRootImpl);
         } catch (NoSuchMethodException e) {
+            Log.e(TAG, "NoSuchMethodException: " + e.getMessage());
             e.printStackTrace();
         } catch (IllegalAccessException e) {
+            Log.e(TAG, "IllegalAccessException: " + e.getMessage());
             e.printStackTrace();
         } catch (InvocationTargetException e) {
+            Log.e(TAG, "InvocationTargetException: " + e.getMessage());
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            Log.e(TAG, "ClassNotFoundException: " + e.getMessage());
             e.printStackTrace();
         }
-
         return null;
     }
+
+//    private SurfaceControl getSurfaceControl(View overlayView) {
+//        Class<?> viewClassOvelay = null;
+//        try {
+//            //拿到window
+//            viewClassOvelay = Class.forName("android.view.View");
+//            Log.d(TAG, "viewClassOvelay is " + viewClassOvelay);
+//            // 反射获取ViewRootImpl对象
+//            @SuppressLint("DiscouragedPrivateApi") Method getViewRootImplMethod =
+//                    viewClassOvelay.getDeclaredMethod("getViewRootImpl");
+//            getViewRootImplMethod.setAccessible(true);
+//            Object viewRootImpl = getViewRootImplMethod.invoke(overlayView);
+//            Log.d(TAG, "viewRootImpl is " + viewRootImpl);
+//            if (viewRootImpl == null) return null;
+//            // 反射获取反射获取ViewRootImpl对象的SurfaceControl对象
+//            Class<?> viewRootImplclass = Class.forName("android.view.ViewRootImpl");
+//            Log.d(TAG, "viewRootImplclass is " + viewRootImplclass);
+//            @SuppressLint("BlockedPrivateApi") Method getSurfaceControlMethod =
+//                    viewRootImplclass.getDeclaredMethod("getSurfaceControl");
+//            getSurfaceControlMethod.setAccessible(true);
+//            SurfaceControl overlaySurfaceControl = (SurfaceControl) getSurfaceControlMethod.invoke(viewRootImpl);
+//            return overlaySurfaceControl;
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return null;
+//    }
 
     private SurfaceControl getSurfaceControl() {
         SurfaceControl currenActivitySurfaceControl = null;
         try {
             Window window = getWindow();
-            Log.d("AvmRuntime", "window is " + window);
+            Log.d(TAG, "window is " + window);
             View decorView = window.getDecorView();
-            Log.d("AvmRuntime", "decorView is " + decorView);
+            Log.d(TAG, "decorView is " + decorView);
             Class<?> viewClass = Class.forName("android.view.View");
             // 反射获取ViewRootImpl对象
             Method getViewRootImplMethod = viewClass.getDeclaredMethod("getViewRootImpl");
             getViewRootImplMethod.setAccessible(true);
             Object viewRootImpl = getViewRootImplMethod.invoke(decorView);
-            Log.d("AvmRuntime", "viewRootImpl is " + viewRootImpl);
+            Log.d(TAG, "viewRootImpl is " + viewRootImpl);
             if (viewRootImpl == null) return null;
 
             Class<?> viewRootImplclass = Class.forName("android.view.ViewRootImpl");
@@ -275,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
                 //构建SurfaceControl$Transactio对象
                 Class<?> transactionClass = Class.forName("android.view.SurfaceControl$Transaction");
                 Object transactionObject = transactionClass.newInstance();
-
+                Log.d(TAG, "onDestroy() setSCLayer:"+isDelay);
                 SurfaceControl.Transaction transaction = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     // 调用setRelativeLayer方法
