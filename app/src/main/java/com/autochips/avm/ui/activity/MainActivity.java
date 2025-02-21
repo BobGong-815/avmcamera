@@ -88,12 +88,11 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         finish();
     }
 
-    @SuppressLint("SuspiciousIndentation")
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "new onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
         if (AvmApp.getInstance().getCameraView().getRootView() != null) {
-            Log.d(TAG, "123 CameraView.windowSurfaceControl is 123" + CameraView.windowSurfaceControl);
+            Log.d(TAG, "123 CameraView.windowSurfaceControl is 123" + CameraView.windowSurfaceControl.toString());
             if (CameraView.windowSurfaceControl != null) {
                 setSCLayer(CameraView.windowSurfaceControl, 0,true);
             }
@@ -142,9 +141,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
             Log.d(TAG, "mySurfaceControl is " + mySurfaceControl);
 
             if (CameraView.windowSurfaceControl != null && mySurfaceControl != null) {
-                mHandler.postDelayed(()-> {
-                    setRelativeLayer(CameraView.windowSurfaceControl, mySurfaceControl);//设置层级与act同级
-                },300);
+                setRelativeLayer(CameraView.windowSurfaceControl, mySurfaceControl);//设置层级与act同级
                 return true;
             } else {
                 return false;
@@ -251,14 +248,9 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 currenActivitySurfaceControl = (SurfaceControl) getSurfaceControlMethod.invoke(viewRootImpl);
             }
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.d(TAG, "getSurfaceControl Exception: " + e);
         }
 
         return currenActivitySurfaceControl;
@@ -289,22 +281,14 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
                 transaction.apply();
             }
 
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
+            Log.d(TAG, "setRelativeLayer Exception: " + e);
         }
 
     }
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
-    @SuppressLint("SoonBlockedPrivateApi")
     private void setSCLayer(SurfaceControl windowSC, int z,boolean isDelay) {
         mHandler.postDelayed(()->{
             try {
@@ -330,16 +314,9 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
                     transaction.apply();
                 }
 
-            } catch (ClassNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
+                Log.d(TAG, "setSCLayer Exception: " + e);
             }
         },isDelay ? 300 : 0);
     }
