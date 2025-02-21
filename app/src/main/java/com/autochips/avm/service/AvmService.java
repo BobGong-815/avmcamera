@@ -158,6 +158,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private boolean isSecondTimeOut = false;//第二个任务是否已超时
     public static int mCarPowerWorkModeStatus = CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal();//默认是全功能
     public static boolean mCanSendAvmState = false;
+    public static boolean mCanSendAvmStateIsActivity = false;
     public AvmService() { }
 
     @SuppressLint("InvalidWakeLockTag")
@@ -321,8 +322,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 DataManager.writeFault(DataConstant.Code.ACTIVI_LIGHT);
                             }
                             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
-                            AvmApp.getInstance().getCameraView().showSmartWin();
                             mCanSendAvmState = true;
+                            mCanSendAvmStateIsActivity = false;
+                            AvmApp.getInstance().getCameraView().showSmartWin();
 //                            if (isActAndWindowMode) {
 //                                if (!AvmRuntime.self().isRearGearSts()) {
 //                                    intent = new Intent(AvmService.this, MainActivity.class);
@@ -345,8 +347,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 DataManager.writeFault(DataConstant.Code.ACTIVI_RGEAR);
                             }
                             AvmRuntime.self().setRadarPauseFlag(false);
-                            AvmApp.getInstance().getCameraView().showFullWin();
                             mCanSendAvmState = true;
+                            mCanSendAvmStateIsActivity = isActAndWindowMode && !AvmRuntime.self().isRearGearSts();
+                            AvmApp.getInstance().getCameraView().showFullWin();
                             if (isActAndWindowMode) {
                                 if (!AvmRuntime.self().isRearGearSts()) {
                                     intent = new Intent(AvmService.this, MainActivity.class);
@@ -368,8 +371,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             }
                             KLog.i("avmService____ ACT_ACTVE_DUAL_CARD........+ isAvmDeInit " + BvAvmJNIHelper.isAvmDeInit);
                             AvmRuntime.self().setRadarPauseFlag(false);
-                            AvmApp.getInstance().getCameraView().showFullWin();
                             mCanSendAvmState = true;
+                            mCanSendAvmStateIsActivity = isActAndWindowMode && !AvmRuntime.self().isRearGearSts();
+                            AvmApp.getInstance().getCameraView().showFullWin();
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
                                 mHandler.sendEmptyMessage(MSG_CR_CAMERA);

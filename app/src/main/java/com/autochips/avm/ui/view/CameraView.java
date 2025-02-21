@@ -480,7 +480,7 @@ public class CameraView extends View implements LifecycleOwner {
         tabView();
         tabViewInit();
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            if(AvmService.mCanSendAvmState) {
+            if(AvmService.mCanSendAvmState && !AvmService.mCanSendAvmStateIsActivity) {
                 AvmService.mCanSendAvmState = false;
                 KLog.d(" addOnGlobalLayoutListener mWindowLps.height： " + mWindowLps.height);
                 SystemProperties.setGlobal("avm_state", 1);

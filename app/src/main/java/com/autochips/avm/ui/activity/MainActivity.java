@@ -15,8 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.service.AvmRuntime;
+import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.DataDefine;
+import com.autochips.avm.util.SystemProperties;
+import com.gxa.service.camera.AvmManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -66,6 +69,12 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     protected void onResume() {
         super.onResume();
         Log.d("AvmRuntime", "MainActivity::onResume()");
+        if(AvmService.mCanSendAvmStateIsActivity){
+            AvmService.mCanSendAvmStateIsActivity = false;
+            AvmService.mCanSendAvmState = false;
+            SystemProperties.setGlobal("avm_state", 1);
+            AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
+        }
         AvmRuntime.self().registerActionListener(MainActivity.this);
         getWindow().getDecorView().postDelayed(runnable, 0);
     }
