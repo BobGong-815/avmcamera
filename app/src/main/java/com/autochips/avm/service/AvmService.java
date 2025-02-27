@@ -77,9 +77,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
@@ -128,6 +130,8 @@ public class AvmService extends Service {
     public boolean IS_AY5 = false;
     private CarPowerManager mCarPowerManager;
     public static boolean mIsStartStatus = false;//记录是否开始导航
+    public static boolean isLeftScreen = false;//是否为左边的分屏显示全景
+
     @SuppressLint("InvalidWakeLockTag")
     @Override
     public void onCreate() {
@@ -246,9 +250,55 @@ public class AvmService extends Service {
 
             }
         });
+
+        // 注册配置监听
+        //registerComponentCallbacks(componentCallbacks);
     }
 
+//    private int lastScreenWidth = -1;
+//    private boolean isSplitScreen = false;
+//    private ComponentCallbacks2 componentCallbacks = new ComponentCallbacks2() {
+//        @Override
+//        public void onConfigurationChanged(Configuration newConfig) {
+//            checkSplitScreen(newConfig);
+//        }
+//
+//        @Override
+//        public void onLowMemory() {}
+//
+//        @Override
+//        public void onTrimMemory(int level) {}
+//    };
+//
+//    // 分屏检测逻辑
+//    private void checkSplitScreen(Configuration newConfig) {
+//        int currentWidth = newConfig.screenWidthDp;
+//        KLog.d("checkSplitScreen:"+currentWidth);
+//        int threshold = 600; // 分屏阈值（根据设备调整）
+//
+//        // 首次初始化
+//        if (lastScreenWidth == -1) {
+//            lastScreenWidth = currentWidth;
+//            return;
+//        }
+//
+//        // 宽度变化超过阈值判定为分屏
+//        if (Math.abs(currentWidth - lastScreenWidth) > threshold) {
+//            isSplitScreen = true;
+//        } else {
+//            isSplitScreen = false;
+//        }
+//        lastScreenWidth = currentWidth;
+//    }
 
+    //更改显示位置
+    private void changeScreenDirection(){
+        KLog.v("changeScreenDirection  mIsStartStatus:"+mIsStartStatus +" isLeftScreen:"+isLeftScreen);
+        if (AvmApp.getInstance().getCameraView() != null && AvmApp.getInstance().getCameraView().isSmartWin) {
+            //存在左右分屏切换，需要更改吸附位置
+            mHandler.post(() -> AvmApp.getInstance().getCameraView().snapToPosition());
+        }
+    }
 
     public   static  boolean isCalibration = false;
 
@@ -326,12 +376,24 @@ public class AvmService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         KLog.d(flags + "[onStartCommand]" + startId);
         //adb指令模拟启动service带参数调试功能
-        //adb shell am start-service -n com.autochips.avm/.service.AvmService --ei avm_onclick 1
+        //adb shell am start-service -n com.autochips.avm/.service3.AvmService --ei avm_onclick 1
         if(AvmApp.getInstance().getCameraView() ==null){
             KLog.d(flags + "[onStartCommand] AvmApp view is not init");
             return START_STICKY;
         }
         if (intent != null) {
+            int cancleScreen = intent.getIntExtra("cancleScreen", -1);
+            int changeScreen = intent.getIntExtra("changeScreen", -1);
+            if(cancleScreen != -1 || changeScreen != -1){
+                if(cancleScreen != -1){
+                    mIsStartStatus = !mIsStartStatus;
+                }
+                if(changeScreen != -1){
+                    isLeftScreen = !isLeftScreen;
+                }
+                changeScreenDirection();
+                return START_STICKY;
+            }
             int avm_onclick = intent.getIntExtra("avm_start", -1);
             KLog.d("[onStartCommand] avm_start = " + avm_onclick);
             switch (avm_onclick) {

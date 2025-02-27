@@ -40,12 +40,13 @@
             android:name=".ui.activity.MainActivity"
             android:exported="true"
             android:configChanges="uiMode"
+            android:resizeableActivity="false"
             android:theme="@style/Theme.Transparent" />
 
         <service
             android:name=".service.AvmService"
             android:enabled="true"
-            android:exported="true"
+            android:exported="false"
             android:directBootAware="true">
             <intent-filter>
                 <action android:name="com.android.avm.action.AvmStart" />

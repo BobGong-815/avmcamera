@@ -16,6 +16,9 @@ import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D_LEFT_REAR;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D_RIGHT_FRONT;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D_RIGHT_REAR;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.UiModeManager;
 import android.content.Context;
@@ -36,7 +39,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceControl;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -138,6 +143,7 @@ public class CameraView extends View implements LifecycleOwner {
     private LongPressGestureListener longPressGestureListener;
     private  boolean canChange3DRear = false;//是否允许倒挡设置3d视角
     private boolean isFirst = true;//是否第一次显示
+    private boolean canShowAct = false;//是否允许显示act
     public CameraView(Context context) {
         super(context);
         KLog.d("BaseCameraView");
@@ -172,7 +178,9 @@ public class CameraView extends View implements LifecycleOwner {
     /**
      * 更新窗口
      */
+    private boolean isFirstOpen = false;
     public void updateWind(float alpha,int wh) {
+        isFirstOpen = true;
         showSmartWin();
     }
     @SuppressLint("ClickableViewAccessibility")
@@ -447,7 +455,17 @@ public class CameraView extends View implements LifecycleOwner {
         viewRedChick();
         tabView();
         tabViewInit();
-
+        mViewCameraBinding.getRoot().getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            if(mWindowLps.height > 100 && canShowAct){
+                canShowAct = false;
+                KLog.d("startAct  mWindowLps.height：" + mWindowLps.height);
+                Intent intent = new Intent(AvmApp.getInstance(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                AvmApp.getInstance().startActivity(intent);
+            }else {
+                KLog.d("  mWindowLps.height：" + mWindowLps.height);
+            }
+        });
     }
 
     public void viewRearStatus(int status) {
@@ -1141,7 +1159,7 @@ public class CameraView extends View implements LifecycleOwner {
 
 
         mWindowLps.y = 86;
-        mWindowLps.x = AvmService.mIsStartStatus ? 810 : 50;
+        mWindowLps.x = AvmService.mIsStartStatus && !AvmService.isLeftScreen ? 810 : 50;
         isSmartWin = true;
         mWindowLps.width = 455;
         mWindowLps.height = 623;
@@ -1185,16 +1203,17 @@ public class CameraView extends View implements LifecycleOwner {
      * 如果，全屏显示，则不显示小屏
      */
     public void showFullWin() {
-        Log.i(TAG, isSmartWin + " valGear showFullWin: 全屏显示  t底部透明 " + isFullWin +" 第一帧CameraGLSurfaceView："+CameraGLSurfaceView.glStatus );
-        Intent intent = new Intent(AvmApp.getInstance(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        AvmApp.getInstance().startActivity(intent);
 
+        Log.i(TAG, isSmartWin + " valGear showFullWin: 全屏显示  t底部透明 " + isFullWin +" 第一帧CameraGLSurfaceView："+CameraGLSurfaceView.glStatus );
+//        if(!isFullWin){
+//            showSmartWin();
+//            return;
+//        }
         if (isFullWin) return;
         isSmartWin = false;
         isFullWin = true;
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
-
+        canShowAct = true;
 
         mViewCameraBinding.smartGroupId.setVisibility(VISIBLE);
         mWindowLps.format = PixelFormat.UNKNOWN;
@@ -1285,7 +1304,11 @@ public class CameraView extends View implements LifecycleOwner {
         //初始化进来也要显示上一次设置的透明度的车模
 
 //        setTransparentIndexTab();
-        SystemProperties.setGlobal("avm_state", 1);
+        if(!isFirstOpen) {
+            SystemProperties.setGlobal("avm_state", 1);
+        }else {
+            isFirstOpen = false;
+        }
         int calibrateBtn = Settings.System.getInt(getContext().getContentResolver(), "avm.calibrate", 0);
         if (calibrateBtn > 0) {
             mViewCameraBinding.layoutCalibrateId.setVisibility(VISIBLE);
@@ -1726,10 +1749,9 @@ public class CameraView extends View implements LifecycleOwner {
                 if (!isMove) {
                     // 点击事件
                     showFull2DByOnTouch();
+                } else {
+                    snapToPosition();
                 }
-                // 手指起来时的，为结束的坐标
-//                touch_x = (int) event.getRawX();
-//                touch_y = (int) event.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if(isSmartWin){
@@ -1740,13 +1762,21 @@ public class CameraView extends View implements LifecycleOwner {
                     int movedY = nowY - y;
                     int mX = mWindowLps.x + movedX;
                     int mY = mWindowLps.y + movedY;
-                    mWindowLps.x = mX < 0 ? 0 : mX > 1465 ? 1465 : mX;
-                    mWindowLps.y = mY < 0 ? 0 : mY > 457 ? 457 : (mWindowLps.y + movedY);
-//                    mWindowLps.width = mX;
-//                    mWindowLps.height = mY;
-//                    if(x == nowX && y == nowY){
-//                        isMove = false;
-//                    }
+                    if (AvmService.mIsStartStatus) {
+                        //地图在导航，表示在分屏
+                        if (AvmService.isLeftScreen) {
+                            // 左分屏：X范围0-735
+                            mX = Math.max(0, Math.min(mX, 735));
+                        } else {
+                            // 右分屏：X范围760-1465
+                            mX = Math.max(760, Math.min(mX, 1465));
+                        }
+                    } else {
+                        // 正常模式：X范围0-1465
+                        mX = Math.max(0, Math.min(mX, 1465));
+                    }
+                    mWindowLps.x = mX;
+                    mWindowLps.y = Math.max(0, Math.min(mY, 457));  // 1080 - 623 = 457
                     x = nowX;
                     y = nowY;
                     mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
@@ -1756,6 +1786,43 @@ public class CameraView extends View implements LifecycleOwner {
         return true;
     }
 
+    public void snapToPosition() {
+        int screenHeight = 1080;
+        // 计算当前悬浮窗中心Y坐标
+        int currentCenterY = mWindowLps.y + 623 / 2;
+        int targetY = (currentCenterY <= screenHeight / 2) ? 86 : 371;
+        // 确定目标X坐标
+        int targetX;
+        if (AvmService.mIsStartStatus) {
+            targetX = AvmService.isLeftScreen ? 50 : 810; // 右分屏810，左分屏50
+        } else {
+            targetX = 50; // 正常模式
+        }
+        // 动画过渡到目标位置
+        int startX = mWindowLps.x;
+        int startY = mWindowLps.y;
+        ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+        animator.setDuration(300);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addUpdateListener(animation -> {
+            float fraction = animation.getAnimatedFraction();
+            int newX = (int) (startX + (targetX - startX) * fraction);
+            int newY = (int) (startY + (targetY - startY) * fraction);
+            mWindowLps.x = newX;
+            mWindowLps.y = newY;
+            mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // 确保最终位置准确
+                mWindowLps.x = targetX;
+                mWindowLps.y = targetY;
+                mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
+            }
+        });
+        animator.start();
+    }
 
     private final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
         @Override

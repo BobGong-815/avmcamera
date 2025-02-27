@@ -1,6 +1,7 @@
 package com.autochips.avm.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,6 +15,7 @@ import com.autochips.avm.R;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.service.AvmService;
+import com.autochips.avm.ui.activity.MainActivity;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
@@ -123,6 +125,9 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 mHandler.post(()->{
                     if(mCameraView == null) {
                         mCameraView = new CameraView(context);
+                        Intent intent = new Intent(AvmApp.getInstance(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        AvmApp.getInstance().startActivity(intent);
                         mCameraView.updateWind(0.0f, 2);
                         CanManager.getInstance().startConnect((v -> {
                             mCameraView.dismissView("初始化关闭......");
