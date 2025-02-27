@@ -816,13 +816,6 @@ public class CameraViewModel extends BaseCameraViewModel {
         mDirection = direction;
     }
 
-    public void turnResetChange() {
-        if(mDirection == 0) {
-            KLog.d("lightChange 重置退出逻辑");
-            threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
-        }
-    }
-
     public void simWheelSpeed() {
         Message message = Message.obtain();
         message.what = MSG_SIM_WHEEL_SPEED;

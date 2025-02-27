@@ -3,6 +3,9 @@ package com.autochips.avm.ui.activity;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceControl;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.autochips.avm.R;
@@ -27,7 +31,7 @@ import java.lang.reflect.Method;
 import me.goldze.mvvmhabit.utils.KLog;
 
 public class MainActivity extends AppCompatActivity implements AvmRuntime.ActionListener {
-
+    private static final String TAG = "MainActivityAVM";
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -35,7 +39,28 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         }
     };
 
+    private static boolean isOnResume = false;
+    private static final int SEND_AVM_STATE = 1001;
+
     public static MainActivity inStance;
+    private static final Handler mHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            Log.d(TAG, "MainActivity::handleMessage():"+msg.what);
+            if (msg.what == SEND_AVM_STATE){
+                if (CameraView.isShowing) {
+                    AvmService.mCanSendAvmStateIsActivity = false;
+                    AvmService.mCanSendAvmState = false;
+                    int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
+                    Log.d(TAG, "MainActivity::handleMessage() avm_state:"+avm_state);
+                    if(avm_state != 1) {
+                        SystemProperties.setGlobal("avm_state", 1);
+                        AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
+                    }
+                }
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //        requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -69,14 +94,23 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     protected void onResume() {
         super.onResume();
         Log.d("AvmRuntime", "MainActivity::onResume()");
+        isOnResume = true;
+        if(CameraView.isShowing) {
+            AvmApp.getInstance().getCameraView().showRootView();
+        }
         if(AvmService.mCanSendAvmStateIsActivity){
-            AvmService.mCanSendAvmStateIsActivity = false;
-            AvmService.mCanSendAvmState = false;
-            SystemProperties.setGlobal("avm_state", 1);
-            AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
+            mHandler.sendEmptyMessageAtTime(SEND_AVM_STATE,CameraView.isShowing ? 0 : 100);
         }
         AvmRuntime.self().registerActionListener(MainActivity.this);
         getWindow().getDecorView().postDelayed(runnable, 0);
+    }
+
+    @Override
+    protected void onPause() {
+        isOnResume = false;
+        super.onPause();
+        mHandler.removeCallbacksAndMessages("setRelativeLayer");
+        Log.d(TAG, "MainActivity::onPause()");
     }
 
     protected void onStop() {
@@ -87,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     protected void onDestroy() {
         super.onDestroy();
         Log.d("AvmRuntime", "onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
+        mHandler.removeCallbacksAndMessages("setRelativeLayer");
+        AvmApp.getInstance().getCameraView().hideView();
         if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
             AvmRuntime.self().artificialExit();
         }
@@ -132,15 +168,27 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
                 return false;
             }
         } else {
+            if(!isOnResume){
+                Log.d(TAG, "act is not show");
+                return false;
+            }
             Log.d("AvmRuntime", "start read Surface control.");
             if (CameraView.windowSurfaceControl == null)
                 CameraView.windowSurfaceControl = getSurfaceControl(AvmApp.getInstance().getCameraView().getRootView());
             Log.d("AvmRuntime", "widnowSurfaceControl is " + CameraView.windowSurfaceControl);
             SurfaceControl mySurfaceControl = getSurfaceControl();
             Log.d("AvmRuntime", "mySurfaceControl is " + mySurfaceControl);
-
+            mHandler.removeCallbacksAndMessages("setRelativeLayer");
             if (CameraView.windowSurfaceControl != null && mySurfaceControl != null) {
-                setRelativeLayer(CameraView.windowSurfaceControl, mySurfaceControl);//设置层级与act同级
+                Log.d(TAG, "MainActivity::setRelativeLayer()");
+                mHandler.postDelayed(()->{
+                    if (CameraView.windowSurfaceControl != null && isOnResume) {
+                        //规避存在窗口退出，act还未销毁导致的消息未发送
+                        mHandler.sendEmptyMessage(SEND_AVM_STATE);
+                        Log.d(TAG, "MainActivity::setRelativeLayer() true");
+                        setRelativeLayer(CameraView.windowSurfaceControl, mySurfaceControl);//设置层级与act同级
+                    }
+                },"setRelativeLayer",300);
                 return true;
             } else {
                 return false;

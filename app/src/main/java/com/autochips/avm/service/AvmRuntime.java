@@ -1812,17 +1812,16 @@ public class AvmRuntime {
                         && (dataSts.sensors[0] == DataDefine.SENSOR_RADAR || (dataSts.sensors[0] == DataDefine.SENSOR_RADAR_TURN_LAMP && dataSts.lastSensorSrc == 2))) {
                     if (!dataSts.events.contains(DataDefine.EVT_SHIFT_P)) setRadarPauseFlag(true);
                 }
-                boolean isNotDisplayOff = AvmService.mCarPowerWorkModeStatus != CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal();
-                if (cfgItem.actions[0] == DataDefine.ACT_PASSIVE_DUAL_CARD && isNotDisplayOff) {
+                if (cfgItem.actions[0] == DataDefine.ACT_PASSIVE_DUAL_CARD && AvmService.mIsCanShow) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_PASSIVE_DUAL_CARD;
                     dataSts.fvSts[1] = DataDefine.INVALID;
-                } else if (cfgItem.actions[0] == DataDefine.ACT_ACTIVE_DUAL_CARD && isNotDisplayOff) {
+                } else if (cfgItem.actions[0] == DataDefine.ACT_ACTIVE_DUAL_CARD && AvmService.mIsCanShow) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_ACTIVE_DUAL_CARD;
                     dataSts.fvSts[1] = DataDefine.INVALID;
                 } else if (cfgItem.actions[0] == DataDefine.ACT_EXIT) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_NON;
                     dataSts.fvSts[1] = DataDefine.INVALID;
-                } else if (cfgItem.actions[0] == DataDefine.ACT_LEFT_CARD && isNotDisplayOff) {
+                } else if (cfgItem.actions[0] == DataDefine.ACT_LEFT_CARD && AvmService.mIsCanShow) {
                     dataSts.fvSts[0] = DataDefine.FV_STATE_LEFT_CARD;
                     dataSts.fvSts[1] = DataDefine.INVALID;
                 }
