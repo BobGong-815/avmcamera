@@ -219,10 +219,11 @@ public class DataManager{
     * */
     public static void writeFault(int code){
         FaultInfo faultInfo = new FaultInfo();
-        faultInfo.faultCode = Integer.parseInt(DataConstant.Code.getFaultCode(code));
+        String faultCode = DataConstant.Code.getFaultCode(code);
+        faultInfo.faultCode = Integer.parseInt(faultCode.replace("0x", ""), 16);;
         int tag = EventLog.getTagCode("data_mining");
         faultInfo.timestamp = System.currentTimeMillis();
-        KLog.i("faultInfo code:"+code+" time:"+faultInfo.timestamp);
+        KLog.i("faultInfo code:"+faultCode+"faultInfo.faultCode:"+faultInfo.faultCode+" time:"+faultInfo.timestamp);
         if(tag < 0){
             tag = FaultInfo.DEFAULT_TAG;
         }
