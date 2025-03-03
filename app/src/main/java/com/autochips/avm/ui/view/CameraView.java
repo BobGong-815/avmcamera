@@ -518,7 +518,15 @@ public class CameraView extends View implements LifecycleOwner {
         viewRedChick();
         tabView();
         tabViewInit();
-
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            if(AvmService.mCanSendAvmState && !AvmService.mCanSendAvmStateIsActivity) {
+                AvmService.mCanSendAvmState = false;
+                KLog.d(" addOnGlobalLayoutListener mWindowLps.height： " + mWindowLps.height);
+                showRootView();
+                SystemProperties.setGlobal("avm_state", 1);
+                AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
+            }
+        });
     }
 
     //初始化控件id
@@ -2076,6 +2084,10 @@ public class CameraView extends View implements LifecycleOwner {
 
     public void hideView() {
         rootView.setVisibility(GONE);
+    }
+
+    public void showRootView() {
+        rootView.setVisibility(VISIBLE);
     }
 
     /**

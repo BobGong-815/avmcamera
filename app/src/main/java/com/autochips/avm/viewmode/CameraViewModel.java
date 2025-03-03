@@ -793,18 +793,36 @@ public class CameraViewModel extends BaseCameraViewModel {
 
     private int mDirection = -1;
     public void turnLampChange(int direction, long delay) {
+        KLog.d("turnLampChange direction:"+direction+" delay:"+delay);
         threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
         Message message = Message.obtain();
         message.what = MSG_TURN_LAMP_CHANGE;
         message.arg1 = direction;
         threadHandler.sendMessageDelayed(message, delay);
-        mDirection = direction;
+        if(direction != 0 || delay == 1000) {
+            mDirection = direction;
+        }
     }
 
-    public void turnResetChange() {
+    private boolean mIsCloseCamera = false;//记录是否在关摄像头时重置了退出
+    public void turnResetChange(boolean isCloseCamera) {
         if(mDirection == 0) {
+            mIsCloseCamera = isCloseCamera;
             KLog.d("lightChange 重置退出逻辑");
             threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
+        }
+    }
+
+    public void turnLampChangeResetWithCloseCamera(int direction, long delay) {
+        if(mIsCloseCamera) {
+            mIsCloseCamera = false;
+            KLog.d("turnLampChangeResetWithCloseCamera 关闭摄像头前重置了回正，需要重新执行回正");
+            threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
+            Message message = Message.obtain();
+            message.what = MSG_TURN_LAMP_CHANGE;
+            message.arg1 = direction;
+            threadHandler.sendMessageDelayed(message, delay);
+            mDirection = direction;
         }
     }
 

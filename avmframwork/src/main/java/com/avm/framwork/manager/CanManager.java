@@ -15,6 +15,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CL
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_STOP_ON_BRK_REMIND_SIGNAL;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_WARNING_SOUND;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.HAZARD_LIGHTS_STATE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.ASSIST_DRIVE_PAS_BUTTON_PRESS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AUDIO_WARNING_SOURCE;
@@ -190,6 +191,8 @@ public class CanManager implements Handler.Callback {
         mRegisterId.add(SETTINGS_TRUN_TO_MODE);// 转向模式
         mRegisterId.add(AUDIO_WARNING_SOURCE);// 灯光预警
 
+        //双闪
+        mRegisterId.add(HAZARD_LIGHTS_STATE);
 
         //转向灯
         mRegisterId.add(AVM_UINM_TURN_LIGHT_SW_ST);// 转向灯开关状态  激活全景

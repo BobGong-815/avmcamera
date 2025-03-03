@@ -372,7 +372,7 @@ public class DataConstant {
          * */
         public static final int SJ_SAVE_FAIL = 0x32;
 
-        private static final String getFaultCode(int type){
+        public static final String getFaultCode(int type){
             return "0x" + Integer.toHexString((0x03 << 24) + (0x12 << 16) + (type << 4) + 0x02);
         }
     }
