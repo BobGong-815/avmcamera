@@ -659,6 +659,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private boolean isCanDismissCard = false;//是否允许双闪关闭全景
 
     private boolean isDulTurnChange = false;//执行双闪动作
+    private int leftLightStPt = 0;//左转灯光 0表示不亮 1表示亮起,控制2.5处理
+    private int rightLightStpt = 0;//右转灯光 0表示不亮 1表示亮起,控制2.5处理
     private final CanManager.onSignalValueChangedListener mOnSignalValueChangedListener = (vehicleId, value) -> {
         if(AvmApp.getInstance().getCameraView() == null){
             KLog.d("AvmApp", "avm is null ");
@@ -690,11 +692,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 if (value instanceof Integer) {
                     int intValue = (int) value;
                     turnLampSwSts = intValue;
+                    mHandler.removeCallbacksAndMessages("turnReset");
                     if (intValue == 0) {
-                        mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0),"closeTurn",1000);
+                        AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 800);
                     } else {
-                        mHandler.removeCallbacksAndMessages("closeTurn");
-                        isDulTurnChange = false;
                         AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0);
                     }
                 }
@@ -702,6 +703,48 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP || vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//左边转向灯闪s //右边转向灯闪
             if(AvmApp.EEA == 2) {
                 lightEeaThree(vehicleId, value);
+            }else {
+                if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
+                    if(value instanceof Integer){
+                        leftLightStPt = (int) value;
+                    }
+                    leftTurnLChangeTime = System.currentTimeMillis();
+                    KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime));
+                    long delay = 800;
+                    if (turnLampSwSts == 0) {
+                        if ((leftTurnLChangeTime-rightTurnLChangeTime) < 500) { //双闪
+                            mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0),"turnReset",1000);
+                        }else {
+                            AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
+                        }
+                    }else {
+                        //转向未回正也会双闪，处理转向未回正的双闪逻辑
+                        if ((leftTurnLChangeTime-rightTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) { //双闪
+                            mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0),"turnReset",1000);
+                        }
+                    }
+                    AvmRuntime.self().updateChangeTime();
+                } else{//右边转向灯闪
+                    if(value instanceof Integer){
+                        rightLightStpt = (int) value;
+                    }
+                    rightTurnLChangeTime = System.currentTimeMillis();
+                    KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime));
+                    long delay = 800;
+                    if (turnLampSwSts == 0) {
+                        if ((rightTurnLChangeTime-leftTurnLChangeTime) < 500) { //双闪
+                            mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0),"turnReset",1000);
+                        }else {
+                            AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, delay);
+                        }
+                    }else {
+                        //转向未回正也会双闪，处理转向未回正的双闪逻辑
+                        if ((rightTurnLChangeTime-leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) { //双闪
+                            mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(0, 0),"turnReset",1000);
+                        }
+                    }
+                    AvmRuntime.self().updateChangeTime();
+                }
             }
         }else if(vehicleId == HAZARD_LIGHTS_STATE){
             if(AvmApp.EEA != 2) {
