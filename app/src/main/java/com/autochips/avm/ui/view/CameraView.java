@@ -2560,6 +2560,12 @@ public class CameraView extends View implements LifecycleOwner {
         viewModel.calibrationBack();
     }
 
+    //标定成功下发
+    public void calibrationSuccess() {
+        viewModel.calibrationInspect(1);
+    }
+
+
     //反馈错误结果
     public void calibrationError() {
         viewModel.calibrationBackError();
