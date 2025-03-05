@@ -1,11 +1,11 @@
 <resources>
 <string name="app_name" translatable="false">AVMCamera</string>
     <string name="setting_p_exit">P擋退出</string>
-    <string name="setting_p_exit_content">掛入P擋，全景立刻退出或\n延遲30秒退出全景</string>
+    <string name="setting_p_exit_content">掛入P擋，全景立刻退出或\n延遲30秒退出</string>
     <string name="setting_at_once">立刻</string>
     <string name="setting_30_seconds">30秒後</string>
     <string name="setting_transparent_chassis">透明底盤</string>
-    <string name="setting_close">關</string>
+    <string name="setting_close">關閉</string>
     <string name="setting_low">低</string>
     <string name="setting_centre">中</string>
     <string name="setting_high">高</string>
