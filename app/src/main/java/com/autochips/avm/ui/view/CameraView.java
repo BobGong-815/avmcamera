@@ -486,7 +486,7 @@ public class CameraView extends View implements LifecycleOwner {
                 || language.equals("sv") || language.equals("pt") || language.equals("ptrBR") || language.equals("ar")){
             //越南
             ViewGroup.LayoutParams layoutParams = infobook.getLayoutParams();
-            layoutParams.height = 270;
+            layoutParams.height = language.equals("ru") ? 300 : 270;
             infobook.setLayoutParams(layoutParams);
         }
         settingView.setViewRefresh(language.equals("ar") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
@@ -2514,9 +2514,9 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.d(" 当前language："+language);
         ViewGroup.LayoutParams layoutParams = infobook.getLayoutParams();
         layoutParams.height = language.equals("vi") || language.equals("ms") || language.equals("en")
-                || language.equals("th") || language.equals("ru") || language.equals("de") || language.equals("nb")
+                || language.equals("th") || language.equals("de") || language.equals("nb")
                 || language.equals("fr") || language.equals("it") || language.equals("es") || language.equals("esrUs") || language.equals("nl")
-                || language.equals("sv") || language.equals("pt") || language.equals("ptrBR") || language.equals("ar")? 270 : 240;
+                || language.equals("sv") || language.equals("pt") || language.equals("ptrBR") || language.equals("ar") ? 270 : language.equals("ru") ? 300 : 240;
         infobook.setLayoutParams(layoutParams);
         tvBreakdown.setText(R.string.camera_breakdown);
         settingView.setViewRefresh(language.equals("ar") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
