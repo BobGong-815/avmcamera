@@ -297,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
                 currenActivitySurfaceControl = (SurfaceControl) getSurfaceControlMethod.invoke(viewRootImpl);
             }
         } catch (Exception e) {
+            Log.e(TAG, "setRelativeLayer failed: " + e.getMessage());
             e.printStackTrace();
             Log.d(TAG, "getSurfaceControl Exception: " + e);
         }
