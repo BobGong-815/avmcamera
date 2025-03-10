@@ -4,12 +4,14 @@ package com.autochips.avm.data;
 import android.content.Context;
 import android.util.EventLog;
 
+import com.autochips.avm.ui.view.CameraView;
 import com.gxatek.cockpit.datamining.client.DataMiningClientManager;
 import com.gxatek.cockpit.datamining.client.reporter.CommonReporter;
 import com.gxatek.cockpit.datamining.sdk.data.AppEvent;
 import com.gxatek.cockpit.datamining.sdk.data.ReporterType;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.goldze.mvvmhabit.utils.KLog;
 
@@ -214,20 +216,32 @@ public class DataManager{
         writeFault(code);
     }
 
+    private static ConcurrentHashMap<Integer, Long> uploadFault = new ConcurrentHashMap<>();
     /**
      * 埋点
-    * */
+     * */
     public static void writeFault(int code){
-        FaultInfo faultInfo = new FaultInfo();
-        String faultCode = DataConstant.Code.getFaultCode(code);
-        faultInfo.faultCode = Integer.parseInt(faultCode.replace("0x", ""), 16);;
-        int tag = EventLog.getTagCode("data_mining");
-        faultInfo.timestamp = System.currentTimeMillis();
-        KLog.i("faultInfo code:"+faultCode+"faultInfo.faultCode:"+faultInfo.faultCode+" time:"+faultInfo.timestamp);
-        if(tag < 0){
-            tag = FaultInfo.DEFAULT_TAG;
+        if(!CameraView.VALID_CODES.contains(code) && uploadFault.containsKey(code)){
+            KLog.i("faultInfo code is upload :"+ code);
+            return;
         }
-        EventLog.writeEvent(tag,faultInfo.tag,faultInfo.sysId,faultInfo.appId,faultInfo.timestamp,faultInfo.faultCode,faultInfo.faultString,faultInfo.faultReason,faultInfo.faultDetail);
+        FaultInfo faultInfo = new FaultInfo();
+        faultInfo.timestamp = System.currentTimeMillis();
+        uploadFault.putIfAbsent(code,faultInfo.timestamp);
+        String faultCode = DataConstant.Code.getFaultCode(code);
+        faultInfo.faultCode = Integer.parseInt(faultCode.replace("0x", ""), 16);
+        KLog.i("faultInfo code:"+faultCode+"faultInfo.faultCode:"+faultInfo.faultCode+" time:"+faultInfo.timestamp);
+        reportEvent(faultInfo);
+    }
+
+    private static void reportEvent(FaultInfo faultInfo) {
+        int tag = getEventTag();
+        EventLog.writeEvent(tag, faultInfo.tag, faultInfo.sysId, faultInfo.appId, faultInfo.timestamp, faultInfo.faultCode, faultInfo.faultString, faultInfo.faultReason, faultInfo.faultDetail);
+    }
+
+    private static int getEventTag() {
+        int tag = EventLog.getTagCode("data_mining");
+        return tag < 0 ? FaultInfo.DEFAULT_TAG : tag;
     }
 
     private static void realReport(String code, String event, String str, String reason, String detail){

@@ -81,6 +81,8 @@ import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.manager.CanManager;
 import com.avm.framwork.manager.ViewSwitchManager;
 
+import java.util.Set;
+
 import me.goldze.mvvmhabit.utils.KLog;
 @SuppressLint("WrongConstant")
 public class CameraView extends View implements LifecycleOwner {
@@ -1287,7 +1289,6 @@ public class CameraView extends View implements LifecycleOwner {
     private  boolean isSmartWinToFull = false;
     public void showComm() {
         Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
-        DataManager.writeFault(DataConstant.Code.COMMING_APP);
         DataManager.writeFault(DataConstant.Code.APK_OPEN);
         DataManager.writeFault(DataConstant.Code.BP_SHOW);
 //        isSmartWin = false;
@@ -1898,10 +1899,19 @@ public class CameraView extends View implements LifecycleOwner {
         CallBackHelper.getInstance().setup(msg, param1, param2);
     }
 
+    // 视屏流code
+    public static final Set<Integer> VALID_CODES = Set.of(37, 38, 39, 40, 41, 42, 43, 44);
+
     //埋点
     public static void bAvmFault(int code, int param1, int param2) {
         KLog.i("bAvmFault code:"+code);
-        DataManager.writeFault(code);
+        if(VALID_CODES.contains(code)){
+            KLog.i("bAvmFault is vedio code");
+            //mCodeThrottler.submitCode(code);
+            DataManager.writeFault(code);
+        }else {
+            DataManager.writeFault(code);
+        }
     }
 
     public void setRadar(int model, int len,int gear) {
