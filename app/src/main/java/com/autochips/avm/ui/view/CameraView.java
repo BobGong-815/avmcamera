@@ -3,7 +3,6 @@ package com.autochips.avm.ui.view;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.ASSIST_DRIVE_PAS_BUTTON_PRESS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_UINM_TURN_LIGHT_SW_ST;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_CHIME_PAS_WARNTONE;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_VCU_GEAR_LVL_DISP;
 import static com.avm.framwork.constant.CameraContracts.ROW_1_LEFT;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_2_D;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_2_D_BOTTOM;
@@ -23,10 +22,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
-import android.opengl.GLSurfaceView;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
@@ -39,7 +36,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -67,13 +63,12 @@ import com.autochips.avm.listener.CallBackHelper;
 import com.autochips.avm.listener.CallBackInterface;
 import com.autochips.avm.listener.OnTabSelectListener;
 import com.autochips.avm.ui.BottomDialog;
-import com.autochips.avm.util.CustomToast;
+import com.autochips.avm.data.CodeThrottlerHelper;
 import com.autochips.avm.util.NotCloseToast;
 import com.autochips.avm.util.RearviewToast;
 import com.autochips.avm.util.SystemProperties;
 import com.autochips.avm.viewmode.CameraViewModel;
 import com.avm.framwork.constant.CameraContracts;
-import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
 import com.avm.framwork.manager.ViewSwitchManager;
 
@@ -96,6 +91,7 @@ public class CameraView extends View implements LifecycleOwner {
             });
         }
     };
+    private static CodeThrottlerHelper mCodeThrottler;//执行视频埋点流code
 
     private int[] getDescValueArray() {
         return new int[]{R.string.camera_2d, R.string.camera_3d, R.string.camera_wide_angle};
@@ -304,6 +300,10 @@ public class CameraView extends View implements LifecycleOwner {
             }
         });
 
+//        mCodeThrottler = new CodeThrottlerHelper(code -> {
+//            KLog.i("bAvmFault is submit code:"+ code);
+//            DataManager.writeFault(code);
+//        });
     }
 
   /**
@@ -1279,7 +1279,6 @@ public class CameraView extends View implements LifecycleOwner {
     public void showComm() {
         setVisibility(VISIBLE);
         Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
-        DataManager.writeFault(DataConstant.Code.COMMING_APP);
         DataManager.writeFault(DataConstant.Code.APK_OPEN);
         DataManager.writeFault(DataConstant.Code.BP_SHOW);
 //        isSmartWin = false;
@@ -1821,7 +1820,13 @@ public class CameraView extends View implements LifecycleOwner {
     //埋点
     public static void bAvmFault(int code, int param1, int param2) {
         KLog.i("bAvmFault code:"+code);
-        DataManager.writeFault(code);
+        if(CodeThrottlerHelper.VALID_CODES.contains(code)){
+            KLog.i("bAvmFault is vedio code");
+            //mCodeThrottler.submitCode(code);
+            DataManager.writeFault(code);
+        }else {
+            DataManager.writeFault(code);
+        }
     }
 
     public void setRadar(int model, int len,int gear) {

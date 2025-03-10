@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.BuildConfig;
 import com.autochips.avm.R;
+import com.autochips.avm.data.DataConstant;
+import com.autochips.avm.data.DataManager;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.service.AvmService;
@@ -73,6 +75,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         }
         Thread.setDefaultUncaughtExceptionHandler(this);
         ServiceUtils.startCaptureService(this,AvmService.class);
+        DataManager.writeFault(DataConstant.Code.COMMING_APP);
     }
 
     private void initConfig(Context context) {

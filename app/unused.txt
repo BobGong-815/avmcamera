@@ -5863,6 +5863,8 @@ com.autochips.avm.DataBinderMapperImpl:
     private static final int LAYOUT_VIEWSETTING
 com.autochips.avm.DataBindingTriggerClass
 com.autochips.avm.R
+com.autochips.avm.data.CodeThrottlerHelper:
+    private static final long THROTTLE_INTERVAL
 com.autochips.avm.data.DataConstant$Code:
     public static final int ACTIVI_AJ
     public static final int ACTIVI_LIGHT
@@ -5929,6 +5931,7 @@ com.autochips.avm.ui.view.CameraView:
     private static final int CALIBRATION_SHOW_WINDOW
     public static final int WINDOW_TYPE
     private com.autochips.avm.helper.LongPressGestureListener longPressGestureListener
+    private static com.autochips.avm.data.CodeThrottlerHelper mCodeThrottler
 com.autochips.avm.ui.view.SegmentTabLayout:
     protected int sp2px(float)
 com.autochips.avm.util.SystemProperties:
