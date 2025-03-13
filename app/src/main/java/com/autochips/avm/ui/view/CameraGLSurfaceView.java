@@ -39,10 +39,9 @@ public class CameraGLSurfaceView extends GLSurfaceView {
     private static volatile int sCameraDirection = bvavmJNI.BW_VIEW_POWER_OFF;
     private int nowShowDirection = -1;//当前显示视图
 
-    Renderer renderer;
-    {
-        renderer = new Renderer();
-    }
+    private Renderer renderer;
+    private static final int MSG_RENDER = 1;
+    private static final long FRAME_INTERVAL_MS = 30;
 
     private static final int SHOW_BOTTOM = 2;
     private Handler handler = new Handler(Looper.getMainLooper()) {
@@ -54,7 +53,10 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                 case SHOW_BOTTOM:
                     BvAvmJNIHelper.getInstance().onClick();
                     break;
-
+                case MSG_RENDER:
+                    // 触发onDrawFrame
+                    requestRender();
+                    break;
             }
         }
     };
@@ -72,6 +74,29 @@ public class CameraGLSurfaceView extends GLSurfaceView {
         initData();
     }
 
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        startFrameCallback();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopFrameCallback();
+    }
+
+    private void startFrameCallback() {
+        //启动渲染循环
+        handler.sendEmptyMessage(MSG_RENDER);
+    }
+
+    private void stopFrameCallback() {
+        //停止渲染循环
+        handler.removeMessages(MSG_RENDER);
+    }
+
     private boolean isOpenCamera = false;
 
     private void initData() {
@@ -79,7 +104,8 @@ public class CameraGLSurfaceView extends GLSurfaceView {
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         setEGLContextClientVersion(3);
         setEGLConfigChooser(new MyConfigChooser());
-        setRenderer(renderer);
+        setRenderer(renderer = new Renderer());
+        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY); // 手动控制渲染
     }
 
     public void stopSurface() {
@@ -103,36 +129,10 @@ public class CameraGLSurfaceView extends GLSurfaceView {
             if (glStatus == 0) {
                 handler.sendEmptyMessageDelayed(SHOW_BOTTOM, 0);
             }
-
-            /*
-            cnt++;
-            if (cnt == 50) {
-                KLog.d("bwSetLampStatus2() null.");
-                bvavmJNI.bwSetLampStatus2(null);
-            } else if (cnt == 100) {
-                KLog.d("bwSetLampStatus2() int[].");
-                bvavmJNI.bwSetLampStatus2(new int[] {});
-            } else if (cnt == 150) {
-                KLog.d("bwSetCarDoorStatus() null.");
-                bvavmJNI.bwSetCarDoorStatus(null);
-            } else if (cnt == 200) {
-                KLog.d("bwSetCarDoorStatus() int[].");
-                bvavmJNI.bwSetCarDoorStatus(new int[] {});
-            } else if (cnt == 250) {
-                KLog.d("bwGetRVCStatus() null.");
-                bvavmJNI.bwGetRVCStatus(null);
-            } else if (cnt == 300) {
-                KLog.d("bwGetRVCStatus() int[].");
-                bvavmJNI.bwGetRVCStatus(null);
-            }
-
-             */
-
             if(nowShowDirection != sCameraDirection) {
                 KLog.d("sCameraDirection 视图=" + sCameraDirection);
                 nowShowDirection = sCameraDirection;
             }
-            try {
                 if (doCalibrateNum > 0) {
                     KLog.d("doCalibrateNum = " + doCalibrateNum);
                     if (doCalibrateNum == 1) {
@@ -154,11 +154,7 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                         }
                     }
                 }
-                Thread.sleep(30);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            handler.sendEmptyMessageDelayed(MSG_RENDER, FRAME_INTERVAL_MS); // 继续下一帧
             glStatus = 1;
         }
 

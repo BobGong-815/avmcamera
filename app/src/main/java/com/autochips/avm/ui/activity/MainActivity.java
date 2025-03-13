@@ -94,9 +94,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     protected void onResume() {
         super.onResume();
         isOnResume = true;
-        if(CameraView.isShowing) {
-            AvmApp.getInstance().getCameraView().showRootView();
-        }
+        AvmApp.getInstance().getCameraView().showRootView();
         if(AvmService.mCanSendAvmStateIsActivity){
             mHandler.sendEmptyMessageAtTime(SEND_AVM_STATE,CameraView.isShowing ? 0 : 100);
         }
@@ -109,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     protected void onPause() {
         isOnResume = false;
         super.onPause();
+        AvmApp.getInstance().getCameraView().hideView();
         mHandler.removeCallbacksAndMessages("setRelativeLayer");
         Log.d(TAG, "MainActivity::onPause()");
     }
@@ -122,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     protected void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacksAndMessages("setRelativeLayer");
-        AvmApp.getInstance().getCameraView().hideView();
         if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
             AvmRuntime.self().artificialExit();
         }
@@ -240,40 +238,6 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         return null;
     }
 
-//    private SurfaceControl getSurfaceControl(View overlayView) {
-//        Class<?> viewClassOvelay = null;
-//        try {
-//            //拿到window
-//            viewClassOvelay = Class.forName("android.view.View");
-//            Log.d(TAG, "viewClassOvelay is " + viewClassOvelay);
-//            // 反射获取ViewRootImpl对象
-//            @SuppressLint("DiscouragedPrivateApi") Method getViewRootImplMethod =
-//                    viewClassOvelay.getDeclaredMethod("getViewRootImpl");
-//            getViewRootImplMethod.setAccessible(true);
-//            Object viewRootImpl = getViewRootImplMethod.invoke(overlayView);
-//            Log.d(TAG, "viewRootImpl is " + viewRootImpl);
-//            if (viewRootImpl == null) return null;
-//            // 反射获取反射获取ViewRootImpl对象的SurfaceControl对象
-//            Class<?> viewRootImplclass = Class.forName("android.view.ViewRootImpl");
-//            Log.d(TAG, "viewRootImplclass is " + viewRootImplclass);
-//            @SuppressLint("BlockedPrivateApi") Method getSurfaceControlMethod =
-//                    viewRootImplclass.getDeclaredMethod("getSurfaceControl");
-//            getSurfaceControlMethod.setAccessible(true);
-//            SurfaceControl overlaySurfaceControl = (SurfaceControl) getSurfaceControlMethod.invoke(viewRootImpl);
-//            return overlaySurfaceControl;
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
-
     private SurfaceControl getSurfaceControl() {
         SurfaceControl currenActivitySurfaceControl = null;
         try {
@@ -304,51 +268,57 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         return currenActivitySurfaceControl;
     }
 
+    @SuppressLint("SoonBlockedPrivateApi")
     private void setRelativeLayer(SurfaceControl windowSC, SurfaceControl activitySC) {
-        if (windowSC == null || activitySC == null) {
-            Log.e(TAG, "SurfaceControl is null");
-            return;
-        }
         try {
-            //直接使用 SurfaceControl.Transaction 类，避免字符串类名
-            SurfaceControl.Transaction transaction = new SurfaceControl.Transaction();
-            // 通过反射获取方法（兼容不同版本）
-            @SuppressLint("SoonBlockedPrivateApi") Method setRelativeLayerMethod = SurfaceControl.Transaction.class.getDeclaredMethod("setRelativeLayer",
+            // 获取SurfaceControl类
+            Class<?> surfaceControlClass = Class.forName("android.view.SurfaceControl$Transaction");
+            // 获取setRelativeLayer方法
+            Method setRelativeLayerMethod = null;
+            setRelativeLayerMethod = surfaceControlClass.getDeclaredMethod("setRelativeLayer",
                     SurfaceControl.class, SurfaceControl.class, int.class);
+            // 设置setRelativeLayer方法的可访问性（如果是私有方法）
             setRelativeLayerMethod.setAccessible(true);
-            //调用方法
-            setRelativeLayerMethod.invoke(transaction, windowSC, activitySC, -1);
+            //构建SurfaceControl$Transactio对象
+            Class<?> transactionClass = Class.forName("android.view.SurfaceControl$Transaction");
+            Object transactionObject = transactionClass.newInstance();
+            SurfaceControl.Transaction transaction = null;
+            // 调用setRelativeLayer方法
+            transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
+                    windowSC, activitySC, -1);
             transaction.apply();
             transaction.close();
+
         } catch (Exception e) {
-            Log.e(TAG, "setRelativeLayer failed: " + e.getMessage());
             e.printStackTrace();
+            Log.d(TAG, "setRelativeLayer Exception: " + e);
         }
     }
 
-    @SuppressLint("PrivateApi")
     private void setSCLayer(SurfaceControl windowSC, int z) {
-        //反射调用安全封装
         try {
-            //创建 Transaction 对象（推荐直接构造）
-            SurfaceControl.Transaction transaction = new SurfaceControl.Transaction();
-            // 反射获取方法（兼容不同版本）
-            Method setLayerMethod = SurfaceControl.Transaction.class.getDeclaredMethod("setLayer", SurfaceControl.class, int.class);
-            setLayerMethod.setAccessible(true);
-            setLayerMethod.invoke(transaction, windowSC, z);
+            // 获取SurfaceControl类
+            Class<?> surfaceControlClass = Class.forName("android.view.SurfaceControl$Transaction");
+
+            // 获取setRelativeLayer方法
+            Method setRelativeLayerMethod = null;
+            setRelativeLayerMethod = surfaceControlClass.getDeclaredMethod("setLayer",
+                    SurfaceControl.class, int.class);
+            // 设置setRelativeLayer方法的可访问性（如果是私有方法）
+            setRelativeLayerMethod.setAccessible(true);
+
+            //构建SurfaceControl$Transactio对象
+            Class<?> transactionClass = Class.forName("android.view.SurfaceControl$Transaction");
+            Object transactionObject = transactionClass.newInstance();
+            SurfaceControl.Transaction transaction = null;
+            // 调用setRelativeLayer方法
+            transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
+                    windowSC, z);
             transaction.apply();
             transaction.close();
-            Log.d(TAG, "setSCLayer succeeded: z=" + z);
-        } catch (NoSuchMethodException e) {
-            Log.e(TAG, "setLayer method not found: " + e.getMessage());
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            Log.e(TAG, "Reflection failed: " + e.getCause().getMessage());
-            // 具体错误类型细化处理
-            if (e.getCause() instanceof NullPointerException) {
-                Log.e(TAG, "SurfaceControl may have been released");
-            }
         } catch (Exception e) {
-            Log.e(TAG, "Unexpected error: " + e.getMessage());
+            e.printStackTrace();
+            Log.d(TAG, "setSCLayer Exception: " + e);
         }
     }
 
