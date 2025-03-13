@@ -95,9 +95,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         super.onResume();
         Log.d("AvmRuntime", "MainActivity::onResume()");
         isOnResume = true;
-        if(CameraView.isShowing) {
-            AvmApp.getInstance().getCameraView().showRootView();
-        }
+        AvmApp.getInstance().getCameraView().showRootView();
         if(AvmService.mCanSendAvmStateIsActivity){
             mHandler.sendEmptyMessageAtTime(SEND_AVM_STATE,CameraView.isShowing ? 0 : 100);
         }
@@ -109,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     protected void onPause() {
         isOnResume = false;
         super.onPause();
+        AvmApp.getInstance().getCameraView().hideView();
         mHandler.removeCallbacksAndMessages("setRelativeLayer");
         Log.d(TAG, "MainActivity::onPause()");
     }
@@ -122,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         super.onDestroy();
         Log.d("AvmRuntime", "onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
         mHandler.removeCallbacksAndMessages("setRelativeLayer");
-        AvmApp.getInstance().getCameraView().hideView();
         if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
             AvmRuntime.self().artificialExit();
         }
@@ -284,25 +282,16 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
             Object transactionObject = transactionClass.newInstance();
 
             SurfaceControl.Transaction transaction = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // 调用setRelativeLayer方法
-                transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
-                        windowSC, activitySC, -1);
-                transaction.apply();
-            }
+            // 调用setRelativeLayer方法
+            transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
+                    windowSC, activitySC, -1);
+            assert transaction != null;
+            transaction.apply();
+            transaction.close();
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @SuppressLint("SoonBlockedPrivateApi")
@@ -323,22 +312,14 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
             Object transactionObject = transactionClass.newInstance();
 
             SurfaceControl.Transaction transaction = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // 调用setRelativeLayer方法
-                transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
-                        windowSC, z);
-                transaction.apply();
-            }
+            // 调用setRelativeLayer方法
+            transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
+                    windowSC, z);
+            assert transaction != null;
+            transaction.apply();
+            transaction.close();
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -133,7 +133,7 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                     DataManager.writeFault(DataConstant.Code.TX_FAIL);
                 }
             }
-            handler.sendEmptyMessageDelayed(MSG_RENDER, AvmApp.getInstance().getCameraView().isSmartWin ? 66 : FRAME_INTERVAL_MS); // 继续下一帧
+            handler.sendEmptyMessageDelayed(MSG_RENDER, FRAME_INTERVAL_MS); // 继续下一帧
             glStatus = 1;
         }
 
