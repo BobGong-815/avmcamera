@@ -498,7 +498,6 @@ public class CameraViewModel extends BaseCameraViewModel {
             }
             //CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP, 0, arrBack);
             isDIAGCalibration = false;
-            calibrationInspect(1);
         } else {//标定失败
             //byte[] arrBack = {0x01, 0x02,0x00,0x00};
             byte[] arrBack = {0x00, 0x01, 0x00, 0x00};
