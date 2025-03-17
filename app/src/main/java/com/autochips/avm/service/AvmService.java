@@ -55,6 +55,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.HAZARD_LIGHTS_STATE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.MIRROR_FOLD_UNFOLD_STATUS;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.NFS_SYNC_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.POWER_PARKING_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SETTINGS_VCU_BRKPEDPST;
@@ -817,6 +818,20 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                     }
                 },AvmRuntime.self().isPREixt() ? 500 : 0);
+            }
+        }else if(vehicleId == NFS_SYNC_STATUS){
+            KLog.i(" 标定结果 NFS_SYNC_STATUS： " + vehicleId + "  ,value = " + value);
+            if (value instanceof Integer) {
+                int sync_status = (int) value;
+                if(sync_status == 1){
+                    byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
+                    CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
+                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
+                    KLog.i("标定-DIAG_31 app 标定成功 ");
+                    DataManager.writeFault(DataConstant.Code.BD_SUCCESS);
+                    DataManager.writeFault(DataConstant.Code.SJ_SAVE_SUCCESS);
+                    AvmApp.getInstance().getCameraView().calibrationSuccess();
+                }
             }
         }
 
