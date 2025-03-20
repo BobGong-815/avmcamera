@@ -462,7 +462,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             try {
                 int i = bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE, 0);
                 KLog.i(TAG+"第一个任务完成:"+i);
-                if(!isFirstTimeOut) {
+                if(!isFirstTimeOut && AvmApp.getInstance().getCameraView() == null) {
                     mainHandler.post(this::initAvm);
                 }
                 if(i == -1){
@@ -487,7 +487,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 try {
                     bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
                     KLog.i(TAG+"第二个任务完成");
-                    if(!isSecondTimeOut) {
+                    if(!isSecondTimeOut && AvmApp.getInstance().getCameraView() == null) {
                         mainHandler.post(this::initAvm);
                     }
                 } catch (Exception ex) {
@@ -502,7 +502,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.e(TAG+"第二个任务超时，转为主线程执行操作");
                 isSecondTimeOut = true;
                 secondTaskFuture.cancel(true); // 取消第二个任务
-                mainHandler.post(this::initAvm);
+                if(AvmApp.getInstance().getCameraView() == null) {
+                    mainHandler.post(this::initAvm);
+                }
             } catch (Exception ex) {
                 KLog.e(TAG+"第二个任务异常"+ ex);
             }
