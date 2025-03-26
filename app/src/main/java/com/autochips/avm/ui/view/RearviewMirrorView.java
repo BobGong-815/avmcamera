@@ -200,6 +200,14 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
 
     }
 
+    public void changeShow(float speedValue) {
+        boolean isEnable = speedValue <= 15;//可以点击
+        if(isEnable != rearviewMirrorBinding.swFold.isEnabled()){
+            rearviewMirrorBinding.swFold.setAlpha(isEnable ? 1.0f : 0.3f);
+            rearviewMirrorBinding.swFold.setEnabled(isEnable);
+        }
+    }
+
     public interface OnVisibilityListener {
         void Visibility(boolean isVisibility);
     }

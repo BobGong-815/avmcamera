@@ -371,6 +371,7 @@ public class CameraViewModelHelper {
 
     public void setSpeed(float val) {
         speedValue = mpsToKmh(val);
+        AvmApp.getInstance().getCameraView().changeRearviewShow(speedValue);
 //        speedValue = 3;// 测试透明地盘
         //KLog.d("车速："+val+"   isSpeedModel: "+isSpeedModel+"   speedValue: "+speedValue+"   turnValue: "+turnValue+ "  isClick:  "+isClick+"  版本号： "+ ServiceUtils.getVersionName());
         int turn = CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT);
@@ -571,7 +572,7 @@ public class CameraViewModelHelper {
                 isReverseInByTurn = false;
                 if (isReverseIn) // 倒车进入的时候才会定时
                   isReverseToTurnStats = true;
-                turnActive(turnValue);
+                turnActive(turnValue,false);
             }
 
 
@@ -580,7 +581,7 @@ public class CameraViewModelHelper {
           if (isReverseIn)
             isReverseToTurnStats = true;
             isReverseInByTurn = false;
-            turnActive(turnValue);
+            turnActive(turnValue,false);
         }
 
     }
@@ -608,9 +609,11 @@ public class CameraViewModelHelper {
      * 转向激活 557843113
      *
      * @param value 1：left 2:right
+     * @param isLight 灯光
      */
-    public void turnActive(int value) {
-        KLog.d(value + " 转向激活 turnActive isClose = " + AvmApp.getInstance().getCameraView().isFullWin + " isReverse:" + isReverse +" valGear : " + valGear );
+    public void turnActive(int value, boolean isLight) {
+        KLog.d(value + " 转向激活 turnActive isClose = " + AvmApp.getInstance().getCameraView().isFullWin + " isReverse:" + isReverse +" valGear : " + valGear
+        +"mCurrentTime :"+mCurrentTime);
 //        if (value == 0 && turnValue > 0){
 //            turnExit(0);
 //        }
@@ -622,16 +625,16 @@ public class CameraViewModelHelper {
             turnValue = value;
         }
         turnRSet = false;
-        if(value == 0 && mCurrentTime == 0){
+        if(value == 0 && mCurrentTime == 0 && !isLight){
             mCurrentTime = System.currentTimeMillis();
             mHandler.postDelayed(() -> {
                 KLog.d(" 转向激活 delayed do 0 ");
-                turnActive(0);
-            },"turnDealyClose",800);
+                turnActive(0,false);
+            },"turnDealyClose",1000);
             return;
         }else {
            if(mCurrentTime != 0){
-               if(System.currentTimeMillis() - mCurrentTime < 800){
+               if(System.currentTimeMillis() - mCurrentTime < 1000){
                    KLog.d(" 转向激活 turnActive  is same remove 0 ");
                    mHandler.removeCallbacksAndMessages("turnDealyClose");
                }

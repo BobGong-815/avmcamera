@@ -125,4 +125,5 @@ dependencies {
 //    implementation 'skin.support:skin-support-constraint-layout:4.0.5'
     implementation files('libs\\Car-Framework-2.0-2.0.29-20240429.021058-1.jar')
     implementation files('libs\\bljsonsdk_v2.0.7-product-release.aar')
+    implementation files('libs\\SplitScreenManager.jar')
 }

@@ -77,24 +77,23 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.android.bvavm.bvavmJNI;
+import com.android.wm.shell.splitscreen.ISplitScreenCallback;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.data.DataConstant;
@@ -102,19 +101,24 @@ import com.autochips.avm.data.DataManager;
 import com.autochips.avm.data.Monitor;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
+import com.autochips.avm.info.AutoStatusRequBean;
+import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
 import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
 import com.google.gson.Gson;
+import com.gxa.car.splitscreenmanager.ServiceConnectCallback;
+import com.gxa.car.splitscreenmanager.SplitScreenManager;
 import com.iflytek.autofly.mapsdk.BlJsonProtocolManager;
 import com.iflytek.autofly.mapsdk.IJsonProtocolReceive;
-import com.iflytek.autofly.mapsdk.bean.infotransmit.AutoStatusRequBean;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
-import gxa.car.engineModeSdk.ConfigManager;
 import gxa.car.power.data.CarPowerData;
 import gxa.car.power.data.CarPowerSignalStatus;
 import gxa.car.power.data.CarPowerWorkModeStatus;
@@ -129,7 +133,8 @@ public class AvmService extends Service {
     public Monitor sMonitor;
     public boolean IS_AY5 = false;
     private CarPowerManager mCarPowerManager;
-    public static boolean mIsStartStatus = false;//记录是否开始导航
+    public static boolean mIsStartStatus = false;//记录地图是否开始导航
+    public static boolean mIsScreen = false; // 记录是否为分屏
     public static boolean isLeftScreen = false;//是否为左边的分屏显示全景
 
     @SuppressLint("InvalidWakeLockTag")
@@ -226,23 +231,35 @@ public class AvmService extends Service {
             @Override
             public void received(String result, int aidlBindState) {
                 KLog.d("BlJsonProtocolManager  result:"+result);
-                AutoStatusRequBean autoStatusRequBean = gson.fromJson(result, AutoStatusRequBean.class);
-                if(autoStatusRequBean != null){
-                    int autoStatus = autoStatusRequBean.getAutoStatus();
-                    KLog.v("BlJsonProtocolManager  autoStatusRequBean:"+autoStatus);
-                    if(autoStatus == 16) {
-                        mIsStartStatus = true;
-                    }else if(autoStatus == 17){
-                        mIsStartStatus = false;
-                    }
-                    if(mIsStartStatus){
-                        //开始导航
-                        if(AvmApp.getInstance().getCameraView() != null && AvmApp.getInstance().getCameraView().isSmartWin){
-                            //小卡片显示中，需要小卡片移动
-                            mHandler.post(()->AvmApp.getInstance().getCameraView().moveView());
+                // 1. 先解析 protocolId
+                try {
+                    JSONObject root = new JSONObject(result);
+                    int protocolId = root.getInt("protocolId");
+                    if(protocolId == 300200) {
+                        AutoStatusRequBean autoStatusRequBean = gson.fromJson(result, AutoStatusRequBean.class);
+                        if (autoStatusRequBean != null) {
+                            KLog.d("BlJsonProtocolManager  result: autoStatusRequBean：" + autoStatusRequBean.toString());
+                        }
+                        if (autoStatusRequBean != null && autoStatusRequBean.getData() != null) {
+                            int autoStatus = autoStatusRequBean.getData().getAutoStatus();
+                            KLog.i("BlJsonProtocolManager  autoStatusRequBean:" + autoStatus);
+                            if (autoStatus == 16) {
+                                mIsStartStatus = true;
+                            } else if (autoStatus == 17) {
+                                mIsStartStatus = false;
+                            }
+                            //开始导航
+                            if (AvmApp.getInstance().getCameraView() != null && AvmApp.getInstance().getCameraView().isSmartWin) {
+                                //小卡片显示中，需要小卡片移动
+                                changeScreenDirection();
+                            }
                         }
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+
             }
 
             @Override
@@ -250,50 +267,102 @@ public class AvmService extends Service {
 
             }
         });
+        SplitScreenManager.getInstance().init(this,SplitScreenManager.AUTO_RECONNECTED);
+        SplitScreenManager.getInstance().setServiceConnectCallback(new ServiceConnectCallback() {
+            @Override
+            public void onServiceConnected() {
+                KLog.i("SplitScreenManager  onServiceConnected");
+            }
 
-        // 注册配置监听
-        //registerComponentCallbacks(componentCallbacks);
+            @Override
+            public void onServiceDisconnected() {
+                KLog.i("SplitScreenManager  onServiceDisconnected");
+            }
+        });
+        SplitScreenManager.getInstance().registerSplitScreenCallback(new ISplitScreenCallback() {
+
+            //分屏区域⼤⼩改变，stage： 0、表⽰地图所在的区域； 1、表⽰⾮地图所在的区域； 1
+            //rect：区域的⼤⼩、位置
+            @Override
+            public void onStageBoundsChanged(int stage, Rect rect) {
+                KLog.i("SplitScreenManager  onStageBoundsChanged stage:"+stage +" rect"+rect.width());
+            }
+
+
+            //分屏位置交换回调，stage：0、表⽰地图所在的区域； 1、表⽰⾮地图所在的区域；
+            // position: 0、表⽰左侧区域； 1、表⽰右侧区域；
+            @Override
+            public void onStagePositionChanged(int stage, int position) {
+                KLog.i("SplitScreenManager  onStagePositionChanged stage:"+stage +" position:"+position);
+                mIsScreen = true;
+                if (stage == 0){
+                    if(position == 0) {
+                        //此时表示地图在左边
+                        isLeftScreen = false;
+                        changeScreenDirection();
+                    }else if(position == 1){
+                        //此时表示地图在右侧区域
+                        isLeftScreen = true;
+                        changeScreenDirection();
+                    }
+                }
+            }
+
+            // 是否分屏状态监听：true、分屏状态；false、退出分屏状态
+            @Override
+            public void onSplitScreenStateChanged(boolean isScreenState) {
+                KLog.i("SplitScreenManager  onSplitScreenStateChanged:"+isScreenState);
+                mIsStartStatus = isScreenState;
+            }
+
+            // 分屏区域栈状态改变回调： taskId、所在栈的id;
+            // stage: 0、表⽰地图所在的区域； 1、表⽰⾮地图所在的区域;
+            // visible: 是否可⻅
+            @Override
+            public void onTaskStageChanged(int taskId, int stage, boolean visible) {
+                KLog.i("SplitScreenManager  onTaskStageChanged taskId:"+taskId+" stage:"+stage +" visible:"+visible);
+            }
+
+            /** 通知地图分屏按钮是否显⽰,返回结果如下：
+            [{
+             "packageName": "com.android.xxxx", //包名
+             "showOrHide": 1 // 1 show; 2 hide
+             }, {
+             "packageName": "com.android.xxxx",
+             "showOrHide": 1
+             }]
+            其中packageName为应⽤包名，showOrHide表⽰显⽰隐藏：1、为显⽰ 2、为隐藏*/
+            @Override
+            public void onAppViewShowOrHideChanged(String json) {
+                KLog.i("SplitScreenManager  SplitScreenManager json:"+json);
+            }
+
+
+            /**
+             INVALID_VALUE = -1;
+             LAUNCHER_SCENE_CAR = 0; //⻋模场景
+             LAUNCHER_SCENE_MAP = 1; //地图场景：地图、地图+SR分屏场景
+             LAUNCHER_SCENE_WALLPAPER = 2; // 壁纸场景： Launcher
+             SCENE_APP = 3; // app场景：全屏app、分屏app
+             SCENE_SR = 4; // sr全屏场景
+             */
+            @Override
+            public void onScenesChanged(int scene) {
+                mIsScreen = (scene == 1 || scene == 3);
+                KLog.i("SplitScreenManager  onScenesChanged scene:"+scene +"mIsScreen:"+mIsScreen);
+                changeScreenDirection();
+            }
+
+            @Override
+            public IBinder asBinder() {
+                return null;
+            }
+        });
     }
-
-//    private int lastScreenWidth = -1;
-//    private boolean isSplitScreen = false;
-//    private ComponentCallbacks2 componentCallbacks = new ComponentCallbacks2() {
-//        @Override
-//        public void onConfigurationChanged(Configuration newConfig) {
-//            checkSplitScreen(newConfig);
-//        }
-//
-//        @Override
-//        public void onLowMemory() {}
-//
-//        @Override
-//        public void onTrimMemory(int level) {}
-//    };
-//
-//    // 分屏检测逻辑
-//    private void checkSplitScreen(Configuration newConfig) {
-//        int currentWidth = newConfig.screenWidthDp;
-//        KLog.d("checkSplitScreen:"+currentWidth);
-//        int threshold = 600; // 分屏阈值（根据设备调整）
-//
-//        // 首次初始化
-//        if (lastScreenWidth == -1) {
-//            lastScreenWidth = currentWidth;
-//            return;
-//        }
-//
-//        // 宽度变化超过阈值判定为分屏
-//        if (Math.abs(currentWidth - lastScreenWidth) > threshold) {
-//            isSplitScreen = true;
-//        } else {
-//            isSplitScreen = false;
-//        }
-//        lastScreenWidth = currentWidth;
-//    }
 
     //更改显示位置
     private void changeScreenDirection(){
-        KLog.v("changeScreenDirection  mIsStartStatus:"+mIsStartStatus +" isLeftScreen:"+isLeftScreen);
+        KLog.i("changeScreenDirection  mIsStartStatus:"+mIsStartStatus +" isLeftScreen:"+isLeftScreen +" mIsScreen:"+mIsScreen);
         if (AvmApp.getInstance().getCameraView() != null && AvmApp.getInstance().getCameraView().isSmartWin) {
             //存在左右分屏切换，需要更改吸附位置
             mHandler.post(() -> AvmApp.getInstance().getCameraView().snapToPosition());
@@ -332,6 +401,104 @@ public class AvmService extends Service {
       },1000);
     },3000);
   }
+
+    private void onValueChangedListener(int vehicleId, Object value) {
+        if (AvmApp.getInstance().getCameraView() == null) {
+            KLog.d("AvmApp view is not init");
+            return;
+        }
+
+        if (vehicleId == AVM_UINM_TURN_LIGHT_SW_ST) { //转向激活
+            KLog.d(fishTh + " fishTh 转向 vehicleId = " + vehicleId + "  ,value = " + value);
+            if (value instanceof Integer && (int) value > 0) {
+                fishTh = 1;
+            }
+            if (BvAvmJNIHelper.isAvmDeInit) {
+                CameraViewModelHelper.getInstance().turnActive((Integer) value, false);
+            } else {
+                KLog.d("初始化未成功 ，过滤转向");
+            }
+//        } else if (vehicleId == CLUSTER_BCM_RIGHT_TURN_LAMP) {//右转向灯
+        } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP || vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//左边转向灯闪
+//            if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
+//                if (value instanceof Integer) {
+//                    leftLightStPt = (int) value;
+//                }
+//                leftTurnLChangeTime = System.currentTimeMillis();
+//                KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime - rightTurnLChangeTime));
+//                if (turnLampSwSts == 1) {
+//                    //转向未回正也会双闪，处理转向未回正的双闪逻辑
+//                    if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
+//                        KLog.d(" 判定为双闪 ");
+//                        //双闪
+//                        mHandler.postDelayed(() -> CameraViewModelHelper.getInstance().turnActive(0, true), "turnReset", 1000);
+//                    } else if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 0 && rightLightStpt == 0) {
+//                        KLog.d(" 判定为双闪 ");
+//                    } else {
+//                        KLog.d(" 判定为非双闪 ");
+//                        mHandler.removeCallbacksAndMessages("turnReset");
+//                    }
+//                }
+//            } else {//右边转向灯闪
+//                if (value instanceof Integer) {
+//                    rightLightStpt = (int) value;
+//                }
+//                rightTurnLChangeTime = System.currentTimeMillis();
+//                KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime - leftTurnLChangeTime));
+//                if (turnLampSwSts == 1) {
+//                    //转向未回正也会双闪，处理转向未回正的双闪逻辑
+//                    if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
+//                        KLog.d(" 判定为双闪 ");
+//                        //双闪
+//                        mHandler.postDelayed(() -> CameraViewModelHelper.getInstance().turnActive(0, true), "turnReset", 1000);
+//                    } else if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 0 && rightLightStpt == 0) {
+//                        KLog.d(" 判定为双闪 ");
+//                    } else if (rightTurnLChangeTime == 0 || leftTurnLChangeTime == 0) {
+//                        KLog.d(" 判定为非双闪 ");
+//                        mHandler.removeCallbacksAndMessages("turnReset");
+//                    }
+//                }
+//            }
+        } else if (vehicleId == VEHICLE_SPEED) {// 车速
+            if (!(value instanceof Float)) {
+                KLog.d("value is not Float");
+                return;
+            }
+            float fl = (Float) value;
+            //KLog.d("车速： "+fl);
+            CameraViewModelHelper.getInstance().setSpeed(fl);
+        } else if (vehicleId == SETTINGS_VCU_BRKPEDPST) {//刹车踏板
+            if (!(value instanceof Float)) {
+                KLog.d("value is not Float");
+                return;
+            }
+            if ((Float) value > 99.96f) {
+                CustomToast.showToast(AvmApp.getInstance().getString(R.string.emergency_braking));
+            }
+
+        } else if (vehicleId == AVM_SAS_STEERING_ANGLE) { // 转角值
+            CameraViewModelHelper.getInstance().angleSteel();
+        } else if (vehicleId == MIRROR_FOLD_UNFOLD_STATUS) { // 后视镜折叠
+            CameraViewModelHelper.getInstance().mirrorFoldUnFoldStatus(value);
+        } else if (vehicleId == SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE) { // 后视下翻
+            CameraViewModelHelper.getInstance().mirrorAutomaticStatus();
+        } else if (vehicleId == CLUSTER_VCU_GEAR_LVL_DISP) {// 挡位
+            if (!(value instanceof Integer)) {
+                return;
+            }
+            if (BvAvmJNIHelper.isAvmDeInit) {
+                reverse((int) value);
+            } else {
+                KLog.d("初始化未成功 ，过滤挡位");
+            }
+        }
+        setDoorStatus(vehicleId, value);
+        setFlWheelStatus(vehicleId, value);
+        setLight(vehicleId, value);
+        setRadar(vehicleId, value);
+        setCalibration(vehicleId, value);
+    }
+
     public class AvmServiceIBinder extends Binder {
 
 
@@ -463,67 +630,14 @@ public class AvmService extends Service {
     }
 
     private  int  count = 0;
-    private final CanManager.onSignalValueChangedListener mOnSignalValueChangedListener = (vehicleId, value) -> {
-        if(AvmApp.getInstance().getCameraView() ==null) {
-            KLog.d("AvmApp view is not init");
-            return;
-        }
 
-        if (vehicleId == AVM_UINM_TURN_LIGHT_SW_ST) { //转向激活
-            KLog.d(fishTh+" fishTh 转向 vehicleId = " + vehicleId + "  ,value = " + value);
-            if (value instanceof  Integer && (int)value > 0){
-                fishTh = 1;
-            }
-            if(BvAvmJNIHelper.isAvmDeInit) {
-                CameraViewModelHelper.getInstance().turnActive((Integer) value);
-            } else {
-                KLog.d("初始化未成功 ，过滤转向");
-            }
-//        } else if (vehicleId == CLUSTER_BCM_RIGHT_TURN_LAMP) {//右转向灯
-        } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪
-//            turnExit((Integer) value);
-        } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
+    int turnLampSwSts = -1;
+    long leftTurnLChangeTime = 0;
+    long rightTurnLChangeTime = 0;
 
-//            turnExit((Integer) value);
-        } else if (vehicleId == VEHICLE_SPEED) {// 车速
-            if (!(value instanceof Float)) {
-                KLog.d("value is not Float");
-                return;
-            }
-            float fl = (Float) value;
-            //KLog.d("车速： "+fl);
-            CameraViewModelHelper.getInstance().setSpeed(fl);
-        } else if (vehicleId == SETTINGS_VCU_BRKPEDPST) {//刹车踏板
-            if (!(value instanceof Float)) {
-                KLog.d("value is not Float");
-                return;
-            }
-            if ((Float) value > 99.96f) {
-                CustomToast.showToast(AvmApp.getInstance().getString(R.string.emergency_braking));
-            }
-
-        } else if (vehicleId == AVM_SAS_STEERING_ANGLE) { // 转角值
-            CameraViewModelHelper.getInstance().angleSteel();
-        } else if (vehicleId == MIRROR_FOLD_UNFOLD_STATUS) { // 后视镜折叠
-            CameraViewModelHelper.getInstance().mirrorFoldUnFoldStatus(value);
-        } else if (vehicleId == SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE) { // 后视下翻
-            CameraViewModelHelper.getInstance().mirrorAutomaticStatus();
-        } else if (vehicleId == CLUSTER_VCU_GEAR_LVL_DISP) {// 挡位
-            if (!(value instanceof Integer)) {
-                return;
-            }
-            if(BvAvmJNIHelper.isAvmDeInit) {
-                reverse((int) value);
-            }else{
-                KLog.d("初始化未成功 ，过滤挡位");
-            }
-        }
-        setDoorStatus(vehicleId, value);
-        setFlWheelStatus(vehicleId, value);
-        setLight(vehicleId, value);
-        setRadar(vehicleId, value);
-        setCalibration(vehicleId, value);
-    };
+    private int leftLightStPt = 0;//左转灯光 0表示不亮 1表示亮起,控制2.5处理
+    private int rightLightStpt = 0;//右转灯光 0表示不亮 1表示亮起,控制2.5处理
+    private final CanManager.onSignalValueChangedListener mOnSignalValueChangedListener = this::onValueChangedListener;
 
     private  void reverse(int value){
         gearValue = value;

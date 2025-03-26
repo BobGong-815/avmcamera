@@ -601,9 +601,9 @@ public class CameraView extends View implements LifecycleOwner {
 
       boolean bl = mViewCameraBinding.getRoot().isAttachedToWindow();
       mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
-      if (viewType == ViewType.ReverseIn && !isSmartWin){
-        mWindowLps.height = 1080;
-      }
+//      if (viewType == ViewType.ReverseIn && !isSmartWin){
+//        mWindowLps.height = 1080;
+//      }
       KLog.d("刷新--setWindowType-bl ：" + bl +" height:"+mWindowLps.height + "CameraGLSurfaceView.glStatus:"+CameraGLSurfaceView.glStatus);
 //        CameraGLSurfaceView.glStatus ;
       if ( bl && (CameraGLSurfaceView.glStatus == 1 || CameraGLSurfaceView.glStatus == 25) && isShowing){
@@ -1153,15 +1153,15 @@ public class CameraView extends View implements LifecycleOwner {
      * 显示1/3 屏
      */
     public void showSmartWin() {
-        Log.i(TAG, "valGear showSmartWin: 显示1/3屏幕");
+        Log.i(TAG, "valGear showSmartWin: 显示1/3屏幕 mIsStartStatus:"+AvmService.mIsStartStatus +"mIsScreen:"+AvmService.mIsScreen+" isLeftScreen:"+AvmService.isLeftScreen);
         if (isSmartWin || isFullWin) {
             Log.i(TAG, "showSmartWin: 已经显示1/3屏幕");
             return;
         }
 
-
+        canShowAct = false;
         mWindowLps.y = 86;
-        mWindowLps.x = AvmService.mIsStartStatus && !AvmService.isLeftScreen ? 810 : 50;
+        mWindowLps.x = (AvmService.mIsStartStatus && !AvmService.mIsScreen) || (AvmService.mIsScreen && !AvmService.isLeftScreen) ? 810 : 50;
         isSmartWin = true;
         mWindowLps.width = 455;
         mWindowLps.height = 623;
@@ -1288,6 +1288,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     private  boolean isSmartWinToFull = false;
     public void showComm() {
+        showRootView();
         Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
         DataManager.writeFault(DataConstant.Code.APK_OPEN);
         DataManager.writeFault(DataConstant.Code.BP_SHOW);
@@ -1503,7 +1504,7 @@ public class CameraView extends View implements LifecycleOwner {
         isSmartWin = false;
         isShowing = false;
         isDismissView = true;
-
+        canShowAct = false;
         boolean attachedToWindow = mViewCameraBinding.getRoot().isAttachedToWindow();
         KLog.d(" attachedToWindowcameraBinding dismissView attached = " + attachedToWindow);
         mWindowLps.alpha = 0.0f;
@@ -1612,6 +1613,10 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowLps.x = 810;
         }
         mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(),mWindowLps);
+    }
+
+    public void changeRearviewShow(float speedValue){
+        rearviewMirrorView.changeShow(speedValue);
     }
 
     /**
@@ -1749,13 +1754,23 @@ public class CameraView extends View implements LifecycleOwner {
             case MotionEvent.ACTION_UP:
                 if (!isMove) {
                     // 点击事件
+                    if(isSnapToPosition){
+                        KLog.i("onTouch: isSnapToPosition");
+                        if(animator != null){
+                            isSnapToPosition = false;
+                            KLog.i("onTouch: isSnapToPosition cancle animator");
+                            animator.cancel();
+                        }
+                    }
                     showFull2DByOnTouch();
                 } else {
-                    snapToPosition();
+                    if(!isSnapToPosition) {
+                        snapToPosition();
+                    }
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(isSmartWin){
+                if(isSmartWin && !isSnapToPosition){
                     isMove = true;
                     int nowX = (int) event.getRawX();
                     int nowY = (int) event.getRawY();
@@ -1763,21 +1778,21 @@ public class CameraView extends View implements LifecycleOwner {
                     int movedY = nowY - y;
                     int mX = mWindowLps.x + movedX;
                     int mY = mWindowLps.y + movedY;
-                    if (AvmService.mIsStartStatus) {
-                        //地图在导航，表示在分屏
-                        if (AvmService.isLeftScreen) {
-                            // 左分屏：X范围0-735
-                            mX = Math.max(0, Math.min(mX, 735));
-                        } else {
-                            // 右分屏：X范围760-1465
-                            mX = Math.max(760, Math.min(mX, 1465));
-                        }
-                    } else {
-                        // 正常模式：X范围0-1465
-                        mX = Math.max(0, Math.min(mX, 1465));
-                    }
+//                    if (AvmService.mIsScreen) {
+//                        //表示在分屏
+//                        if (AvmService.isLeftScreen) {
+//                            // 左分屏：X范围0-735
+//                            mX = Math.max(0, Math.min(mX, 735));
+//                        } else {
+//                            // 右分屏：X范围760-1465
+//                            mX = Math.max(760, Math.min(mX, 1465));
+//                        }
+//                    } else {
+//                        // 正常模式：X范围0-1465
+                    mX = Math.max(0, Math.min(mX, 1465));
+                    //}
                     mWindowLps.x = mX;
-                    mWindowLps.y = Math.max(0, Math.min(mY, 457));  // 1080 - 623 = 457
+                    mWindowLps.y = Math.max(0, Math.min(mY, 349));  // 1080 - 108 - 623 = 349
                     x = nowX;
                     y = nowY;
                     mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
@@ -1787,22 +1802,30 @@ public class CameraView extends View implements LifecycleOwner {
         return true;
     }
 
+    private boolean isSnapToPosition = false;//正在拖动位置
+    private ValueAnimator animator;
     public void snapToPosition() {
-        int screenHeight = 1080;
+        KLog.i("snapToPosition: AvmService.isLeftScreen"+AvmService.isLeftScreen+"AvmService.mIsStartStatus:"+AvmService.mIsStartStatus);
+        isSnapToPosition = true;
+        //mViewCameraBinding.viewFrame.setEnabled(false);
+        int screenHeight = 1080 - 108;
         // 计算当前悬浮窗中心Y坐标
         int currentCenterY = mWindowLps.y + 623 / 2;
         int targetY = (currentCenterY <= screenHeight / 2) ? 86 : 371;
         // 确定目标X坐标
         int targetX;
-        if (AvmService.mIsStartStatus) {
+        if (AvmService.mIsScreen) {
             targetX = AvmService.isLeftScreen ? 50 : 810; // 右分屏810，左分屏50
         } else {
-            targetX = 50; // 正常模式
+            targetX = AvmService.mIsStartStatus ? 810 : 50; // 正常模式
         }
         // 动画过渡到目标位置
         int startX = mWindowLps.x;
         int startY = mWindowLps.y;
-        ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+        if(animator != null) {
+            animator.cancel();
+        }
+        animator = ValueAnimator.ofFloat(0f, 1f);
         animator.setDuration(300);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.addUpdateListener(animation -> {
@@ -1820,6 +1843,8 @@ public class CameraView extends View implements LifecycleOwner {
                 mWindowLps.x = targetX;
                 mWindowLps.y = targetY;
                 mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(), mWindowLps);
+                isSnapToPosition = false;
+                //mViewCameraBinding.viewFrame.setEnabled(true);
             }
         });
         animator.start();
@@ -1917,6 +1942,16 @@ public class CameraView extends View implements LifecycleOwner {
     public void setRadar(int model, int len,int gear) {
 
         mViewCameraBinding.rearRadarViewId.status(model, len, gear);
+    }
+
+    public void hideView() {
+        KLog.i("hideView");
+        mViewCameraBinding.getRoot().setVisibility(GONE);
+    }
+
+    public void showRootView() {
+        KLog.i("showRootView");
+        mViewCameraBinding.getRoot().setVisibility(VISIBLE);
     }
 
 

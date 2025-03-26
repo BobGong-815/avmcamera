@@ -31,19 +31,20 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void gearChange(int gear) {
             KLog.v("MainActivity", "MainActivity::gearChange():"+gear);
-            if(gear == 3){
-                //r档不需要act,解绑act
-                unBindWindow();
-            }else {
-                if(AvmApp.getInstance().getCameraView().isFullWin){
-                    bindWindow();
-                }
-            }
+//            if(gear == 3){
+//                //r档不需要act,解绑act
+//                unBindWindow();
+//            }else {
+//                if(AvmApp.getInstance().getCameraView().isFullWin){
+//                    bindWindow();
+//                }
+//            }
         }
 
         @Override
         public void viewChange() {
             KLog.v("MainActivity", "MainActivity::viewChange()");
+            AvmApp.getInstance().getCameraView().hideView();
             unBindWindow();
             //关闭
             finish();
@@ -53,8 +54,6 @@ public class MainActivity extends AppCompatActivity{
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         super.onCreate(savedInstanceState);
 
         Window window = getWindow();
@@ -81,8 +80,16 @@ public class MainActivity extends AppCompatActivity{
 
     protected void onResume() {
         super.onResume();
+        //AvmApp.getInstance().getCameraView().showRootView();
         KLog.v("MainActivity", "MainActivity::onResume()");
         getWindow().getDecorView().postDelayed(runnable, 0);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        KLog.v("MainActivity", "MainActivity::onPause()");
+        //AvmApp.getInstance().getCameraView().hideView();
     }
 
     protected void onStop() {
@@ -112,7 +119,7 @@ public class MainActivity extends AppCompatActivity{
 
     public boolean updateLayer() {
         KLog.v("MainActivity", "isRearGearSts : " + CameraViewModelHelper.valGear + " , getFullSceneSts is " + AvmApp.getInstance().getCameraView().isSmartWin);
-        if (CameraViewModelHelper.valGear == 3 || AvmApp.getInstance().getCameraView().isSmartWin) {
+        if (AvmApp.getInstance().getCameraView().isSmartWin) {
             return unBindWindow();
         } else {
             return bindWindow();
@@ -223,9 +230,12 @@ public class MainActivity extends AppCompatActivity{
 
             SurfaceControl.Transaction transaction = null;
             // 调用setRelativeLayer方法
-            transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
-                    windowSC, activitySC, -1);
-            transaction.apply();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
+                        windowSC, activitySC, -1);
+                transaction.apply();
+                transaction.close();
+            }
 
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             e.printStackTrace();
@@ -256,6 +266,7 @@ public class MainActivity extends AppCompatActivity{
                 transaction = (SurfaceControl.Transaction) setRelativeLayerMethod.invoke(transactionObject,
                         windowSC, z);
                 transaction.apply();
+                transaction.close();
             }
 
         } catch (ClassNotFoundException e) {

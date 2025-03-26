@@ -117,7 +117,7 @@ public class BvAvmJNIHelper {
                         turnIsPgear = true;
                     }
                     Log.i("BvAvmJNIHelper","turnIsPgear:"+turnIsPgear);
-                    mHandler.post(() -> CameraViewModelHelper.getInstance().turnActive(turnVaule));
+                    mHandler.post(() -> CameraViewModelHelper.getInstance().turnActive(turnVaule,false));
                 }
             }
             bwSetTrajLineStatus(gear);

@@ -1,14 +1,9 @@
 package com.autochips.avm.ui.view;
 
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_VCU_GEAR_LVL_DISP;
-import static android.hardware.camera2.CameraMetadata.LENS_FACING_BACK;
 import static android.opengl.GLES10.GL_TRUE;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
@@ -19,24 +14,19 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 
 import com.android.bvavm.bvavmJNI;
-import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.data.DataConstant;
 import com.autochips.avm.data.DataManager;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.util.SystemProperties;
-import com.avm.framwork.helper.ThreadPoolUtil;
-import com.avm.framwork.manager.CanManager;
 
-import java.util.Arrays;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
 
-import gxa.car.power.data.CarPowerWorkModeStatus;
 import gxa.car.power.manager.CarPowerManager;
 import me.goldze.mvvmhabit.utils.KLog;
 
@@ -126,7 +116,7 @@ public class CameraGLSurfaceView extends GLSurfaceView {
 //                return;
 //            }
             try {
-                Thread.sleep(30);
+                Thread.sleep(40);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
