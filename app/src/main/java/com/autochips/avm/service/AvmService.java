@@ -748,7 +748,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 }, "turnReset",1000);
                         }else if((rightTurnLChangeTime-leftTurnLChangeTime) < 50 && leftLightStPt == 0 && rightLightStpt == 0){
                             KLog.d(" 判定为双闪 ");
-                        }else if(rightTurnLChangeTime == 0 || leftTurnLChangeTime == 0){
+                        }else{
                             KLog.d(" 判定为非双闪 ");
                             mHandler.removeCallbacksAndMessages("turnReset");
                         }
