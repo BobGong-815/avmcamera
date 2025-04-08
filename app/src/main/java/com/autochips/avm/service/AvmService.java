@@ -714,7 +714,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     }
                     leftTurnLChangeTime = System.currentTimeMillis();
                     KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime));
-                    if (turnLampSwSts == 1) {
+                    if (turnLampSwSts != 0) {
                         //转向未回正也会双闪，处理转向未回正的双闪逻辑
                         if ((rightTurnLChangeTime-leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
                             KLog.d(" 判定为双闪 ");
@@ -737,7 +737,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     }
                     rightTurnLChangeTime = System.currentTimeMillis();
                     KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime));
-                    if (turnLampSwSts == 1) {
+                    if (turnLampSwSts != 0) {
                         //转向未回正也会双闪，处理转向未回正的双闪逻辑
                         if ((rightTurnLChangeTime-leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
                             KLog.d(" 判定为双闪 ");
