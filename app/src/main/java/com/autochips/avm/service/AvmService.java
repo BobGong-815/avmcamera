@@ -697,6 +697,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     if (intValue == 0) {
                         mHandler.postDelayed(()-> AvmApp.getInstance().getCameraView().getViewModel().turnLampChange(intValue, 0),"closeTurn",1000);
                     } else {
+                        mHandler.removeCallbacksAndMessages("turnReset");
                         leftTurnLChangeTime = 0;
                         rightTurnLChangeTime = 0;
                         isDulTurnChange = false;
