@@ -2196,10 +2196,10 @@ public class CameraView extends View implements LifecycleOwner {
 
 
                 if (AvmApp.ISAY5T) {
-                    segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle_day);
-                    segmentWideAngle.setBackground(mContext.getResources().getDrawable(R.mipmap.gj_bg_day));
-                    segmentWideAngle.setTextSelectColor(R.color.setting_view_title_color_day, 5);
-                    segmentWideAngle.setTextUnselectColor(R.color.setting_view_content_color_day);
+                    segmentWideAngle.setThumbDrawable2(R.mipmap.wide_angle);
+                    segmentWideAngle.setBackground(mContext.getResources().getDrawable(R.mipmap.gj_bg));
+                    segmentWideAngle.setTextSelectColor(R.color.setting_view_title_color, 5);
+                    segmentWideAngle.setTextUnselectColor(R.color.setting_view_content_color);
                 }
                 break;
         }
