@@ -1490,7 +1490,7 @@ public class CameraView extends View implements LifecycleOwner {
     private  boolean isDismissView = false;
 
     public void dismissView(String position) {
-        KLog.d(position + " position dismissView isShowing = " + isShowing+"turnValue:"+CameraViewModelHelper.getInstance().turnValue);
+        KLog.i(position + " position dismissView isShowing = " + isShowing+"turnValue:"+CameraViewModelHelper.getInstance().turnValue);
         if(position.contains("转向延时500ms退出") && (CameraViewModelHelper.getInstance().turnValue == 1
                 || CameraViewModelHelper.getInstance().turnValue == 2) && isSmartWin){
             return;
