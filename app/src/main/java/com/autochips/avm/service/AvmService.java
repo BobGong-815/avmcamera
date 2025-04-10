@@ -102,7 +102,6 @@ import com.autochips.avm.data.Monitor;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.info.AutoStatusRequBean;
-import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
@@ -113,6 +112,7 @@ import com.gxa.car.splitscreenmanager.ServiceConnectCallback;
 import com.gxa.car.splitscreenmanager.SplitScreenManager;
 import com.iflytek.autofly.mapsdk.BlJsonProtocolManager;
 import com.iflytek.autofly.mapsdk.IJsonProtocolReceive;
+import com.iflytek.autofly.mapsdk.bean.navi.TbtBean;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -134,6 +134,7 @@ public class AvmService extends Service {
     public boolean IS_AY5 = false;
     private CarPowerManager mCarPowerManager;
     public static boolean mIsStartStatus = false;//记录地图是否开始导航
+    public static boolean mMapSpeedStatus = false;//记录地图是否有弹出限速图标
     public static boolean mIsScreen = false; // 记录是否为分屏
     public static boolean isLeftScreen = false;//是否为左边的分屏显示全景
 
@@ -238,7 +239,7 @@ public class AvmService extends Service {
                     if(protocolId == 300200) {
                         AutoStatusRequBean autoStatusRequBean = gson.fromJson(result, AutoStatusRequBean.class);
                         if (autoStatusRequBean != null) {
-                            KLog.d("BlJsonProtocolManager  result: autoStatusRequBean：" + autoStatusRequBean.toString());
+                            KLog.d("BlJsonProtocolManager  result: autoStatusRequBean：" + autoStatusRequBean);
                         }
                         if (autoStatusRequBean != null && autoStatusRequBean.getData() != null) {
                             int autoStatus = autoStatusRequBean.getData().getAutoStatus();
@@ -249,6 +250,23 @@ public class AvmService extends Service {
                                 mIsStartStatus = false;
                             }
                             //开始导航
+                            if (AvmApp.getInstance().getCameraView() != null && AvmApp.getInstance().getCameraView().isSmartWin) {
+                                //小卡片显示中，需要小卡片移动
+                                changeScreenDirection();
+                            }
+                        }
+                    }else if(protocolId == 300407){
+                        TbtBean tbtBean = gson.fromJson(result, TbtBean.class);
+                        KLog.d("BlJsonProtocolManager  result: tbtBean：" + tbtBean);
+                        if (tbtBean != null) {
+                            int cameraType = tbtBean.getCameraType();
+                            KLog.i("BlJsonProtocolManager  tbtBean:" + cameraType);
+                            if (cameraType == 8) {
+                                mMapSpeedStatus = true;
+                            } else if (cameraType == 9) {
+                                mMapSpeedStatus = false;
+                            }
+                            //弹出收回区间限速
                             if (AvmApp.getInstance().getCameraView() != null && AvmApp.getInstance().getCameraView().isSmartWin) {
                                 //小卡片显示中，需要小卡片移动
                                 changeScreenDirection();
@@ -267,7 +285,7 @@ public class AvmService extends Service {
 
             }
         });
-        SplitScreenManager.getInstance().init(this,SplitScreenManager.AUTO_RECONNECTED);
+
         SplitScreenManager.getInstance().setServiceConnectCallback(new ServiceConnectCallback() {
             @Override
             public void onServiceConnected() {
@@ -358,6 +376,8 @@ public class AvmService extends Service {
                 return null;
             }
         });
+
+        SplitScreenManager.getInstance().init(this,SplitScreenManager.AUTO_RECONNECTED);
     }
 
     //更改显示位置
@@ -413,52 +433,59 @@ public class AvmService extends Service {
             if (value instanceof Integer && (int) value > 0) {
                 fishTh = 1;
             }
-            if (BvAvmJNIHelper.isAvmDeInit) {
-                CameraViewModelHelper.getInstance().turnActive((Integer) value, false);
-            } else {
-                KLog.d("初始化未成功 ，过滤转向");
+            if(value instanceof Integer) {
+                turnLampSwSts = (Integer) value;
+                if(turnLampSwSts != 0){
+                    //开时移除双闪退出动作
+                    mHandler.removeCallbacksAndMessages("turnReset");
+                }
+                if (BvAvmJNIHelper.isAvmDeInit) {
+                    CameraViewModelHelper.getInstance().turnActive((Integer) value, false);
+                } else {
+                    KLog.d("初始化未成功 ，过滤转向");
+                }
             }
 //        } else if (vehicleId == CLUSTER_BCM_RIGHT_TURN_LAMP) {//右转向灯
         } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP || vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//左边转向灯闪
-//            if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
-//                if (value instanceof Integer) {
-//                    leftLightStPt = (int) value;
-//                }
-//                leftTurnLChangeTime = System.currentTimeMillis();
-//                KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime - rightTurnLChangeTime));
-//                if (turnLampSwSts == 1) {
-//                    //转向未回正也会双闪，处理转向未回正的双闪逻辑
-//                    if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
-//                        KLog.d(" 判定为双闪 ");
-//                        //双闪
-//                        mHandler.postDelayed(() -> CameraViewModelHelper.getInstance().turnActive(0, true), "turnReset", 1000);
-//                    } else if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 0 && rightLightStpt == 0) {
-//                        KLog.d(" 判定为双闪 ");
-//                    } else {
-//                        KLog.d(" 判定为非双闪 ");
-//                        mHandler.removeCallbacksAndMessages("turnReset");
-//                    }
-//                }
-//            } else {//右边转向灯闪
-//                if (value instanceof Integer) {
-//                    rightLightStpt = (int) value;
-//                }
-//                rightTurnLChangeTime = System.currentTimeMillis();
-//                KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime - leftTurnLChangeTime));
-//                if (turnLampSwSts == 1) {
-//                    //转向未回正也会双闪，处理转向未回正的双闪逻辑
-//                    if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
-//                        KLog.d(" 判定为双闪 ");
-//                        //双闪
-//                        mHandler.postDelayed(() -> CameraViewModelHelper.getInstance().turnActive(0, true), "turnReset", 1000);
-//                    } else if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 0 && rightLightStpt == 0) {
-//                        KLog.d(" 判定为双闪 ");
-//                    } else if (rightTurnLChangeTime == 0 || leftTurnLChangeTime == 0) {
-//                        KLog.d(" 判定为非双闪 ");
-//                        mHandler.removeCallbacksAndMessages("turnReset");
-//                    }
-//                }
-//            }
+            if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
+                if (value instanceof Integer) {
+                    leftLightStPt = (int) value;
+                }
+                leftTurnLChangeTime = System.currentTimeMillis();
+                KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime - rightTurnLChangeTime));
+                if (turnLampSwSts != 0) {
+                    //转向未回正也会双闪，处理转向未回正的双闪逻辑
+                    if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
+                        KLog.d(" 判定为双闪 ");
+                        //双闪
+                        mHandler.postDelayed(() -> CameraViewModelHelper.getInstance().turnActive(0, true), "turnReset", 1000);
+                    } else if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 0 && rightLightStpt == 0) {
+                        KLog.d(" 判定为双闪 ");
+                    } else {
+                        KLog.d(" 判定为非双闪 ");
+                        mHandler.removeCallbacksAndMessages("turnReset");
+                    }
+                }
+            } else {//右边转向灯闪
+                if (value instanceof Integer) {
+                    rightLightStpt = (int) value;
+                }
+                rightTurnLChangeTime = System.currentTimeMillis();
+                KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime - leftTurnLChangeTime));
+                if (turnLampSwSts != 0) {
+                    //转向未回正也会双闪，处理转向未回正的双闪逻辑
+                    if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
+                        KLog.d(" 判定为双闪 ");
+                        //双闪
+                        mHandler.postDelayed(() -> CameraViewModelHelper.getInstance().turnActive(0, true), "turnReset", 1000);
+                    } else if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 0 && rightLightStpt == 0) {
+                        KLog.d(" 判定为双闪 ");
+                    } else if (rightTurnLChangeTime == 0 || leftTurnLChangeTime == 0) {
+                        KLog.d(" 判定为非双闪 ");
+                        mHandler.removeCallbacksAndMessages("turnReset");
+                    }
+                }
+            }
         } else if (vehicleId == VEHICLE_SPEED) {// 车速
             if (!(value instanceof Float)) {
                 KLog.d("value is not Float");
@@ -616,7 +643,7 @@ public class AvmService extends Service {
         if (!isExitAction){
             BvAvmJNIHelper.getInstance().avmDeInit();
         }
-
+        SplitScreenManager.getInstance().deInit();
         AvmApp.getInstance().getCameraView().removeView();
         ThreadPoolUtil.getInstance().removeAllHandlerAndShutdownThreadPool();
         CanManager.getInstance().unRegisterSignalListener(mOnSignalValueChangedListener);
@@ -625,8 +652,6 @@ public class AvmService extends Service {
         super.onDestroy();
         KLog.d("[onDestroy]");
         unregisterReceiver(broadcastReceiver);
-
-
     }
 
     private  int  count = 0;

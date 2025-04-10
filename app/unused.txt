@@ -5854,6 +5854,205 @@ com.android.car.internal.FeatureUtil
 com.android.car.internal.PropertyPermissionMapping$Permission
 com.android.car.internal.PropertyPermissionMapping
 com.android.internal.car.EventLogTags
+com.android.systemui.navigationbar.buttons.KeyButtonRipple:
+    private static final int ANIMATION_DURATION_FADE
+    private static final int ANIMATION_DURATION_SCALE
+    private static final float GLOW_MAX_ALPHA
+    private static final float GLOW_MAX_ALPHA_DARK
+    private static final float GLOW_MAX_SCALE_FACTOR
+com.android.systemui.shared.navigationbar.RegionSamplingHelper$1
+com.android.systemui.shared.navigationbar.RegionSamplingHelper$2
+com.android.systemui.shared.navigationbar.RegionSamplingHelper$3
+com.android.systemui.shared.navigationbar.RegionSamplingHelper$SamplingCallback
+com.android.systemui.shared.navigationbar.RegionSamplingHelper
+com.android.systemui.shared.pip.PipSurfaceTransactionHelper
+com.android.systemui.shared.plugins.PluginActionManager:
+    private static final boolean DEBUG
+    public static final java.lang.String PLUGIN_PERMISSION
+    private static final java.lang.String TAG
+com.android.systemui.shared.plugins.PluginEnabler$DisableReason
+com.android.systemui.shared.plugins.PluginEnabler:
+    public static final int DISABLED_FROM_EXPLICIT_CRASH
+    public static final int DISABLED_FROM_SYSTEM_CRASH
+    public static final int DISABLED_INVALID_VERSION
+    public static final int DISABLED_MANUALLY
+    public static final int ENABLED
+com.android.systemui.shared.plugins.PluginInstance:
+    private static final java.lang.String TAG
+    android.content.Context getPluginContext()
+com.android.systemui.shared.plugins.PluginManager
+com.android.systemui.shared.plugins.PluginManagerImpl:
+    static final java.lang.String DISABLE_PLUGIN
+com.android.systemui.shared.plugins.PluginPrefs:
+    private static final java.lang.String HAS_PLUGINS
+    private static final java.lang.String PLUGIN_ACTIONS
+    private static final java.lang.String PREFS
+com.android.systemui.shared.recents.model.Task
+com.android.systemui.shared.recents.utilities.AppTrace
+com.android.systemui.shared.recents.utilities.BitmapUtil
+com.android.systemui.shared.recents.utilities.RectFEvaluator
+com.android.systemui.shared.recents.utilities.Utilities:
+    private static final float TABLET_MIN_DPS
+com.android.systemui.shared.recents.utilities.ViewRippler:
+    private static final int RIPPLE_INTERVAL_MS
+    private static final int RIPPLE_OFFSET_MS
+com.android.systemui.shared.recents.view.AppTransitionAnimationSpecCompat
+com.android.systemui.shared.recents.view.AppTransitionAnimationSpecsFuture$1
+com.android.systemui.shared.recents.view.AppTransitionAnimationSpecsFuture$2
+com.android.systemui.shared.recents.view.AppTransitionAnimationSpecsFuture
+com.android.systemui.shared.recents.view.RecentsTransition$1
+com.android.systemui.shared.recents.view.RecentsTransition$2
+com.android.systemui.shared.recents.view.RecentsTransition$3
+com.android.systemui.shared.recents.view.RecentsTransition
+com.android.systemui.shared.rotation.FloatingRotationButton:
+    private static final int MARGIN_ANIMATION_DURATION_MILLIS
+com.android.systemui.shared.rotation.FloatingRotationButtonView:
+    private static final float BACKGROUND_ALPHA
+com.android.systemui.shared.rotation.RotationButtonController:
+    private static final int BUTTON_FADE_IN_OUT_DURATION_MS
+    private static final int NAVBAR_HIDDEN_PENDING_ICON_TIMEOUT_MS
+    private static final int NUM_ACCEPTED_ROTATION_SUGGESTIONS_FOR_INTRODUCTION
+    private static final java.lang.String TAG
+com.android.systemui.shared.system.ActivityCompat
+com.android.systemui.shared.system.ActivityManagerWrapper:
+    public static final java.lang.String CLOSE_SYSTEM_WINDOWS_REASON_HOME_KEY
+    public static final java.lang.String CLOSE_SYSTEM_WINDOWS_REASON_RECENTS
+    private static final java.lang.String INVOCATION_TIME_MS_KEY
+    private static final int NUM_RECENT_ACTIVITIES_REQUEST
+    private static final java.lang.String TAG
+com.android.systemui.shared.system.BlurUtils
+com.android.systemui.shared.system.ClipDescriptionCompat
+com.android.systemui.shared.system.ConfigurationCompat
+com.android.systemui.shared.system.ContextUtils
+com.android.systemui.shared.system.DevicePolicyManagerWrapper
+com.android.systemui.shared.system.DockedStackListenerCompat$1
+com.android.systemui.shared.system.DockedStackListenerCompat
+com.android.systemui.shared.system.InputChannelCompat$InputEventListener
+com.android.systemui.shared.system.InputChannelCompat$InputEventReceiver$1
+com.android.systemui.shared.system.InputChannelCompat$InputEventReceiver
+com.android.systemui.shared.system.InputChannelCompat
+com.android.systemui.shared.system.InputConsumerController$InputEventReceiver
+com.android.systemui.shared.system.InputConsumerController$InputListener
+com.android.systemui.shared.system.InputConsumerController$RegistrationListener
+com.android.systemui.shared.system.InputConsumerController
+com.android.systemui.shared.system.InputMonitorCompat
+com.android.systemui.shared.system.InteractionJankMonitorWrapper$CujType
+com.android.systemui.shared.system.InteractionJankMonitorWrapper
+com.android.systemui.shared.system.KeyguardManagerCompat
+com.android.systemui.shared.system.LatencyTrackerCompat
+com.android.systemui.shared.system.LauncherAppsCompat
+com.android.systemui.shared.system.LauncherEventUtil
+com.android.systemui.shared.system.MetricsLoggerCompat
+com.android.systemui.shared.system.PackageManagerWrapper
+com.android.systemui.shared.system.PeopleProviderUtils
+com.android.systemui.shared.system.QuickStepContract$SystemUiStateFlags
+com.android.systemui.shared.system.QuickStepContract
+com.android.systemui.shared.system.RemoteAnimationDefinitionCompat
+com.android.systemui.shared.system.RemoteAnimationTargetCompat:
+    public static final int ACTIVITY_TYPE_ASSISTANT
+    public static final int ACTIVITY_TYPE_HOME
+    public static final int ACTIVITY_TYPE_RECENTS
+    public static final int ACTIVITY_TYPE_STANDARD
+    public static final int ACTIVITY_TYPE_UNDEFINED
+    public static final int MODE_CHANGING
+    public static final int MODE_CLOSING
+    public static final int MODE_OPENING
+com.android.systemui.shared.system.RemoteTransitionCompat$Builder
+com.android.systemui.shared.system.RemoteTransitionCompat:
+    private static final java.lang.String TAG
+    void <init>(android.window.RemoteTransition,android.window.TransitionFilter)
+com.android.systemui.shared.system.RotationWatcher$1
+com.android.systemui.shared.system.RotationWatcher
+com.android.systemui.shared.system.SurfaceViewRequestReceiver
+com.android.systemui.shared.system.SurfaceViewRequestUtils
+com.android.systemui.shared.system.SyncRtSurfaceTransactionApplierCompat$1
+com.android.systemui.shared.system.SyncRtSurfaceTransactionApplierCompat$2
+com.android.systemui.shared.system.SyncRtSurfaceTransactionApplierCompat$3
+com.android.systemui.shared.system.SyncRtSurfaceTransactionApplierCompat$4
+com.android.systemui.shared.system.SyncRtSurfaceTransactionApplierCompat$SurfaceParams$Builder
+com.android.systemui.shared.system.SyncRtSurfaceTransactionApplierCompat$SurfaceParams
+com.android.systemui.shared.system.SyncRtSurfaceTransactionApplierCompat
+com.android.systemui.shared.system.SystemGestureExclusionListenerCompat$1
+com.android.systemui.shared.system.SystemGestureExclusionListenerCompat
+com.android.systemui.shared.system.TaskDescriptionCompat
+com.android.systemui.shared.system.TaskStackChangeListeners$Impl:
+    private static final int ON_ACTIVITY_DISMISSING_DOCKED_STACK
+    private static final int ON_ACTIVITY_FORCED_RESIZABLE
+    private static final int ON_ACTIVITY_LAUNCH_ON_SECONDARY_DISPLAY_FAILED
+    private static final int ON_ACTIVITY_LAUNCH_ON_SECONDARY_DISPLAY_REROUTED
+    private static final int ON_ACTIVITY_PINNED
+    private static final int ON_ACTIVITY_REQUESTED_ORIENTATION_CHANGE
+    private static final int ON_ACTIVITY_RESTART_ATTEMPT
+    private static final int ON_ACTIVITY_ROTATION
+    private static final int ON_ACTIVITY_UNPINNED
+    private static final int ON_BACK_PRESSED_ON_TASK_ROOT
+    private static final int ON_LOCK_TASK_MODE_CHANGED
+    private static final int ON_TASK_CREATED
+    private static final int ON_TASK_DESCRIPTION_CHANGED
+    private static final int ON_TASK_DISPLAY_CHANGED
+    private static final int ON_TASK_LIST_FROZEN_UNFROZEN
+    private static final int ON_TASK_LIST_UPDATED
+    private static final int ON_TASK_MOVED_TO_FRONT
+    private static final int ON_TASK_PROFILE_LOCKED
+    private static final int ON_TASK_REMOVED
+    private static final int ON_TASK_SNAPSHOT_CHANGED
+    private static final int ON_TASK_STACK_CHANGED
+com.android.systemui.shared.system.ThreadedRendererCompat
+com.android.systemui.shared.system.TonalCompat$ExtractionInfo
+com.android.systemui.shared.system.TonalCompat
+com.android.systemui.shared.system.TransactionCompat
+com.android.systemui.shared.system.UniversalSmartspaceUtils
+com.android.systemui.shared.system.ViewRootImplCompat$1
+com.android.systemui.shared.system.ViewRootImplCompat
+com.android.systemui.shared.system.ViewTreeObserverWrapper$InsetsInfo
+com.android.systemui.shared.system.ViewTreeObserverWrapper$OnComputeInsetsListener
+com.android.systemui.shared.system.ViewTreeObserverWrapper
+com.android.systemui.shared.system.WallpaperEngineCompat
+com.android.systemui.shared.system.WallpaperManagerCompat
+com.android.systemui.shared.system.WindowManagerWrapper
+com.android.systemui.shared.tracing.FrameProtoTracer$1
+com.android.systemui.shared.tracing.FrameProtoTracer$2
+com.android.systemui.shared.tracing.FrameProtoTracer$ProtoTraceParams
+com.android.systemui.shared.tracing.FrameProtoTracer
+com.android.systemui.shared.tracing.ProtoTraceable
+com.android.systemui.statusbar.policy.CallbackController
+com.android.systemui.unfold.util.ScopedUnfoldTransitionProgressProvider
+com.android.wm.shell.splitscreen.ISplitScreenCallback$Default
+com.android.wm.shell.splitscreen.ISplitScreenCallback$Stub:
+    static final int TRANSACTION_onAppViewShowOrHideChanged
+    static final int TRANSACTION_onScenesChanged
+    static final int TRANSACTION_onSplitScreenStateChanged
+    static final int TRANSACTION_onStageBoundsChanged
+    static final int TRANSACTION_onStagePositionChanged
+    static final int TRANSACTION_onTaskStageChanged
+com.android.wm.shell.splitscreen.ISplitScreenCallback:
+    public static final java.lang.String DESCRIPTOR
+com.android.wm.shell.splitscreen.OverViewProxy$Default
+com.android.wm.shell.splitscreen.OverViewProxy$Stub:
+    static final int TRANSACTION_exitSplitScreen
+    static final int TRANSACTION_exitSplitScreenWithRemember
+    static final int TRANSACTION_getSideStageTopActivityName
+    static final int TRANSACTION_getSplitScreenInfo
+    static final int TRANSACTION_isInSplitScreen
+    static final int TRANSACTION_isNeedRestoreSplitScreen
+    static final int TRANSACTION_notifySplitScreenState
+    static final int TRANSACTION_onSplitScreenServiceInitialized
+    static final int TRANSACTION_onStartingWindowServiceInitialized
+    static final int TRANSACTION_registerSplitScreenCallback
+    static final int TRANSACTION_restoreSplitScreenIfNeed
+    static final int TRANSACTION_startApp
+    static final int TRANSACTION_startAppWithOptions
+    static final int TRANSACTION_startHomeActivity
+    static final int TRANSACTION_startIntentWithOptions
+    static final int TRANSACTION_transportCommand
+    static final int TRANSACTION_unregisterSplitScreenCallback
+com.android.wm.shell.splitscreen.OverViewProxy:
+    public static final java.lang.String DESCRIPTOR
+com.android.wm.shell.splitscreen.RestoreSplitScreenCallback$Default
+com.android.wm.shell.splitscreen.RestoreSplitScreenCallback$Stub:
+    static final int TRANSACTION_onRestoreResult
+com.android.wm.shell.splitscreen.RestoreSplitScreenCallback:
+    public static final java.lang.String DESCRIPTOR
 com.autochips.avm.BR
 com.autochips.avm.BuildConfig
 com.autochips.avm.DataBinderMapperImpl:
@@ -5927,6 +6126,11 @@ com.autochips.avm.ui.view.CameraGLSurfaceView:
     private static final int SHOW_BOTTOM
 com.autochips.avm.ui.view.CameraView:
     private static final int CALIBRATION_SHOW_WINDOW
+    public static final int WINDOW_SHOW_LEFT
+    public static final int WINDOW_SHOW_LEFT_SCREEN
+    public static final int WINDOW_SHOW_MIDDLE
+    public static final int WINDOW_SHOW_RIGHT
+    public static final int WINDOW_SHOW_RIGHT_SCREEN
     public static final int WINDOW_TYPE
     private com.autochips.avm.helper.LongPressGestureListener longPressGestureListener
 com.autochips.avm.ui.view.SegmentTabLayout:
@@ -6459,6 +6663,13 @@ com.gxa.car.scene.SceneManagerImpl:
     private static final int WAIT_SERVICE_STARTED_TIMER
 com.gxa.car.scene.SceneManagerProxy:
     private static final java.lang.String SCENE_TYPE_PREFIX
+    private static final java.lang.String TAG
+com.gxa.car.splitscreenmanager.SplitScreenManager:
+    public static final int AUTO_RECONNECTED
+    public static final int CONNECTED_ONCE_ONLY
+    private static final long RETRY_CONNECT_INTERVAL
+    public static final int SPLIT_SCREEN_RESTORE_FAILED
+    public static final int SPLIT_SCREEN_RESTORE_OK
     private static final java.lang.String TAG
 com.gxa.car.utils.net.NetworkUtils
 com.gxa.car.utils.statemachine.IState
@@ -8125,6 +8336,7 @@ com.iflytek.autofly.mapsdk.bean.car.PRAngleRespBean
 com.iflytek.autofly.mapsdk.bean.car.PitchRollAngleRespBean
 com.iflytek.autofly.mapsdk.bean.exploremap.BookBean
 com.iflytek.autofly.mapsdk.bean.infotransmit.ActiveRespBean
+com.iflytek.autofly.mapsdk.bean.infotransmit.AutoStatusRequBean
 com.iflytek.autofly.mapsdk.bean.infotransmit.AutoStatusRespBean
 com.iflytek.autofly.mapsdk.bean.infotransmit.CommuteRequBean
 com.iflytek.autofly.mapsdk.bean.infotransmit.CommuteRespBean$RouteTMCSegment
@@ -8209,7 +8421,6 @@ com.iflytek.autofly.mapsdk.bean.navi.RouteStrategyRequBean
 com.iflytek.autofly.mapsdk.bean.navi.Send2CarMsgGetRequBean
 com.iflytek.autofly.mapsdk.bean.navi.Send2CarMsgGetRespBean
 com.iflytek.autofly.mapsdk.bean.navi.Send2CarRespBean
-com.iflytek.autofly.mapsdk.bean.navi.TbtBean
 com.iflytek.autofly.mapsdk.bean.navi.TrafficRequBean
 com.iflytek.autofly.mapsdk.bean.navi.TrafficRespBean
 com.iflytek.autofly.mapsdk.bean.search.AlongSearchRequBean
@@ -11690,6 +11901,36 @@ androidx.recyclerview.widget.SortedList$Callback
 androidx.transition.Slide$CalculateSlide
 androidx.transition.Slide$CalculateSlideHorizontal
 androidx.transition.Slide$CalculateSlideVertical
+com.android.systemui.shared.recents.utilities.Utilities
+com.android.systemui.shared.recents.utilities.ViewRippler$1
+com.android.systemui.shared.recents.utilities.ViewRippler
+com.android.systemui.shared.rotation.-$$Lambda$6C9JU6u-zYg5T9BlQa8suAkJ9sY
+com.android.systemui.shared.rotation.-$$Lambda$FloatingRotationButton$KlNtkQsfU8KBz67x5m2ktsr8jd0
+com.android.systemui.shared.rotation.-$$Lambda$FloatingRotationButton$ru2bO1n_Sw-5453EhPqos_J4PT8
+com.android.systemui.shared.rotation.-$$Lambda$RotationButtonController$1$tbcz1Y9L5CjhHvmrEgBc0MOywbA
+com.android.systemui.shared.rotation.-$$Lambda$RotationButtonController$TN26GBhO0iajE6nDwh6BEL4qwA0
+com.android.systemui.shared.rotation.-$$Lambda$RotationButtonController$TaskStackListenerImpl$ng6C5VVizl0ne23uFS5AodFayDY
+com.android.systemui.shared.rotation.-$$Lambda$RotationButtonController$YeUFWgBZr8oqH7B3joPsfE2WF6o
+com.android.systemui.shared.rotation.-$$Lambda$RotationButtonController$YjnDy7AOTuEVJEKSHSjIm0l-gOY
+com.android.systemui.shared.rotation.-$$Lambda$RotationButtonController$zgkIWtDwDdf8jAM6lj_qLTw8at8
+com.android.systemui.shared.rotation.FloatingRotationButton
+com.android.systemui.shared.rotation.RotationButton$RotationButtonUpdatesCallback
+com.android.systemui.shared.rotation.RotationButton
+com.android.systemui.shared.rotation.RotationButtonController$1
+com.android.systemui.shared.rotation.RotationButtonController$2
+com.android.systemui.shared.rotation.RotationButtonController$RotationButtonEvent
+com.android.systemui.shared.rotation.RotationButtonController$TaskStackListenerImpl
+com.android.systemui.shared.rotation.RotationButtonController
+com.android.systemui.shared.system.ActivityManagerWrapper$1
+com.android.systemui.shared.system.ActivityManagerWrapper$2
+com.android.systemui.shared.system.ActivityManagerWrapper$3
+com.android.systemui.shared.system.ActivityManagerWrapper
+com.android.systemui.shared.system.ActivityOptionsCompat$1
+com.android.systemui.shared.system.ActivityOptionsCompat
+com.android.systemui.shared.system.TaskStackChangeListener
+com.android.systemui.shared.system.TaskStackChangeListeners$Impl
+com.android.systemui.shared.system.TaskStackChangeListeners$PinnedActivityInfo
+com.android.systemui.shared.system.TaskStackChangeListeners
 com.core.lib.common.ICoreSystemServer$Stub$Proxy
 com.core.lib.common.ICoreSystemServer$Stub
 com.core.lib.common.ICoreSystemServer

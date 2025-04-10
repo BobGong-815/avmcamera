@@ -8,5 +8,13 @@
     tools:context=".ui.activity.MainActivity"
     android:background="@color/transparent" >
 
+    <View
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

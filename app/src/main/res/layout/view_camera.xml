@@ -161,9 +161,7 @@
                     android:id="@+id/automatic_calibration"
                     android:layout_width="150px"
                     android:layout_height="50px"
-                    android:layout_marginLeft="50px"
                     android:layout_marginTop="80px"
-                    android:layout_marginEnd="50px"
                     android:layout_marginBottom="30px"
                     android:background="@drawable/shape_text_bg_nor"
                     android:gravity="center"
@@ -171,8 +169,9 @@
                     android:text="@string/automatic_calibration"
                     android:textColor="@color/setting_view_bg"
                     android:textSize="@dimen/text_size_20px"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/calibration_title" />
+                    app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -203,7 +202,7 @@
                     android:id="@+id/rearRadarViewId"
                     android:layout_width="276px"
                     android:layout_height="174px"
-                    android:layout_marginBottom="30px"
+                    android:layout_marginBottom="58px"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -228,7 +227,7 @@
                         android:gravity="center"
                         android:text="@{viewModel.info.radarDistance}"
                         android:textColor="#FFFFFF"
-                        android:textSize="@dimen/text_size_27px" />
+                        android:textSize="@dimen/text_size_24px" />
                 </LinearLayout>
 
 
@@ -926,10 +925,10 @@
 
         <LinearLayout
             android:id="@+id/toast_nc_bg"
-            android:layout_width="wrap_content"
+            android:layout_width="480px"
             android:layout_height="wrap_content"
             android:layout_marginLeft="636px"
-            android:layout_marginTop="138px"
+            android:layout_marginTop="117px"
             android:background="@drawable/shape_toast_bg"
             android:orientation="vertical"
             android:visibility="gone"
@@ -949,10 +948,10 @@
 
         <LinearLayout
             android:id="@+id/toast_bg"
-            android:layout_width="wrap_content"
+            android:layout_width="480px"
             android:layout_height="wrap_content"
             android:layout_marginLeft="636px"
-            android:layout_marginTop="138px"
+            android:layout_marginTop="117px"
             android:background="@drawable/shape_toast_bg"
             android:orientation="vertical"
             android:visibility="gone"
@@ -1076,8 +1075,8 @@
             android:id="@+id/rl_close"
             android:layout_width="108px"
             android:layout_height="72px"
-            android:layout_marginStart="17px"
-            android:layout_marginTop="15px"
+            android:layout_marginStart="15px"
+            android:layout_marginTop="14px"
             android:background="@drawable/shape_bg_nor_12"
             android:contentDescription="关闭360影像卡片|关闭全景影像卡片|关闭360全景影像卡片::parkimage_home_close360"
             android:onClick="@{() -> viewModel.closeAvm()}"

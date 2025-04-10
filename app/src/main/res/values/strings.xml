@@ -19,7 +19,7 @@
     <string name="setting_transparent_chassis_infobook_content">开启可观察车底路况</string>
     <string name="setting_transparent_chassis_infobook_ok">好的</string>
     <string name="setting_rearview_mirror">外后视镜调节</string>
-    <string name="setting_fold">外后视折叠</string>
+    <string name="setting_fold">外后视镜折叠</string>
     <string name="setting_expand">展开</string>
     <string name="setting_rearview_mirror_down">外后视镜倒车下翻</string>
     <string name="camera_2d">2D</string>

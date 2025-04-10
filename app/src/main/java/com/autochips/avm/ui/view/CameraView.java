@@ -146,6 +146,13 @@ public class CameraView extends View implements LifecycleOwner {
     private  boolean canChange3DRear = false;//是否允许倒挡设置3d视角
     private boolean isFirst = true;//是否第一次显示
     private boolean canShowAct = false;//是否允许显示act
+
+    public static final int WINDOW_SHOW_RIGHT = 810;
+    public static final int WINDOW_SHOW_LEFT = 48;
+    public static final int WINDOW_SHOW_MIDDLE = 636;
+    public static final int WINDOW_SHOW_LEFT_SCREEN = 45;
+    public static final int WINDOW_SHOW_RIGHT_SCREEN = 728;
+
     public CameraView(Context context) {
         super(context);
         KLog.d("BaseCameraView");
@@ -458,6 +465,7 @@ public class CameraView extends View implements LifecycleOwner {
         tabView();
         tabViewInit();
         mViewCameraBinding.getRoot().getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            KLog.d("mWindowLps.height：getVisibility:" + mViewCameraBinding.getRoot().getVisibility());
             if(mWindowLps.height > 100 && canShowAct){
                 canShowAct = false;
                 KLog.d("startAct  mWindowLps.height：" + mWindowLps.height);
@@ -1160,8 +1168,9 @@ public class CameraView extends View implements LifecycleOwner {
         }
 
         canShowAct = false;
-        mWindowLps.y = 86;
-        mWindowLps.x = (AvmService.mIsStartStatus && !AvmService.mIsScreen) || (AvmService.mIsScreen && !AvmService.isLeftScreen) ? 810 : 50;
+        mWindowLps.y = 84;
+        mWindowLps.x = (AvmService.mIsStartStatus && AvmService.mMapSpeedStatus && !AvmService.mIsScreen) || (AvmService.mIsScreen && !AvmService.isLeftScreen) ? (AvmService.mIsScreen ? WINDOW_SHOW_RIGHT_SCREEN : WINDOW_SHOW_RIGHT) :
+                (AvmService.mIsStartStatus && !AvmService.mMapSpeedStatus && !AvmService.mIsScreen) ? WINDOW_SHOW_MIDDLE : (AvmService.mIsScreen ? WINDOW_SHOW_LEFT_SCREEN : WINDOW_SHOW_LEFT);
         isSmartWin = true;
         mWindowLps.width = 455;
         mWindowLps.height = 623;
@@ -1606,15 +1615,6 @@ public class CameraView extends View implements LifecycleOwner {
         return registry;
     }
 
-    //移动小窗口
-    public void moveView() {
-        KLog.v("moveView now position:"+ mWindowLps.x);
-        if(mWindowLps.x < 810 ){
-            mWindowLps.x = 810;
-        }
-        mWindowManager.updateViewLayout(mViewCameraBinding.getRoot(),mWindowLps);
-    }
-
     public void changeRearviewShow(float speedValue){
         rearviewMirrorView.changeShow(speedValue);
     }
@@ -1704,7 +1704,7 @@ public class CameraView extends View implements LifecycleOwner {
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_REAR);
                                 } else if (touchPos == 3) {
-                                    mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
+                                     mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_RIGHT_FRONT);
                                 } else if (touchPos == 4) {
@@ -1811,13 +1811,13 @@ public class CameraView extends View implements LifecycleOwner {
         int screenHeight = 1080 - 108;
         // 计算当前悬浮窗中心Y坐标
         int currentCenterY = mWindowLps.y + 623 / 2;
-        int targetY = (currentCenterY <= screenHeight / 2) ? 86 : 371;
+        int targetY = (currentCenterY <= screenHeight / 2) ? 84 : 320;
         // 确定目标X坐标
         int targetX;
         if (AvmService.mIsScreen) {
-            targetX = AvmService.isLeftScreen ? 50 : 810; // 右分屏810，左分屏50
+            targetX = AvmService.isLeftScreen ? WINDOW_SHOW_LEFT_SCREEN : WINDOW_SHOW_RIGHT_SCREEN; // 右分屏810，左分屏50
         } else {
-            targetX = AvmService.mIsStartStatus ? 810 : 50; // 正常模式
+            targetX = AvmService.mIsStartStatus && AvmService.mMapSpeedStatus ? WINDOW_SHOW_RIGHT : AvmService.mIsStartStatus ? WINDOW_SHOW_MIDDLE : WINDOW_SHOW_LEFT; // 正常模式
         }
         // 动画过渡到目标位置
         int startX = mWindowLps.x;

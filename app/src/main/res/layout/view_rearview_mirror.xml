@@ -18,7 +18,7 @@
     <LinearLayout
         android:id="@+id/ll_rearviewMirror"
         binding:onClickCommand="@{viewModel.pRearviewClick}"
-        android:layout_width="wrap_content"
+        android:layout_width="682px"
         android:layout_height="wrap_content"
         android:layout_marginTop="126px"
         android:orientation="vertical">
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="36px"
             android:layout_marginLeft="33px"
-            android:layout_marginTop="42px"
+            android:layout_marginTop="40px"
             android:gravity="center"
             android:includeFontPadding="false"
             android:text="@string/setting_rearview_mirror"
@@ -41,7 +41,7 @@
             android:layout_width="623dp"
             android:layout_height="126px"
             android:layout_marginLeft="30px"
-            android:layout_marginTop="18px"
+            android:layout_marginTop="26px"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="18px"
+                android:layout_marginStart="23px"
                 android:gravity="center_vertical"
                 android:text="@string/setting_fold"
                 android:textColor="@color/setting_view_content_color"
@@ -76,7 +76,7 @@
             android:layout_width="623dp"
             android:layout_height="126px"
             android:layout_marginLeft="30px"
-            android:layout_marginTop="18px"
+            android:layout_marginBottom="10px"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="18px"
+                android:layout_marginStart="23px"
                 android:gravity="center_vertical"
                 android:text="@string/setting_rearview_mirror_down"
                 android:textColor="@color/setting_view_content_color"
