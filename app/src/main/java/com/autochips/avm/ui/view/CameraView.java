@@ -1546,7 +1546,7 @@ public class CameraView extends View implements LifecycleOwner {
     private boolean isDismissView = false;
 
     public void dismissView(String position) {
-        KLog.d(position + " position dismissView isShowing = " + isShowing);
+        KLog.i(position + " position dismissView isShowing = " + isShowing);
         tabSelectFromUser = false;
         if (!isShowing) {
             return;
