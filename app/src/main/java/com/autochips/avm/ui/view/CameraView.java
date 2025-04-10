@@ -1803,6 +1803,14 @@ public class CameraView extends View implements LifecycleOwner {
 
     private HidViewButtonTimer hidViewButtonTimer = new HidViewButtonTimer(5000);
 
+    public void hideView() {
+        rootView.setVisibility(GONE);
+    }
+
+    public void showRootView() {
+        rootView.setVisibility(VISIBLE);
+    }
+
     /**
      * 设置列表关闭倒计时
      */
@@ -2551,6 +2559,12 @@ public class CameraView extends View implements LifecycleOwner {
     public void calibrationBack() {
         viewModel.calibrationBack();
     }
+
+    //标定成功下发
+    public void calibrationSuccess() {
+        viewModel.calibrationInspect(1);
+    }
+
 
     //反馈错误结果
     public void calibrationError() {

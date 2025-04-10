@@ -496,16 +496,8 @@ public class CameraViewModel extends BaseCameraViewModel {
             } catch (InterruptedException exception) {
                 KLog.e(exception.toString());
             }
-            byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
             //CanManager.getInstance().setByteArray(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP, 0, arrBack);
-            CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
-            CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
-//            isCaliStatus = -1;
             isDIAGCalibration = false;
-            KLog.i("标定-DIAG_31 app 标定成功：isCaliStatus " + isCaliStatus);
-            DataManager.writeFault(DataConstant.Code.BD_SUCCESS);
-            DataManager.writeFault(DataConstant.Code.SJ_SAVE_SUCCESS);
-            calibrationInspect(1);
         } else {//标定失败
             //byte[] arrBack = {0x01, 0x02,0x00,0x00};
             byte[] arrBack = {0x00, 0x01, 0x00, 0x00};
@@ -522,7 +514,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     /**
      * 标定流程第二部，标定检测
      */
-    private void calibrationInspect(int value) {
+    public void calibrationInspect(int value) {
         KLog.i("标定-0305 标定监测结果：value " + value);
         if (value == 1) {//标定成功
             byte[] arrBack = new byte[]{0x01, 0x00, 0x00, 0x00, 0x00};
@@ -814,13 +806,6 @@ public class CameraViewModel extends BaseCameraViewModel {
         message.arg1 = direction;
         threadHandler.sendMessageDelayed(message, delay);
         mDirection = direction;
-    }
-
-    public void turnResetChange() {
-        if(mDirection == 0) {
-            KLog.d("lightChange 重置退出逻辑");
-            threadHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
-        }
     }
 
     public void simWheelSpeed() {

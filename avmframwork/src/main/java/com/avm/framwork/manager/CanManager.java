@@ -12,6 +12,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CL
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_STOP_ON_BRK_REMIND_SIGNAL;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_WARNING_SOUND;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.NFS_SYNC_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.ASSIST_DRIVE_PAS_BUTTON_PRESS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AUDIO_WARNING_SOURCE;
@@ -302,6 +303,8 @@ public class CanManager implements Handler.Callback {
         mRegisterId.add(DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_REQ);//下线标定检查结果请求
         mRegisterId.add(DIAG_31_380D_AVM_READ_FAIL_REASON_REQ);//读取标定失败原因请求
         mRegisterId.add(DIAG_31_380D_AVM_READ_FAIL_REASON_RESULT_REQ);//读取标定失败原因结果请求
+
+        mRegisterId.add(NFS_SYNC_STATUS);
     }
 
     public void startConnect(View.OnClickListener listener) {
