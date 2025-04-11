@@ -143,12 +143,12 @@ public class CameraViewModelHelper {
      * 手动进入的，就手动关闭
      */
     public void dismissView(boolean isClick, int time, String position) {
-        KLog.d(position + " dismissView关闭 " + isClick);
+        KLog.i(position + " dismissView关闭 " + isClick);
         this.isClick = isClick;
         if (isClick) {
             return;
         }
-        KLog.d(position + " 测试 ");
+        KLog.i(position + " 测试 ");
         if (isCalibrateRunning) {
             KLog.d(" dismissView关闭  isCalibrateRunning: true 进入标定；");
             CustomToast.showToast("正在标定.......");
