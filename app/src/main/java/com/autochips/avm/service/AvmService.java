@@ -137,6 +137,7 @@ public class AvmService extends Service {
     public static boolean mMapSpeedStatus = false;//记录地图是否有弹出限速图标
     public static boolean mIsScreen = false; // 记录是否为分屏
     public static boolean isLeftScreen = false;//是否为左边的分屏显示全景
+    private SplitScreenManager mSplitScreenManager;
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -285,11 +286,13 @@ public class AvmService extends Service {
 
             }
         });
-
-        SplitScreenManager.getInstance().setServiceConnectCallback(new ServiceConnectCallback() {
+        mSplitScreenManager = SplitScreenManager.getInstance();
+        mSplitScreenManager.init(this,SplitScreenManager.AUTO_RECONNECTED);
+        mSplitScreenManager.setServiceConnectCallback(new ServiceConnectCallback() {
             @Override
             public void onServiceConnected() {
                 KLog.i("SplitScreenManager  onServiceConnected");
+                registerSplitScreenCallback();
             }
 
             @Override
@@ -297,7 +300,12 @@ public class AvmService extends Service {
                 KLog.i("SplitScreenManager  onServiceDisconnected");
             }
         });
-        SplitScreenManager.getInstance().registerSplitScreenCallback(new ISplitScreenCallback() {
+
+
+    }
+
+    private void registerSplitScreenCallback() {
+        mSplitScreenManager.registerSplitScreenCallback(new ISplitScreenCallback.Stub(){
 
             //分屏区域⼤⼩改变，stage： 0、表⽰地图所在的区域； 1、表⽰⾮地图所在的区域； 1
             //rect：区域的⼤⼩、位置
@@ -370,14 +378,7 @@ public class AvmService extends Service {
                 KLog.i("SplitScreenManager  onScenesChanged scene:"+scene +"mIsScreen:"+mIsScreen);
                 changeScreenDirection();
             }
-
-            @Override
-            public IBinder asBinder() {
-                return null;
-            }
         });
-
-        SplitScreenManager.getInstance().init(this,SplitScreenManager.AUTO_RECONNECTED);
     }
 
     //更改显示位置
