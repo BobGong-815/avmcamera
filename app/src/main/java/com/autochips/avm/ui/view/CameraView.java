@@ -1169,8 +1169,12 @@ public class CameraView extends View implements LifecycleOwner {
 
         canShowAct = false;
         mWindowLps.y = 84;
-        mWindowLps.x = (AvmService.mIsStartStatus && AvmService.mMapSpeedStatus && !AvmService.mIsScreen) || (AvmService.mIsScreen && !AvmService.isLeftScreen) ? (AvmService.mIsScreen ? WINDOW_SHOW_RIGHT_SCREEN : WINDOW_SHOW_RIGHT) :
-                (AvmService.mIsStartStatus && !AvmService.mMapSpeedStatus && !AvmService.mIsScreen) ? WINDOW_SHOW_MIDDLE : (AvmService.mIsScreen ? WINDOW_SHOW_LEFT_SCREEN : WINDOW_SHOW_LEFT);
+        if (AvmService.mIsScreen) {
+            //分屏
+            mWindowLps.x = AvmService.isLeftScreen ? WINDOW_SHOW_LEFT_SCREEN : WINDOW_SHOW_RIGHT_SCREEN; // 右分屏810，左分屏50
+        } else {
+            mWindowLps.x = AvmService.mIsStartStatus && AvmService.mMapSpeedStatus ? WINDOW_SHOW_RIGHT : AvmService.mIsStartStatus ? WINDOW_SHOW_MIDDLE : WINDOW_SHOW_LEFT; // 正常模式
+        }
         isSmartWin = true;
         mWindowLps.width = 455;
         mWindowLps.height = 623;

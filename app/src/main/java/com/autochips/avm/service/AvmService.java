@@ -338,7 +338,8 @@ public class AvmService extends Service {
             @Override
             public void onSplitScreenStateChanged(boolean isScreenState) {
                 KLog.i("SplitScreenManager  onSplitScreenStateChanged:"+isScreenState);
-                mIsStartStatus = isScreenState;
+                mIsScreen = isScreenState;
+                changeScreenDirection();
             }
 
             // 分屏区域栈状态改变回调： taskId、所在栈的id;
@@ -374,9 +375,7 @@ public class AvmService extends Service {
              */
             @Override
             public void onScenesChanged(int scene) {
-                mIsScreen = (scene == 1 || scene == 3);
                 KLog.i("SplitScreenManager  onScenesChanged scene:"+scene +"mIsScreen:"+mIsScreen);
-                changeScreenDirection();
             }
         });
     }
