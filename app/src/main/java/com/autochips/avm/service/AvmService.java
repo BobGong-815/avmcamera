@@ -544,8 +544,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 int avm_onclick = intent.getIntExtra("avm_start", -1);
                 int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
                 KLog.d("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);
-                if (avm_onclick != -1) {//-1表示是通过AS启动的
-                    if (avm_state == 0) {
+                switch (avm_onclick) {
+                    case 1: //SystemUI跳转打开AVM首页
                         if (!mIsCanShow) {
                             KLog.i("[onStartCommand] 半功能到全功能范围不启动全景");
                             return START_STICKY;
@@ -557,9 +557,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         }
                         DataManager.writeFault(avm_onclick == 1 ? DataConstant.Code.CLICK_IN_SUI :
                                 avm_onclick == 2 ? DataConstant.Code.CLICK_IN_FK : DataConstant.Code.CLICK_IN_SPEECH);
-                    } else if (avm_state == 1) {
+                        break;
+                    case 0://关闭AVM首页
                         AvmRuntime.self().artificialExit();
-                    }
+                        break;
                 }
             }
         }
