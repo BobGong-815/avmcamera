@@ -1503,7 +1503,7 @@ public class AvmRuntime {
     public void artificialExit() {
         synchronized (syncObj) {
             KLog.d(" artificialExit(). ");
-            if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
+            if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID || BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_TR_ID) {
                 setOverExitFlag(0);
                 dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
             } else {

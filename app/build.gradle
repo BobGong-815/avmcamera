@@ -117,6 +117,6 @@ dependencies {
     //数据埋点
     implementation files('libs\\dataminingclient.jar')
 
-    implementation files('libs\\Car-Framework-2.0-2.0.29-20240429.021058-1.jar')
+    implementation files('libs\\Car-Framework-2.0-2.0.40-20240814.023227-1.jar')
 
 }

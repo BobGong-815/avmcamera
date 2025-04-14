@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
                     Log.i(TAG, "MainActivity::handleMessage() avm_state:"+avm_state);
                     if(avm_state != 1) {
                         SystemProperties.setGlobal("avm_state", 1);
-                        AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
+                        //AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
                     }
                 }
             }

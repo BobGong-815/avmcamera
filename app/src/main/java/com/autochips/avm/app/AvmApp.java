@@ -13,12 +13,10 @@ import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.service.AvmService;
-import com.autochips.avm.ui.activity.MainActivity;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
 
-import java.util.Random;
 
 import gxa.car.engineModeSdk.ConfigManager;
 import me.goldze.mvvmhabit.base.BaseApplication;
@@ -42,15 +40,11 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static int OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = 1;//0、无配置后视镜下翻 ，1、有配置后视镜下翻
     public static int OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = 1;//0、无配置后视镜折叠 ，1、有配置后视镜折叠
 
-    public volatile boolean isRight = false; // 默认非右陀
+    public volatile boolean isRight = false; // 默认右陀,打包时根据修改该配置传入是否传入左右舵车型id
 
     public static AvmApp getInstance() {
         return mAvmApp;
     }
-
-//    public CameraViewBottom getViewBottom() {
-//        return viewBottom;
-//    }
 
     @Override
     public void onCreate() {
@@ -62,11 +56,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         mAvmApp = this;
         //是否开启打印日志
         KLog.init(true);
-        BvAvmJNIHelper.getInstance().bwSetProjectID(BvAvmJNIHelper.CAMERA_TYPE);
+        BvAvmJNIHelper.getInstance().bwSetProjectID(0x05);
 
-        // 暂时废弃
-//        viewBottom = new CameraViewBottom(this);
-//        viewBottom.showInit();
         KLog.d("[onCreate]");
         //连接信号服务
         SystemProperties.setGlobal("avm_state", 0);
@@ -74,48 +65,10 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         //initConfig(mAvmApp);
         //初始化全局异常崩溃
         initCrash();
-        //初始化摄像头画面数据
-        //bvavmJNI.avmInit();
-        //初始化AVM首页弹窗
-//        int[] rvcStatus = new int[1];
-//        rvcStatus[0] = 0;
-//        bvavmJNI.bwGetRVCStatus(rvcStatus);
-//        mAvmRvcState = rvcStatus[0];
-//        KLog.d("[onCreate] mAvmRvcState:" + mAvmRvcState);
-//        if (mAvmRvcState != 1 && mAvmRvcState != -1) {
-////            bvavmJNI.bwNotifyRVC(0);
-//            BvAvmJNIHelper.getInstance().bwNotifyRVC(0);
-//        }
         //数据埋点
         //DataManager.init(this);
         Thread.setDefaultUncaughtExceptionHandler(this);
         ServiceUtils.startCaptureService(this, AvmService.class);
-//        mHandler.postDelayed(()->{
-//            closeAndShowAvm();
-//        },10000);
-    }
-
-    private boolean isFirstOpen = true;
-    private void closeAndShowAvm(){
-        KLog.i("closeAndShowAvm isFirstOpen:" + isFirstOpen);
-        Intent intent = new Intent();
-        if(isFirstOpen){
-            intent.setAction("action.syncore.FOPEN.mode");
-        }else {
-            if (mCameraView.isShowing) {
-                intent.setAction("action.syncore.CLOSE.mode");
-            } else {
-                intent.setAction("action.syncore.OPEN.mode");
-            }
-        }
-        sendBroadcast(intent);
-        Random random = new Random();
-        int randSecond = random.nextInt(2700)+300;
-        KLog.d("AvmApp randSecond:"+randSecond);
-        mHandler.postDelayed(() -> {
-            isFirstOpen = false;
-            closeAndShowAvm();
-        }, isFirstOpen ? 10000 : randSecond);
     }
 
     private void initConfig(Context context) {
@@ -123,7 +76,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         configManager.registerInitListener(isConnect -> {
             if (isConnect) {
                 int vehicalplatform = configManager.getVehicleplatform();
-                KLog.i("Avmapp....注册完成 ... " + vehicalplatform);
+                int rudderCfg = configManager.getRudderCfg();
+                KLog.i("Avmapp....注册完成 ... " + vehicalplatform  + " rudderCfg:"+rudderCfg);
                 int outsidebackmirrorbackupdownswitch = configManager.getOutsidebackmirrorbackupdownswitch();
                 int outsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch();
                 Log.i("AvmApp","注册完成---- outsidebackmirrorbackupdownswitch:"+outsidebackmirrorbackupdownswitch);
@@ -131,13 +85,17 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
                 OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
                 //AY5T AY5G左陀  AY5右陀
-                if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
-                    ISAY5T = true;
-                } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_G_ID) {
-                    ISAY5T = false;
-                } else if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_GR_ID) {
-                    ISAY5G_R = true;
-                    isRight = true;
+                if (mCameraView == null) {
+                    if (rudderCfg == 1) {
+                        isRight = true;
+                        BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_TR_ID);
+                    } else {
+                        isRight = false;
+                        BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+                    }
+                    Intent intentService =  new Intent(context, AvmService.class);
+                    intentService.putExtra("initCam","init");
+                    context.startService(intentService);
                 }
             }else {
                 KLog.i("Avmapp....还未连接成功 ...");
@@ -150,7 +108,9 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     }
 
     public void createCameraView(){
-        mCameraView = new CameraView(this);
+        if(mCameraView == null) {
+            mCameraView = new CameraView(this);
+        }
     }
 
     private void initCrash() {

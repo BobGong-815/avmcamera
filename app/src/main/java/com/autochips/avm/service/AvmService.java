@@ -88,6 +88,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -169,8 +170,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        //启动加载读写文件任务
-        startTask();
     }
 
     @SuppressLint("HandlerLeak")
@@ -307,7 +306,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             //CameraShowTypeHelper.getInstance().exitActivity();
                             AvmApp.getInstance().getCameraView().dismissView(null);
                             SystemProperties.setGlobal("avm_state", 0);
-                            mAvmManager.sendAvmState(0);
+                            //mAvmManager.sendAvmState(0);
                             BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_CR_CAMERA);
@@ -442,7 +441,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
         //快速启动
         if(AvmApp.getInstance().getCameraView()!=null)
-            AvmApp.getInstance().getCameraView().updateWind(0.0f, 2);
+            AvmApp.getInstance().getCameraView().showSmartWin();
         mHandler.postDelayed(() -> {
             if(AvmApp.getInstance().getCameraView()!=null)
                 AvmApp.getInstance().getCameraView().dismissView("初始化关闭......");
@@ -458,16 +457,17 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
     private void startTask() {
         // 第一个子线程任务
+        int tid  = AvmApp.getInstance().isRight ? bvavmJNI.PROJ_AY5_TR_ID : bvavmJNI.PROJ_AY5_T_ID;
         Future<?> firstTaskFuture = executorService.submit(() -> {
             try {
-                int i = bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE, 0);
+                int i = bvavmJNI.bwSetParamsXML(tid, 0);
                 KLog.i(TAG+"第一个任务完成:"+i);
                 if(!isFirstTimeOut && AvmApp.getInstance().getCameraView() == null) {
                     mainHandler.post(this::initAvm);
                 }
                 if(i == -1){
                     KLog.i(TAG+"第一个任务读取不到文件，执行第二个文件查询");
-                    bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
+                    bvavmJNI.bwSetParamsXML(tid,1);
                 }
             } catch (Exception e) {
                 KLog.e(TAG+"第一个任务被中断"+e);
@@ -485,7 +485,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             // 第二个子线程任务
             Future<?> secondTaskFuture = executorService.submit(() -> {
                 try {
-                    bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
+                    bvavmJNI.bwSetParamsXML(tid,1);
                     KLog.i(TAG+"第二个任务完成");
                     if(!isSecondTimeOut && AvmApp.getInstance().getCameraView() == null) {
                         mainHandler.post(this::initAvm);
@@ -530,30 +530,36 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         KLog.d(flags + "[onStartCommand]" + startId + ", version is " + ServiceUtils.getVersionName());
         //adb指令模拟启动service带参数调试功能
-        if(AvmApp.getInstance().getCameraView() == null){
-            KLog.d("AvmApp", "avm is null ");
-            return START_STICKY;
-        }
+
         //adb shell am start-service -n com.autochips.avm/.service.AvmService --ei avm_onclick 1
         if (intent != null) {
-            int avm_onclick = intent.getIntExtra("avm_start", -1);
-            int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
-            KLog.d("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);
-            if (avm_onclick != -1) {//-1表示是通过AS启动的
-                if (avm_state == 0) {
-                    if(!mIsCanShow){
-                        KLog.i("[onStartCommand] 半功能到全功能范围不启动全景");
-                        return START_STICKY;
+            if(!TextUtils.isEmpty(intent.getStringExtra("initCam"))){
+                KLog.i("init can");
+                startTask();
+            }else {
+                if (AvmApp.getInstance().getCameraView() == null) {
+                    KLog.d("AvmApp", "avm is null ");
+                    return START_STICKY;
+                }
+                int avm_onclick = intent.getIntExtra("avm_start", -1);
+                int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
+                KLog.d("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);
+                if (avm_onclick != -1) {//-1表示是通过AS启动的
+                    if (avm_state == 0) {
+                        if (!mIsCanShow) {
+                            KLog.i("[onStartCommand] 半功能到全功能范围不启动全景");
+                            return START_STICKY;
+                        }
+                        AvmRuntime.self().artificialEnter();
+                        if (isFirstEnter) { //avm首次被占用摄像头被释放，onCreate bwDele;后 点击进行创建
+                            mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            isFirstEnter = false;
+                        }
+                        DataManager.writeFault(avm_onclick == 1 ? DataConstant.Code.CLICK_IN_SUI :
+                                avm_onclick == 2 ? DataConstant.Code.CLICK_IN_FK : DataConstant.Code.CLICK_IN_SPEECH);
+                    } else if (avm_state == 1) {
+                        AvmRuntime.self().artificialExit();
                     }
-                    AvmRuntime.self().artificialEnter();
-                    if (isFirstEnter) { //avm首次被占用摄像头被释放，onCreate bwDele;后 点击进行创建
-                        mHandler.sendEmptyMessage(MSG_CR_CAMERA);
-                        isFirstEnter = false;
-                    }
-                    DataManager.writeFault(avm_onclick == 1 ? DataConstant.Code.CLICK_IN_SUI :
-                            avm_onclick == 2 ? DataConstant.Code.CLICK_IN_FK : DataConstant.Code.CLICK_IN_SPEECH);
-                } else if (avm_state == 1) {
-                    AvmRuntime.self().artificialExit();
                 }
             }
         }
@@ -610,7 +616,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             @Override
             public void run() {
                 if (!handleFlag) AvmApp.getInstance().getCameraView().viewShowStatus();
-                AvmApp.getInstance().getCameraView().setCurrentGear(gear);
+                AvmApp.getInstance().getCameraView().setCurrentGear();
             }
         });
     }
@@ -1145,7 +1151,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.i("AvmApp","open avm ");
                 AvmApp.getInstance().getCameraView().showFullWin();
                 SystemProperties.setGlobal("avm_state", 1);
-                mAvmManager.sendAvmState(1);
+                //mAvmManager.sendAvmState(1);
                 if (DELETE_CAMERA_FLAG) {
                     mHandler.removeMessages(MSG_DEL_CAMERA);
                     mHandler.sendEmptyMessage(MSG_CR_CAMERA);
@@ -1154,7 +1160,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.i("AvmApp","close avm ");
                 AvmApp.getInstance().getCameraView().dismissView(null);
                 SystemProperties.setGlobal("avm_state", 0);
-                mAvmManager.sendAvmState(0);
+                //mAvmManager.sendAvmState(0);
                 if (DELETE_CAMERA_FLAG) {
                     mHandler.removeMessages(MSG_CR_CAMERA);
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
