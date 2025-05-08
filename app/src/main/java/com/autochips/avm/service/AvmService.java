@@ -570,7 +570,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 avm_onclick == 2 ? DataConstant.Code.CLICK_IN_FK : DataConstant.Code.CLICK_IN_SPEECH);
                         break;
                     case 0://关闭AVM首页
-                        AvmRuntime.self().artificialExit();
+                        AvmRuntime.self().artificialExit(false);
                         break;
                 }
             }
