@@ -524,7 +524,7 @@ public class CameraView extends View implements LifecycleOwner {
                 KLog.d(" addOnGlobalLayoutListener mWindowLps.height： " + mWindowLps.height);
                 showRootView();
                 SystemProperties.setGlobal("avm_state", 1);
-                AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
+//                AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
             }
         });
     }
@@ -1985,6 +1985,8 @@ public class CameraView extends View implements LifecycleOwner {
                     KLog.i(endX + " startX开始拖动车模bwSetTouchScreenPos " + endY);
                     int finalTouch_x = endX;
                     int finalTouch_y = endY;
+
+
                     boolean canMove = AvmApp.getInstance().isRight ? (endX > 66 && endX < 1356 && endY < 950 && endY > 113)
                             : (endX < 1860 && endX > 570 && endY < 950 && endY > 113);
                     if (canMove) {
