@@ -218,7 +218,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     DataManager.writeFault(DataConstant.Code.GET_IN_STR);
                     mHandler.removeMessages(MSG_CR_CAMERA);
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
-                    AvmRuntime.self().artificialExit();
+                    AvmRuntime.self().artificialExit(false);
                 } else if (mCarPowerWorkModeStatus == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     mIsCanShow = true;
@@ -555,9 +555,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 int avm_onclick = intent.getIntExtra("avm_start", -1);
                 int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
                 KLog.d("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);
-                switch (avm_onclick) {
-                    case 1: //SystemUI跳转打开AVM首页
-                        if (!mIsCanShow) {
+                if (avm_onclick != -1) {//-1表示是通过AS启动的
+                    if (avm_state == 0) {
+                        if(!mIsCanShow){
                             KLog.i("[onStartCommand] 半功能到全功能范围不启动全景");
                             return START_STICKY;
                         }
@@ -568,10 +568,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         }
                         DataManager.writeFault(avm_onclick == 1 ? DataConstant.Code.CLICK_IN_SUI :
                                 avm_onclick == 2 ? DataConstant.Code.CLICK_IN_FK : DataConstant.Code.CLICK_IN_SPEECH);
-                        break;
-                    case 0://关闭AVM首页
-                        AvmRuntime.self().artificialExit();
-                        break;
+                    } else if (avm_state == 1) {
+                        AvmRuntime.self().artificialExit(false);
+                    }
                 }
             }
         }
@@ -1436,7 +1435,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.i("AvmApp","open avm ");
                 AvmApp.getInstance().getCameraView().showFullWin();
                 SystemProperties.setGlobal("avm_state", 1);
-//                mAvmManager.sendAvmState(1);
+                mAvmManager.sendAvmState(1);
                 if (DELETE_CAMERA_FLAG) {
                     mHandler.removeMessages(MSG_DEL_CAMERA);
                     mHandler.sendEmptyMessage(MSG_CR_CAMERA);
@@ -1445,7 +1444,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.i("AvmApp","close avm ");
                 AvmApp.getInstance().getCameraView().dismissView(null);
                 SystemProperties.setGlobal("avm_state", 0);
-//                mAvmManager.sendAvmState(0);
+                mAvmManager.sendAvmState(0);
                 if (DELETE_CAMERA_FLAG) {
                     mHandler.removeMessages(MSG_CR_CAMERA);
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);

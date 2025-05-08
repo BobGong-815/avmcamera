@@ -60,9 +60,9 @@ public class MockActivity extends BaseActivity<ActivityMockBinding, MockViewMode
         KLog.d("AVM app 启动 MockActivity ");
        // getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG);
         //getWindow().getAttributes().type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //openCamera();
         //skinView();y

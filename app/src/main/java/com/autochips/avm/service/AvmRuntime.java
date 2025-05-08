@@ -70,6 +70,14 @@ public class AvmRuntime {
         mContext = context;
         dataSts = new DataSts();
         configTable = new ArrayList<>();
+
+        configTable.add(new CfgItem(DataDefine.FV_STATE_ALL,// 任何情况下，点x都可以退出AVM
+                null,
+                null,
+                null,
+                new int[]{DataDefine.EVT_USER_CLICK_EXIT},
+                new int[]{DataDefine.ACT_EXIT}));
+
         //非全景(状态0)
         configTable.add(new CfgItem(DataDefine.FV_STATE_NON,// 1-1-1
                 new int[]{DataDefine.GEAR_P, DataDefine.GEAR_D, DataDefine.GEAR_N},
@@ -1434,7 +1442,7 @@ public class AvmRuntime {
     }
 
     public void speedChange(float value) {
-        //KLog.d("speedChange value is " + value);
+//        KLog.d("speedChange value is " + value);
         boolean flag = false;
         synchronized (syncObj) {
             dataSts.currSpeed = CameraViewModelHelper.mpsToKmh((Float) value);
@@ -1506,9 +1514,12 @@ public class AvmRuntime {
         }
     }
 
-    public void artificialExit() {
+    public void artificialExit(boolean userClick) {
         synchronized (syncObj) {
             KLog.d(" artificialExit(). ");
+            if (userClick) {
+                dataSts.events.add(DataDefine.EVT_USER_CLICK_EXIT);
+            }
             if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
                 setOverExitFlag(0);
                 dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
@@ -2182,10 +2193,10 @@ public class AvmRuntime {
 //        }
 
         int[] matchAction(DataSts dataSts) {
-            if (!fill(dataSts.fvSts, fvState)) return null;
-            if (!fill(dataSts.gears, gears)) return null;
-            if (!fill(dataSts.sensors, sensorSts)) return null;
-            if (memories != null && !fill(dataSts.memory, memories)) return null;
+            if (fvState != DataDefine.FV_STATE_ALL && !fill(dataSts.fvSts, fvState)) return null;
+            if (gears != null && !fill(dataSts.gears, gears)) return null;
+            if (sensorSts != null && !fill(dataSts.sensors, sensorSts)) return null;
+            if (memories != null && memories != null && !fill(dataSts.memory, memories)) return null;
             if (dataSts.events.size() == 0 || !fill(dataSts.events, events)) return null;
 //            if (dataSts.events.size() > 1) {
 //                if (dataSts.events.size() > 2) {
@@ -2244,20 +2255,30 @@ public class AvmRuntime {
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append("CfgItem (")
                     .append("fvState = " + DataDefine.id2String(fvState));
-            for (int i = 0; i < gears.length; i++) {
-                stringBuffer.append("\n, gears[" + i + "] = " + DataDefine.id2String(gears[i]));
+            if (gears != null) {
+                for (int i = 0; i < gears.length; i++) {
+                    stringBuffer.append("\n, gears[" + i + "] = " + DataDefine.id2String(gears[i]));
+                }
             }
-            for (int i = 0; i < sensorSts.length; i++) {
-                stringBuffer.append("\n, sensorSts[" + i + "] = " + DataDefine.id2String(sensorSts[i]));
+            if (sensorSts != null) {
+                for (int i = 0; i < sensorSts.length; i++) {
+                    stringBuffer.append("\n, sensorSts[" + i + "] = " + DataDefine.id2String(sensorSts[i]));
+                }
             }
-            for (int i = 0; i < memories.length; i++) {
-                stringBuffer.append("\n, memories[" + i + "] = " + DataDefine.id2String(memories[i]));
+            if (memories != null) {
+                for (int i = 0; i < memories.length; i++) {
+                    stringBuffer.append("\n, memories[" + i + "] = " + DataDefine.id2String(memories[i]));
+                }
             }
-            for (int i = 0; i < events.length; i++) {
-                stringBuffer.append("\n, events[" + i + "] = " + DataDefine.id2String(events[i]));
+            if (events != null) {
+                for (int i = 0; i < events.length; i++) {
+                    stringBuffer.append("\n, events[" + i + "] = " + DataDefine.id2String(events[i]));
+                }
             }
-            for (int i = 0; i < actions.length; i++) {
-                stringBuffer.append("\n, actions[" + i + "] = " + DataDefine.id2String(actions[i]));
+            if (actions != null) {
+                for (int i = 0; i < actions.length; i++) {
+                    stringBuffer.append("\n, actions[" + i + "] = " + DataDefine.id2String(actions[i]));
+                }
             }
             stringBuffer.append(" )");
 

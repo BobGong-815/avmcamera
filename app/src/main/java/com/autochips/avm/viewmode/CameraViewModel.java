@@ -220,7 +220,7 @@ public class CameraViewModel extends BaseCameraViewModel {
      */
     public void closeAvm() {// 手动关闭
         KLog.i("closeAvm");
-        AvmRuntime.self().artificialExit();
+        AvmRuntime.self().artificialExit(true);
 //        setRunning(false);
 //        CameraViewModelHelper.getInstance().setRadarActiveTow(true);
 //        CameraViewModelHelper.getInstance().dismissView(false, 0, "2");
