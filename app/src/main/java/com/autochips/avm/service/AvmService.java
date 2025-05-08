@@ -213,7 +213,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     mHandler.removeMessages(MSG_CR_CAMERA);
                     mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                     //半功能需要退出全景
-                    AvmRuntime.self().artificialExit();
+                    AvmRuntime.self().artificialExit(false);
                 } else if (mCarPowerWorkModeStatus == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     KLog.i("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
@@ -559,7 +559,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 avm_onclick == 2 ? DataConstant.Code.CLICK_IN_FK : DataConstant.Code.CLICK_IN_SPEECH);
                         break;
                     case 0://关闭AVM首页
-                        AvmRuntime.self().artificialExit();
+                        AvmRuntime.self().artificialExit(false);
                         break;
                 }
             }

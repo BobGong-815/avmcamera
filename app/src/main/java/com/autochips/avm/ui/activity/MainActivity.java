@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         Log.i("AvmRuntime", "onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
         mHandler.removeCallbacksAndMessages("setRelativeLayer");
         if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
-            AvmRuntime.self().artificialExit();
+            AvmRuntime.self().artificialExit(false);
         }
         if (AvmApp.getInstance().getCameraView().getRootView() != null) {
             Log.i("AvmRuntime", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
