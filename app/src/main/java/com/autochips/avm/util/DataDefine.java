@@ -27,6 +27,7 @@ public class DataDefine {
     public final static int FV_STATE_PASSIVE_DUAL_CARD = 3;
     public final static int FV_STATE_ACTIVE_DUAL_CARD = 4;
     public final static int FV_STATE_OVER_SPEED_EXIT = 5;
+    public final static int FV_STATE_ALL = 6;
 
     public final static int GEAR_P = 10; //当前档位 P
 //    public final static int GEAR_P_STOP = 11;
@@ -88,6 +89,7 @@ public class DataDefine {
     public final static int EVT_SWITCH_2_WIDE_ANGLE = 92;
     public final static int EVT_CLICK_CAMERA_ICON = 93;
     public final static int EVT_TOUCH_TAP = 94;
+    public final static int EVT_USER_CLICK_EXIT = 100;
 
     public final static int ACT_AERIAL_VIEW = 300; //鸟瞰图
     public final static int ACT_2D_REAR_VIEW = 301;//后视图
@@ -258,6 +260,8 @@ public class DataDefine {
                 return "GEAR_D_MOVING";
             case GEAR_N_MOVING:
                 return "GEAR_N_MOVING";
+            case EVT_USER_CLICK_EXIT:
+                return "EVT_USER_CLICK_EXIT";
 
         }
 
