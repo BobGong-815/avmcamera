@@ -1512,7 +1512,8 @@ public class AvmRuntime {
             if (userClick) {
                 dataSts.events.add(DataDefine.EVT_USER_CLICK_EXIT);
             }
-            if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID) {
+            if (BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_T_ID
+                    || BvAvmJNIHelper.CAMERA_TYPE == bvavmJNI.PROJ_AY5_TR_ID) {
                 setOverExitFlag(0);
                 dataSts.events.add(DataDefine.EVT_ACTIVE_EXIT);
             } else {
