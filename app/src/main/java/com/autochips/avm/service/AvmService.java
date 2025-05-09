@@ -400,10 +400,10 @@ public class AvmService extends Service {
 //        if (activatedPanorama == -1) {
 //            SystemProperties.set("settingPathLine", "1");
 //        }
-        int signalActivates = SystemProperties.getInt("signalActivates", -1);
-        if (signalActivates == -1) {
-            SystemProperties.set("signalActivates", "1");
-        }
+//        int signalActivates = SystemProperties.getInt("signalActivates", -1);
+//        if (signalActivates == -1) {
+//            SystemProperties.set("signalActivates", "1");
+//        }
     }
 
   /**

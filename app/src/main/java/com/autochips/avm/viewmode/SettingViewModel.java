@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.bvavm.bvavmJNI;
+import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.SystemProperties;
@@ -165,9 +166,9 @@ public class SettingViewModel extends BaseCameraViewModel {
         setRunning(true);
         startTimer();
         if(isChecked){
-            SystemProperties.set("signalActivates","1");
+            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION, 1);//SystemProperties.set("signalActivates","1");
         }else{
-            SystemProperties.set("signalActivates","0");
+            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION, 0); //SystemProperties.set("signalActivates","0");
         }
 
     }

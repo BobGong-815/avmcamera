@@ -31,6 +31,7 @@ import androidx.lifecycle.Observer;
 
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.R;
+import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.databinding.ViewSettingBinding;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.listener.OnTabSelectListener;
@@ -101,7 +102,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
     public void checkButton() {
         try {
             int settingPathLine = Settings.Global.getInt(context.getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY);// SystemProperties.getInt("settingPathLine", -1);
-            int signalActivates = SystemProperties.getInt("signalActivates", -1);
+            int signalActivates = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION);// SystemProperties.getInt("signalActivates", -1);
             settingBinding.swSettingPathLine.setChecked(settingPathLine == 1);
             settingBinding.switchSignalActivates.setChecked(signalActivates == 1);
             if (settingPathLine == 1)

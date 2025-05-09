@@ -29,6 +29,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VE
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.android.bvavm.bvavmJNI;
@@ -41,6 +42,7 @@ import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
+import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.NotCloseToast;
 import com.autochips.avm.util.RearviewToast;
 import com.autochips.avm.util.ServiceUtils;
@@ -399,17 +401,21 @@ public class CameraViewModelHelper {
                 mHandler.removeCallbacks(getmRun);
                 mHandler.removeCallbacksAndMessages("close_N");
                 //if (!isTurn) {
-                    // 转向灯激活全景开关打开，且车速《20，右转向灯打开 557843113
-                    int signalActivates = SystemProperties.getInt("signalActivates", 0);
-                    if (signalActivates == 1) {
-                        KLog.d("车速： 激活视图 :"+isCloseClick);
-                        if(!isCloseClick) {
-                            //只有非主动关闭的才允许打开左卡片
-                            KLog.d("车速非主动关闭才退出 ");
-                            isPGearShowSmart = false;
-                            isRGearShowSmart = false;
-                            smartActive(turn);
+                    try {
+                        // 转向灯激活全景开关打开，且车速《20，右转向灯打开 557843113
+                        int signalActivates = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION);// SystemProperties.getInt("signalActivates", 0);
+                        if (signalActivates == 1) {
+                            KLog.d("车速： 激活视图 :" + isCloseClick);
+                            if (!isCloseClick) {
+                                //只有非主动关闭的才允许打开左卡片
+                                KLog.d("车速非主动关闭才退出 ");
+                                isPGearShowSmart = false;
+                                isRGearShowSmart = false;
+                                smartActive(turn);
+                            }
                         }
+                    } catch (Settings.SettingNotFoundException settingNotFoundException) {
+                        settingNotFoundException.printStackTrace();
                     }
                // }
                 isTurn = true;
@@ -687,16 +693,20 @@ public class CameraViewModelHelper {
             isRGearShowSmart = false;
             if (!AvmApp.getInstance().getCameraView().isFullWin) {
                 // 转向灯激活全景开关打开，且车速《20，右转向灯打开 557843113
-                int signalActivates = SystemProperties.getInt("signalActivates", 0);
-                if (signalActivates == 1) {
-                    if(valGear == 4) {
-                        isPGearShowSmart = true;
+                try {
+                    int signalActivates = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION); //SystemProperties.getInt("signalActivates", 0);
+                    if (signalActivates == 1) {
+                        if (valGear == 4) {
+                            isPGearShowSmart = true;
+                        }
+                        if (valGear == 3) {
+                            //r挡转向激活左卡片
+                            isRGearShowSmart = true;
+                        }
+                        smartActive(value);
                     }
-                    if(valGear == 3){
-                        //r挡转向激活左卡片
-                        isRGearShowSmart = true;
-                    }
-                    smartActive(value);
+                } catch (Settings.SettingNotFoundException settingNotFoundException) {
+                    settingNotFoundException.printStackTrace();
                 }
             }
 
