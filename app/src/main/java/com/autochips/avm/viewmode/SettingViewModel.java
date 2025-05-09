@@ -8,12 +8,14 @@ import static com.avm.framwork.manager.ViewSwitchManager.ACTION_INFO_TRANSPARENT
 
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.provider.Settings;
 import android.widget.CompoundButton;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.helper.CameraViewModelHelper;
+import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.SystemProperties;
 
 import me.goldze.mvvmhabit.binding.command.BindingAction;
@@ -136,10 +138,10 @@ public class SettingViewModel extends BaseCameraViewModel {
         setRunning(true);
         startTimer();
         if(isChecked){
-            SystemProperties.set("settingPathLine","1");
+            Settings.Global.putInt(mContext.getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY, 1); // SystemProperties.set("settingPathLine","1");
             bvavmJNI.bwSetTrajLineStatus((byte)1);
         }else{
-            SystemProperties.set("settingPathLine","0");
+            Settings.Global.putInt(mContext.getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY, 0); // SystemProperties.set("settingPathLine","0");
             bvavmJNI.bwSetTrajLineStatus((byte)0);
         }
 

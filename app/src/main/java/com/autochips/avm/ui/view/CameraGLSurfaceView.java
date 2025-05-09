@@ -9,6 +9,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.autochips.avm.data.DataManager;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.service.AvmService;
+import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.SystemProperties;
 
 
@@ -148,10 +150,16 @@ public class CameraGLSurfaceView extends GLSurfaceView {
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // 设置清除颜色为透明
             KLog.i("ActivityLifecycleCallbacks onSurfaceCreated 创建画布");
             //初始化摄像头画面数据
+
             BvAvmJNIHelper.getInstance().avmInit(getContext());
             KLog.i("ActivityLifecycleCallbacks onSurfaceCreated 创建画布结束");
-            int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
-            bvavmJNI.bwSetTrajLineStatus((byte)settingPathLine);
+            try {
+                int settingPathLine = Settings.Global.getInt(getContext().getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY);
+                bvavmJNI.bwSetTrajLineStatus((byte)settingPathLine);
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+
 //            setIndexTab();
 //            bvavmJNI.bwNotifyRVC(0);
             KLog.d(" valGear 结束RVC-1 resRvc  handler：了");

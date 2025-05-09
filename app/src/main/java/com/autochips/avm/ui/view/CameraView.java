@@ -73,6 +73,7 @@ import com.autochips.avm.listener.OnTabSelectListener;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.BottomDialog;
 import com.autochips.avm.ui.activity.MainActivity;
+import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.NotCloseToast;
 import com.autochips.avm.util.RearviewToast;
 import com.autochips.avm.util.SystemProperties;
@@ -502,9 +503,13 @@ public class CameraView extends View implements LifecycleOwner {
         mViewCameraBinding.radarSoundIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_radar_sound_nor));
         mViewCameraBinding.rearviewMirrorView.gearInfo(CameraViewModelHelper.valGear == 3 ? 1 : 0);
         KLog.d(hisModel + "  valGear viewShowStatus 模式：" + model + " 记忆模式: " + viewPosition);
-        int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
-        if (settingPathLine == 1) {
-            bvavmJNI.bwSetTrajLineStatus((byte) 1);
+        try {
+            int settingPathLine = Settings.Global.getInt(mContext.getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY);// SystemProperties.getInt("settingPathLine", -1);
+            if (settingPathLine == 1) {
+                bvavmJNI.bwSetTrajLineStatus((byte) 1);
+            }
+        } catch (Settings.SettingNotFoundException settingNotFoundException) {
+            settingNotFoundException.printStackTrace();
         }
         hisModel = model;
         viewModel.setmHisModel(hisModel);
@@ -1055,13 +1060,17 @@ public class CameraView extends View implements LifecycleOwner {
 
             camera3DDirection = bvavmJNI.BW_2D_FRONT_UNDISTORT;
             bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
-            //判断轨迹线有没有打开，打开就显示2D轨迹线
-            int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
-            KLog.d("设置车辅线:" + settingPathLine);
-            if (settingPathLine == 1) {
-                bvavmJNI.bwSetTrajLineStatus((byte) 1);
-                bvavmJNI.bwSetCarIsDgear((byte) 1);//2D前视
-                //bvavmJNI.bwSetCarIsBack((byte) 0);//2D后视
+            try {
+                //判断轨迹线有没有打开，打开就显示2D轨迹线
+                int settingPathLine = Settings.Global.getInt(mContext.getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY);// SystemProperties.getInt("settingPathLine", -1);
+                KLog.d("设置车辅线:" + settingPathLine);
+                if (settingPathLine == 1) {
+                    bvavmJNI.bwSetTrajLineStatus((byte) 1);
+                    bvavmJNI.bwSetCarIsDgear((byte) 1);//2D前视
+                    //bvavmJNI.bwSetCarIsBack((byte) 0);//2D后视
+                }
+            } catch (Settings.SettingNotFoundException settingNotFoundException) {
+                settingNotFoundException.printStackTrace();
             }
             if (!isSmartWin) {
                 CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_FRONT_UNDISTORT;

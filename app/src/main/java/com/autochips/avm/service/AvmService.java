@@ -396,10 +396,10 @@ public class AvmService extends Service {
 //        SystemProperties.set("settingPathLine","1");  // 轨迹线
 //        SystemProperties.set("activatedPanorama","1"); // 雷达激活
 //        SystemProperties.set("signalActivates","1"); // // 转向激活
-        int activatedPanorama = SystemProperties.getInt("settingPathLine", -1);
-        if (activatedPanorama == -1) {
-            SystemProperties.set("settingPathLine", "1");
-        }
+//        int activatedPanorama = SystemProperties.getInt("settingPathLine", -1);
+//        if (activatedPanorama == -1) {
+//            SystemProperties.set("settingPathLine", "1");
+//        }
         int signalActivates = SystemProperties.getInt("signalActivates", -1);
         if (signalActivates == -1) {
             SystemProperties.set("signalActivates", "1");

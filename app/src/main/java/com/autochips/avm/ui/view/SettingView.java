@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.autochips.avm.databinding.ViewSettingBinding;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.listener.OnTabSelectListener;
 import com.autochips.avm.util.CustomToast;
+import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.SystemProperties;
 import com.autochips.avm.viewmode.SettingViewModel;
 import com.avm.framwork.helper.ThreadPoolUtil;
@@ -96,14 +98,18 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         }
         checkButton();
     }
-    public void checkButton(){
-        int settingPathLine = SystemProperties.getInt("settingPathLine", -1);
-        int signalActivates = SystemProperties.getInt("signalActivates", -1);
-        settingBinding.swSettingPathLine.setChecked(settingPathLine == 1);
-        settingBinding.switchSignalActivates.setChecked(signalActivates == 1);
-        if (settingPathLine == 1)
-          bvavmJNI.bwSetTrajLineStatus((byte) 1);
-      CameraViewModelHelper.getInstance().setTransparentIndexTab();
+    public void checkButton() {
+        try {
+            int settingPathLine = Settings.Global.getInt(context.getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY);// SystemProperties.getInt("settingPathLine", -1);
+            int signalActivates = SystemProperties.getInt("signalActivates", -1);
+            settingBinding.swSettingPathLine.setChecked(settingPathLine == 1);
+            settingBinding.switchSignalActivates.setChecked(signalActivates == 1);
+            if (settingPathLine == 1)
+                bvavmJNI.bwSetTrajLineStatus((byte) 1);
+            CameraViewModelHelper.getInstance().setTransparentIndexTab();
+        } catch (Settings.SettingNotFoundException settingNotFoundException) {
+            settingNotFoundException.printStackTrace();
+        }
 
     }
 

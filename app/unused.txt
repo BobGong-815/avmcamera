@@ -6135,6 +6135,7 @@ com.autochips.avm.ui.view.CameraView:
     private com.autochips.avm.helper.LongPressGestureListener longPressGestureListener
 com.autochips.avm.ui.view.SegmentTabLayout:
     protected int sp2px(float)
+com.autochips.avm.util.GlobalSetting
 com.autochips.avm.util.SystemProperties:
     private static final java.lang.String TAG
 com.autochips.avm.viewmode.CameraViewModel:
