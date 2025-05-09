@@ -337,7 +337,19 @@ public class CameraViewModelHelper {
     if (!CameraView.isShowing){
       return;
     }
-    int position = SystemProperties.getInt("settingRadarActivatedPanorama", 0);
+    int position;
+    try {
+        position = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS); //SystemProperties.getInt("settingRadarActivatedPanorama", 0);
+        if (position == 3 || position == 4 || position == 5) {
+            position -= 2;
+        } else {
+            position = 0;
+        }
+        KLog.d("transparent chassis position is " + position);
+    } catch (Settings.SettingNotFoundException settingNotFoundException) {
+        settingNotFoundException.printStackTrace();
+        return;
+    }
 //    if (!isTransparent){
 //       position =speedValue > 0.3 ? position : 0 ;
 //    }

@@ -124,7 +124,6 @@ public class BvAvmJNIHelper {
         }else {
             Log.i("BvAvmJNIHelper","car is not connect");
         }
-        //setIndexTab();
 //        bvavmJNI.bwNotifyRVC(0);
         isAvmDeInit = true;
         return res;
@@ -150,27 +149,6 @@ public class BvAvmJNIHelper {
         return status;
     }
 
-    private void setIndexTab(){
-        int position = SystemProperties.getInt("settingRadarActivatedPanorama", -1);
-        KLog.e(position+" setIndexTab 设置透明底盘-初始化后调用: " + position);
-        if (position == -1)return;
-        if (position == 0) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 0);
-            bvavmJNI.bwSetCarTransparency( 1f);
-        }else if(position == 1){
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.3f);
-        } else if(position == 2){
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency( 0.15f);
-        }else {
-            bvavmJNI.bwSetCarBottomStatus((byte) 1);
-            bvavmJNI.bwSetCarTransparency(0.05f);
-        }
-    }
-
-
-
     public void avmDeInit() {
         isActive = false;
         mHandler.postDelayed(()->{
@@ -180,8 +158,6 @@ public class BvAvmJNIHelper {
         },500);
 
     }
-
-
 
     public void setCalibration(boolean calibration) {
         isCalibration = calibration;

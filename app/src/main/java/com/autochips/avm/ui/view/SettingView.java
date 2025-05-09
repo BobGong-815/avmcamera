@@ -40,6 +40,7 @@ import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.SystemProperties;
 import com.autochips.avm.viewmode.SettingViewModel;
 import com.avm.framwork.helper.ThreadPoolUtil;
+import com.gxa.lib.car.VehicleVendorProperty;
 
 import me.goldze.mvvmhabit.utils.KLog;
 
@@ -122,6 +123,21 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             } else {
                 settingBinding.segmentTab.setSelectTab(0);
             }
+
+            int settingTabPosition;
+            try {
+                settingTabPosition = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS); //SystemProperties.getInt("settingRadarActivatedPanorama", 0);
+                if (settingTabPosition == 3 || settingTabPosition == 4 || settingTabPosition == 5) {
+                    settingTabPosition -= 2;
+                } else {
+                    settingTabPosition = 0;
+                }
+                KLog.d("transparent chassis settingTabPosition is " + settingTabPosition);
+            } catch (Settings.SettingNotFoundException settingNotFoundException) {
+                settingNotFoundException.printStackTrace();
+                return;
+            }
+            settingBinding.transparentChassisTab.setSelectTab(settingTabPosition);
         } catch (Settings.SettingNotFoundException settingNotFoundException) {
             settingNotFoundException.printStackTrace();
         }
@@ -129,14 +145,14 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
     }
 
     private void initTab() {
-        int position;
-        try {
-            position = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P); //SystemProperties.get("pExit");
-            KLog.d("position: " + position);
-        } catch (Settings.SettingNotFoundException settingNotFoundException) {
-            settingNotFoundException.printStackTrace();
-            return;
-        }
+//        int position;
+//        try {
+//            position = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P); //SystemProperties.get("pExit");
+//            KLog.d("position: " + position);
+//        } catch (Settings.SettingNotFoundException settingNotFoundException) {
+//            settingNotFoundException.printStackTrace();
+//            return;
+//        }
         LayoutParams layoutParams = new LayoutParams(settingBinding.segmentTab.getLayoutParams());
         //layoutParams.width = (304*getDescValueArray().length);
         layoutParams.leftMargin = 30;
@@ -146,11 +162,11 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         settingBinding.segmentTab.setLayoutParams(layoutParams);
         settingBinding.segmentTab.setTabData(getDescValueArray());
         settingBinding.segmentTab.setSelectTab(1);
-        if (position == 1) {
-            settingBinding.segmentTab.setSelectTab(1);
-        } else {
-            settingBinding.segmentTab.setSelectTab(0);
-        }
+//        if (position == 1) {
+//            settingBinding.segmentTab.setSelectTab(1);
+//        } else {
+//            settingBinding.segmentTab.setSelectTab(0);
+//        }
         settingBinding.segmentTab.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position, boolean fromUser) {
@@ -174,17 +190,30 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         settingBinding.transparentChassisTab.setLayoutParams(transparentChassisParams);
         settingBinding.transparentChassisTab.setTabData(getTransparentChassisDescValueArray());
 
-      int settingTabPosition = SystemProperties.getInt("settingRadarActivatedPanorama", 0);
+//        int settingTabPosition;
+//        try {
+//            settingTabPosition = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS); //SystemProperties.getInt("settingRadarActivatedPanorama", 0);
+//            if (settingTabPosition == 3 || settingTabPosition == 4 || settingTabPosition == 5) {
+//                settingTabPosition -= 2;
+//            } else {
+//                settingTabPosition = 0;
+//            }
+//            KLog.d("transparent chassis settingTabPosition is " + settingTabPosition);
+//        } catch (Settings.SettingNotFoundException settingNotFoundException) {
+//            settingNotFoundException.printStackTrace();
+//            return;
+//        }
 
       CameraViewModelHelper.getInstance().setTransparentIndexTab();
-        settingBinding.transparentChassisTab.setSelectTab(settingTabPosition);
+//        settingBinding.transparentChassisTab.setSelectTab(settingTabPosition);
         settingBinding.transparentChassisTab.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position, boolean fromUser) {
                 viewModel.startTimer();
                 viewModel.setRunning(true);
                 KLog.e("设置透明底盘: " + position);
-                SystemProperties.set("settingRadarActivatedPanorama",  String.valueOf(position));
+                Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS, position+2);
+//                SystemProperties.set("settingRadarActivatedPanorama",  String.valueOf(position));
               CameraViewModelHelper.getInstance().setTransparentIndexTab();
             }
 
