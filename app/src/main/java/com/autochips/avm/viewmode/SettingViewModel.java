@@ -153,10 +153,9 @@ public class SettingViewModel extends BaseCameraViewModel {
         setRunning(true);
         startTimer();
         if(isChecked){
-
-            SystemProperties.set("activatedPanorama","1");
+            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION, 1); //SystemProperties.set("activatedPanorama","1");
         }else{
-            SystemProperties.set("activatedPanorama","2");
+            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION, 0); //SystemProperties.set("activatedPanorama","2");
         }
 
     }

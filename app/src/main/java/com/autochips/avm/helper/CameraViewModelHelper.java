@@ -822,22 +822,26 @@ public class CameraViewModelHelper {
     public void radarActive(int value) {
         KLog.d(isRadarActiveTow + " radarActive 雷达距离 = " + value);
         if (value >= 0 && isRadarActiveTow == 2) {
-            // 雷达激活全景开关打开，且车速《12，且 雷达检测到障碍物
-            int activatedPanorama = SystemProperties.getInt("activatedPanorama", 2);
-            KLog.d("activatedPanorama = " + activatedPanorama);
-            if (activatedPanorama != 1) {
-                KLog.d("activatedPanorama is close");
-                return;
-            }
-            float speed = getSpeed();
-            KLog.d("speed = " + speed);
-            if (speed <= 30) {
-                isRadarActive = true;
-                isPGearShowSmart = false;
-                isRGearShowSmart = false;
-                smartActive(value);
-            } else {
-                radarExit(value);
+            try {
+                // 雷达激活全景开关打开，且车速《12，且 雷达检测到障碍物
+                int activatedPanorama = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION); // SystemProperties.getInt("activatedPanorama", 2);
+                KLog.d("activatedPanorama = " + activatedPanorama);
+                if (activatedPanorama != 1) {
+                    KLog.d("activatedPanorama is close");
+                    return;
+                }
+                float speed = getSpeed();
+                KLog.d("speed = " + speed);
+                if (speed <= 30) {
+                    isRadarActive = true;
+                    isPGearShowSmart = false;
+                    isRGearShowSmart = false;
+                    smartActive(value);
+                } else {
+                    radarExit(value);
+                }
+            } catch (Settings.SettingNotFoundException settingNotFoundException) {
+                settingNotFoundException.printStackTrace();
             }
 
         }
