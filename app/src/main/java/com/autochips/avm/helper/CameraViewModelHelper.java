@@ -841,6 +841,9 @@ public class CameraViewModelHelper {
         isReverseToTurnStats = false;
         mHandler.removeCallbacks(getmRun);
         mIsThtihty = time == 30000;
+        if (time == 0) {
+            CameraView.ENABLE_SKIP = false;
+        }
         mHandler.postDelayed(getmRun, time);
     }
 

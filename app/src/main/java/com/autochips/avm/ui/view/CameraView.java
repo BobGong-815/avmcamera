@@ -154,6 +154,8 @@ public class CameraView extends View implements LifecycleOwner {
     public static final int WINDOW_SHOW_LEFT_SCREEN = 45;
     public static final int WINDOW_SHOW_RIGHT_SCREEN = 728;
 
+    public static boolean ENABLE_SKIP;
+
     public CameraView(Context context) {
         super(context);
         KLog.d("BaseCameraView");
@@ -1176,6 +1178,7 @@ public class CameraView extends View implements LifecycleOwner {
             return;
         }
 
+        ENABLE_SKIP = true;
         canShowAct = false;
         mWindowLps.y = 84;
         if (AvmService.mIsScreen) {
@@ -1741,9 +1744,13 @@ public class CameraView extends View implements LifecycleOwner {
     private int y;
     private boolean isMove;
     public boolean onTouchView(View v, MotionEvent event) {
+        if (!ENABLE_SKIP) { // 不许滑动
+            return true;
+        }
+
         viewModel.setRunning(true);
         int action = event.getAction();
-        KLog.i("onTouch: viewPosition=" + viewPosition +"event x"+event.getX()+"eventY:"+event.getY()+" action:"+action);
+        KLog.i("onTouch: viewPosition=" + viewPosition +"event x"+event.getX()+"eventY:"+event.getY()+" action:"+action + " , ENABLE_SKIP = " + ENABLE_SKIP);
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mViewCameraBinding.llBackMirror.setSelected(false);
