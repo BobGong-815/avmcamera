@@ -146,10 +146,10 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
     public void onClick(View view) {
       KLog.d("后视镜11----");
         if (view.getId() == R.id.sw_rearview_mirror_down) {
-            if(CameraViewModelHelper.valGear != 3) {
-                KLog.d("is not R gear");
-                return;
-            }
+//            if(CameraViewModelHelper.valGear != 3) {
+//                KLog.d("is not R gear");
+//                return;
+//            }
             rearviewMirrorModel.startTimer();
             rearviewMirrorModel.setRunning(true);
             int reverseAutoMaticStatus = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
@@ -234,11 +234,11 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
     }
 
     private void setRearviewMirrorStatus(int reverseLightSts) {
-        if(CameraViewModelHelper.valGear != 3){
-            setRearviewMirrorDownViewStatus(0);
-            KLog.d("is not R gear");
-            return;
-        }
+//        if(CameraViewModelHelper.valGear != 3){
+//            setRearviewMirrorDownViewStatus(0);
+//            KLog.d("is not R gear");
+//            return;
+//        }
         if(reverseLightSts==4){
             rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(true);
             rearviewMirrorBinding.swRearviewMirrorDown.setChecked(true);
@@ -252,14 +252,8 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
     private void setRearviewMirrorDownViewStatus(int reverseLightSts) {
         KLog.e("reverseLightSts: " + reverseLightSts);
         //倒车档可以操作
-        if(reverseLightSts == 1){
-            int status = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
-            setRearviewMirrorStatus(status);
-        }else{
-            KLog.d("后视镜11----设置false 3");
-//            rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(false);
-//            rearviewMirrorBinding.swRearviewMirrorDown.setChecked(false);
-        }
+        int status = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
+        setRearviewMirrorStatus(status);
 //        rearviewMirrorBinding.llSettingRearviewMirrorDown.setAlpha(reverseLightSts == 1 ? 1.0f : 0.3f);
 //        rearviewMirrorBinding.llSettingRearviewMirrorDown.setEnabled(reverseLightSts == 1);
 //        rearviewMirrorBinding.swRearviewMirrorDown.setEnabled(reverseLightSts == 1);
