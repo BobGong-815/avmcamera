@@ -239,10 +239,16 @@ public class CameraViewModelHelper {
     }
 
     public void gearExit(int value) {
-        // P档退出 0 立即   1 30S
-        int pExit = SystemProperties.getInt("pExit", 0);
-        KLog.d(value + " pExit = " + pExit);
-        KLog.d(" isTurn = " + isTurn);
+        int pExit;
+        try {
+            // P档退出 0 立即   1 30S
+            pExit = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P); //SystemProperties.getInt("pExit", 0);
+            KLog.d(value + " pExit = " + pExit);
+            KLog.d(" isTurn = " + isTurn);
+        } catch (Settings.SettingNotFoundException settingNotFoundException) {
+            settingNotFoundException.printStackTrace();
+            return;
+        }
 
         KLog.d(value + " value valGear = " + isRunning);
 
@@ -296,10 +302,17 @@ public class CameraViewModelHelper {
                     isRunning = false;
                     return;
                 }
-                if (pExit != 0 && isTurn){ // 正在转向的时候，P档设置立即关闭，则就关闭 ，否则不关闭
-                    isRunning = false;
+                try {
+                    int pExitFlag = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P);
+                    if (pExitFlag != 0 && isTurn){ // 正在转向的时候，P档设置立即关闭，则就关闭 ，否则不关闭
+                        isRunning = false;
+                        return;
+                    }
+                } catch (Settings.SettingNotFoundException settingNotFoundException) {
+                    settingNotFoundException.printStackTrace();
                     return;
                 }
+
                 dismissView(false, 0, "d2");
             }, "close_N", pExit == 0 ? 0 : 30 * 1000);
 
@@ -569,8 +582,14 @@ public class CameraViewModelHelper {
     private void reverseToTurn() {
         if (valGear == 4) { // p档
             setViewModel(ViewType.gear_P);
-            int pExit = SystemProperties.getInt("pExit", 0);
-            KLog.d(" 是否进入转向pExit = " + pExit);
+            int pExit = 0;
+            try {
+                pExit = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P); //SystemProperties.getInt("pExit", 0);
+                KLog.d(" 是否进入转向pExit = " + pExit);
+            } catch (Settings.SettingNotFoundException settingNotFoundException) {
+                settingNotFoundException.printStackTrace();
+                return;
+            }
             if (pExit == 0) {
                 gearExit(valGear); // 如果R档退出，设置了立即关闭，则立即关闭
                 return;

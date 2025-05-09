@@ -108,6 +108,20 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             if (settingPathLine == 1)
                 bvavmJNI.bwSetTrajLineStatus((byte) 1);
             CameraViewModelHelper.getInstance().setTransparentIndexTab();
+
+            int position;
+            try {
+                position = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P); //SystemProperties.get("pExit");
+                KLog.d("position: " + position);
+            } catch (Settings.SettingNotFoundException settingNotFoundException) {
+                settingNotFoundException.printStackTrace();
+                return;
+            }
+            if (position == 1) {
+                settingBinding.segmentTab.setSelectTab(1);
+            } else {
+                settingBinding.segmentTab.setSelectTab(0);
+            }
         } catch (Settings.SettingNotFoundException settingNotFoundException) {
             settingNotFoundException.printStackTrace();
         }
@@ -115,8 +129,14 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
     }
 
     private void initTab() {
-        String position = SystemProperties.get("pExit");
-        KLog.d("position: " + position);
+        int position;
+        try {
+            position = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P); //SystemProperties.get("pExit");
+            KLog.d("position: " + position);
+        } catch (Settings.SettingNotFoundException settingNotFoundException) {
+            settingNotFoundException.printStackTrace();
+            return;
+        }
         LayoutParams layoutParams = new LayoutParams(settingBinding.segmentTab.getLayoutParams());
         //layoutParams.width = (304*getDescValueArray().length);
         layoutParams.leftMargin = 30;
@@ -126,7 +146,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         settingBinding.segmentTab.setLayoutParams(layoutParams);
         settingBinding.segmentTab.setTabData(getDescValueArray());
         settingBinding.segmentTab.setSelectTab(1);
-        if (position.equals("1")) {
+        if (position == 1) {
             settingBinding.segmentTab.setSelectTab(1);
         } else {
             settingBinding.segmentTab.setSelectTab(0);
@@ -136,7 +156,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             public void onTabSelect(int position, boolean fromUser) {
                     viewModel.startTimer();
                     viewModel.setRunning(true);
-                    SystemProperties.set("pExit", position + "");
+                Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, position); //SystemProperties.set("pExit", position + "");
             }
 
             @Override
