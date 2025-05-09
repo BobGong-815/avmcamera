@@ -202,9 +202,15 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
 
     public void changeShow(float speedValue) {
         boolean isEnable = speedValue <= 15;//可以点击
-        if(isEnable != rearviewMirrorBinding.swFold.isEnabled()){
-            rearviewMirrorBinding.swFold.setAlpha(isEnable ? 1.0f : 0.3f);
+        if(isEnable != rearviewMirrorBinding.llFold.isEnabled()){
+            rearviewMirrorBinding.llFold.setAlpha(isEnable ? 1.0f : 0.3f);
+            rearviewMirrorBinding.llFold.setEnabled(isEnable);
             rearviewMirrorBinding.swFold.setEnabled(isEnable);
+        }
+        if(isEnable != rearviewMirrorBinding.llSettingRearviewMirrorDown.isEnabled()){
+            rearviewMirrorBinding.llSettingRearviewMirrorDown.setAlpha(isEnable ? 1.0f : 0.3f);
+            rearviewMirrorBinding.llSettingRearviewMirrorDown.setEnabled(isEnable);
+            rearviewMirrorBinding.swRearviewMirrorDown.setEnabled(isEnable);
         }
     }
 
@@ -251,14 +257,14 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             setRearviewMirrorStatus(status);
         }else{
             KLog.d("后视镜11----设置false 3");
-            rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(false);
-            rearviewMirrorBinding.swRearviewMirrorDown.setChecked(false);
+//            rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(false);
+//            rearviewMirrorBinding.swRearviewMirrorDown.setChecked(false);
         }
-        rearviewMirrorBinding.llSettingRearviewMirrorDown.setAlpha(reverseLightSts == 1 ? 1.0f : 0.3f);
-        rearviewMirrorBinding.llSettingRearviewMirrorDown.setEnabled(reverseLightSts == 1);
-        rearviewMirrorBinding.swRearviewMirrorDown.setEnabled(reverseLightSts == 1);
-        rearviewMirrorBinding.llSettingRearviewMirrorDown.setClickable(reverseLightSts == 1);
-        rearviewMirrorBinding.swRearviewMirrorDown.setClickable(reverseLightSts == 1);
+//        rearviewMirrorBinding.llSettingRearviewMirrorDown.setAlpha(reverseLightSts == 1 ? 1.0f : 0.3f);
+//        rearviewMirrorBinding.llSettingRearviewMirrorDown.setEnabled(reverseLightSts == 1);
+//        rearviewMirrorBinding.swRearviewMirrorDown.setEnabled(reverseLightSts == 1);
+//        rearviewMirrorBinding.llSettingRearviewMirrorDown.setClickable(reverseLightSts == 1);
+//        rearviewMirrorBinding.swRearviewMirrorDown.setClickable(reverseLightSts == 1);
     }
 
     public void skinView(int uiMode) {
