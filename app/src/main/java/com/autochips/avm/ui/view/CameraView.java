@@ -34,12 +34,12 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceControl;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -438,6 +438,13 @@ public class CameraView extends View implements LifecycleOwner {
         rearviewMirrorView = mViewCameraBinding.rearviewMirrorView;
         mViewCameraBinding.layout3dTouchId.setOnTouchListener(this::onTouch);
         mViewCameraBinding.viewFrame.setOnTouchListener(this::onTouchView);
+        mViewCameraBinding.viewFrame.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                KLog.d("key event : " + event);
+                return false;
+            }
+        });
         rearviewMirrorView.setOnClickListener((v) -> {
         });
         settingView.setOnClickListener((v) -> {
@@ -481,8 +488,12 @@ public class CameraView extends View implements LifecycleOwner {
         });
     }
 
-    public void viewRearStatus(int status) {
-        mViewCameraBinding.rearviewMirrorView.reverseLight(status);
+    public void rearMirrowFlipDown(int status) {
+        mViewCameraBinding.rearviewMirrorView.rearMirrorFlipDown(status);
+    }
+
+    public void rearMirrorFold(int status) {
+        mViewCameraBinding.rearviewMirrorView.rearMirrorFold(status);
     }
 
     /**

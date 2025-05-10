@@ -39,14 +39,10 @@ import com.autochips.avm.data.DataConstant;
 import com.autochips.avm.data.DataManager;
 import com.autochips.avm.em.ViewType;
 import com.autochips.avm.service.AvmService;
-import com.autochips.avm.ui.view.CameraGLSurfaceView;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.GlobalSetting;
-import com.autochips.avm.util.NotCloseToast;
 import com.autochips.avm.util.RearviewToast;
-import com.autochips.avm.util.ServiceUtils;
-import com.autochips.avm.util.SystemProperties;
 import com.avm.framwork.manager.CanManager;
 
 import java.util.Arrays;
@@ -345,7 +341,7 @@ public class CameraViewModelHelper {
         } else {
             position = 0;
         }
-        KLog.d("transparent chassis position is " + position);
+//        KLog.d("transparent chassis position is " + position);
     } catch (Settings.SettingNotFoundException settingNotFoundException) {
         settingNotFoundException.printStackTrace();
         return;
@@ -951,10 +947,9 @@ public class CameraViewModelHelper {
     public void mirrorFoldUnFoldStatus(Object statusVal) {
 //     int status =  CanManager.getInstance().getIntStatus(MIRROR_FOLD_UNFOLD_STATUS, 0); //后视镜折叠
         KLog.d("后视镜折叠：" + statusVal);
-        int status = Integer.valueOf(statusVal.toString());
-        if (status == 0) return;
-//        CustomToast.showToast("后视镜折叠: " + status);
-
+        if (statusVal instanceof Integer) {
+            AvmApp.getInstance().getCameraView().rearMirrorFold((Integer) statusVal);
+        }
     }
 
     /**
@@ -966,14 +961,14 @@ public class CameraViewModelHelper {
     public void mirrorAutomaticStatus() {
         int status = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0); //后视镜折叠
         KLog.d("后视镜下翻：" + status);
-        AvmApp.getInstance().getCameraView().viewRearStatus(status);
-        String strStatus = "左右两边下翻";
-        if (status == 1) {
-            strStatus = "左边下翻";
-        } else if (status == 2) {
-            strStatus = "右边下翻";
-        }
-        if (status == 0) return;
+        AvmApp.getInstance().getCameraView().rearMirrowFlipDown(status);
+//        String strStatus = "左右两边下翻";
+//        if (status == 1) {
+//            strStatus = "左边下翻";
+//        } else if (status == 2) {
+//            strStatus = "右边下翻";
+//        }
+//        if (status == 0) return;
 //        CustomToast.showToast("后视镜" + strStatus);
 
     }

@@ -8,10 +8,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,8 +23,6 @@ import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.data.DataConstant;
 import com.autochips.avm.data.DataManager;
 import com.autochips.avm.databinding.ViewRearviewMirrorBinding;
-import com.autochips.avm.helper.CameraViewModelHelper;
-import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.RearviewToast;
 import com.autochips.avm.viewmode.RearviewMirrorModel;
 import com.avm.framwork.helper.ThreadPoolUtil;
@@ -77,12 +73,24 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         setRearviewMirrorDownViewStatus(val);
 
     }
+
     /**
      * 后视镜下翻状态
      */
-    public void reverseLight(int val) {
+    public void rearMirrorFlipDown(int val) {
         KLog.d("reverseLight: "+val);
-        setRearviewMirrorStatus(val);
+        setRearMirrorFlipDownStatus(val);
+    }
+
+    /**
+     * 后视镜折叠状态
+     */
+    public void rearMirrorFold(int value) {
+        if (value == 1) {
+            rearviewMirrorBinding.swFold.setChecked(true);
+        } else if (value == 2) {
+            rearviewMirrorBinding.swFold.setChecked(false);
+        }
     }
 
     @NonNull
@@ -104,7 +112,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         int reverseLightSts = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
         setRearviewMirrorDownViewStatus(reverseLightSts);
         KLog.d("initData reverseLightSts: "+reverseLightSts);
-        reverseLight(reverseLightSts);
+        rearMirrorFlipDown(reverseLightSts);
 
         // 设置点击事件
 //        rearviewMirrorBinding.llSettingRearviewMirrorDown.setOnClickListener(this);
@@ -233,7 +241,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         rearviewMirrorBinding.llFold.setVisibility(AvmApp.OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH==1?VISIBLE:GONE);
     }
 
-    private void setRearviewMirrorStatus(int reverseLightSts) {
+    private void setRearMirrorFlipDownStatus(int reverseLightSts) {
 //        if(CameraViewModelHelper.valGear != 3){
 //            setRearviewMirrorDownViewStatus(0);
 //            KLog.d("is not R gear");
@@ -253,7 +261,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
         KLog.e("reverseLightSts: " + reverseLightSts);
         //倒车档可以操作
         int status = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
-        setRearviewMirrorStatus(status);
+        setRearMirrorFlipDownStatus(status);
 //        rearviewMirrorBinding.llSettingRearviewMirrorDown.setAlpha(reverseLightSts == 1 ? 1.0f : 0.3f);
 //        rearviewMirrorBinding.llSettingRearviewMirrorDown.setEnabled(reverseLightSts == 1);
 //        rearviewMirrorBinding.swRearviewMirrorDown.setEnabled(reverseLightSts == 1);
