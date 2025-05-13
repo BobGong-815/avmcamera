@@ -627,9 +627,9 @@ public class CameraView extends View implements LifecycleOwner {
 
       boolean bl = mViewCameraBinding.getRoot().isAttachedToWindow();
       mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
-//      if (viewType == ViewType.ReverseIn && !isSmartWin){
-//        mWindowLps.height = 1080;
-//      }
+      if (viewType == ViewType.ReverseIn && !isSmartWin){
+        mWindowLps.height = 1080;
+      }
       KLog.d("刷新--setWindowType-bl ：" + bl +" height:"+mWindowLps.height + "CameraGLSurfaceView.glStatus:"+CameraGLSurfaceView.glStatus);
 //        CameraGLSurfaceView.glStatus ;
       if ( bl && (CameraGLSurfaceView.glStatus == 1 || CameraGLSurfaceView.glStatus == 25) && isShowing){
@@ -1199,6 +1199,7 @@ public class CameraView extends View implements LifecycleOwner {
             mWindowLps.x = AvmService.mIsStartStatus && AvmService.mMapSpeedStatus ? WINDOW_SHOW_RIGHT : AvmService.mIsStartStatus ? WINDOW_SHOW_MIDDLE : WINDOW_SHOW_LEFT; // 正常模式
         }
         isSmartWin = true;
+        mWindowLps.alpha = 1.0f;
         mWindowLps.width = 455;
         mWindowLps.height = 623;
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mViewCameraBinding.viewFrame.getLayoutParams();
