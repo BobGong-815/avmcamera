@@ -1343,6 +1343,11 @@ public class CameraView extends View implements LifecycleOwner {
 
 //        setTransparentIndexTab();
         if(!isFirstOpen) {
+            if (isFullWin) {
+                SystemProperties.setGlobal("avm_displaymode", 1);
+            } else {
+                SystemProperties.setGlobal("avm_displaymode", 2);
+            }
             SystemProperties.setGlobal("avm_state", 1);
         }else {
             isFirstOpen = false;

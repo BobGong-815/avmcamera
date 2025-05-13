@@ -88,6 +88,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.view.KeyEvent;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -102,6 +103,7 @@ import com.autochips.avm.data.Monitor;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.info.AutoStatusRequBean;
+import com.autochips.avm.ui.activity.MainActivity;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
@@ -119,6 +121,8 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import gxa.car.hardkey.HardKeyPolicyManager;
+import gxa.car.hardkey.KeyEventCallback;
 import gxa.car.power.data.CarPowerData;
 import gxa.car.power.data.CarPowerSignalStatus;
 import gxa.car.power.data.CarPowerWorkModeStatus;
@@ -128,6 +132,9 @@ import me.goldze.mvvmhabit.utils.KLog;
 
 public class AvmService extends Service {
     // adb shell am broadcast -a action.syncore.EOL.mode
+    private final String BR_GEAR_STATUS = "com.avm.define.GEAR_STATUS";
+    private final String BR_TURN_LAMP_STATUS = "com.avm.define.EVT_TURN_LAMP_STS";
+    private final String BR_TEST = "com.avm.define.TEST";
     private String exit_action = "action.syncore.EOL.mode";
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     public Monitor sMonitor;
@@ -150,6 +157,7 @@ public class AvmService extends Service {
         SystemProperties.setGlobal("avm_state", 0);
         initData();
         // 注册信号监听
+
         CanManager.getInstance().init(this);
         CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
         mCarPowerManager = CarPowerManager.getInstance(this, new CarPowerEventListener() {
@@ -209,6 +217,9 @@ public class AvmService extends Service {
         mCarPowerManager.connect();
         IntentFilter filter = new IntentFilter();
         filter.addAction(exit_action);
+        filter.addAction(BR_GEAR_STATUS);
+        filter.addAction(BR_TEST);
+        filter.addAction(BR_TURN_LAMP_STATUS);
         registerReceiver(broadcastReceiver, filter);
         isExitAction = false;
         KLog.d("启动----service_123  "+fishTh);
@@ -300,7 +311,6 @@ public class AvmService extends Service {
                 KLog.i("SplitScreenManager  onServiceDisconnected");
             }
         });
-
 
     }
 
@@ -900,10 +910,8 @@ public class AvmService extends Service {
             return;
         }
         int status = (int) object;
-      KLog.d("信号监听 vehicleId = " + vehicleId + "  ,value = " + status);
+//      KLog.d("信号监听 vehicleId = " + vehicleId + "  ,value = " + status);
         switch (vehicleId) {
-
-
             case CLUSTER_PAS_FSLSideDistance://前左侧）
             case CLUSTER_PAS_FSRSideDistance: //（前右侧）
             case CLUSTER_PAS_PAS_FRDistance://（前右） 60
@@ -1008,6 +1016,30 @@ public class AvmService extends Service {
                 BvAvmJNIHelper.getInstance().bwDeleteCamera();
 //                System.exit(0);
 
+            } else if (action.equals(BR_GEAR_STATUS)) {
+                int gearValue = intent.getIntExtra("value", -1);
+                if (BvAvmJNIHelper.isAvmDeInit) {
+                    reverse(gearValue);
+                } else {
+                    KLog.d("初始化未成功 ，过滤挡位");
+                }
+            } else if (action.equals(BR_TEST)) {
+                int testValue = intent.getIntExtra("value", -1);
+                KLog.d("test value is " + testValue);
+                if (testValue == 0) {
+                    Intent mainIntent = new Intent(AvmApp.getInstance(), MainActivity.class);
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(mainIntent);
+                } else if (testValue == 3) {
+                    AvmApp.getInstance().getCameraView().showSmartWin();
+                }
+            } else if (action.equals(BR_TURN_LAMP_STATUS)) {
+                int value = intent.getIntExtra("value", -1);
+                if (BvAvmJNIHelper.isAvmDeInit) {
+                    CameraViewModelHelper.getInstance().turnActive(value, false);
+                } else {
+                    KLog.d("初始化未成功 ，过滤转向");
+                }
             }
 
         }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.SurfaceControl;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +16,7 @@ import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.ui.view.CameraView;
+import com.gxa.lib.car.HalPropertyIds;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -90,6 +92,15 @@ public class MainActivity extends AppCompatActivity{
         super.onPause();
         KLog.v("MainActivity", "MainActivity::onPause()");
         //AvmApp.getInstance().getCameraView().hideView();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
+        Log.d("AVM_DEBUG", keyCode + " , " + keyEvent);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            CameraViewModelHelper.getInstance().dismissView(false, 0, "click");
+        }
+        return super.onKeyDown(keyCode, keyEvent);
     }
 
     protected void onStop() {
