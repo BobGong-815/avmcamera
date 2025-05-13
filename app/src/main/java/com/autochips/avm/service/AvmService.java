@@ -135,6 +135,7 @@ public class AvmService extends Service {
     private final String BR_GEAR_STATUS = "com.avm.define.GEAR_STATUS";
     private final String BR_TURN_LAMP_STATUS = "com.avm.define.EVT_TURN_LAMP_STS";
     private final String BR_TEST = "com.avm.define.TEST";
+    private final String MENU_KEY = "com.gxatek.cockpit.systemUi.ALL_MENU_CLICK";
     private String exit_action = "action.syncore.EOL.mode";
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     public Monitor sMonitor;
@@ -220,6 +221,7 @@ public class AvmService extends Service {
         filter.addAction(BR_GEAR_STATUS);
         filter.addAction(BR_TEST);
         filter.addAction(BR_TURN_LAMP_STATUS);
+        filter.addAction(MENU_KEY);
         registerReceiver(broadcastReceiver, filter);
         isExitAction = false;
         KLog.d("启动----service_123  "+fishTh);
@@ -1039,6 +1041,11 @@ public class AvmService extends Service {
                     CameraViewModelHelper.getInstance().turnActive(value, false);
                 } else {
                     KLog.d("初始化未成功 ，过滤转向");
+                }
+            } else if (action.equals(MENU_KEY)) {
+                boolean visible = intent.getBooleanExtra("visible", false);
+                if (visible) {
+                    CameraViewModelHelper.getInstance().dismissView(false, 0, "click");
                 }
             }
 
