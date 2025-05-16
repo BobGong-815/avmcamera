@@ -64,7 +64,7 @@
             app:tl_textUnClickColor="@color/setting_view_content_color"
             app:tl_textUnselectColor="@color/setting_view_content_color"
             app:tl_textUnableColor="@color/setting_view_content_color"
-            app:tl_textsize="@dimen/text_size_27px"
+            app:tl_textsize="@dimen/text_size_24px"
             app:tl_thumb_drawable="@drawable/tab_selector_thumb"
             app:tl_thumb_drawable_2="@drawable/tab_selector_thumb_old"
             app:tl_thumb_drawable_3="@drawable/tab_selector_thumb"/>
@@ -113,7 +113,7 @@
             app:tl_textUnClickColor="@color/setting_view_content_color"
             app:tl_textUnselectColor="@color/setting_view_content_color"
             app:tl_textUnableColor="@color/setting_view_content_color"
-            app:tl_textsize="@dimen/text_size_27px"
+            app:tl_textsize="@dimen/text_size_24px"
             app:tl_thumb_drawable="@drawable/tab_selector_thumb"
             app:tl_thumb_drawable_2="@drawable/tab_selector_thumb_old"
             app:tl_thumb_drawable_3="@drawable/tab_selector_thumb"/>
