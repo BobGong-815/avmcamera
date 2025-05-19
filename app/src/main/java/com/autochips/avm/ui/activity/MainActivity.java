@@ -32,22 +32,22 @@ public class MainActivity extends AppCompatActivity{
     private CameraViewModelHelper.ChangeListener changeListener = new CameraViewModelHelper.ChangeListener() {
         @Override
         public void gearChange(int gear) {
-            KLog.v("MainActivity", "MainActivity::gearChange():"+gear);
-//            if(gear == 3){
-//                //r档不需要act,解绑act
-//                unBindWindow();
-//            }else {
-//                if(AvmApp.getInstance().getCameraView().isFullWin){
-//                    bindWindow();
-//                }
-//            }
+            KLog.d("MainActivity", "MainActivity::gearChange():"+gear);
+            if(gear == 3){
+                //r档不需要act,解绑act
+                unBindWindow();
+            }else {
+                if(AvmApp.getInstance().getCameraView().isFullWin){
+                    bindWindow();
+                }
+            }
         }
 
         @Override
         public void viewChange() {
             KLog.v("MainActivity", "MainActivity::viewChange()");
             AvmApp.getInstance().getCameraView().hideView();
-            unBindWindow();
+//            unBindWindow();
             //关闭
             finish();
         }
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity{
 
     public boolean updateLayer() {
         KLog.v("MainActivity", "isRearGearSts : " + CameraViewModelHelper.valGear + " , getFullSceneSts is " + AvmApp.getInstance().getCameraView().isSmartWin);
-        if (AvmApp.getInstance().getCameraView().isSmartWin) {
+        if (AvmApp.getInstance().getCameraView().isSmartWin || CameraViewModelHelper.valGear == 3) {
             return unBindWindow();
         } else {
             return bindWindow();

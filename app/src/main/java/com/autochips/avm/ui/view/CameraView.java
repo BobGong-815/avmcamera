@@ -387,9 +387,6 @@ public class CameraView extends View implements LifecycleOwner {
       mWindowLps.height = 2;
       mWindowLps.gravity = Gravity.LEFT |Gravity.TOP;
 
-
-
-
         BvAvmJNIHelper.getInstance().setCallback((v -> {
             /**
              * cameraBinding 为了解决车模透明时，穿透到桌面而增加了window底部蒙版，只有视频返回第一帧的时候，才显示
