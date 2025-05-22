@@ -62,6 +62,9 @@ public class CameraViewModel extends BaseCameraViewModel {
     private String chick2DView;
     private CameraInfo info = new CameraInfo();
     private Timer testTimer;
+
+    private boolean caliResultSyncing;
+    private Runnable syncCaliResultRun;
     //    private ViewType mHisModel;
 
     private HandlerThread handlerThread = new HandlerThread("HandlerThread");
@@ -103,6 +106,14 @@ public class CameraViewModel extends BaseCameraViewModel {
         info.setShowCaliDemo(false);
         liveDataInfo.postValue(info);
 
+        syncCaliResultRun = () -> {
+            caliResultSyncing = true;
+            KLog.i("start bwSetRVCStatus().");
+            bvavmJNI.bwSetRVCStatus(5);
+            KLog.i("end bwSetRVCStatus().");
+            caliResultSyncing = false;
+        };
+
         handlerThread.start();
         threadHandler = new Handler(handlerThread.getLooper()) {
             @Override
@@ -114,7 +125,7 @@ public class CameraViewModel extends BaseCameraViewModel {
                     BvAvmJNIHelper.getInstance().setCalibration(true);
                     isCaliStatus = -1;
                     isCaliStatus = bvavmJNI.bwStartCalibrate(msg.arg1);
-                    KLog.i("标定 bwStartCalibrate ret is " + isCaliStatus);
+                    KLog.i("标定 bwStartCalibrate ret is " + isCaliStatus + " , caliResultSyncing is " + caliResultSyncing);
                     BvAvmJNIHelper.getInstance().setCalibration(false);
                     // isCaliStatus 返回值
                     // 0 成功
@@ -122,6 +133,10 @@ public class CameraViewModel extends BaseCameraViewModel {
                     // 4 左视图标定失败
                     // 8 右视图标定失败
                     threadHandler.removeMessages(MSG_CALIBRATING);
+
+                    if (isCaliStatus == 0 && !caliResultSyncing) {
+                        new Thread(syncCaliResultRun).start();
+                    }
                 } else if (msg.what == MSG_CALIBRATE_RESP) {
                     KLog.i("标定 handle MSG_CALIBRATE_RESP.");
                     AvmApp.getInstance().getCameraView().calibrationBack();
