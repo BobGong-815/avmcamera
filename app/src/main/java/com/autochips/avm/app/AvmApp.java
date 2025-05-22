@@ -34,6 +34,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     private int IS_AY5G = 112; //左陀
     private int IS_AY5G_R = 112; //右陀 已经获取的值 112
     public static boolean ISAY5T = true;
+    public static int EEA = 0;
     private boolean ISAY5G = false;
     private boolean ISAY5G_R = false;
     private boolean IsOutsidebackmirrorautofoldswitch = true; //后视镜倒车下翻开关是否存在
@@ -77,6 +78,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
             if (isConnect) {
                 int vehicalplatform = configManager.getVehicleplatform();
                 int rudderCfg = configManager.getRudderCfg();
+                EEA = configManager.getEEA();
                 KLog.i("Avmapp....注册完成 ... " + vehicalplatform  + " rudderCfg:"+rudderCfg);
                 int outsidebackmirrorbackupdownswitch = configManager.getOutsidebackmirrorbackupdownswitch();
                 int outsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch();

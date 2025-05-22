@@ -224,10 +224,15 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             // 外后视镜倒车下翻
             ThreadPoolUtil.getInstance().execute(() -> {
                 int reverseAutoMaticStatus = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
+                KLog.d("000 SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE reverseAutoMaticStatus is " + reverseAutoMaticStatus);
                 if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_ID){
+                    KLog.d("111 SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE " + (reverseAutoMaticStatus == 3 ? 1 : 4));
                     CanManager.getInstance().setIntProperty(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0, reverseAutoMaticStatus == 3 ? 1 : 4);
                 }else if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID
-                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID) {
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_TR_ID
+                        || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_GR_ID) {
+                    KLog.d("222 SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE " + (reverseAutoMaticStatus == 4 ? 1 : 4));
                     CanManager.getInstance().setIntProperty(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0, reverseAutoMaticStatus == 4 ? 1 : 4);
                 }
                 rearviewMirrorModel.startTimer();
@@ -321,7 +326,9 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
                 rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(false);
             }
         } else if (BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_T_ID
-                || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID) {
+                || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_G_ID
+                || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_TR_ID
+                || BvAvmJNIHelper.getInstance().getCameraType() == bvavmJNI.PROJ_AY5_GR_ID) {
             if (reverseLightSts == 4) {
                 rearviewMirrorBinding.llSettingRearviewMirrorDown.setSelected(true);
                 UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);

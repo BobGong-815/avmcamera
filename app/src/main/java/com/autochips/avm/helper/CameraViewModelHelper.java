@@ -589,15 +589,17 @@ public class CameraViewModelHelper {
      * @param val
      */
     public void doorStatus(int vehicleId, int val) {
-        Log.i(TAG, val + " AvmService 门的状态DOOR_HOOD: " + CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, DOOR_HOOD));
+        Log.i(TAG, val + " AvmService 门的状态DOOR_HOOD: " + CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, DOOR_HOOD)
+                + " isRight:"+AvmApp.getInstance().isRight+" EEA:"+AvmApp.EEA);
+        boolean isRightEEA = AvmApp.EEA == 1;
         /*设置车模上四个车门和后备箱开合状态，顺序分别为左前门、右前门、左后门、右后门，后备箱，左后视镜、右后视镜、前车盖*/
-        int doors[] = {CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, ROW_1_LEFT),
-                CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, ROW_1_RIGHT),
+        int doors[] = {CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, isRightEEA ? ROW_1_RIGHT : ROW_1_LEFT),
+                CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, isRightEEA ? ROW_1_LEFT : ROW_1_RIGHT),
                 CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, ROW_2_LEFT),
                 CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, ROW_2_RIGHT),
                 CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, DOOR_REAR),
-               /* vehicleId == MIRROR_FOLD_UNFOLD_STATUS ? (val == 1 ? 1 : 0) : 0,
-                vehicleId == MIRROR_FOLD_UNFOLD_STATUS ? (val == 1 ? 1 : 0) : 0,*/
+                /* vehicleId == MIRROR_FOLD_UNFOLD_STATUS ? (val == 1 ? 1 : 0) : 0,
+                 vehicleId == MIRROR_FOLD_UNFOLD_STATUS ? (val == 1 ? 1 : 0) : 0,*/
                 0, //后视镜车模不折叠 2024 0827
                 0,
                 CanManager.getInstance().getIntStatus(CABIN_DOOR_OPEN_STATUS, DOOR_HOOD),};
