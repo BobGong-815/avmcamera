@@ -1027,6 +1027,7 @@
                 android:layout_width="538px"
                 android:layout_height="1093px"
                 android:background="@color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:visibility="gone" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -1111,7 +1112,6 @@
             android:id="@+id/layout_showFull_2d"
             android:layout_width="560px"
             android:layout_height="match_parent"
-            android:layout_marginTop="80px"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

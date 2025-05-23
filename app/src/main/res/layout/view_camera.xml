@@ -1102,7 +1102,6 @@
             android:id="@+id/layout_showFull_2d"
             android:layout_width="560px"
             android:layout_height="match_parent"
-            android:layout_marginTop="80px"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
