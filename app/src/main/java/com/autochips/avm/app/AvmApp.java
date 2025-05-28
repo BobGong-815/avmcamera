@@ -32,9 +32,10 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static int mAvmRvcState;//0隐藏 ，1、显示,-1、异常
     public static int OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = 1;//0、无配置后视镜下翻 ，1、有配置后视镜下翻
     public static int OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = 1;//0、无配置后视镜折叠 ，1、有配置后视镜折叠
-    private final int IS_AY5 = 0x67;
-    private final int IS_AY3 = 0x66;
-    public static boolean ISAY5 = true;
+    public static final int IS_AY5 = 0x67;
+    public static final int IS_AY3 = 0x66;
+    public static final int IS_AY5Y = 0x90;
+    public static int VEHICEL_PLATFORM;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     public static AvmApp getInstance() {
@@ -83,20 +84,20 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         configManager.registerInitListener(isConnect -> {
             //获取配置码
             if(isConnect){
-                int vehicleplatform = configManager.getVehicleplatform();
+                VEHICEL_PLATFORM = configManager.getVehicleplatform();
                 int outsidebackmirrorbackupdownswitch = configManager.getOutsidebackmirrorbackupdownswitch();
                 int outsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch();
-                Log.i("AvmApp","注册完成---- getVehicleplatform:"+vehicleplatform);
+                Log.i("AvmApp","注册完成---- getVehicleplatform:"+VEHICEL_PLATFORM);
                 Log.i("AvmApp","注册完成---- outsidebackmirrorbackupdownswitch:"+outsidebackmirrorbackupdownswitch);
                 Log.i("AvmApp","注册完成---- outsidebackmirrorautofoldswitch:"+outsidebackmirrorautofoldswitch);
                 OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
                 OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
-                if(vehicleplatform == IS_AY5){
-                    ISAY5 = true;
+                if(VEHICEL_PLATFORM == IS_AY5){
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY5_ID);
-                }else if(vehicleplatform == IS_AY3){
-                    ISAY5 = false;
+                }else if(VEHICEL_PLATFORM == IS_AY3){
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY3_ID);
+                } else if (VEHICEL_PLATFORM == IS_AY5Y) {
+                    BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY5_Y_ID);
                 }
                 mHandler.post(()->{
                     if(mCameraView == null) {

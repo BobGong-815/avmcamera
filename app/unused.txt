@@ -5834,6 +5834,7 @@ com.android.bvavm.bvavmJNI:
     public static final int PROJ_AY5_G_ID
     public static final int PROJ_AY5_ID
     public static final int PROJ_AY5_T_ID
+    public static final int PROJ_AY5_Y_ID
     public static final int SCANCODE_IR_DOWN
     public static final int SCANCODE_IR_EXIT
     public static final int SCANCODE_IR_LEFT
@@ -5863,6 +5864,10 @@ com.autochips.avm.DataBinderMapperImpl:
     private static final int LAYOUT_VIEWSETTING
 com.autochips.avm.DataBindingTriggerClass
 com.autochips.avm.R
+com.autochips.avm.app.AvmApp:
+    public static final int IS_AY3
+    public static final int IS_AY5
+    public static final int IS_AY5Y
 com.autochips.avm.data.CodeThrottlerHelper:
     private static final long THROTTLE_INTERVAL
 com.autochips.avm.data.DataConstant$Code:
