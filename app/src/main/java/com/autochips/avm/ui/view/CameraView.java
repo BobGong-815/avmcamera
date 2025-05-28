@@ -1472,6 +1472,7 @@ public class CameraView extends View implements LifecycleOwner {
     private void inputViewModel() {
 //      KLog.d(isDismissView+" isDismissView hisModel= " + hisModel +"hisPosition= "+hisPosition + "viewPosition="+ viewPosition);
         KLog.d("inputViewModel()");
+        /*
         if (isDismissView && hisPosition == 2) {
 
             if (AvmRuntime.self().isRearGearSts()) {
@@ -1495,6 +1496,7 @@ public class CameraView extends View implements LifecycleOwner {
                 return;
             }
         }
+        */
         viewShowStatus();
     }
 
