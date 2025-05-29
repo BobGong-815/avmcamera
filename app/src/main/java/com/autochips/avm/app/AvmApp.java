@@ -35,7 +35,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static final int IS_AY5 = 0x67;
     public static final int IS_AY3 = 0x66;
     public static final int IS_AY5Y = 0x90;
-    public static int VEHICEL_PLATFORM;
+    public static int VEHICLE_PLATFORM;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
     public static AvmApp getInstance() {
@@ -84,19 +84,19 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         configManager.registerInitListener(isConnect -> {
             //获取配置码
             if(isConnect){
-                VEHICEL_PLATFORM = configManager.getVehicleplatform();
+                VEHICLE_PLATFORM = configManager.getVehicleplatform();
                 int outsidebackmirrorbackupdownswitch = configManager.getOutsidebackmirrorbackupdownswitch();
                 int outsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch();
-                Log.i("AvmApp","注册完成---- getVehicleplatform:"+VEHICEL_PLATFORM);
+                Log.i("AvmApp","注册完成---- getVehicleplatform:"+ VEHICLE_PLATFORM);
                 Log.i("AvmApp","注册完成---- outsidebackmirrorbackupdownswitch:"+outsidebackmirrorbackupdownswitch);
                 Log.i("AvmApp","注册完成---- outsidebackmirrorautofoldswitch:"+outsidebackmirrorautofoldswitch);
                 OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
                 OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
-                if(VEHICEL_PLATFORM == IS_AY5){
+                if(VEHICLE_PLATFORM == IS_AY5){
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY5_ID);
-                }else if(VEHICEL_PLATFORM == IS_AY3){
+                }else if(VEHICLE_PLATFORM == IS_AY3){
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY3_ID);
-                } else if (VEHICEL_PLATFORM == IS_AY5Y) {
+                } else if (VEHICLE_PLATFORM == IS_AY5Y) {
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY5_Y_ID);
                 }
                 mHandler.post(()->{
