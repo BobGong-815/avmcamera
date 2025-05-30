@@ -332,16 +332,17 @@ public class AvmService extends Service {
             @Override
             public void onStagePositionChanged(int stage, int position) {
                 KLog.i("SplitScreenManager  onStagePositionChanged stage:"+stage +" position:"+position);
-                mIsScreen = true;
-                if (stage == 0){
-                    if(position == 0) {
-                        //此时表示地图在左边
-                        isLeftScreen = false;
-                        changeScreenDirection();
-                    }else if(position == 1){
-                        //此时表示地图在右侧区域
-                        isLeftScreen = true;
-                        changeScreenDirection();
+                if (mIsScreen) {
+                    if (stage == 0) {
+                        if (position == 0) {
+                            //此时表示地图在左边
+                            isLeftScreen = false;
+                            changeScreenDirection();
+                        } else if (position == 1) {
+                            //此时表示地图在右侧区域
+                            isLeftScreen = true;
+                            changeScreenDirection();
+                        }
                     }
                 }
             }

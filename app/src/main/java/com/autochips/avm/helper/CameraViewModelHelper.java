@@ -1025,7 +1025,7 @@ public class CameraViewModelHelper {
         } else if (status < -540) {
             status = -540;
         }
-        if(AvmApp.ISAY5){
+        if(AvmApp.VEHICLE_PLATFORM == AvmApp.IS_AY5){
             status = (float) (((status + 540.0) / 1080.0) * 72.0 - 36.0);
         }
         bvavmJNI.bwSetWheelAngle(status * -1);
@@ -1065,7 +1065,7 @@ public class CameraViewModelHelper {
         //50毫秒内如果左右转向都有，就视为双闪
         mHandler.postDelayed(() -> {
             if (leftFogLamp == 1 && rightFogLamp == 1) {
-                if(!AvmApp.getInstance().ISAY5){
+                if(AvmApp.VEHICLE_PLATFORM != AvmApp.IS_AY5){
                     int[] lightArray1 = {highBeamStatus, lowBeamStatus, readFog, parkingLamp, 0, 1, brakeLight, reverseLight};
                     bvavmJNI.bwSetLampStatus2(lightArray1);
                 }else {
@@ -1073,7 +1073,7 @@ public class CameraViewModelHelper {
                 }
             } else if (leftFogLamp == 0 && rightFogLamp == 0) {
                 //KLog.d("3D 灯光 leftFogLamp bwSetLampStatus 之前:" + leftFogLamp);
-                if(!AvmApp.getInstance().ISAY5){
+                if(AvmApp.VEHICLE_PLATFORM != AvmApp.IS_AY5){
                     int[] lightArray0 = {highBeamStatus, lowBeamStatus, readFog, parkingLamp, 0, 0, brakeLight, reverseLight};
                     bvavmJNI.bwSetLampStatus2(lightArray0);
                 }else {
@@ -1082,14 +1082,14 @@ public class CameraViewModelHelper {
 
             } else if (leftFogLamp == 1 && rightFogLamp == 0) {
                 //KLog.d("3D 灯光 leftFogLamp bwSetLampStatus show之前:" + leftFogLamp);
-                if(!AvmApp.getInstance().ISAY5){
+                if(AvmApp.VEHICLE_PLATFORM != AvmApp.IS_AY5){
                     int[] lightArray2 = {highBeamStatus, lowBeamStatus, readFog, parkingLamp, 0, 2, brakeLight, reverseLight};
                     bvavmJNI.bwSetLampStatus2(lightArray2);
                 }else {
                     bvavmJNI.bwSetLampStatus((byte) highBeamStatus, (byte) lowBeamStatus, (byte) readFog, (byte) parkingLamp, (byte) 0, (byte) 2, (byte) brakeLight);
                 }
             } else if (leftFogLamp == 0 && rightFogLamp == 1) {
-                if(!AvmApp.getInstance().ISAY5){
+                if(AvmApp.VEHICLE_PLATFORM != AvmApp.IS_AY5){
                     int[] lightArray3 = {highBeamStatus, lowBeamStatus, readFog, parkingLamp, 0, 3, brakeLight, reverseLight};
                     bvavmJNI.bwSetLampStatus2(lightArray3);
                 }else {

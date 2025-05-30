@@ -348,24 +348,32 @@ public class CameraView extends View implements LifecycleOwner {
       }
       // 开始动画
       canChange3DRear = false;
-      showFullWin();
-      KLog.d("showFull2DByOnTouch hisModel:" + hisModel + " viewPosition:" + viewPosition + " valGear:"
-              + CameraViewModelHelper.valGear);
-      if (viewPosition == 2 && CameraViewModelHelper.valGear == 3) {
-          CameraViewModelHelper.getInstance().gdNotChangeView = true;
-          CameraViewModelHelper.getInstance().setViewModel(ViewType.ReverseIn);
-      } else if (viewPosition == 1 && CameraViewModelHelper.valGear == 3) {
-          canChange3DRear = true;
-          CameraViewModelHelper.getInstance().setViewModel(ViewType.ReverseIn);
-      }
-      //此处点击左卡片要直接进入倒计时
-      if (CameraViewModelHelper.getInstance().isRGearShowSmart) {
-          //R挡下，打开转向灯，激活左卡片后点击左卡片激活右卡片，关闭转向灯，无操作30秒没有退出全景，应退出
-          CameraViewModelHelper.getInstance().isRGearShowSmart = false;
-          //CameraViewModelHelper.getInstance().setRunning();
-      } else {
-          CameraViewModelHelper.getInstance().setRunning(true);
-      }
+
+      dismissView("click");
+      mMainHandler.postDelayed(new Runnable() {
+          @Override
+          public void run() {
+              showFullWin();
+              KLog.d("showFull2DByOnTouch hisModel:" + hisModel + " viewPosition:" + viewPosition + " valGear:"
+                      + CameraViewModelHelper.valGear);
+              if (viewPosition == 2 && CameraViewModelHelper.valGear == 3) {
+                  CameraViewModelHelper.getInstance().gdNotChangeView = true;
+                  CameraViewModelHelper.getInstance().setViewModel(ViewType.ReverseIn);
+              } else if (viewPosition == 1 && CameraViewModelHelper.valGear == 3) {
+                  canChange3DRear = true;
+                  CameraViewModelHelper.getInstance().setViewModel(ViewType.ReverseIn);
+              }
+              //此处点击左卡片要直接进入倒计时
+              if (CameraViewModelHelper.getInstance().isRGearShowSmart) {
+                  //R挡下，打开转向灯，激活左卡片后点击左卡片激活右卡片，关闭转向灯，无操作30秒没有退出全景，应退出
+                  CameraViewModelHelper.getInstance().isRGearShowSmart = false;
+                  //CameraViewModelHelper.getInstance().setRunning();
+              } else {
+                  CameraViewModelHelper.getInstance().setRunning(true);
+              }
+          }
+      }, 100);
+
       return true;
     }
 
@@ -471,18 +479,10 @@ public class CameraView extends View implements LifecycleOwner {
         viewRedChick();
         tabView();
         tabViewInit();
-        mViewCameraBinding.getRoot().getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            KLog.d("mWindowLps.height：getVisibility:" + mViewCameraBinding.getRoot().getVisibility());
-            if(mWindowLps.height > 100 && canShowAct){
-                canShowAct = false;
-                KLog.d("startAct  mWindowLps.height：" + mWindowLps.height);
-                Intent intent = new Intent(AvmApp.getInstance(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                AvmApp.getInstance().startActivity(intent);
-            }else {
-                KLog.d("  mWindowLps.height：" + mWindowLps.height);
-            }
-        });
+//        mViewCameraBinding.getRoot().getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+//            KLog.d("mWindowLps.height：getVisibility:" + mViewCameraBinding.getRoot().getVisibility());
+//
+//        });
     }
 
     public void rearMirrowFlipDown(int status) {
@@ -1246,6 +1246,11 @@ public class CameraView extends View implements LifecycleOwner {
 //            return;
 //        }
         if (isFullWin) return;
+
+        Intent intent = new Intent(AvmApp.getInstance(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        AvmApp.getInstance().startActivity(intent);
+
         isSmartWin = false;
         isFullWin = true;
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
