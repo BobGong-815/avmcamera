@@ -9,6 +9,7 @@ import static com.avm.framwork.manager.ViewSwitchManager.ACTION_INFO_TRANSPARENT
 
 import android.app.UiModeManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,6 +36,7 @@ import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.databinding.ViewSettingBinding;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.listener.OnTabSelectListener;
+import com.autochips.avm.ui.activity.DebugActivity;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.SystemProperties;
@@ -57,6 +59,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
     private RelativeLayout mInfoView;
     private SegmentTabLayout mSegmentTabLayout;
     private View infoBg;
+    private int clickCount = 0;
 
     private int[] getDescValueArray() {
         return new int[]{R.string.setting_at_once, R.string.setting_30_seconds};
@@ -99,6 +102,18 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             initTab();
         }
         checkButton();
+
+        findViewById(R.id.view_debug).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (clickCount ++ >= 10) {
+                    Intent intent = new Intent(getContext(), DebugActivity.class);
+                    getContext().startActivity(intent);
+                    clickCount = 0;
+                }
+            }
+        });
     }
     public void checkButton() {
         try {
@@ -241,6 +256,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         registry.setCurrentState(Lifecycle.State.DESTROYED);
+        clickCount = 0;
     }
 
     @Override
@@ -253,6 +269,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             settingBinding.swSettingPathLine.setEnabled(true);
             settingBinding.switchSignalActivates.setEnabled(true);
         }else{
+            clickCount = 0;
             mSegmentTabLayout.setEnable(true);
         }
 

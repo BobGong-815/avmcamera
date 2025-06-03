@@ -6063,6 +6063,7 @@ com.autochips.avm.DataBinderMapperImpl:
     private static final int LAYOUT_VIEWSETTING
 com.autochips.avm.DataBindingTriggerClass
 com.autochips.avm.R
+com.autochips.avm.ai.Constant
 com.autochips.avm.app.AvmApp:
     public static final int IS_AY3
     public static final int IS_AY5
@@ -6117,6 +6118,7 @@ com.autochips.avm.data.Monitor
 com.autochips.avm.databinding.ActivityMainBinding
 com.autochips.avm.databinding.CustomRearviewToastLayoutBinding
 com.autochips.avm.databinding.CustomToastLayoutBinding
+com.autochips.avm.databinding.DebugLayoutBinding
 com.autochips.avm.databinding.LayoutImageTabSegmentBinding
 com.autochips.avm.databinding.LayoutTabSegmentBinding
 com.autochips.avm.em.WorkStatusType

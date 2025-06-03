@@ -43,6 +43,12 @@
             android:resizeableActivity="false"
             android:theme="@style/Theme.Transparent" />
 
+        <activity
+            android:name=".ui.activity.DebugActivity"
+            android:exported="true"
+            android:configChanges="uiMode"
+            android:resizeableActivity="false" />
+
         <service
             android:name=".service.AvmService"
             android:enabled="true"
