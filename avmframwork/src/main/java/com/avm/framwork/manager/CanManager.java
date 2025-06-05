@@ -16,6 +16,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CL
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_WARNING_SOUND;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_22_0305_AVM_SYSTEM_CALIBRATTION_INFO_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.HAZARD_LIGHTS_STATE;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.NFS_SYNC_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.ASSIST_DRIVE_PAS_BUTTON_PRESS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AUDIO_WARNING_SOURCE;
@@ -183,6 +184,7 @@ public class CanManager implements Handler.Callback {
      * */
     public void init(Context context) {
         mContext = context;
+        mRegisterId.add(NFS_SYNC_STATUS);
         mRegisterId.add(AVM_SAS_STEERING_ANGLE);// 方向盘转角 EPS_SteeringAngle  、、收到
 //        mRegisterId.add(AVM_PAS_PCSDISPLAYREQ);// 雷达触发全景显示请求
 //        mRegisterId.add(VEHICLE_AT_LEVEL_INSTRUMENT);// 档位
