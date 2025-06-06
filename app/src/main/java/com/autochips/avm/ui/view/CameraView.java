@@ -1764,7 +1764,8 @@ public class CameraView extends View implements LifecycleOwner {
     @SuppressLint("WrongConstant")
     private void updateWind() {
         boolean attachedToWindow = rootView.isAttachedToWindow();
-        mWindowLps.alpha = 0.0f;
+        //mWindowLps.alpha = 0.0f;
+        Log.i("AVM_DEBUG", "set alpha 111.");
         //      KLog.d("窗口层级 mWindowLpsBottom："+mWindowLpsBottom);
 
         if (rootView.getParent() == null && !attachedToWindow) {

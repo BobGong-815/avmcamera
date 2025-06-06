@@ -3,7 +3,7 @@
     <string name="setting_p_exit">(P) Gang raus</string>
     <string name="setting_p_exit_content">Im Gang P: Panorama wird nach 30 Sekunden beendet.</string>
     <string name="setting_at_once">Sofort</string>
-    <string name="setting_30_seconds">Nach 30 Jahren</string>
+    <string name="setting_30_seconds">Nach 30 Sekunden</string>
     <string name="setting_transparent_chassis">Transparentes Gehäuse</string>
     <string name="setting_close">Schließen</string>
     <string name="setting_low">Tief</string>

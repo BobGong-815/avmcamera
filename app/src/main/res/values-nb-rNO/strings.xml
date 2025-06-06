@@ -3,7 +3,7 @@
     <string name="setting_p_exit">(P) gir utgang</string>
     <string name="setting_p_exit_content">Når girspaken er i P-gir, avsluttes panoramavisningen umiddelbart, senest etter 30 sekunder</string>
     <string name="setting_at_once">Med en gang</string>
-    <string name="setting_30_seconds">Etter 30-årene</string>
+    <string name="setting_30_seconds">Etter 30 sekunder</string>
     <string name="setting_transparent_chassis">Gjennomsiktig chassis</string>
     <string name="setting_close">Lukk</string>
     <string name="setting_low">Lav</string>
