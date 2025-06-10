@@ -1476,8 +1476,7 @@ public class CameraView extends View implements LifecycleOwner {
     @SuppressLint("WrongConstant")
     private void updateWind() {
         boolean attachedToWindow = mViewCameraBinding.getRoot().isAttachedToWindow();
-//        mWindowLps.alpha = 0.0f;
-        Log.d("AVM_DEBUG", "set alpha 111.");
+        mWindowLps.alpha = 0.0f;
 //      KLog.d("窗口层级 mWindowLpsBottom："+mWindowLpsBottom);
 
       if (mViewCameraBinding.getRoot().getParent() == null && !attachedToWindow){
@@ -1575,6 +1574,7 @@ public class CameraView extends View implements LifecycleOwner {
             rearviewMirrorView.setVisibility(View.GONE);
             mViewCameraBinding.liftBg.setVisibility(GONE);
         }
+        hideView();
         CameraGLSurfaceView.glStatus = 0;
         //CameraViewModelHelper.getInstance().closeCamera()
     }
