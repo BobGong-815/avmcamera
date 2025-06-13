@@ -43,6 +43,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static final int IS_AY5 = 0x67;
     public static final int IS_AY3 = 0x66;
     public static final int IS_AY5Y = 0x90;
+    public static final int IS_AY3Y = 0x91;
     public static int VEHICLE_PLATFORM;
 //    public static boolean ISAY5 = true;
     private Handler mHandler = new Handler(Looper.getMainLooper());
@@ -121,7 +122,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = outsidebackmirrorautofoldswitch;
                 if(VEHICLE_PLATFORM == IS_AY5){
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY5_ID);
-                }else if(VEHICLE_PLATFORM == IS_AY3){ ;
+                }else if(VEHICLE_PLATFORM == IS_AY3 || VEHICLE_PLATFORM == IS_AY3Y){
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY3_ID);
                 } else if (VEHICLE_PLATFORM == IS_AY5Y) {
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY5_Y_ID);
