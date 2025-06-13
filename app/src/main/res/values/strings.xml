@@ -13,7 +13,7 @@
     <string name="setting_radar_activated_panorama_content">当车速&amp;#06012km/h且前雷达报警v时进入全景</string>
     <string name="setting_path_line">轨迹线</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">转向灯激活全景</string>
+    <string name="setting_signal_activates_panorama">转向灯激活影像</string>
     <string name="setting_signal_activates_panorama_content">打转向灯进入全景\n车速>30km/h自动退出</string>
     <string name="setting_transparent_chassis_infobook_title">透明底盘</string>
     <string name="setting_transparent_chassis_infobook_content">开启可观察车底路况</string>
