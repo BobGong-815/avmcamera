@@ -759,7 +759,14 @@ public class CameraViewModelHelper {
             //isSpeedModel = false; // 转向关闭的时候，需要置空车速过高模式
             isTurn = false;
             if (valGear != 3){
-              setViewModel(ViewType.gear_turn_exit);
+                long now = System.currentTimeMillis();
+                KLog.i("now - AvmService.lastLittleSharkTime = " + (now - AvmService.lastLittleSharkTime));
+                if (now - AvmService.lastLittleSharkTime < 1000) {
+                    mHandler.removeCallbacks(setViewModelRunnable);
+                    mHandler.postDelayed(setViewModelRunnable, 1200);
+                } else {
+                    setViewModel(ViewType.gear_turn_exit);
+                }
             }
             if(valGear  == 4&&!AvmApp.getInstance().getCameraView().isSmartWin){
                 KLog.d(  " 这里仅仅只是在全屏的时候从其他档挂入P档要重新计时才能进入");
@@ -773,7 +780,14 @@ public class CameraViewModelHelper {
                 }
             }else{
                 KLog.d(  "其他视图跟转向操作都走这里");
-                turnExit(value);
+                long now = System.currentTimeMillis();
+                KLog.i("now - AvmService.lastLittleSharkTime = " + (now - AvmService.lastLittleSharkTime));
+                if (now - AvmService.lastLittleSharkTime < 1000) {
+                    mHandler.removeCallbacks(turnExitRunnable);
+                    mHandler.postDelayed(turnExitRunnable, 1200);
+                } else {
+                    turnExit(value);
+                }
             }
 
         }
@@ -810,6 +824,21 @@ public class CameraViewModelHelper {
         }
     };
 
+    Runnable setViewModelRunnable = new Runnable() {
+        @Override
+        public void run() {
+            setViewModel(ViewType.gear_turn_exit);
+        }
+    };
+
+    Runnable turnExitRunnable = new Runnable() {
+        @Override
+        public void run() {
+            turnExit(0);
+        }
+    };
+
+    // 转向退出
     public void turnExit(int value) {
 
         KLog.d(  " isRunning： "+isRunning+"   isReverseToTurnStats: "+isReverseToTurnStats);

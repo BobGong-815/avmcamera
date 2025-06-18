@@ -460,6 +460,23 @@ public class AvmService extends Service {
             }
 //        } else if (vehicleId == CLUSTER_BCM_RIGHT_TURN_LAMP) {//右转向灯
         } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP || vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//左边转向灯闪
+            if (value instanceof Integer) {
+                long now = System.currentTimeMillis();
+                int nowValue = (int) value;
+                if (lastTurnLampVehicle != 0) {
+                    if (vehicleId == lastTurnLampVehicle && nowValue != lastTurnLampValue) { // 信号没变，值有变
+                        if (now - lastTurnLampTime < 600) {
+                            lastLittleSharkTime = now;
+                            KLog.d(" 判定为小闪 ");
+//                            CameraViewModelHelper.getInstance().turnActive(nowValue, true);
+//                            return;
+                        }
+                    }
+                }
+                lastTurnLampTime = now;
+                lastTurnLampVehicle = vehicleId;
+                lastTurnLampValue = nowValue;
+            }
             if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
                 if (value instanceof Integer) {
                     leftLightStPt = (int) value;
@@ -669,6 +686,11 @@ public class AvmService extends Service {
 
     private  int  count = 0;
 
+    long lastTurnLampTime = 0;
+    public static long lastLittleSharkTime = 0;
+    int lastTurnLampVehicle = 0;
+    int lastTurnLampValue = 0;
+
     int turnLampSwSts = -1;
     long leftTurnLChangeTime = 0;
     long rightTurnLChangeTime = 0;
@@ -683,10 +705,10 @@ public class AvmService extends Service {
 
     }
 
-    private void turnExit(Integer value) {
-        CameraViewModelHelper.getInstance().turnExit(value);
-
-    }
+//    private void turnExit(Integer value) {
+//        CameraViewModelHelper.getInstance().turnExit(value);
+//
+//    }
 
 
     /**
@@ -1035,6 +1057,10 @@ public class AvmService extends Service {
                     startActivity(mainIntent);
                 } else if (testValue == 3) {
                     AvmApp.getInstance().getCameraView().showSmartWin();
+                } else if (testValue == 100) {
+                    int vehicleId = intent.getIntExtra("vehicleId", -1);
+                    int vehicleValue = intent.getIntExtra("vehicleValue", -1);
+                    onValueChangedListener(vehicleId, vehicleValue);
                 }
             } else if (action.equals(BR_TURN_LAMP_STATUS)) {
                 int value = intent.getIntExtra("value", -1);
