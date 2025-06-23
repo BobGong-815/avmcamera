@@ -164,7 +164,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         KLog.d("AVMAPP    =    onConfigurationChanged" );
-        getCameraView().skinView();
+        if (getCameraView() != null) getCameraView().skinView();
     }
 
 }
