@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">AVMCamera</string>
-    <string name="setting_p_exit">Exiting Gear P</string>
+    <string name="setting_p_exit">Exiting When Gear Control in Position P</string>
     <string name="setting_p_exit_content">AVM exits immediately or after 30s when in P gear</string>
     <string name="setting_at_once">Immediately</string>
     <string name="setting_30_seconds">After 30s</string>
@@ -11,9 +11,9 @@
     <string name="setting_high">High</string>
     <string name="setting_radar_activated_panorama">Panoramic view activated\nwhen radar on</string>
     <string name="setting_radar_activated_panorama_content">Enter the AVM when speed &lt;15km/h and front radar alarms</string>
-    <string name="setting_path_line">Track line</string>
+    <string name="setting_path_line">Track Line</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
-    <string name="setting_signal_activates_panorama">Panoramic view activated\nwhen turn signal light on</string>
+    <string name="setting_signal_activates_panorama">Panoramic View Activated\nWhen Turn Signal Light On</string>
     <string name="setting_signal_activates_panorama_content">Toggle turn signal for AVM; \nAuto-exit at>30km/h</string>
     <string name="setting_transparent_chassis_infobook_title">Transparent chassis</string>
     <string name="setting_transparent_chassis_infobook_content">Enable to\nobserve the vehicle road condition</string>
@@ -129,7 +129,7 @@
     <string name="camera_error_5">前后摄像头失败</string>
     <string name="camera_error_6">前后左右摄像头失败</string>
     <string name="camera_success">标定成功</string>
-    <string name="camera_breakdown">Camera malfunction</string>
+    <string name="camera_breakdown">Camera Malfunction</string>
     <string name="camera_radar_error">Ultrasonic radar fault, please check!</string>
     <string name="camera_please_park">Please park!</string>
 </resources>
