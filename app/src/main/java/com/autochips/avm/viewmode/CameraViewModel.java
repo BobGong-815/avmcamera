@@ -64,6 +64,9 @@ public class CameraViewModel extends BaseCameraViewModel {
     private Timer testTimer;
 //    private ViewType mHisModel;
 
+    private boolean caliResultSyncing;
+    private Runnable syncCaliResultRun;
+
     private HandlerThread handlerThread = new HandlerThread("HandlerThread");
     private Handler threadHandler;
 
@@ -101,6 +104,14 @@ public class CameraViewModel extends BaseCameraViewModel {
         info.setShowCaliDemo(false);
         liveDataInfo.postValue(info);
 
+        syncCaliResultRun = () -> {
+            caliResultSyncing = true;
+            KLog.i("start bwSetRVCStatus().");
+            bvavmJNI.bwSetRVCStatus(5);
+            KLog.i("end bwSetRVCStatus().");
+            caliResultSyncing = false;
+        };
+
         handlerThread.start();
         threadHandler = new Handler(handlerThread.getLooper()) {
             @Override
@@ -118,6 +129,10 @@ public class CameraViewModel extends BaseCameraViewModel {
                     // 4 左视图标定失败
                     // 8 右视图标定失败
                     threadHandler.removeMessages(MSG_CALIBRATING);
+
+                    if (isCaliStatus == 0 && !caliResultSyncing) {
+                        new Thread(syncCaliResultRun).start();
+                    }
                 } else if (msg.what == MSG_CALIBRATE_RESP) {
                     KLog.i("标定 handle MSG_CALIBRATE_RESP.");
                     AvmApp.getInstance().getCameraView().calibrationBack();
@@ -475,14 +490,13 @@ public class CameraViewModel extends BaseCameraViewModel {
             KLog.i("标定-DIAG_31 app 未收到反馈：isCaliStatus " + isCaliStatus);
         } else if (isCaliStatus == 0) {//成功
             //byte[] arrBack = {0x00, 0x02,0x00,0x00};
-            try {
-                CanManager.getInstance().setIntProperty(NFS_SYNC, 0, 1);
-                int nfs_sts = CanManager.getInstance().getIntStatus(NFS_SYNC_STATUS, 0);
-                KLog.i("标定 Read NFS STATUS is " + nfs_sts);
-                Thread.sleep(500);
-            } catch (InterruptedException exception) {
-                KLog.e(exception.toString());
-            }
+
+            byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
+            CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
+            CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
+            KLog.i("标定-DIAG_31 app 标定成功 ");
+
+            CanManager.getInstance().setIntProperty(NFS_SYNC, 0, 1);
             isDIAGCalibration = false;
         } else {//标定失败
             //byte[] arrBack = {0x01, 0x02,0x00,0x00};

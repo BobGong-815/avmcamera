@@ -498,8 +498,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             // 第二个子线程任务
             Future<?> secondTaskFuture = executorService.submit(() -> {
                 try {
-                    bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
-                    KLog.i(TAG+"第二个任务完成");
+                    int k = bvavmJNI.bwSetParamsXML(BvAvmJNIHelper.CAMERA_TYPE,1);
+                    KLog.i(TAG+"第二个任务完成, ret is " + k);
                     if(!isSecondTimeOut && AvmApp.getInstance().getCameraView() == null) {
                         mainHandler.post(this::initAvm);
                     }
@@ -510,7 +510,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
             // 设置第二个任务的超时时间为500毫秒
             try {
-                secondTaskFuture.get(200, TimeUnit.MILLISECONDS);
+                secondTaskFuture.get(1500, TimeUnit.MILLISECONDS);
             } catch (TimeoutException ex) {
                 KLog.e(TAG+"第二个任务超时，转为主线程执行操作");
                 isSecondTimeOut = true;
@@ -541,12 +541,17 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        KLog.d(flags + "[onStartCommand]" + startId + ", version is " + ServiceUtils.getVersionName());
+        KLog.i(flags + "[onStartCommand]" + startId + ", version is " + ServiceUtils.getVersionName());
         //adb指令模拟启动service带参数调试功能
         if (intent != null) {
             if(!TextUtils.isEmpty(intent.getStringExtra("initCam"))){
                 KLog.i("init can");
-                startTask();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        startTask();
+                    }
+                }).start();
             }else {
                 if(AvmApp.getInstance().getCameraView() == null){
                     KLog.d("AvmApp", "avm is null ");
@@ -554,7 +559,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 }
                 int avm_onclick = intent.getIntExtra("avm_start", -1);
                 int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
-                KLog.d("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);
+                KLog.i("[onStartCommand] avm_start = " + avm_onclick + " , avm_state is " + avm_state);
                 switch (avm_onclick) {
                     case 1: //SystemUI跳转打开AVM首页
                         if (!mIsCanShow) {
@@ -832,18 +837,18 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             }
         }else if(vehicleId == NFS_SYNC_STATUS){
             KLog.i(" 标定结果 NFS_SYNC_STATUS： " + vehicleId + "  ,value = " + value);
-            if (value instanceof Integer) {
-                int sync_status = (int) value;
-                if(sync_status == 1){
-                    byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
-                    CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
-                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
-                    KLog.i("标定-DIAG_31 app 标定成功 ");
-                    DataManager.writeFault(DataConstant.Code.BD_SUCCESS);
-                    DataManager.writeFault(DataConstant.Code.SJ_SAVE_SUCCESS);
-                    AvmApp.getInstance().getCameraView().calibrationSuccess();
-                }
-            }
+//            if (value instanceof Integer) {
+//                int sync_status = (int) value;
+//                if(sync_status == 1){
+//                    byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
+//                    CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
+//                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
+//                    KLog.i("标定-DIAG_31 app 标定成功 ");
+//                    DataManager.writeFault(DataConstant.Code.BD_SUCCESS);
+//                    DataManager.writeFault(DataConstant.Code.SJ_SAVE_SUCCESS);
+//                    AvmApp.getInstance().getCameraView().calibrationSuccess();
+//                }
+//            }
         }
 
         setDoorStatus(vehicleId, value);
@@ -1428,7 +1433,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                System.exit(0);
             } else if (action.equals(Intent.ACTION_LOCALE_CHANGED)) {
                 KLog.i("语言切换 。。。。。。。。:" + action);
-                //System.exit(0);
+//                System.exit(0);
                 if(AvmApp.getInstance().getCameraView()!=null) {
                     AvmApp.getInstance().getCameraView().reloadLanauge();
                 }
