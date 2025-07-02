@@ -16,8 +16,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.bvavm.bvavmJNI;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.helper.CameraViewModelHelper;
+import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.SystemProperties;
+import com.gxa.lib.car.HalPropertyIds;
 
 import me.goldze.mvvmhabit.binding.command.BindingAction;
 import me.goldze.mvvmhabit.binding.command.BindingCommand;
@@ -152,11 +154,8 @@ public class SettingViewModel extends BaseCameraViewModel {
         KLog.d("雷达激活全景: = "+isChecked);
         setRunning(true);
         startTimer();
-        if(isChecked){
-            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION, 1); //SystemProperties.set("activatedPanorama","1");
-        }else{
-            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION, 0); //SystemProperties.set("activatedPanorama","2");
-        }
+        AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_RADAR_ACTIVATION, isChecked?true:false);
+        Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION, isChecked?1:0);
 
     }
     //转向灯激活全景开关
@@ -164,12 +163,8 @@ public class SettingViewModel extends BaseCameraViewModel {
         KLog.d("转向灯激活全景开关: = "+isChecked);
         setRunning(true);
         startTimer();
-        if(isChecked){
-            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION, 1);//SystemProperties.set("signalActivates","1");
-        }else{
-            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION, 0); //SystemProperties.set("signalActivates","0");
-        }
-
+        AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION, isChecked?true:false);
+        Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION, isChecked?1:0);
     }
     /**
      * 是否在操作

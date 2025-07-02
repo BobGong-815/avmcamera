@@ -84,6 +84,12 @@ public class BvAvmJNIHelper {
         if (isActive)return 0;
         isActive = true;
        int res = bvavmJNI.avmInit();
+        BvAvmJNIHelper.getInstance().bwSetCarDoorStatus(new int[] {
+                0,0,0,0,0,0,0,0
+        });
+        BvAvmJNIHelper.getInstance().bwSetCarDoorStatus(new int[] {
+                1,0,1,0,1,0,1,0
+        });
         DataManager.writeFault(res == 1 ? DataConstant.Code.INIT_SUCCESS : DataConstant.Code.INIT_FAIL);
         UiModeManager uiModeManager = (UiModeManager) context.getSystemService(Context.UI_MODE_SERVICE);
         int uiMode = uiModeManager.getNightMode();
@@ -253,13 +259,39 @@ public class BvAvmJNIHelper {
         bvavmJNI.bwSet3DfreeFlag(stat);
     }
 
-
+    private float wheelAngle = -1.f;
+    public void bwSetWheelAngle(float angle) {
+        if (wheelAngle != angle) {
+            wheelAngle = angle;
+            synchronized (syncObj) {
+                KLog.d("bwSetWheelAngle : " + angle);
+                bvavmJNI.bwSetWheelAngle(angle);
+            }
+        }
+    }
 
     public int bwSetCarDoorStatus(int[] doors) {
         return bvavmJNI.bwSetCarDoorStatus(doors);
     }
 
-
+    /*1 设置是否处于D档状态，1为是，0为否*/
+//    public static native int bwSetCarIsDgear(int flag);
+//    /*2 设置轨迹线开关，0是关闭，1是打开*/
+//    public static native int bwSetTrajLineStatus(byte flag);
+//    /*3 设置车辆是否处于倒车状态，1为倒车，0为静止或者前进*/
+//    public static native int bwSetCarIsBack(byte flag);
+    public void updateTrajLineStatus(int gear) {
+        // 轨迹线需要 bwSetTrajLineStatus(byte flag); 开启
+        synchronized (syncObj) {
+            if (gear == 3) {// R档
+                bvavmJNI.bwSetCarIsDgear(0);
+                bvavmJNI.bwSetCarIsBack((byte) 1);
+            } else {
+                bvavmJNI.bwSetCarIsDgear(1);
+                bvavmJNI.bwSetCarIsBack((byte) 0);
+            }
+        }
+    }
     /*1 设置是否处于D档状态，1为是，0为否*/
 //    public static native int bwSetCarIsDgear(int flag);
 //    /*2 设置轨迹线开关，0是关闭，1是打开*/
@@ -274,6 +306,12 @@ public class BvAvmJNIHelper {
         }else  {
             bvavmJNI.bwSetCarIsDgear(1);
             bvavmJNI.bwSetCarIsBack((byte) 0);
+        }
+    }
+
+    public void bwClearCarBottomImage() {
+        synchronized (syncObj) {
+            bvavmJNI.bwClearCarBottomImage();
         }
     }
 

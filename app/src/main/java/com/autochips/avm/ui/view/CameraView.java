@@ -70,9 +70,11 @@ import com.autochips.avm.helper.LongPressGestureListener;
 import com.autochips.avm.listener.CallBackHelper;
 import com.autochips.avm.listener.CallBackInterface;
 import com.autochips.avm.listener.OnTabSelectListener;
+import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.BottomDialog;
 import com.autochips.avm.ui.activity.MainActivity;
+import com.autochips.avm.util.DataDefine;
 import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.NotCloseToast;
 import com.autochips.avm.util.RearviewToast;
@@ -130,6 +132,8 @@ public class CameraView extends View implements LifecycleOwner {
     protected ViewCameraBinding mViewCameraBinding;//总windowManager界面
     protected CameraViewModel viewModel;
     private SettingView settingView;
+    protected SegmentTabLayout segmentTab;
+    protected SegmentTabLayout segmentWideAngle;
     private RearviewMirrorView rearviewMirrorView;
     public int viewPosition = 0;// 是2d或者3d页面切换
     private int hisPosition = -1;// 临时记忆视角模式
@@ -439,6 +443,8 @@ public class CameraView extends View implements LifecycleOwner {
         mViewCameraBinding.rearRadarViewId.setViewModel(viewModel);
 
         settingView = mViewCameraBinding.settingView;
+        segmentTab = mViewCameraBinding.segmentTab;
+        segmentWideAngle = mViewCameraBinding.segmentWideAngle;
         settingView.setInfoBookView(mViewCameraBinding.infobook, mViewCameraBinding.infoBg,mViewCameraBinding.segmentWideAngle);
         rearviewMirrorView = mViewCameraBinding.rearviewMirrorView;
         mViewCameraBinding.layout3dTouchId.setOnTouchListener(this::onTouch);
@@ -502,6 +508,10 @@ public class CameraView extends View implements LifecycleOwner {
     private ViewType hisModelTurn = ViewType.gear_D;// 转向退出的时候的模式
     private  boolean isChangeGear = false; // 用来判断是否换挡，如果，换挡测不取消按钮高亮
 
+    public CameraViewModel getViewModel() {
+        return viewModel;
+    }
+
     public void viewShowStatus(ViewType model,int potison) {
        int turnExitReverseIn = -1;
        if (model == ViewType.gear_turn_exit && hisModel == ViewType.ReverseIn){
@@ -525,10 +535,6 @@ public class CameraView extends View implements LifecycleOwner {
         viewModel.setmHisModel(hisModel);
         if( model == ViewType.ReverseIn){
             KLog.d("  R挡转向：" + model + " 记忆模式: " + viewPosition);
-            if(CameraGLSurfaceView.sCameraDirection == bvavmJNI.BW_FRONT_3D) {
-                KLog.d("  R挡视角切换转向可恢复");
-                //BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
-            }
         }else {
             KLog.d("  转向3d复位");
             BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
@@ -549,7 +555,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
         if (isSmartWin) {
             KLog.d("  isShowing isSmartWin  ：" + isSmartWin);
-            CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_BIRD_3D;
+            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
             return;
         }
         switch (model) {
@@ -575,8 +581,8 @@ public class CameraView extends View implements LifecycleOwner {
                         KLog.d("r 挡下3d模式不响应转向灯视角 canChange3DRear:"+canChange3DRear);
                         if(canChange3DRear) {
                             canChange3DRear = false;
-                            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
-                            CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_FRONT_3D;
+//                            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_FRONT_3D);
                             chick3DView(CAMERA_3_D);
 //                            if (CameraViewModelHelper.getInstance().turnValue == 1) {
 //                                leftModel();
@@ -588,7 +594,7 @@ public class CameraView extends View implements LifecycleOwner {
                     if(CameraViewModelHelper.getInstance().gdNotChangeView) {
                         CameraViewModelHelper.getInstance().gdNotChangeView = false;
                         //记忆广角模式，在 R 档下，主动进入全景，视角为前广角，应为后广角
-                        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_REAR_120;
+                        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_REAR_120);
                         setAngleStatus(bvavmJNI.BW_2D_REAR_120);
                     }
                 }else {
@@ -615,7 +621,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
         setWindowType(model,1);
         if (isSmartWin) {
-            CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_BIRD_3D;
+            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
             return;
         }
     }
@@ -624,9 +630,9 @@ public class CameraView extends View implements LifecycleOwner {
 
       boolean bl = mViewCameraBinding.getRoot().isAttachedToWindow();
       mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
-      if (viewType == ViewType.ReverseIn && !isSmartWin){
-        mWindowLps.height = 1080;
-      }
+//      if (viewType == ViewType.ReverseIn && !isSmartWin){
+//        mWindowLps.height = 1080;
+//      }
       KLog.d("刷新--setWindowType-bl ：" + bl +" height:"+mWindowLps.height + "CameraGLSurfaceView.glStatus:"+CameraGLSurfaceView.glStatus);
 //        CameraGLSurfaceView.glStatus ;
       if ( bl && (CameraGLSurfaceView.glStatus == 1 || CameraGLSurfaceView.glStatus == 25) && isShowing){
@@ -655,7 +661,7 @@ public class CameraView extends View implements LifecycleOwner {
         } else if (viewPosition == 2) {
             status = bvavmJNI.BW_2D_FRONT_120;
         }
-        CameraGLSurfaceView.sCameraDirection = status;
+        CameraGLSurfaceView.setAngleOfView(status);
     }
 
     public void  setRadarFailStatus(int flag,int value){
@@ -693,7 +699,7 @@ public class CameraView extends View implements LifecycleOwner {
         return;
       }
         int status = bvavmJNI.BW_2D_FRONT_UNDISTORT;
-        bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+//        bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
         if (viewPosition == 0) {
             status = bvavmJNI.BW_LEFT_RIGHT_FRONT;
             chick2DView(CAMERA_2_D_LIFT_RIGHT);
@@ -706,7 +712,7 @@ public class CameraView extends View implements LifecycleOwner {
             hidViewButtonTimer.start(viewPosition);
 
         }
-        CameraGLSurfaceView.sCameraDirection = status;
+        CameraGLSurfaceView.setAngleOfView(status);
     }
 
     /**
@@ -729,14 +735,14 @@ public class CameraView extends View implements LifecycleOwner {
             mViewCameraBinding.viewShow3dGroupId.setVisibility(VISIBLE);
             hidViewButtonTimer.start(viewPosition);
         }
-        CameraGLSurfaceView.sCameraDirection = status;
+        CameraGLSurfaceView.setAngleOfView(status);
 
 
     }
 
     private void clickShowModel() {
         if (isSmartWin) {
-            CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_BIRD_3D;
+            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
             return;
         }
         if (hisModel == ViewType.ReverseIn) {
@@ -754,22 +760,25 @@ public class CameraView extends View implements LifecycleOwner {
         int status = 0;
         // 广角
         if (isSmartWin) {
-            CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_BIRD_3D;
+            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
             return;
         }
-        if (viewPosition == 0) {
-            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
-            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
-            chick2DView(CAMERA_2_D_BOTTOM);
-        } else if (viewPosition == 1) {
-            status = bvavmJNI.BW_FRONT_3D;
-            chick3DView(CAMERA_3_D);
-            mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
-        } else if (viewPosition == 2) {
-            status = bvavmJNI.BW_2D_REAR_120;
-            setAngleStatus(bvavmJNI.BW_2D_REAR_120);
+        if (tabSelectFromUser) {
+            if (viewPosition == 0) {
+                status = bvavmJNI.BW_2D_REAR_UNDISTORT;
+//                bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                chick2DView(CAMERA_2_D_BOTTOM);
+            } else if (viewPosition == 1) {
+                status = bvavmJNI.BW_FRONT_3D;
+                chick3DView(CAMERA_3_D);
+                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+            } else if (viewPosition == 2) {
+                status = bvavmJNI.BW_2D_REAR_120;
+                setAngleStatus(bvavmJNI.BW_2D_REAR_120);
+            }
+        } else {
+            updateTabViewIndex();
         }
-        CameraGLSurfaceView.sCameraDirection = status;
 
     }
 
@@ -790,19 +799,19 @@ public class CameraView extends View implements LifecycleOwner {
         int status = 0;
         if (viewPosition == 0) {
             status = bvavmJNI.BW_2D_REAR_UNDISTORT;
-            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+//            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
             chick2DView(CAMERA_2_D_BOTTOM);
         } else if (viewPosition == 1) {
             status = bvavmJNI.BW_2D_REAR_UNDISTORT;
             chick2DView(CAMERA_2_D_BOTTOM);
-            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+//            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
             mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
         } else if (viewPosition == 2) {
             status = bvavmJNI.BW_2D_REAR_UNDISTORT;
-            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+//            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
 //            setAngleStatus(bvavmJNI.BW_2D_REAR);
         }
-        CameraGLSurfaceView.sCameraDirection = status;
+        CameraGLSurfaceView.setAngleOfView(status);
         //这里注释是为了改这个BUG，在记忆3D/广角模式下，R档激活，手动切换改变记忆3D/广角，没有被记忆
         hisPosition = viewPosition;
         mViewCameraBinding.segmentTab.setSelectTab(0);
@@ -811,7 +820,7 @@ public class CameraView extends View implements LifecycleOwner {
 
     private void viewModelByActive(String position) {
         if (isSmartWin) {
-            CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_BIRD_3D;
+            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
             return;
         }
         KLog.d(viewPosition + "  viewPosition viewModelByActive 显示位置:" + position);
@@ -822,11 +831,11 @@ public class CameraView extends View implements LifecycleOwner {
             //如果进来转向灯还在，不在R档的情况下，显示左右视图
             if(CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT)==1||CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT)==2&&hisModel != ViewType.ReverseIn){
                 status = bvavmJNI.BW_LEFT_RIGHT_FRONT;
-                bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+//                bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
                 chick2DView(CAMERA_2_D_LIFT_RIGHT);
             }else{
                 status = bvavmJNI.BW_2D_FRONT_UNDISTORT;
-                bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+//                bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
                 chick2DView(CAMERA_2_D_TOP);
             }
 
@@ -854,15 +863,17 @@ public class CameraView extends View implements LifecycleOwner {
             setAngleStatus(bvavmJNI.BW_2D_FRONT_120);
         } else {
             status = bvavmJNI.BW_2D_FRONT_UNDISTORT;
-            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+//            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
         }
-        CameraGLSurfaceView.sCameraDirection = status;
+        CameraGLSurfaceView.setAngleOfView(status);
     }
 
 
+    private boolean tabSelectFromUser = false;
     private OnTabSelectListener tabSelectListener = new OnTabSelectListener() {
         @Override
         public void onTabSelect(int position, boolean fromUser) {
+            tabSelectFromUser = fromUser;
             KLog.d(viewPosition + "tabSelectListener onTabSelect = " + position + " isChangeGear：" + isChangeGear);
             viewModel.setRunning(true);
             if (!isChangeGear){// 换挡的时候，不给取消高亮
@@ -870,7 +881,6 @@ public class CameraView extends View implements LifecycleOwner {
                 mViewCameraBinding.llSetting.setSelected(false);
 
             }
-
 
             if (viewPosition == position) {
               if (isChangeGear && viewPosition == 2){
@@ -943,7 +953,17 @@ public class CameraView extends View implements LifecycleOwner {
                 mViewCameraBinding.camera3dBg.setVisibility(View.GONE);
                 mViewCameraBinding.cameraBreakdown.setVisibility(View.GONE);
             }
+
             SystemProperties.set("tabSelect", String.valueOf(position));
+            if (tabSelectFromUser) {
+                int memEvt = DataDefine.EVT_SWITCH_2_2D;
+                if (position == 1) {
+                    memEvt = DataDefine.EVT_SWITCH_2_3D;
+                } else if (position == 2) {
+                    memEvt = DataDefine.EVT_SWITCH_2_WIDE_ANGLE;
+                }
+                AvmRuntime.self().userClick(memEvt);
+            }
 
 //            viewShowStatus(hisModel);
             clickShowModel();
@@ -981,7 +1001,7 @@ public class CameraView extends View implements LifecycleOwner {
     @SuppressLint("NewApi")
     private void setAngleStatus(int type) {
         if (isSmartWin) {
-            CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_BIRD_3D;
+            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
             return;
         }
         mViewCameraBinding.segmentWideAngle.setVisibility(VISIBLE);
@@ -1012,26 +1032,38 @@ public class CameraView extends View implements LifecycleOwner {
             if (position == 0) {
                 if (mViewCameraBinding.segmentTab.getCurrentTab() == 2) {
                     cameraShowType = 0;
-                    CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_FRONT_120;
+                    CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_120);
                     SystemProperties.set("tabSelectWideAngle", "0");
+                    if (fromUser) {
+                        AvmRuntime.self().userClick(DataDefine.EVT_WIDE_ANGLE_FRONT);
+                    }
 //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.front_wide_angle));
                 }
             } else if (position == 1) {
                 if (mViewCameraBinding.segmentTab.getCurrentTab() == 2) {
-                    CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_REAR_120;
+                    CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_REAR_120);
                     SystemProperties.set("tabSelectWideAngle", "1");
+                    if (fromUser) {
+                        AvmRuntime.self().userClick(DataDefine.EVT_WIDE_ANGLE_REAR);
+                    }
                     cameraShowType = 1;
                 }
             } else if (position == 2) {
                 if (mViewCameraBinding.segmentTab.getCurrentTab() == 2) {
-                    CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_LEFT_RIGHT_FRONT;
+                    CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_RIGHT_FRONT);
                     SystemProperties.set("tabSelectWideAngle", "2");
+                    if (fromUser) {
+                        AvmRuntime.self().userClick(DataDefine.EVT_WIDE_ANGLE_FRONT_WHEEL);
+                    }
 //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.before));
                 }
             } else if (position == 3) {
                 if (mViewCameraBinding.segmentTab.getCurrentTab() == 2) {
-                    CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_LEFT_RIGHT_BACK;
+                    CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_RIGHT_BACK);
                     SystemProperties.set("tabSelectWideAngle", "3");
+                    if (fromUser) {
+                        AvmRuntime.self().userClick(DataDefine.EVT_WIDE_ANGLE_REAR_WHEEL);
+                    }
 //                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.rear_wheel));
                 }
             }
@@ -1069,7 +1101,7 @@ public class CameraView extends View implements LifecycleOwner {
         if (tabSelect == 0) {
 
             camera3DDirection = bvavmJNI.BW_2D_FRONT_UNDISTORT;
-            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+//            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
             try {
                 //判断轨迹线有没有打开，打开就显示2D轨迹线
                 int settingPathLine = Settings.Global.getInt(mContext.getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY);// SystemProperties.getInt("settingPathLine", -1);
@@ -1083,8 +1115,8 @@ public class CameraView extends View implements LifecycleOwner {
                 settingNotFoundException.printStackTrace();
             }
             if (!isSmartWin) {
-                CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_FRONT_UNDISTORT;
-                bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+//                bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
                 KLog.d(" layout2d tabview ");
                 mViewCameraBinding.layout2d.setVisibility(isSmartWin ? View.GONE : View.VISIBLE);
                 mViewCameraBinding.layout3d.setVisibility(View.GONE);
@@ -1103,15 +1135,15 @@ public class CameraView extends View implements LifecycleOwner {
                 if(CameraViewModelHelper.getInstance().isClick && CameraViewModelHelper.getInstance().isRGearShowSmart){
                     //记忆3D模式，在R档下，转向激活左卡片，退出左卡片，再主动进入全景，显示3D左前视角，应为3D后视
                     camera3DDirection = bvavmJNI.BW_FRONT_3D;
-                    CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_FRONT_3D;
+                    CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_FRONT_3D);
                 }else {
                     camera3DDirection = bvavmJNI.BW_LEFT_FRONT_3D;
-                    CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_LEFT_FRONT_3D;
+                    CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_FRONT_3D);
                 }
                 mViewCameraBinding.layout2d.setVisibility(View.GONE);
                 mViewCameraBinding.layout3d.setVisibility(isSmartWin ? View.GONE : View.VISIBLE);
                 mViewCameraBinding.layoutWideAngle.setVisibility(GONE);
-                if(CameraGLSurfaceView.sCameraDirection == bvavmJNI.BW_FRONT_3D){
+                if(CameraGLSurfaceView.getAngleOfView() == bvavmJNI.BW_FRONT_3D){
                     chick3DView(CAMERA_3_D);
                 }else {
                     chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
@@ -1127,7 +1159,7 @@ public class CameraView extends View implements LifecycleOwner {
 
             if (!isSmartWin) {//三分之一屏不显示
                 camera3DDirection = bvavmJNI.BW_2D_FRONT_120;
-                CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_FRONT_120;
+                CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_120);
                 mViewCameraBinding.layout2d.setVisibility(View.GONE);
                 mViewCameraBinding.layout3d.setVisibility(View.GONE);
                 mViewCameraBinding.cameraImageLayout.setVisibility(View.GONE);
@@ -1159,6 +1191,10 @@ public class CameraView extends View implements LifecycleOwner {
         mViewCameraBinding.segmentTab.setSelectTab(tabSelect);
       }
 
+        if (isFullWin) {
+            updateTabViewIndex();
+        }
+
     }
 
     public boolean isSmartWin = false;
@@ -1180,6 +1216,7 @@ public class CameraView extends View implements LifecycleOwner {
      * 显示1/3 屏
      */
     public void showSmartWin() {
+        Log.e("AVM_DEBUG", Log.getStackTraceString(new Throwable()));
         Log.i(TAG, "valGear showSmartWin: 显示1/3屏幕 mIsStartStatus:"+AvmService.mIsStartStatus +"mIsScreen:"+AvmService.mIsScreen+" isLeftScreen:"+AvmService.isLeftScreen);
         if (isSmartWin || isFullWin) {
             Log.i(TAG, "showSmartWin: 已经显示1/3屏幕");
@@ -1239,13 +1276,15 @@ public class CameraView extends View implements LifecycleOwner {
      * 如果，全屏显示，则不显示小屏
      */
     public void showFullWin() {
-
         Log.i(TAG, isSmartWin + " valGear showFullWin: 全屏显示  t底部透明 " + isFullWin +" 第一帧CameraGLSurfaceView："+CameraGLSurfaceView.glStatus );
 //        if(!isFullWin){
 //            showSmartWin();
 //            return;
 //        }
-        if (isFullWin) return;
+        if (isFullWin) {
+            updateTabViewIndex();
+            return;
+        }
 
         Intent intent = new Intent(AvmApp.getInstance(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1362,7 +1401,7 @@ public class CameraView extends View implements LifecycleOwner {
         inputViewModel();
       isDismissView = false;
         if (isSmartWin) {
-            CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_BIRD_3D;
+            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
         }
         if (isFullWin){// R档关闭avm，手动进来不需要记忆视角，需要回到2d后视角
             Log.i(TAG, isFullWin + "  sCameraDirection 当前视图： " + isSmartWin);
@@ -1492,8 +1531,8 @@ public class CameraView extends View implements LifecycleOwner {
             KLog.d(" layout2d show2DView ");
             mViewCameraBinding.layout2d.setVisibility(View.VISIBLE);
             mViewCameraBinding.layout3d.setVisibility(View.GONE);
-            CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_REAR_UNDISTORT;
-            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+            CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_REAR_UNDISTORT);
+//            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
             viewModel.setLiveDataCamera2DTopUI(ViewSwitchManager.CAMERA_2_D_BOTTOM);
         }
     }
@@ -1525,8 +1564,10 @@ public class CameraView extends View implements LifecycleOwner {
     private  boolean isDismissView = false;
 
     public void dismissView(String position) {
+//        Log.e("AvmRuntime", Log.getStackTraceString(new Throwable()));
+        tabSelectFromUser = false;
         KLog.i(position + " position dismissView isShowing = " + isShowing+"turnValue:"+CameraViewModelHelper.getInstance().turnValue);
-        if(position.contains("转向延时500ms退出") && (CameraViewModelHelper.getInstance().turnValue == 1
+        if(position != null && position.contains("转向延时500ms退出") && (CameraViewModelHelper.getInstance().turnValue == 1
                 || CameraViewModelHelper.getInstance().turnValue == 2) && isSmartWin){
             return;
         }
@@ -1537,11 +1578,10 @@ public class CameraView extends View implements LifecycleOwner {
         if (!isShowing) {
             return;
         }
+//        hideView();
         CameraViewModelHelper.getInstance().setViewChange();
         DataManager.writeFault(DataConstant.Code.BP_HIDE);
         //主动退出
-        CameraViewModelHelper.getInstance().isCloseClick = position.equals("click");
-        KLog.d(" position dismissView isCloseClick = " + position.equals("click"));
 //        bottomDialog.dismiss();
         isChangeGear = false;
         isFullWin = false;
@@ -1802,7 +1842,10 @@ public class CameraView extends View implements LifecycleOwner {
                             animator.cancel();
                         }
                     }
-                    showFull2DByOnTouch();
+                    if (isSmartWin) {
+//                        showFull2DByOnTouch();
+                        AvmRuntime.self().userClick(DataDefine.EVT_CLICK_LEFT_CARD);
+                    }
                 } else {
                     if(!isSnapToPosition) {
                         snapToPosition();
@@ -2649,4 +2692,101 @@ public class CameraView extends View implements LifecycleOwner {
             mViewCameraBinding.infoBg.setVisibility(GONE);
         }
     }
+
+    public void updateTabViewIndex() {
+        int outsideTabIndex = getOutsideTabIndex();
+        if (outsideTabIndex != -1) segmentTab.setSelectTab(outsideTabIndex);
+        KLog.d("AvmRuntime updateTabViewIndex() outsideTabIndex = " + outsideTabIndex);
+        if (outsideTabIndex == 0) {
+            if (CameraGLSurfaceView.getAngleOfView() == bvavmJNI.BW_2D_FRONT_UNDISTORT) {
+                chick2DView(CAMERA_2_D_TOP);
+            } else if (CameraGLSurfaceView.getAngleOfView() == bvavmJNI.BW_2D_REAR_UNDISTORT) {
+                chick2DView(CAMERA_2_D_BOTTOM);
+            } else if (CameraGLSurfaceView.getAngleOfView() == bvavmJNI.BW_LEFT_RIGHT_FRONT
+                    || CameraGLSurfaceView.getAngleOfView() == bvavmJNI.BW_LEFT_RIGHT_BACK) {
+                chick2DView(CAMERA_2_D_LIFT_RIGHT);
+            }
+        }else if(outsideTabIndex == 1){
+            KLog.d("AvmRuntime updateTabViewIndex() getCameraDirection = " + CameraGLSurfaceView.getAngleOfView());
+            if (CameraGLSurfaceView.getAngleOfView() == bvavmJNI.BW_LEFT_REAR_3D) {
+                chick3DView(CAMERA_3_D_LEFT_REAR);
+            } else if (CameraGLSurfaceView.getAngleOfView() == bvavmJNI.BW_RIGHT_REAR_3D) {
+                chick3DView(CAMERA_3_D_RIGHT_REAR);
+            } else if(CameraGLSurfaceView.getAngleOfView() == bvavmJNI.BW_REAR_3D ||
+                    CameraGLSurfaceView.getAngleOfView() == bvavmJNI.BW_FRONT_3D){
+                chick3DView(CAMERA_3_D);
+            }
+        }  else if (outsideTabIndex == 2) {
+            int wideAngleTabIndex = getWideAngleTabIndex();
+            KLog.d("AvmRuntime updateTabViewIndex() wideAngleTabIndex = " + wideAngleTabIndex);
+            if (wideAngleTabIndex != -1) {
+                segmentWideAngle.setSelectTab(wideAngleTabIndex);
+            } else {
+                segmentWideAngle.setSelectTab(0);
+            }
+        }
+    }
+
+    private int getOutsideTabIndex() {
+        int memory = AvmRuntime.self().getMemoryType();
+        int viewAngle = CameraGLSurfaceView.getAngleOfView();
+        KLog.d("AvmRuntime getOutsideTabIndex() memory is " + memory + " , viewAngle is " + viewAngle + " , viewPosition is " + viewPosition);
+
+        switch (viewAngle) {
+            case bvavmJNI.BW_2D_FRONT:
+            case bvavmJNI.BW_2D_REAR:
+            case bvavmJNI.BW_2D_RIGHT:
+            case bvavmJNI.BW_DPMM_LEFT_2D:
+            case bvavmJNI.BW_2D_FRONT_UNDISTORT:
+            case bvavmJNI.BW_2D_REAR_UNDISTORT:
+            case bvavmJNI.BW_2D_LEFT_UNDISTORT:
+            case bvavmJNI.BW_2D_RIGHT_UNDISTORT:
+                return 0;
+            case bvavmJNI.BW_FRONT_3D:
+            case bvavmJNI.BW_RIGHT_FRONT_3D:
+            case bvavmJNI.BW_RIGHT_3D:
+            case bvavmJNI.BW_RIGHT_REAR_3D:
+            case bvavmJNI.BW_REAR_3D:
+            case bvavmJNI.BW_LEFT_REAR_3D:
+            case bvavmJNI.BW_LEFT_3D:
+            case bvavmJNI.BW_LEFT_FRONT_3D:
+            case bvavmJNI.BW_DPMM_FRONT_3D:
+            case bvavmJNI.BW_DPMM_LEFT_3D:
+            case bvavmJNI.BW_DPMM_RIGHT_3D:
+            case bvavmJNI.BW_FREE_3D:
+                return 1;
+            case bvavmJNI.BW_LEFT_RIGHT_FRONT:
+            case bvavmJNI.BW_LEFT_RIGHT_BACK:
+                if (viewPosition == 0) {
+                    return 0;
+                } else if (viewPosition == 2) {
+                    return 2;
+                }
+            case bvavmJNI.BW_2D_FRONT_120:
+            case bvavmJNI.BW_2D_REAR_120:
+                return 2;
+        }
+
+        return -1;
+    }
+
+    private int getWideAngleTabIndex() {
+        int memory = AvmRuntime.self().getMemoryType();
+        int viewAngle = CameraGLSurfaceView.getAngleOfView();
+        if (memory == DataDefine.STS_MEM_MODE_WIDE_ANGLE) {
+            switch (viewAngle) {
+                case bvavmJNI.BW_2D_FRONT_120:
+                    return 0;
+                case bvavmJNI.BW_2D_REAR_120:
+                    return 1;
+                case bvavmJNI.BW_LEFT_RIGHT_FRONT:
+                    return 2;
+                case bvavmJNI.BW_LEFT_RIGHT_BACK:
+                    return 3;
+            }
+        }
+
+        return -1;
+    }
+
 }

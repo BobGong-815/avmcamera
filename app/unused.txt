@@ -6064,8 +6064,11 @@ com.autochips.avm.DataBinderMapperImpl:
 com.autochips.avm.DataBindingTriggerClass
 com.autochips.avm.R
 com.autochips.avm.ai.Constant
+com.autochips.avm.ai.Signal
+com.autochips.avm.ai.SignalCollect
 com.autochips.avm.app.AvmApp:
     public static final int IS_AY3
+    public static final int IS_AY3Y
     public static final int IS_AY5
     public static final int IS_AY5Y
 com.autochips.avm.data.DataConstant$Code:
@@ -6127,6 +6130,8 @@ com.autochips.avm.helper.LongPressGestureListener
 com.autochips.avm.helper.SurfaceTextureHelper
 com.autochips.avm.helper.ViewPageHelper$1
 com.autochips.avm.helper.ViewPageHelper
+com.autochips.avm.service.AvmRuntime$CfgItem:
+    boolean fill(int[],int)
 com.autochips.avm.service.AvmService:
     public com.autochips.avm.data.Monitor sMonitor
 com.autochips.avm.ui.view.CameraGLSurfaceView:
@@ -6142,9 +6147,114 @@ com.autochips.avm.ui.view.CameraView:
     private com.autochips.avm.helper.LongPressGestureListener longPressGestureListener
 com.autochips.avm.ui.view.SegmentTabLayout:
     protected int sp2px(float)
+com.autochips.avm.util.DataDefine:
+    public static final int ACT_2D_FRONT_OUTLINE
+    public static final int ACT_2D_FRONT_UNDISTORT
+    public static final int ACT_2D_FRONT_VIEW
+    public static final int ACT_2D_LR_FRONT
+    public static final int ACT_2D_LR_REAR
+    public static final int ACT_2D_REAR_OUTLINE
+    public static final int ACT_2D_REAR_VIEW
+    public static final int ACT_2D_TOP
+    public static final int ACT_3D_FRONT_VIEW
+    public static final int ACT_3D_LEFT_FRONT
+    public static final int ACT_3D_LEFT_REAR
+    public static final int ACT_3D_REAR_VIEW
+    public static final int ACT_3D_RIGHT_FRONT
+    public static final int ACT_3D_RIGHT_REAR
+    public static final int ACT_ACTIVE_DUAL_CARD
+    public static final int ACT_AERIAL_VIEW
+    public static final int ACT_DISABLE_TIMING
+    public static final int ACT_ENABLE_TIMING
+    public static final int ACT_EXIT
+    public static final int ACT_KEEP
+    public static final int ACT_LEFT_CARD
+    public static final int ACT_PASSIVE_DUAL_CARD
+    public static final int ACT_PREV_VIEW_ANGLE
+    public static final int ACT_REFRESH_TAB_INDEX
+    public static final int ACT_TO_2D_BOTTOM_VIEW
+    public static final int ACT_TO_2D_LR_VIEW
+    public static final int ACT_TO_2D_TOP_VIEW
+    public static final int ACT_WIDE_ANGLE_FRONT
+    public static final int ACT_WIDE_ANGLE_REAR
+    public static final int EVT_ACTIVE_EXIT
+    public static final int EVT_CLICK_2D_BOTTOM
+    public static final int EVT_CLICK_2D_LEFT
+    public static final int EVT_CLICK_2D_RIGHT
+    public static final int EVT_CLICK_2D_TOP
+    public static final int EVT_CLICK_3D_LB
+    public static final int EVT_CLICK_3D_LT
+    public static final int EVT_CLICK_3D_RB
+    public static final int EVT_CLICK_3D_RT
+    public static final int EVT_CLICK_CAMERA_ICON
+    public static final int EVT_CLICK_LEFT_CARD
+    public static final int EVT_DOUBLE_BLINK
+    public static final int EVT_KEEP_30S
+    public static final int EVT_OVER_SPEED
+    public static final int EVT_RADAR_ACTIVE
+    public static final int EVT_RADAR_RESET
+    public static final int EVT_RADAR_TURN_LAMP_ACTIVE
+    public static final int EVT_REDUCE_SPEED
+    public static final int EVT_REDUCE_SPEED2
+    public static final int EVT_SHIFT_D
+    public static final int EVT_SHIFT_D_OVER_SPEED
+    public static final int EVT_SHIFT_N
+    public static final int EVT_SHIFT_N_OVER_SPEED
+    public static final int EVT_SHIFT_P
+    public static final int EVT_SHIFT_P_30S
+    public static final int EVT_SHIFT_R
+    public static final int EVT_SHIFT_RVC_D
+    public static final int EVT_SHIFT_RVC_N
+    public static final int EVT_SWITCH_2_2D
+    public static final int EVT_SWITCH_2_3D
+    public static final int EVT_SWITCH_2_WIDE_ANGLE
+    public static final int EVT_TOUCH_TAP
+    public static final int EVT_TURN_LAMP_ACTIVE
+    public static final int EVT_TURN_LAMP_L_ACTIVE
+    public static final int EVT_TURN_LAMP_RESET
+    public static final int EVT_TURN_LAMP_RESET_ACTIVE
+    public static final int EVT_TURN_LAMP_R_ACTIVE
+    public static final int EVT_USER_CLICK_ENTER
+    public static final int EVT_USER_CLICK_EXIT
+    public static final int EVT_WIDE_ANGLE_FRONT
+    public static final int EVT_WIDE_ANGLE_FRONT_WHEEL
+    public static final int EVT_WIDE_ANGLE_REAR
+    public static final int EVT_WIDE_ANGLE_REAR_WHEEL
+    public static final int INVALID
+    public static final int STS_DOUBLE_BLINK
+    public static final int STS_FV_STATE_ACTIVE_DUAL_CARD
+    public static final int STS_FV_STATE_LEFT_CARD
+    public static final int STS_FV_STATE_NON
+    public static final int STS_FV_STATE_OVER_SPEED_EXIT
+    public static final int STS_FV_STATE_PASSIVE_DUAL_CARD
+    public static final int STS_GEAR_D
+    public static final int STS_GEAR_D_LOW_RATE
+    public static final int STS_GEAR_D_MOVING
+    public static final int STS_GEAR_D_STOP
+    public static final int STS_GEAR_N
+    public static final int STS_GEAR_N_LOW_RATE
+    public static final int STS_GEAR_N_MOVING
+    public static final int STS_GEAR_N_STOP
+    public static final int STS_GEAR_P
+    public static final int STS_GEAR_R
+    public static final int STS_GEAR_R_LOW_RATE
+    public static final int STS_GEAR_R_STOP
+    public static final int STS_MEM_MODE_2D
+    public static final int STS_MEM_MODE_3D
+    public static final int STS_MEM_MODE_WIDE_ANGLE
+    public static final int STS_REDUCE_SPEED_RESUME
+    public static final int STS_SENSOR_RADAR
+    public static final int STS_SENSOR_RADAR_TURN_LAMP
+    public static final int STS_SENSOR_TURN_LAMP
+    public static final int STS_SENSOR_TURN_LAMP_LEFT
+    public static final int STS_SENSOR_TURN_LAMP_RIGHT
+    public static final int SWITCH_DELAY_30S_EXIT
+    public static final int SWITCH_RADAR_ACTIVE
+    public static final int SWITCH_TURN_LAMP_ACTIVE
 com.autochips.avm.util.GlobalSetting
 com.autochips.avm.util.SystemProperties:
     private static final java.lang.String TAG
+com.autochips.avm.util.Utils
 com.autochips.avm.viewmode.CameraViewModel:
     private java.util.Timer testTimer
 com.avm.framwork.BuildConfig
@@ -11939,6 +12049,9 @@ com.android.systemui.shared.system.TaskStackChangeListener
 com.android.systemui.shared.system.TaskStackChangeListeners$Impl
 com.android.systemui.shared.system.TaskStackChangeListeners$PinnedActivityInfo
 com.android.systemui.shared.system.TaskStackChangeListeners
+com.autochips.avm.service.AvmService:
+    public static int MSG_ACTION_EXIT
+    public static int mRvcState
 com.core.lib.common.ICoreSystemServer$Stub$Proxy
 com.core.lib.common.ICoreSystemServer$Stub
 com.core.lib.common.ICoreSystemServer

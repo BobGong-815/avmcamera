@@ -9,15 +9,12 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static com.android.bvavm.bvavmJNI.SCANCODE_IR_POINT1;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESP;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -30,9 +27,11 @@ import com.autochips.avm.em.ViewType;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.info.CameraInfo;
+import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
+import com.autochips.avm.util.DataDefine;
 import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
@@ -119,9 +118,10 @@ public class CameraViewModel extends BaseCameraViewModel {
     public void closeAvm() {// 手动关闭
         KLog.i("closeAvm");
         setRunning(false);
+        AvmRuntime.self().artificialExit(true);
         CameraViewModelHelper.getInstance().setRadarActiveTow(true);
-        CameraViewModelHelper.getInstance().dismissView(false, 0, "click");
-        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+//        CameraViewModelHelper.getInstance().dismissView(false, 0, "click");
+//        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
     }
 
 
@@ -218,28 +218,28 @@ public class CameraViewModel extends BaseCameraViewModel {
 
     public void setCalibration1() {
         KLog.i("setManualCalibration");
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_MANUAL_FRONT;
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_MANUAL_FRONT);
         CustomToast.showToast("标定-前");
         setRunning(true);
     }
 
     public void setCalibration2() {
         KLog.i("setManualCalibration");
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_MANUAL_REAR;
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_MANUAL_REAR);
         CustomToast.showToast("标定-后");
         setRunning(true);
     }
 
     public void setCalibration3() {
         KLog.i("setManualCalibration");
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_MANUAL_LEFT;
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_MANUAL_LEFT);
         CustomToast.showToast("标定-左");
         setRunning(true);
     }
 
     public void setCalibration4() {
         KLog.i("setManualCalibration");
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_MANUAL_RIGHT;
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_MANUAL_RIGHT);
         CustomToast.showToast("标定-右");
         setRunning(true);
     }
@@ -411,14 +411,23 @@ public class CameraViewModel extends BaseCameraViewModel {
 
     }
 
+    public void to2DUpView() {
+        chick2DView = ViewSwitchManager.CAMERA_2_D_TOP;
+        liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_TOP);
+    }
+
     //2D 上视角
     public void camera2dTop() {
         chick2DView = ViewSwitchManager.CAMERA_2_D_TOP;
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_FRONT_UNDISTORT;
+        AvmRuntime.self().userClick(DataDefine.EVT_CLICK_2D_TOP);
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_UNDISTORT);
         bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
-        liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_TOP);
         setRunning(true);
-        KLog.i("上视角：" + CameraGLSurfaceView.sCameraDirection);
+    }
+
+    public void to2DLeftView() {
+        chick2DView = ViewSwitchManager.CAMERA_2_D_LIFT_RIGHT;
+        liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_LIFT);
     }
 
     //2D 左视角
@@ -426,7 +435,8 @@ public class CameraViewModel extends BaseCameraViewModel {
         setRunning(true);
         //if(!TextUtils.isEmpty(chick2DView)&&chick2DView.equals(ViewSwitchManager.CAMERA_2_D_RIGHT)){
         //左右视图
-        CameraGLSurfaceView.sCameraDirection = mHisModel ==  ViewType.ReverseIn ? bvavmJNI.BW_LEFT_RIGHT_BACK : bvavmJNI.BW_LEFT_RIGHT_FRONT;
+        AvmRuntime.self().userClick(DataDefine.EVT_CLICK_2D_LEFT);
+        CameraGLSurfaceView.setAngleOfView(mHisModel ==  ViewType.ReverseIn ? bvavmJNI.BW_LEFT_RIGHT_BACK : bvavmJNI.BW_LEFT_RIGHT_FRONT);
         chick2DView = ViewSwitchManager.CAMERA_2_D_LIFT_RIGHT;
         // liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_LIFT_RIGHT);
         liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_LIFT);
@@ -436,33 +446,38 @@ public class CameraViewModel extends BaseCameraViewModel {
             chick2DView = ViewSwitchManager.CAMERA_2_D_LIFT;
             liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_LIFT);
         }*/
-        KLog.i("左边视角：" + CameraGLSurfaceView.sCameraDirection);
 
+    }
 
+    public void to2DBottomView() {
+        chick2DView = ViewSwitchManager.CAMERA_2_D_BOTTOM;
+        liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_BOTTOM);
     }
 
     //2D 下视角
     public void camera2dBottom() {
-        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
         setRunning(true);
         chick2DView = ViewSwitchManager.CAMERA_2_D_BOTTOM;
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_REAR_UNDISTORT;
+        AvmRuntime.self().userClick(DataDefine.EVT_CLICK_2D_BOTTOM);
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_REAR_UNDISTORT);
         bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
         liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_BOTTOM);
-        KLog.i("下视角：" + CameraGLSurfaceView.sCameraDirection);
 
         //判断轨迹线有没有打开，打开就显示2D轨迹线
+    }
 
-
+    public void to2DRightView() {
+        chick2DView = ViewSwitchManager.CAMERA_2_D_LIFT_RIGHT;
+        liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_RIGHT);
     }
 
     //2D 右视角
     public void camera2dRight() {
-        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
         setRunning(true);
         //if(!TextUtils.isEmpty(chick2DView) &&chick2DView.equals(ViewSwitchManager.CAMERA_2_D_LIFT)){
         //左右视图
-        CameraGLSurfaceView.sCameraDirection =mHisModel == ViewType.ReverseIn ? bvavmJNI.BW_LEFT_RIGHT_BACK : bvavmJNI.BW_LEFT_RIGHT_FRONT;//  改成前轮视角
+        AvmRuntime.self().userClick(DataDefine.EVT_CLICK_2D_RIGHT);
+        CameraGLSurfaceView.setAngleOfView(mHisModel == ViewType.ReverseIn ? bvavmJNI.BW_LEFT_RIGHT_BACK : bvavmJNI.BW_LEFT_RIGHT_FRONT);//  改成前轮视角
         chick2DView = ViewSwitchManager.CAMERA_2_D_LIFT_RIGHT;
         // liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_LIFT_RIGHT);
         liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_RIGHT);
@@ -471,39 +486,46 @@ public class CameraViewModel extends BaseCameraViewModel {
             CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_2D_RIGHT;
             liveDataCamera2DTopUI.postValue(ViewSwitchManager.CAMERA_2_D_RIGHT);
         }*/
-        KLog.i("右视角：" + CameraGLSurfaceView.sCameraDirection);
+    }
+
+    public void reset3D() {
+        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+    }
+
+    public void setUndistortLevel() {
+        bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
     }
 
     //3D 左前
     public void camera3dLeftFront() {
-        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);//复位3D
         setRunning(true);
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_LEFT_FRONT_3D;
+        AvmRuntime.self().userClick(DataDefine.EVT_CLICK_3D_LT);
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_FRONT_3D);
         liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
     }
 
     //3D 右前
     public void camera3dRightFront() {
-        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);//复位3D
         setRunning(true);
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_RIGHT_FRONT_3D;
+        AvmRuntime.self().userClick(DataDefine.EVT_CLICK_3D_RT);
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_RIGHT_FRONT_3D);
         liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_RIGHT_FRONT);
 
     }
 
     //3D 左后
     public void camera3dLeftRear() {
-        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);//复位3D
         setRunning(true);
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_LEFT_REAR_3D;
+        AvmRuntime.self().userClick(DataDefine.EVT_CLICK_3D_LB);
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_REAR_3D);
         liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_LEFT_REAR);
     }
 
     //3D 左后
     public void camera3dRightRear() {
-        BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);//复位3D
         setRunning(true);
-        CameraGLSurfaceView.sCameraDirection = bvavmJNI.BW_RIGHT_REAR_3D;
+        AvmRuntime.self().userClick(DataDefine.EVT_CLICK_3D_RB);
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_RIGHT_REAR_3D);
         liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_RIGHT_REAR);
     }
 

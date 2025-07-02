@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.autochips.avm.R;
 import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.helper.CameraViewModelHelper;
+import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.ui.view.CameraView;
 import com.gxa.lib.car.HalPropertyIds;
 
@@ -96,9 +97,8 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
-        Log.d("AVM_DEBUG", keyCode + " , " + keyEvent);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            CameraViewModelHelper.getInstance().dismissView(false, 0, "click");
+            AvmRuntime.self().artificialExit(true);
         }
         return super.onKeyDown(keyCode, keyEvent);
     }

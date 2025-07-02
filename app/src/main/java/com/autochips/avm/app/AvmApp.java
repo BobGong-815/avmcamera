@@ -45,6 +45,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static final int IS_AY5Y = 0x90;
     public static final int IS_AY3Y = 0x91;
     public static int VEHICLE_PLATFORM;
+    public static long bootTime;
+
 //    public static boolean ISAY5 = true;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -62,6 +64,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         super.onCreate();
         KLog.d("AVM app 启动 ActivityLifecycleCallbacks onCreate:"+ BuildConfig.VERSION_NAME);
         mAvmApp = this;
+
+        bootTime = System.currentTimeMillis();
         //数据埋点
         bvavmJNI.bwDataEmbedding("com/autochips/avm/ui/view/CameraView","bAvmFault");
 //        DataManager.init(this);

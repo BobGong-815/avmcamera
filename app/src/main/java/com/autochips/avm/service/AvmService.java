@@ -20,6 +20,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AV
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RSL_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RSR_SNS_ERR_FLAG;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SAS_STEERING_ANGLE;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_SELECT_STATE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_UINM_TURN_LIGHT_SW_ST;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_WHEEL_DIRE_SPEED;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.BCM_HIGH_BEAM_STATUS;
@@ -47,10 +48,12 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CL
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_PAS_RRMidDistance;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_VCU_GEAR_LVL_DISP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_REQ;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_RESULT_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_380D_AVM_READ_FAIL_REASON_RESULT_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.MIRROR_FOLD_UNFOLD_STATUS;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.NFS_SYNC_STATUS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.POWER_PARKING_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SETTINGS_VCU_BRKPEDPST;
@@ -87,8 +90,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
-import android.view.KeyEvent;
+import android.os.Message;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -104,9 +106,12 @@ import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.info.AutoStatusRequBean;
 import com.autochips.avm.ui.activity.MainActivity;
+import com.autochips.avm.ui.view.CameraGLSurfaceView;
 import com.autochips.avm.util.CustomToast;
+import com.autochips.avm.util.DataDefine;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
+import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.helper.ThreadPoolUtil;
 import com.avm.framwork.manager.CanManager;
 import com.google.gson.Gson;
@@ -121,8 +126,6 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
-import gxa.car.hardkey.HardKeyPolicyManager;
-import gxa.car.hardkey.KeyEventCallback;
 import gxa.car.power.data.CarPowerData;
 import gxa.car.power.data.CarPowerSignalStatus;
 import gxa.car.power.data.CarPowerWorkModeStatus;
@@ -130,8 +133,17 @@ import gxa.car.power.listener.CarPowerEventListener;
 import gxa.car.power.manager.CarPowerManager;
 import me.goldze.mvvmhabit.utils.KLog;
 
-public class AvmService extends Service {
+public class AvmService extends Service implements AvmRuntime.ActionListener {
     // adb shell am broadcast -a action.syncore.EOL.mode
+
+    public static int MSG_ACTION_ENTER = 1;
+    public static int MSG_ACTION_EXIT = 2;
+    public static int MSG_CR_CAMERA = 3;
+    public static int MSG_DEL_CAMERA = 4;
+    public static int MSG_CLOSE_RVC = 5;
+    private final int MSG_TURN_LAMP_CHANGE = 22;
+    public static int mRvcState = 0x0;
+
     private final String BR_GEAR_STATUS = "com.avm.define.GEAR_STATUS";
     private final String BR_TURN_LAMP_STATUS = "com.avm.define.EVT_TURN_LAMP_STS";
     private final String BR_TEST = "com.avm.define.TEST";
@@ -139,6 +151,7 @@ public class AvmService extends Service {
     private String exit_action = "action.syncore.EOL.mode";
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     public Monitor sMonitor;
+    private Handler mHandler;
     public boolean IS_AY5 = false;
     private CarPowerManager mCarPowerManager;
     public static boolean mIsStartStatus = false;//记录地图是否开始导航
@@ -158,6 +171,9 @@ public class AvmService extends Service {
         SystemProperties.setGlobal("avm_state", 0);
         initData();
         // 注册信号监听
+
+        AvmRuntime.self().init(this);
+        AvmRuntime.self().registerActionListener(this);
 
         CanManager.getInstance().init(this);
         CanManager.getInstance().registerSignalListener(mOnSignalValueChangedListener);
@@ -226,8 +242,8 @@ public class AvmService extends Service {
         isExitAction = false;
         KLog.d("启动----service_123  "+fishTh);
         // 快速启动
-//        if(AvmApp.getInstance().getCameraView() !=null)
-//        AvmApp.getInstance().getCameraView().updateWind(0.0f,2);
+        if(AvmApp.getInstance().getCameraView() !=null)
+            AvmApp.getInstance().getCameraView().updateWind(0.0f,2);
 //          mHandler.postDelayed(()->{
 //              CanManager.getInstance().startConnect((v -> {
 //                  if(AvmApp.getInstance().getCameraView() !=null)
@@ -236,11 +252,7 @@ public class AvmService extends Service {
 //                  //BvAvmJNIHelper.getInstance().initCanset();
 //              }));
 //          },0);
-        mHandler.postDelayed(()->{
 
-            KLog.d("注册完成--55 --service_123 "+fishTh);
-            fishTh = 1;
-        },11*1000);
         Gson gson = new Gson();
         BlJsonProtocolManager.getInstance().init(this, new IJsonProtocolReceive() {
             @Override
@@ -291,7 +303,6 @@ public class AvmService extends Service {
                     e.printStackTrace();
                 }
 
-
             }
 
             @Override
@@ -314,6 +325,185 @@ public class AvmService extends Service {
             }
         });
 
+        mHandler = new Handler() {
+            @SuppressLint("HandlerLeak")
+            @Override
+            public void handleMessage(Message msg) {
+                // 处理收到的消息
+                // 处理收到的消息
+                KLog.i("AvmRuntime Msg.what ............ " + msg.what + " ... msg.arg1 ......." + DataDefine.id2String(msg.arg1));
+                Intent intent = null;
+                if(AvmApp.getInstance().getCameraView() == null){
+                    KLog.d("AvmApp", "初始化还未获取到配置码 avm is null ");
+                    return;
+                }
+                if (msg.what == MSG_ACTION_ENTER) {
+                    switch (msg.arg1) {
+                        case DataDefine.ACT_AERIAL_VIEW:
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_BIRD_3D);
+                            break;
+                        case DataDefine.ACT_2D_REAR_VIEW:
+                            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_REAR_UNDISTORT);
+                            break;
+                        case DataDefine.ACT_2D_FRONT_OUTLINE:
+                            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_LEFT_RIGHT_FRONT);
+                            break;
+                        case DataDefine.ACT_2D_FRONT_VIEW:
+ //                           bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+                            break;
+                        case DataDefine.ACT_2D_REAR_OUTLINE:
+                            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_MANUAL_FRONT);
+                            break;
+                        case DataDefine.ACT_3D_FRONT_VIEW:
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_REAR_3D); //确定FRONT 对应REAR
+                            break;
+                        case DataDefine.ACT_3D_REAR_VIEW:
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_FRONT_3D);
+                            break;
+                        case DataDefine.ACT_3D_RIGHT_REAR:
+                            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_RIGHT_REAR_3D);
+                            break;
+                        case DataDefine.ACT_3D_LEFT_REAR:
+                            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_LEFT_REAR_3D);
+                            break;
+                        case DataDefine.ACT_WIDE_ANGLE_REAR:
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_REAR_120);
+                            break;
+                        case DataDefine.ACT_WIDE_ANGLE_FRONT:
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_120);
+                            break;
+                        case DataDefine.ACT_2D_FRONT_UNDISTORT:
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+                            AvmApp.getInstance().getCameraView().getViewModel().to2DUpView();
+                            break;
+                        case DataDefine.ACT_3D_LEFT_FRONT:
+                            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_LEFT_FRONT_3D);
+                            break;
+                        case DataDefine.ACT_3D_RIGHT_FRONT:
+                            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_RIGHT_FRONT_3D);
+                            break;
+                        case DataDefine.ACT_EXIT:
+                            KLog.i("avmService____ ACT_EXIT_CARD........0");
+                            //CameraShowTypeHelper.getInstance().exitActivity();
+                            AvmApp.getInstance().getCameraView().dismissView(null);
+                            SystemProperties.setGlobal("avm_state", 0);
+                            //mAvmManager.sendAvmState(0);
+                            break;
+                        case DataDefine.ACT_LEFT_CARD:
+                            if(AvmRuntime.self().isTurnActiveSts()) {
+                                DataManager.writeFault(DataConstant.Code.ACTIVI_LIGHT);
+                            }
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_BIRD_3D);
+                            AvmApp.getInstance().getCameraView().showSmartWin();
+//                            if (isActAndWindowMode) {
+//                                if (!AvmRuntime.self().isRearGearSts()) {
+//                                    intent = new Intent(AvmService.this, MainActivity.class);
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    startActivity(intent);
+//                                }
+//                            }
+                            break;
+                        case DataDefine.ACT_PASSIVE_DUAL_CARD:
+                            if(AvmRuntime.self().isRearGearSts()){
+                                DataManager.writeFault(DataConstant.Code.ACTIVI_RGEAR);
+                            }
+                            AvmRuntime.self().setRadarPauseFlag(false);
+                            AvmApp.getInstance().getCameraView().showFullWin();
+                            if (!AvmRuntime.self().isRearGearSts()) {
+                                intent = new Intent(AvmService.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                            break;
+                        case DataDefine.ACT_ACTIVE_DUAL_CARD:
+                            AvmRuntime.self().setRadarPauseFlag(false);
+                            AvmApp.getInstance().getCameraView().showFullWin();
+                            if (!AvmRuntime.self().isRearGearSts()) {
+                                intent = new Intent(AvmService.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                            break;
+                        case DataDefine.ACT_KEEP:
+                            break;
+                        case DataDefine.ACT_2D_LR_FRONT:
+                            KLog.i("ACT_2D_LR................  ");
+                            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_LEFT_RIGHT_FRONT);
+                            break;
+                        case DataDefine.ACT_2D_LR_REAR:
+                            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_LEFT_RIGHT_BACK);
+                            break;
+                        case DataDefine.EVT_CLICK_LEFT_CARD:
+                            KLog.i("EVT_CLICK_LEFT_CARD................  ");
+                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_120);
+                            break;
+                        case DataDefine.ACT_PREV_VIEW_ANGLE:
+                            if (CameraGLSurfaceView.getLAngleOfView() != bvavmJNI.BW_VIEW_POWER_OFF && CameraGLSurfaceView.getLAngleOfView() != bvavmJNI.BW_BIRD_3D) {
+                                CameraGLSurfaceView.setAngleOfView2(CameraGLSurfaceView.getLAngleOfView());
+                            } else {
+                                if (AvmRuntime.self().getMemoryType() == DataDefine.STS_MEM_MODE_2D) {
+                                    CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+                                    bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
+                                } else if (AvmRuntime.self().getMemoryType() == DataDefine.STS_MEM_MODE_3D) {
+                                    CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_FRONT_3D);
+                                } else if (AvmRuntime.self().getMemoryType() == DataDefine.STS_MEM_MODE_WIDE_ANGLE) {
+                                    CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_120);
+                                }
+                            }
+                            break;
+                        case DataDefine.ACT_REFRESH_TAB_INDEX:
+                            AvmApp.getInstance().getCameraView().updateTabViewIndex();
+                            break;
+                        case DataDefine.ACT_TO_2D_TOP_VIEW:
+                            AvmApp.getInstance().getCameraView().getViewModel().to2DUpView();
+                            break;
+                        case DataDefine.ACT_TO_2D_LR_VIEW:
+                            AvmApp.getInstance().getCameraView().getViewModel().to2DLeftView();
+                            break;
+                        case DataDefine.ACT_TO_2D_BOTTOM_VIEW:
+                            AvmApp.getInstance().getCameraView().getViewModel().to2DBottomView();
+                            break;
+                    }
+                } else if (msg.what == MSG_CR_CAMERA) {
+                    BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
+//                    if (JNI_IN_THREAD_FLAG) {
+//                        AvmApp.getInstance().getCameraView().getViewModel().createCamera();
+//                    } else {
+//                        if (!BvAvmJNIHelper.isAvmDeInit) {
+//                            BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
+//                        }
+//                    }
+                } else if (msg.what == MSG_DEL_CAMERA) {
+                    BvAvmJNIHelper.getInstance().bwDeleteCamera();
+//                    if (JNI_IN_THREAD_FLAG) {
+//                        AvmApp.getInstance().getCameraView().getViewModel().deleteCamera();
+//                    } else {
+//                        BvAvmJNIHelper.getInstance().bwDeleteCamera();
+//                    }
+                } else if(msg.what == MSG_CLOSE_RVC) {
+                    KLog.i("avmService close rvc ");
+                    CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0, 0x2);
+                } else if (msg.what == MSG_TURN_LAMP_CHANGE) {
+                    AvmRuntime.self().turnLampChange(msg.arg1);
+                }
+            }
+        };
+
+        mHandler.postDelayed(()->{
+
+            KLog.d("注册完成--55 --service_123 "+fishTh);
+            fishTh = 1;
+        },11*1000);
     }
 
     private void registerSplitScreenCallback() {
@@ -436,124 +626,130 @@ public class AvmService extends Service {
   }
 
     private void onValueChangedListener(int vehicleId, Object value) {
-        if (AvmApp.getInstance().getCameraView() == null) {
-            KLog.d("AvmApp view is not init");
+        if(AvmApp.getInstance().getCameraView() == null){
+            KLog.d("AvmApp", "avm is null  vehicleId & value："+vehicleId +" :"+value);
             return;
         }
-
         if (vehicleId == AVM_UINM_TURN_LIGHT_SW_ST) { //转向激活
-            KLog.d(fishTh + " fishTh 转向 vehicleId = " + vehicleId + "  ,value = " + value);
-            if (value instanceof Integer && (int) value > 0) {
-                fishTh = 1;
-            }
-            if(value instanceof Integer) {
-                turnLampSwSts = (Integer) value;
-                if(turnLampSwSts != 0){
-                    //开时移除双闪退出动作
-                    mHandler.removeCallbacksAndMessages("turnReset");
-                }
-                if (BvAvmJNIHelper.isAvmDeInit) {
-                    CameraViewModelHelper.getInstance().turnActive((Integer) value, false);
-                } else {
-                    KLog.d("初始化未成功 ，过滤转向");
-                }
-            }
-//        } else if (vehicleId == CLUSTER_BCM_RIGHT_TURN_LAMP) {//右转向灯
-        } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP || vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//左边转向灯闪
+            KLog.d(" TurnLamp 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
-                long now = System.currentTimeMillis();
-                int nowValue = (int) value;
-                if (lastTurnLampVehicle != 0) {
-                    if (vehicleId == lastTurnLampVehicle && nowValue != lastTurnLampValue) { // 信号没变，值有变
-                        if (now - lastTurnLampTime < 600) {
-                            lastLittleSharkTime = now;
-                            KLog.d(" 判定为小闪 ");
-//                            CameraViewModelHelper.getInstance().turnActive(nowValue, true);
-//                            return;
-                        }
-                    }
-                }
-                lastTurnLampTime = now;
-                lastTurnLampVehicle = vehicleId;
-                lastTurnLampValue = nowValue;
-            }
-            if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
-                if (value instanceof Integer) {
-                    leftLightStPt = (int) value;
-                }
-                leftTurnLChangeTime = System.currentTimeMillis();
-                KLog.d(" 转向 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime - rightTurnLChangeTime));
-                if (turnLampSwSts != 0) {
-                    //转向未回正也会双闪，处理转向未回正的双闪逻辑
-                    if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
-                        KLog.d(" 判定为双闪 ");
-                        //双闪
-                        mHandler.postDelayed(() -> CameraViewModelHelper.getInstance().turnActive(0, true), "turnReset", 1000);
-                    } else if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 0 && rightLightStpt == 0) {
-                        KLog.d(" 判定为双闪 ");
-                    } else {
-                        KLog.d(" 判定为非双闪 ");
-                        mHandler.removeCallbacksAndMessages("turnReset");
-                    }
-                }
-            } else {//右边转向灯闪
-                if (value instanceof Integer) {
-                    rightLightStpt = (int) value;
-                }
-                rightTurnLChangeTime = System.currentTimeMillis();
-                KLog.d(" 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime - leftTurnLChangeTime));
-                if (turnLampSwSts != 0) {
-                    //转向未回正也会双闪，处理转向未回正的双闪逻辑
-                    if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 1 && rightLightStpt == 1) {
-                        KLog.d(" 判定为双闪 ");
-                        //双闪
-                        mHandler.postDelayed(() -> CameraViewModelHelper.getInstance().turnActive(0, true), "turnReset", 1000);
-                    } else if ((rightTurnLChangeTime - leftTurnLChangeTime) < 50 && leftLightStPt == 0 && rightLightStpt == 0) {
-                        KLog.d(" 判定为双闪 ");
-                    } else if (rightTurnLChangeTime == 0 || leftTurnLChangeTime == 0) {
-                        KLog.d(" 判定为非双闪 ");
-                        mHandler.removeCallbacksAndMessages("turnReset");
-                    }
+                int intValue = (int) value;
+                turnLampSwSts = intValue;
+                //                turnLampChangeTime = System.currentTimeMillis();
+                if (intValue == 0) {
+                    turnLampChange(intValue, 800);
+                } else {
+                    turnLampChange(intValue, 0);
                 }
             }
-        } else if (vehicleId == VEHICLE_SPEED) {// 车速
-            if (!(value instanceof Float)) {
-                KLog.d("value is not Float");
-                return;
-            }
-            float fl = (Float) value;
-            //KLog.d("车速： "+fl);
-            CameraViewModelHelper.getInstance().setSpeed(fl);
-        } else if (vehicleId == SETTINGS_VCU_BRKPEDPST) {//刹车踏板
-            if (!(value instanceof Float)) {
-                KLog.d("value is not Float");
-                return;
-            }
-            if ((Float) value > 99.96f) {
-                CustomToast.showToast(AvmApp.getInstance().getString(R.string.emergency_braking));
-            }
+        } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
+            if (!(value instanceof Integer)) return;
 
-        } else if (vehicleId == AVM_SAS_STEERING_ANGLE) { // 转角值
+            leftTurnLChangeTime = System.currentTimeMillis();
+            leftTurnLValue = (int) value;
+            KLog.d(" TurnLamp 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts);
+            if ((leftTurnLChangeTime-rightTurnLChangeTime) < 500) { //双闪
+                KLog.d("TurnLamp 判断为双闪.");
+                AvmRuntime.self().doubleBlink();
+                return;
+            }
+            turnLampChange(0, 800);
+            AvmRuntime.self().updateChangeTime();
+        } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
+            if (!(value instanceof Integer)) return;
+
+            rightTurnLChangeTime = System.currentTimeMillis();
+            rightTurnLValue = (int) value;
+            KLog.d("TurnLamp 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts);
+            if ((rightTurnLChangeTime-leftTurnLChangeTime) < 500) { //双闪
+                KLog.d("TurnLamp 判断为双闪.");
+                AvmRuntime.self().doubleBlink();
+                return;
+            }
+            turnLampChange(0, 800);
+            AvmRuntime.self().updateChangeTime();
+        } else if (vehicleId == VEHICLE_SPEED) {// 车速
+            //KLog.d(" 车速 vehicleId = " + vehicleId + "  ,value = " + value);
+            if (value instanceof Float) {
+                AvmRuntime.self().speedChange((Float) value);
+            }
+            CameraViewModelHelper.getInstance().setSpeed((Float) value);
+        } else if (vehicleId == SETTINGS_VCU_BRKPEDPST) {//刹车踏板
+
+        } else if (vehicleId == AVM_SAS_STEERING_ANGLE) {//转角值
             CameraViewModelHelper.getInstance().angleSteel();
         } else if (vehicleId == MIRROR_FOLD_UNFOLD_STATUS) { // 后视镜折叠
-            CameraViewModelHelper.getInstance().mirrorFoldUnFoldStatus(value);
+            KLog.d(" 后视镜折叠 ....  ..... " + value);
         } else if (vehicleId == SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE) { // 后视下翻
             CameraViewModelHelper.getInstance().mirrorAutomaticStatus();
         } else if (vehicleId == CLUSTER_VCU_GEAR_LVL_DISP) {// 挡位
-            if (!(value instanceof Integer)) {
-                return;
+            KLog.d(" 挡位 vehicleId = " + vehicleId + "  ,value = " + value);
+            if (value instanceof Integer) {
+                int gear = (int) value;// 第一次开机后的默认值
+                if (gear == 0) return;
+                AvmRuntime.self().gearChange(gear);
+                BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
+                //BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
+                if (gear == 4) {
+                    BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
+                    //BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
+                }
             }
-            if (BvAvmJNIHelper.isAvmDeInit) {
-                reverse((int) value);
-            } else {
-                KLog.d("初始化未成功 ，过滤挡位");
+        }else if(vehicleId == NFS_SYNC_STATUS){
+            KLog.i(" 标定结果 NFS_SYNC_STATUS： " + vehicleId + "  ,value = " + value);
+            if (value instanceof Integer) {
+                int sync_status = (int) value;
+                if(sync_status == 1){
+                    byte[] arrBack = {0x00, 0x00, 0x00, 0x00};
+                    CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESULT_RESP, 0, arrBack);
+                    CustomToast.showToast(AvmApp.getInstance().getString(R.string.camera_success));
+                    KLog.i("标定-DIAG_31 app 标定成功 ");
+                    DataManager.writeFault(DataConstant.Code.BD_SUCCESS);
+                    DataManager.writeFault(DataConstant.Code.SJ_SAVE_SUCCESS);
+                }
             }
         }
+
         setDoorStatus(vehicleId, value);
         setFlWheelStatus(vehicleId, value);
         setLight(vehicleId, value);
         setRadar(vehicleId, value);
         setCalibration(vehicleId, value);
+    }
+
+    private int mDirection = -1;
+    public void turnLampChange(int direction, long delay) {
+        mHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
+        Message message = Message.obtain();
+        message.what = MSG_TURN_LAMP_CHANGE;
+        message.arg1 = direction;
+        mHandler.sendMessageDelayed(message, delay);
+        mDirection = direction;
+    }
+
+    public void setWheelAngle(Object value) {
+        if(value instanceof Float) {
+            BvAvmJNIHelper.getInstance().bwSetWheelAngle((float)value);
+        }
+    }
+
+    @Override
+    public void onEnter(int act) {
+        KLog.d("onEnter -> action : " + DataDefine.id2String(act));
+        Message message = Message.obtain();
+        message.what = MSG_ACTION_ENTER;
+        message.arg1 = act;
+        mHandler.sendMessage(message);
+    }
+
+    @Override
+    public void onExit(int act) {
+        KLog.d("onExit -> action : " + DataDefine.id2String(act));
+    }
+
+    @Override
+    public void onGearNoAct(int gear, boolean handleFlag) {
+
     }
 
     public class AvmServiceIBinder extends Binder {
@@ -601,6 +797,8 @@ public class AvmService extends Service {
         KLog.d(flags + "[onStartCommand]" + startId);
         //adb指令模拟启动service带参数调试功能
         //adb shell am start-service -n com.autochips.avm/.service3.AvmService --ei avm_onclick 1
+
+
         if(AvmApp.getInstance().getCameraView() ==null){
             KLog.d(flags + "[onStartCommand] AvmApp view is not init");
             return START_STICKY;
@@ -626,7 +824,7 @@ public class AvmService extends Service {
                 case 3: //语音唤醒打开AVM首页
                 case 4: //语音唤醒打开AVM首页
                     fishTh = 1;
-                    CameraViewModelHelper.getInstance().showView(true);
+                    AvmRuntime.self().artificialEnter();
 //                    AvmApp.getInstance().getCameraView().showSmartWin();
 //                  testModel();
                     DataManager.writeFault(avm_onclick == 1 ? DataConstant.Code.CLICK_IN_SUI :
@@ -641,9 +839,8 @@ public class AvmService extends Service {
                            break;
                     }
 
-                    CameraViewModelHelper.getInstance().dismissView(false, 0, "click");
+                    AvmRuntime.self().artificialExit(true);
                     break;
-
 
                 case 11://启动调试activity页面
                     break;
@@ -686,12 +883,9 @@ public class AvmService extends Service {
 
     private  int  count = 0;
 
-    long lastTurnLampTime = 0;
-    public static long lastLittleSharkTime = 0;
-    int lastTurnLampVehicle = 0;
-    int lastTurnLampValue = 0;
-
     int turnLampSwSts = -1;
+    int leftTurnLValue = -1;
+    int rightTurnLValue = -1;
     long leftTurnLChangeTime = 0;
     long rightTurnLChangeTime = 0;
 
@@ -705,10 +899,10 @@ public class AvmService extends Service {
 
     }
 
-//    private void turnExit(Integer value) {
-//        CameraViewModelHelper.getInstance().turnExit(value);
-//
-//    }
+    private void turnExit(Integer value) {
+        CameraViewModelHelper.getInstance().turnExit(value);
+
+    }
 
 
     /**
@@ -727,7 +921,7 @@ public class AvmService extends Service {
         }
     }
 
-    private  final  Handler mHandler = new Handler(Looper.getMainLooper());
+//    private  final  Handler mHandler = new Handler(Looper.getMainLooper());
 
     private  int calStatus = 0;
 
@@ -1057,6 +1251,21 @@ public class AvmService extends Service {
                     startActivity(mainIntent);
                 } else if (testValue == 3) {
                     AvmApp.getInstance().getCameraView().showSmartWin();
+                } else if (testValue == 4) {
+                    BvAvmJNIHelper.getInstance().bwSetCarDoorStatus(new int[] {
+                            1,0,1,0,1,0,1,0
+                    });
+                } else if (testValue == 5) {
+                    BvAvmJNIHelper.getInstance().bwSetCarDoorStatus(new int[] {
+                            0,0,0,0,0,0,0,0
+                    });
+                } else if (testValue == 10) {
+                    int signal = intent.getIntExtra("signal", -1);
+                    CameraGLSurfaceView.setAngleOfView2(signal);
+                } else if (testValue == 11) {
+                    int speedValue = intent.getIntExtra("speed", -1);
+                    AvmRuntime.self().speedChange(speedValue);
+                    CameraViewModelHelper.getInstance().setSpeed(speedValue);
                 } else if (testValue == 100) {
                     int vehicleId = intent.getIntExtra("vehicleId", -1);
                     int vehicleValue = intent.getIntExtra("vehicleValue", -1);

@@ -397,7 +397,7 @@ public class CameraViewModelHelper {
         AvmApp.getInstance().getCameraView().changeRearviewShow(speedValue);
 //        speedValue = 3;// 测试透明地盘
         //KLog.d("车速："+val+"   isSpeedModel: "+isSpeedModel+"   speedValue: "+speedValue+"   turnValue: "+turnValue+ "  isClick:  "+isClick+"  版本号： "+ ServiceUtils.getVersionName());
-        int turn = CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT);
+//        int turn = CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT);
         //KLog.d("车速：判断当前转向turn: "+turn);
       setTransparentIndexTab();
 
@@ -405,56 +405,57 @@ public class CameraViewModelHelper {
 
 //      SystemProperties.set("settingRadarActivatedPanorama",  String.valueOf(position));
 
-        if (speedValue > 30){
-            isSpeedModel = true;
-        }
 
-        if (speedValue <= 30 && isSpeedModel ) {// 小于30 的时候，判断条件看是否满足转向激活
-            KLog.d("车速：判断条件看是否满足转向激活  "+turn);
-            if(turn == 1||turn == 2){
-                KLog.d("车速： turnActive "+turn);
-                //turnActive(turn);
-                turnSpeedValue = -1;
-                isSpeedModel = false;
-
-
-                mHandler.removeCallbacksAndMessages("setRunning");
-                mHandler.removeCallbacks(getmRun);
-                mHandler.removeCallbacksAndMessages("close_N");
-                //if (!isTurn) {
-                    try {
-                        // 转向灯激活全景开关打开，且车速《20，右转向灯打开 557843113
-                        int signalActivates = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION);// SystemProperties.getInt("signalActivates", 0);
-                        if (signalActivates == 1) {
-                            KLog.d("车速： 激活视图 :" + isCloseClick);
-                            if (!isCloseClick) {
-                                //只有非主动关闭的才允许打开左卡片
-                                KLog.d("车速非主动关闭才退出 ");
-                                isPGearShowSmart = false;
-                                isRGearShowSmart = false;
-                                smartActive(turn);
-                            }
-                        }
-                    } catch (Settings.SettingNotFoundException settingNotFoundException) {
-                        settingNotFoundException.printStackTrace();
-                    }
-               // }
-                isTurn = true;
-                turnSpeedValue = -1;
-                //isSpeedModel = false;// 如果转向进入，则需要取消车速过高模式
-                //setViewModel(turn == 1 ? ViewType.gear_Left : ViewType.gear_Right);
-            }
-        } else if (speedValue > 30 &&!isClick && valGear != 3 && CameraView.isShowing) {// 车速过高，非点击进去关闭AVM
-            turnSpeedValue = turnValue;
-            //turnValue = -1;
-            isTurn = false;
-            //turnExit(1);
-            /*isReverse = false;
-            isRunning = false;
-            mHandler.removeCallbacks(getmRun);
-            mHandler.postDelayed(getmRun, 0);*/
-            dismissView(isClick, 0, "车速大于30立即退出");
-        }
+//        if (speedValue > 30){
+//            isSpeedModel = true;
+//        }
+//
+//        if (speedValue <= 30 && isSpeedModel ) {// 小于30 的时候，判断条件看是否满足转向激活
+//            KLog.d("车速：判断条件看是否满足转向激活  "+turn);
+//            if(turn == 1||turn == 2){
+//                KLog.d("车速： turnActive "+turn);
+//                //turnActive(turn);
+//                turnSpeedValue = -1;
+//                isSpeedModel = false;
+//
+//
+//                mHandler.removeCallbacksAndMessages("setRunning");
+//                mHandler.removeCallbacks(getmRun);
+//                mHandler.removeCallbacksAndMessages("close_N");
+//                //if (!isTurn) {
+//                    try {
+//                        // 转向灯激活全景开关打开，且车速《20，右转向灯打开 557843113
+//                        int signalActivates = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION);// SystemProperties.getInt("signalActivates", 0);
+//                        if (signalActivates == 1) {
+//                            KLog.d("车速： 激活视图 :" + isCloseClick);
+//                            if (!isCloseClick) {
+//                                //只有非主动关闭的才允许打开左卡片
+//                                KLog.d("车速非主动关闭才退出 ");
+//                                isPGearShowSmart = false;
+//                                isRGearShowSmart = false;
+//                                smartActive(turn);
+//                            }
+//                        }
+//                    } catch (Settings.SettingNotFoundException settingNotFoundException) {
+//                        settingNotFoundException.printStackTrace();
+//                    }
+//               // }
+//                isTurn = true;
+//                turnSpeedValue = -1;
+//                //isSpeedModel = false;// 如果转向进入，则需要取消车速过高模式
+//                //setViewModel(turn == 1 ? ViewType.gear_Left : ViewType.gear_Right);
+//            }
+//        } else if (speedValue > 30 &&!isClick && valGear != 3 && CameraView.isShowing) {// 车速过高，非点击进去关闭AVM
+//            turnSpeedValue = turnValue;
+//            //turnValue = -1;
+//            isTurn = false;
+//            //turnExit(1);
+//            /*isReverse = false;
+//            isRunning = false;
+//            mHandler.removeCallbacks(getmRun);
+//            mHandler.postDelayed(getmRun, 0);*/
+//            dismissView(isClick, 0, "车速大于30立即退出");
+//        }
     }
 
     public float getSpeed() {
@@ -599,13 +600,13 @@ public class CameraViewModelHelper {
                 return;
             }
             if (pExit == 0) {
-                gearExit(valGear); // 如果R档退出，设置了立即关闭，则立即关闭
+//                gearExit(valGear); // 如果R档退出，设置了立即关闭，则立即关闭
                 return;
             } else {// 否则进入转向
                 isReverseInByTurn = false;
                 if (isReverseIn) // 倒车进入的时候才会定时
                   isReverseToTurnStats = true;
-                turnActive(turnValue,false);
+//                turnActive(turnValue,false);
             }
 
 
@@ -654,6 +655,8 @@ public class CameraViewModelHelper {
         /*if (value < 1) {
             return;
         }*/
+        if (value >= 0) return;
+
         if(value == 0){
             turnValue = value;
         }
@@ -759,14 +762,7 @@ public class CameraViewModelHelper {
             //isSpeedModel = false; // 转向关闭的时候，需要置空车速过高模式
             isTurn = false;
             if (valGear != 3){
-                long now = System.currentTimeMillis();
-                KLog.i("now - AvmService.lastLittleSharkTime = " + (now - AvmService.lastLittleSharkTime));
-                if (now - AvmService.lastLittleSharkTime < 1000) {
-                    mHandler.removeCallbacks(setViewModelRunnable);
-                    mHandler.postDelayed(setViewModelRunnable, 1200);
-                } else {
-                    setViewModel(ViewType.gear_turn_exit);
-                }
+              setViewModel(ViewType.gear_turn_exit);
             }
             if(valGear  == 4&&!AvmApp.getInstance().getCameraView().isSmartWin){
                 KLog.d(  " 这里仅仅只是在全屏的时候从其他档挂入P档要重新计时才能进入");
@@ -780,14 +776,7 @@ public class CameraViewModelHelper {
                 }
             }else{
                 KLog.d(  "其他视图跟转向操作都走这里");
-                long now = System.currentTimeMillis();
-                KLog.i("now - AvmService.lastLittleSharkTime = " + (now - AvmService.lastLittleSharkTime));
-                if (now - AvmService.lastLittleSharkTime < 1000) {
-                    mHandler.removeCallbacks(turnExitRunnable);
-                    mHandler.postDelayed(turnExitRunnable, 1200);
-                } else {
-                    turnExit(value);
-                }
+                turnExit(value);
             }
 
         }
@@ -824,21 +813,6 @@ public class CameraViewModelHelper {
         }
     };
 
-    Runnable setViewModelRunnable = new Runnable() {
-        @Override
-        public void run() {
-            setViewModel(ViewType.gear_turn_exit);
-        }
-    };
-
-    Runnable turnExitRunnable = new Runnable() {
-        @Override
-        public void run() {
-            turnExit(0);
-        }
-    };
-
-    // 转向退出
     public void turnExit(int value) {
 
         KLog.d(  " isRunning： "+isRunning+"   isReverseToTurnStats: "+isReverseToTurnStats);
@@ -1177,20 +1151,20 @@ public class CameraViewModelHelper {
     public void setRunning(boolean running) {
         isRunning = running;
         KLog.i("是否有操作:" + isRunning);
-        mHandler.removeCallbacksAndMessages("setRunning");
-        mHandler.removeCallbacksAndMessages("close_N");
-        mHandler.removeCallbacksAndMessages("close_token");
-        mHandler.removeCallbacks(getmRun);
-        mHandler.postDelayed(() -> {
-            KLog.i("setRunning:" + isRadarActive +" isTurn:"+isTurn +" isReverse:"+isReverse
-            + "isClick :"+ isClick +" valGear:"+valGear +" isPGear:"+isPGear);
-            if(!isClick){
-                isPGear = false;
-            }
-            if (isRadarActive || isTurn || isReverse || (isClick && valGear != 4) || isPGear)
-                return;
-            dismissView(false, 0, "d7");
-        }, "setRunning", 30 * 1000);
+//        mHandler.removeCallbacksAndMessages("setRunning");
+//        mHandler.removeCallbacksAndMessages("close_N");
+//        mHandler.removeCallbacksAndMessages("close_token");
+//        mHandler.removeCallbacks(getmRun);
+//        mHandler.postDelayed(() -> {
+//            KLog.i("setRunning:" + isRadarActive +" isTurn:"+isTurn +" isReverse:"+isReverse
+//            + "isClick :"+ isClick +" valGear:"+valGear +" isPGear:"+isPGear);
+//            if(!isClick){
+//                isPGear = false;
+//            }
+//            if (isRadarActive || isTurn || isReverse || (isClick && valGear != 4) || isPGear)
+//                return;
+//            dismissView(false, 0, "d7");
+//        }, "setRunning", 30 * 1000);
 
     }
 

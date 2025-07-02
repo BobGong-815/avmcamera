@@ -36,6 +36,7 @@ import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.databinding.ViewSettingBinding;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.listener.OnTabSelectListener;
+import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.ui.activity.DebugActivity;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.GlobalSetting;
@@ -187,6 +188,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             public void onTabSelect(int position, boolean fromUser) {
                     viewModel.startTimer();
                     viewModel.setRunning(true);
+                AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_EXIT_P, position==1);
                 Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, position); //SystemProperties.set("pExit", position + "");
             }
 
