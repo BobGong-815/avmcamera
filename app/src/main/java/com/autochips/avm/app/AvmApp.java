@@ -100,7 +100,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
 //                .setSkinStatusBarColorEnable(false)                     // 关闭状态栏换肤，默认打开[可选]
 //                .setSkinWindowBackgroundEnable(true)                   // 关闭windowBackground换肤，默认打开[可选]
 //                .loadSkin();
-        Thread.setDefaultUncaughtExceptionHandler(this);
+//        Thread.setDefaultUncaughtExceptionHandler(this);
         ServiceUtils.startCaptureService(this,AvmService.class);
 //        mHandler.postDelayed(()->{
 //

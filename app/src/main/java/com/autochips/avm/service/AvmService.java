@@ -83,6 +83,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -90,7 +91,9 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -109,6 +112,7 @@ import com.autochips.avm.ui.activity.MainActivity;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.DataDefine;
+import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
 import com.avm.framwork.constant.CameraContracts;
@@ -159,6 +163,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static boolean mIsScreen = false; // 记录是否为分屏
     public static boolean isLeftScreen = false;//是否为左边的分屏显示全景
     private SplitScreenManager mSplitScreenManager;
+    private ContentObserver turnActiveObserver;
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -504,6 +509,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d("注册完成--55 --service_123 "+fishTh);
             fishTh = 1;
         },11*1000);
+
+//        observer();
     }
 
     private void registerSplitScreenCallback() {
@@ -581,6 +588,18 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.i("SplitScreenManager  onScenesChanged scene:"+scene +"mIsScreen:"+mIsScreen);
             }
         });
+    }
+
+    private void observer() {
+        turnActiveObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+            @Override
+            public void onChange(boolean selfChange) {
+                super.onChange(selfChange);
+                KLog.d("AvmRuntime AVM_SETTING_TURN_LIGHT_ACTIVATION changed.");
+            }
+        };
+        // 注册ContentObserver到系统设置中的亮度URI
+        getContentResolver().registerContentObserver(Settings.System.getUriFor(GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION), true, turnActiveObserver);
     }
 
     //更改显示位置
@@ -693,6 +712,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 if (gear == 4) {
                     BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                     //BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
+                }
+
+                if (BvAvmJNIHelper.isAvmDeInit) {
+                    reverse((int) value);
+                } else {
+                    KLog.d("初始化未成功 ，过滤挡位");
                 }
             }
         }else if(vehicleId == NFS_SYNC_STATUS){
