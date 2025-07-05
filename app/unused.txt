@@ -6177,6 +6177,12 @@ com.autochips.avm.util.DataDefine:
     public static final int ACT_REFRESH_2D_LEFT_VIEW
     public static final int ACT_REFRESH_2D_RIGHT_VIEW
     public static final int ACT_REFRESH_2D_TOP_VIEW
+    public static final int ACT_REFRESH_3D_FRONT
+    public static final int ACT_REFRESH_3D_LEFT_FRONT
+    public static final int ACT_REFRESH_3D_LEFT_REAR
+    public static final int ACT_REFRESH_3D_REAR
+    public static final int ACT_REFRESH_3D_RIGHT_FRONT
+    public static final int ACT_REFRESH_3D_RIGHT_REAR
     public static final int ACT_REFRESH_LAND_TRANSPARENCY
     public static final int ACT_REFRESH_TAB_INDEX
     public static final int ACT_WIDE_ANGLE_FRONT

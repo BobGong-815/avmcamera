@@ -11,7 +11,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -23,7 +22,6 @@ import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.SystemProperties;
-
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -38,8 +36,7 @@ import me.goldze.mvvmhabit.utils.KLog;
  */
 public class CameraGLSurfaceView extends GLSurfaceView {
 
-    private static volatile int lastCeameraDirection = bvavmJNI.BW_VIEW_POWER_OFF;
-    private static volatile int sCameraDirection = bvavmJNI.BW_FRONT_3D;
+    public static volatile int sCameraDirection = bvavmJNI.BW_FRONT_3D;
     private int nowShowDirection = -1;//当前显示视图
      Renderer renderer;
     {
@@ -85,6 +82,22 @@ public class CameraGLSurfaceView extends GLSurfaceView {
 
     }
 
+    public static void setAngleOfView(int value) {
+        //sCameraDirection = value;
+    }
+
+    public static void setAngleOfView2(int value) {
+        sCameraDirection = value;
+    }
+
+    public static int getAngleOfView() {
+        return sCameraDirection;
+    }
+
+    public static int getLAngleOfView() {
+        return sCameraDirection;
+    }
+
     public void stopSurface(){
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
@@ -101,8 +114,10 @@ public class CameraGLSurfaceView extends GLSurfaceView {
             if (AvmService.isExitAction && !isOpenCamera){
                 return;
             }
+            //修改摄像头画面数据
+            GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
             if(!isOpenCamera){
-                KLog.d("onDrawFrame return 000.");
                 return;
             }
             //修改摄像头画面数据
@@ -110,7 +125,7 @@ public class CameraGLSurfaceView extends GLSurfaceView {
 
 
             if(BvAvmJNIHelper.getInstance().isCloseingCamrea){
-                KLog.d("onDrawFrame camrea is Closeing return 111.");
+                KLog.d("onDrawFrame camrea is Closeing");
                 return;
             }
 //            if(AvmApp.mAvmRvcState == 1){
@@ -130,18 +145,13 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                     KLog.d("sCameraDirection 视图=" + sCameraDirection);
                     nowShowDirection = sCameraDirection;
                 }
-
-                //修改摄像头画面数据
-                GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-                GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-                // 调用了glClearColor，却没有render，可能黑屏
-
                 int renderResult = BvAvmJNIHelper.getInstance().avmRender2(sCameraDirection);
                 if(renderResult == -1){
                     DataManager.writeFault(DataConstant.Code.SF_FAIL);
                     DataManager.writeFault(DataConstant.Code.TX_FAIL);
                 }
             }
+
 
           glStatus = 1;
 
@@ -217,25 +227,7 @@ public class CameraGLSurfaceView extends GLSurfaceView {
         }
     }
 
-    public static void setAngleOfView(int value) {
-        KLog.i("AvmRuntime 000 set sCameraDirection to " + value);
-//        Log.e("AvmRuntime", Log.getStackTraceString(new Throwable()));
-    }
 
-    public static void setAngleOfView2(int value) {
-        if (sCameraDirection != value) {
-            sCameraDirection = value;
-            KLog.i("AvmRuntime set sCameraDirection to " + value);
-        }
-    }
-
-    public static int getAngleOfView() {
-        return sCameraDirection;
-    }
-
-    public static int getLAngleOfView() {
-        return lastCeameraDirection;
-    }
 
     public class MyConfigChooser implements EGLConfigChooser {
 

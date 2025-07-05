@@ -13,6 +13,7 @@ import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_2_D_TOP;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D_LEFT_FRONT;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D_LEFT_REAR;
+import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D_REAR;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D_RIGHT_FRONT;
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D_RIGHT_REAR;
 
@@ -2484,7 +2485,7 @@ public class CameraView extends View implements LifecycleOwner {
         }
     }
 
-    private void chick3DView(String type) {
+    public void chick3DView(String type) {
         mViewCameraBinding.cameraImageLayoutLift.setVisibility(GONE);
         int BWAVM_FRONT_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(0);
         int BWAVM_REAR_CAM_ID = BvAvmJNIHelper.getInstance().bwGetCamerastatus(1);
@@ -2497,6 +2498,9 @@ public class CameraView extends View implements LifecycleOwner {
         KLog.e("chick3DView : leftFrontStatus:"+leftFrontStatus+"  rightFrontStatus:"+rightFrontStatus
         +" leftRearStatus:"+leftRearStatus +" rightRearStatus:"+rightRearStatus);
         switch (type) {
+            case CAMERA_3_D_REAR:
+                mViewCameraBinding.cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                break;
             case CAMERA_3_D:
                 camera3DShowType = -1;
                 showCameraImgStatus(mViewCameraBinding.cameraLeftFront,135,leftFrontStatus,1,false);

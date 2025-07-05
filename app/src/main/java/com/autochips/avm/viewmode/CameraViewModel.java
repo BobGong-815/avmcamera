@@ -496,12 +496,22 @@ public class CameraViewModel extends BaseCameraViewModel {
         bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
     }
 
+    public void to3DLeftFront() {
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_FRONT_3D);
+        liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
+    }
+
     //3D 左前
     public void camera3dLeftFront() {
         setRunning(true);
         AvmRuntime.self().userClick(DataDefine.EVT_CLICK_3D_LT);
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_FRONT_3D);
         liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
+    }
+
+    public void to3DRightFront() {
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_RIGHT_FRONT_3D);
+        liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_RIGHT_FRONT);
     }
 
     //3D 右前
@@ -513,12 +523,22 @@ public class CameraViewModel extends BaseCameraViewModel {
 
     }
 
+    public void to3DLeftRear() {
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_REAR_3D);
+        liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_LEFT_REAR);
+    }
+
     //3D 左后
     public void camera3dLeftRear() {
         setRunning(true);
         AvmRuntime.self().userClick(DataDefine.EVT_CLICK_3D_LB);
         CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_LEFT_REAR_3D);
         liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_LEFT_REAR);
+    }
+
+    public void to3DRightRear() {
+        CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_RIGHT_REAR_3D);
+        liveDataCamera3DTopUI.postValue(ViewSwitchManager.CAMERA_3_D_RIGHT_REAR);
     }
 
     //3D 左后

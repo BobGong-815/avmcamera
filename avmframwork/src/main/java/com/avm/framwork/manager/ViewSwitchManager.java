@@ -12,6 +12,7 @@ public class ViewSwitchManager {
     public static final String CAMERA_2_D_RIGHT = "4";//2d右视图
     public static final String CAMERA_2_D_LIFT_RIGHT = "5";//2d左右视图
 
+    public static final String CAMERA_3_D_REAR = "3d_r";//3D 无视角显示默认按钮摄像头图标
     public static final String CAMERA_3_D = "3d";//3D 无视角显示默认按钮摄像头图标
     public static final String CAMERA_3_D_LEFT_FRONT = "5";//3D左前视图
     public static final String CAMERA_3_D_RIGHT_FRONT = "6";//3D右前视图

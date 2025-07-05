@@ -1144,8 +1144,7 @@
                     android:lineHeight="51px"
                     android:text="@string/setting_transparent_chassis_infobook_title"
                     android:textColor="@color/setting_view_title_color_day"
-                    android:textSize="39px"
-                    android:textStyle="bold" />
+                    android:textSize="39px" />
 
                 <TextView
                     android:id="@+id/info_content"

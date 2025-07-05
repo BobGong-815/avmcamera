@@ -134,8 +134,14 @@ public class DataDefine {
     public final static int ACT_REFRESH_2D_LEFT_VIEW = 334;
     public final static int ACT_REFRESH_2D_RIGHT_VIEW = 335;
     public final static int ACT_REFRESH_2D_BOTTOM_VIEW = 336;
-    public final static int ACT_REFRESH_LAND_TRANSPARENCY = 337;
-    public final static int ACT_ACTIVE_2_PASSIVE = 338;
+    public final static int ACT_REFRESH_3D_LEFT_FRONT = 337;
+    public final static int ACT_REFRESH_3D_LEFT_REAR = 338;
+    public final static int ACT_REFRESH_3D_RIGHT_FRONT = 339;
+    public final static int ACT_REFRESH_3D_RIGHT_REAR = 340;
+    public final static int ACT_REFRESH_LAND_TRANSPARENCY = 341;
+    public final static int ACT_ACTIVE_2_PASSIVE = 342;
+    public final static int ACT_REFRESH_3D_FRONT = 343;
+    public final static int ACT_REFRESH_3D_REAR = 344;
     public final static int ACT_CONTINUE = 350;
 
     public static String id2String(int id) {

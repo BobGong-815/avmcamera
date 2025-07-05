@@ -74,6 +74,9 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.HAZARD_LIGHTS_STATE;
 
 
+import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D;
+import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D_REAR;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -214,10 +217,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 if (currentCarPowerMode == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_DEEP_SLEEP.getVal()) {
                     //进⼊STR
                     KLog.i("[onCarPowerServiceConnected]  进⼊STR");
+                    AvmRuntime.self().userClick(DataDefine.EVT_USER_CLICK_EXIT);
                     BvAvmJNIHelper.getInstance().bwDeleteCamera();
                 } else if (currentCarPowerMode == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.i("[onCarPowerServiceConnected]  半功能  释放资源,释放摄像头");
                     DataManager.writeFault(DataConstant.Code.GET_IN_STR);
+                    AvmRuntime.self().userClick(DataDefine.EVT_USER_CLICK_EXIT);
                     BvAvmJNIHelper.getInstance().bwDeleteCamera();
                 } else if (currentCarPowerMode == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
@@ -486,6 +491,24 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         case DataDefine.ACT_REFRESH_LAND_TRANSPARENCY:
                             CameraViewModelHelper.getInstance().setTransparentIndexTab2(msg.arg2);
                             break;
+                        case DataDefine.ACT_REFRESH_3D_LEFT_FRONT:
+                            AvmApp.getInstance().getCameraView().getViewModel().to3DLeftFront();
+                            break;
+                        case DataDefine.ACT_REFRESH_3D_LEFT_REAR:
+                            AvmApp.getInstance().getCameraView().getViewModel().to3DLeftRear();
+                            break;
+                        case DataDefine.ACT_REFRESH_3D_RIGHT_REAR:
+                            AvmApp.getInstance().getCameraView().getViewModel().to3DRightRear();
+                            break;
+                        case DataDefine.ACT_REFRESH_3D_RIGHT_FRONT:
+                            AvmApp.getInstance().getCameraView().getViewModel().to3DRightFront();
+                            break;
+                        case DataDefine.ACT_REFRESH_3D_FRONT:
+                            AvmApp.getInstance().getCameraView().chick3DView(CAMERA_3_D);
+                            break;
+                        case DataDefine.ACT_REFRESH_3D_REAR:
+                            AvmApp.getInstance().getCameraView().chick3DView(CAMERA_3_D_REAR);
+                            break;
                     }
                 } else if (msg.what == MSG_CR_CAMERA) {
                     BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
@@ -657,7 +680,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d("AvmApp", "avm is null  vehicleId & value："+vehicleId +" :"+value);
             return;
         }
-        
+
         if (vehicleId == AVM_UINM_TURN_LIGHT_SW_ST) { //转向激活
             KLog.d(" TurnLamp 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
@@ -677,7 +700,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             } else {
                 KLog.d(" TurnLamp 右边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts);
             }
-            AvmRuntime.self().inputTurnValue((Integer) value, now);
+            AvmRuntime.self().inputTurnValue((Integer) value, System.currentTimeMillis());
             if (AvmRuntime.self().isDoubleBlink()) {
                 KLog.d("TurnLamp 判断为双闪.");
                 AvmRuntime.self().doubleBlink();
