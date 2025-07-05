@@ -41,6 +41,7 @@ import com.autochips.avm.em.ViewType;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
+import com.autochips.avm.util.DataDefine;
 import com.autochips.avm.util.GlobalSetting;
 import com.autochips.avm.util.RearviewToast;
 import com.avm.framwork.manager.CanManager;
@@ -375,6 +376,42 @@ public class CameraViewModelHelper {
     mLastSetPosition = position;
   }
 
+    public void setTransparentIndexTab2(int evt) {
+        KLog.d("AvmRuntime setTransparentIndexTab2 evt is " + evt);
+        if (evt == DataDefine.EVT_OVER_SPEED) {
+            bvavmJNI.bwSetCarBottomStatus((byte) 0);
+            bvavmJNI.bwSetCarTransparency(1f);
+        } else {
+            int position;
+            try {
+                position = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS); //SystemProperties.getInt("settingRadarActivatedPanorama", 0);
+                if (position == 3 || position == 4 || position == 5) {
+                    position -= 2;
+                } else {
+                    position = 0;
+                }
+//        KLog.d("transparent chassis position is " + position);
+            } catch (Settings.SettingNotFoundException settingNotFoundException) {
+                settingNotFoundException.printStackTrace();
+                return;
+            }
+
+            if (position == 0) {
+                bvavmJNI.bwSetCarBottomStatus((byte) 0);
+                bvavmJNI.bwSetCarTransparency(1f);
+            } else if (position == 1) {
+                bvavmJNI.bwSetCarBottomStatus((byte) 1);
+                bvavmJNI.bwSetCarTransparency(0.3f);
+            } else if (position == 2) {
+                bvavmJNI.bwSetCarBottomStatus((byte) 1);
+                bvavmJNI.bwSetCarTransparency(0.15f);
+            } else {
+                bvavmJNI.bwSetCarBottomStatus((byte) 1);
+                bvavmJNI.bwSetCarTransparency(0.05f);
+            }
+        }
+    }
+
     /**
      * 车速
      *
@@ -391,7 +428,7 @@ public class CameraViewModelHelper {
         //KLog.d("车速："+val+"   isSpeedModel: "+isSpeedModel+"   speedValue: "+speedValue+"   turnValue: "+turnValue+ "  isClick:  "+isClick+"  版本号： "+ ServiceUtils.getVersionName());
 //        int turn = CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT);
         //KLog.d("车速：判断当前转向turn: "+turn);
-      setTransparentIndexTab();
+//      setTransparentIndexTab();
     }
 
     public float getSpeed() {

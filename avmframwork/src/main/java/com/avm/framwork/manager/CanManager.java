@@ -15,6 +15,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.VEHICLE_SPEED;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.ASSIST_DRIVE_PAS_BUTTON_PRESS;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AUDIO_WARNING_SOURCE;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.HAZARD_LIGHTS_STATE;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_BCS_FLWHEEL_ROTATED_DIR;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_BCS_FLWHEEL_SPD;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_BCS_FRWHEEL_ROTATED_DIR;
@@ -186,6 +187,7 @@ public class CanManager implements Handler.Callback {
 //        mRegisterId.add(EMS_FIL_VEH_LONG_ACCEL);// 纵向加速度
         mRegisterId.add(SETTINGS_TRUN_TO_MODE);// 转向模式
         mRegisterId.add(AUDIO_WARNING_SOURCE);// 灯光预警
+        mRegisterId.add(HAZARD_LIGHTS_STATE); // 双闪
 
 
         //转向灯

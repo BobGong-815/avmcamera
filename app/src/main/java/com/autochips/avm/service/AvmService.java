@@ -71,6 +71,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_380D_AVM_READ_FAIL_REASON_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_380D_AVM_READ_FAIL_REASON_RESP;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.HAZARD_LIGHTS_STATE;
 
 
 import android.annotation.SuppressLint;
@@ -164,6 +165,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static boolean isLeftScreen = false;//是否为左边的分屏显示全景
     private SplitScreenManager mSplitScreenManager;
     private ContentObserver turnActiveObserver;
+    private int doubleBlinkStep = 0;
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -469,14 +471,20 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         case DataDefine.ACT_REFRESH_TAB_INDEX:
                             AvmApp.getInstance().getCameraView().updateTabViewIndex();
                             break;
-                        case DataDefine.ACT_TO_2D_TOP_VIEW:
+                        case DataDefine.ACT_REFRESH_2D_TOP_VIEW:
                             AvmApp.getInstance().getCameraView().getViewModel().to2DUpView();
                             break;
-                        case DataDefine.ACT_TO_2D_LR_VIEW:
+                        case DataDefine.ACT_REFRESH_2D_LEFT_VIEW:
                             AvmApp.getInstance().getCameraView().getViewModel().to2DLeftView();
                             break;
-                        case DataDefine.ACT_TO_2D_BOTTOM_VIEW:
+                        case DataDefine.ACT_REFRESH_2D_RIGHT_VIEW:
+                            AvmApp.getInstance().getCameraView().getViewModel().to2DRightView();
+                            break;
+                        case DataDefine.ACT_REFRESH_2D_BOTTOM_VIEW:
                             AvmApp.getInstance().getCameraView().getViewModel().to2DBottomView();
+                            break;
+                        case DataDefine.ACT_REFRESH_LAND_TRANSPARENCY:
+                            CameraViewModelHelper.getInstance().setTransparentIndexTab2(msg.arg2);
                             break;
                     }
                 } else if (msg.what == MSG_CR_CAMERA) {
@@ -649,6 +657,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             KLog.d("AvmApp", "avm is null  vehicleId & value："+vehicleId +" :"+value);
             return;
         }
+        
         if (vehicleId == AVM_UINM_TURN_LIGHT_SW_ST) { //转向激活
             KLog.d(" TurnLamp 转向 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Integer) {
@@ -661,32 +670,57 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     turnLampChange(intValue, 0);
                 }
             }
-        } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {//左边转向灯闪s
+        } else if (vehicleId == CLUSTER_LEFT_TURN_LAMP || vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//左边转向灯闪s
             if (!(value instanceof Integer)) return;
-
-            leftTurnLChangeTime = System.currentTimeMillis();
-            leftTurnLValue = (int) value;
-            KLog.d(" TurnLamp 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts);
-            if ((leftTurnLChangeTime-rightTurnLChangeTime) < 500) { //双闪
+            if (vehicleId == CLUSTER_LEFT_TURN_LAMP) {
+                KLog.d(" TurnLamp 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts);
+            } else {
+                KLog.d(" TurnLamp 右边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts);
+            }
+            AvmRuntime.self().inputTurnValue((Integer) value, now);
+            if (AvmRuntime.self().isDoubleBlink()) {
                 KLog.d("TurnLamp 判断为双闪.");
                 AvmRuntime.self().doubleBlink();
-                return;
+            } else {
+                turnLampChange(0, 800);
+                AvmRuntime.self().updateChangeTime();
             }
-            turnLampChange(0, 800);
-            AvmRuntime.self().updateChangeTime();
-        } else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
+
+//            leftTurnLChangeTime = System.currentTimeMillis();
+//            leftTurnLValue = (int) value;
+//            KLog.d(" TurnLamp 左边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts + " , doubleBlinkStep = " + doubleBlinkStep);
+//            if ((leftTurnLChangeTime-rightTurnLChangeTime) < 500) { //双闪
+////                KLog.d("TurnLamp 判断为双闪.");
+//                if (doubleBlinkStep == 3) {
+//                    AvmRuntime.self().doubleBlink();
+//                } else {
+//                    doubleBlinkStep++;
+//                }
+//                return;
+//            }
+//            doubleBlinkStep = 0;
+//            turnLampChange(0, 800);
+//            AvmRuntime.self().updateChangeTime();
+        } /*else if (vehicleId == CLUSTER_RIGHT_TURN_LAMP) {//右边转向灯闪
             if (!(value instanceof Integer)) return;
 
             rightTurnLChangeTime = System.currentTimeMillis();
             rightTurnLValue = (int) value;
-            KLog.d("TurnLamp 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts);
+            KLog.d("TurnLamp 右边转向灯闪 , value = " + value + " , (rightTurnLChangeTime-leftTurnLChangeTime) " + (rightTurnLChangeTime-leftTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts + " , doubleBlinkStep = " + doubleBlinkStep);
             if ((rightTurnLChangeTime-leftTurnLChangeTime) < 500) { //双闪
                 KLog.d("TurnLamp 判断为双闪.");
-                AvmRuntime.self().doubleBlink();
+                if (doubleBlinkStep == 3) {
+                    AvmRuntime.self().doubleBlink();
+                } else {
+                    doubleBlinkStep++;
+                }
                 return;
             }
+            doubleBlinkStep = 0;
             turnLampChange(0, 800);
             AvmRuntime.self().updateChangeTime();
+        }*/ else if (vehicleId == HAZARD_LIGHTS_STATE) {
+            KLog.d(" 双闪 vehicleId = " + vehicleId + "  ,value = " + value);
         } else if (vehicleId == VEHICLE_SPEED) {// 车速
             //KLog.d(" 车速 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Float) {
@@ -699,6 +733,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             CameraViewModelHelper.getInstance().angleSteel();
         } else if (vehicleId == MIRROR_FOLD_UNFOLD_STATUS) { // 后视镜折叠
             KLog.d(" 后视镜折叠 ....  ..... " + value);
+            CameraViewModelHelper.getInstance().mirrorFoldUnFoldStatus(value);
         } else if (vehicleId == SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE) { // 后视下翻
             CameraViewModelHelper.getInstance().mirrorAutomaticStatus();
         } else if (vehicleId == CLUSTER_VCU_GEAR_LVL_DISP) {// 挡位
@@ -759,11 +794,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     }
 
     @Override
-    public void onEnter(int act) {
+    public void onEnter(int act, int parm) {
         KLog.d("onEnter -> action : " + DataDefine.id2String(act));
         Message message = Message.obtain();
         message.what = MSG_ACTION_ENTER;
         message.arg1 = act;
+        message.arg2 = parm;
         mHandler.sendMessage(message);
     }
 
@@ -1289,6 +1325,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     CameraGLSurfaceView.setAngleOfView2(signal);
                 } else if (testValue == 11) {
                     int speedValue = intent.getIntExtra("speed", -1);
+                    KLog.d("AvmRuntime recv speed : " + speedValue);
                     AvmRuntime.self().speedChange(speedValue);
                     CameraViewModelHelper.getInstance().setSpeed(speedValue);
                 } else if (testValue == 100) {

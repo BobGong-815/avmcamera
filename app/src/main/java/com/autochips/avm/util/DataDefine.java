@@ -76,7 +76,6 @@ public class DataDefine {
     public final static int EVT_ACTIVE_EXIT = 88;
     public final static int EVT_OVER_SPEED = 89;  //超速
     public final static int EVT_REDUCE_SPEED = 90; // 小卡片退出降速
-    public final static int EVT_REDUCE_SPEED2 = 91; // 全屏退出降速
 //    public final static int EVT_OBSTACLE_DISAPPEAR = 87;
     public final static int EVT_CLICK_LEFT_CARD = 92;
     public final static int EVT_KEEP_30S = 93;
@@ -98,7 +97,7 @@ public class DataDefine {
     public final static int EVT_CLICK_3D_RT = 109;
     public final static int EVT_CLICK_3D_LB = 110;
     public final static int EVT_CLICK_3D_RB = 111;
-    public final static int EVT_DOUBLE_BLINK = 112;
+    public final static int EVT_DOUBLE_BLINK = 112; // 双闪
 
     public final static int SWITCH_RADAR_ACTIVE = 200;
     public final static int SWITCH_TURN_LAMP_ACTIVE = 201;
@@ -131,9 +130,13 @@ public class DataDefine {
     public final static int ACT_ENABLE_TIMING = 330;
     public final static int ACT_DISABLE_TIMING = 331;
     public final static int ACT_REFRESH_TAB_INDEX = 332;
-    public final static int ACT_TO_2D_TOP_VIEW = 333;
-    public final static int ACT_TO_2D_LR_VIEW = 334;
-    public final static int ACT_TO_2D_BOTTOM_VIEW = 335;
+    public final static int ACT_REFRESH_2D_TOP_VIEW = 333;
+    public final static int ACT_REFRESH_2D_LEFT_VIEW = 334;
+    public final static int ACT_REFRESH_2D_RIGHT_VIEW = 335;
+    public final static int ACT_REFRESH_2D_BOTTOM_VIEW = 336;
+    public final static int ACT_REFRESH_LAND_TRANSPARENCY = 337;
+    public final static int ACT_ACTIVE_2_PASSIVE = 338;
+    public final static int ACT_CONTINUE = 350;
 
     public static String id2String(int id) {
         switch (id) {
@@ -221,10 +224,6 @@ public class DataDefine {
                 return "EVT_OVER_SPEED";
             case EVT_REDUCE_SPEED:
                 return "EVT_REDUCE_SPEED";
-//            case EVT_REDUCE_SPEED2:
-//                return "EVT_REDUCE_SPEED2";
-//            case EVT_OBSTACLE_DISAPPEAR:
-//                return "EVT_OBSTACLE_DISAPPEAR";
             case EVT_CLICK_LEFT_CARD:
                 return "EVT_CLICK_LEFT_CARD";
             case EVT_KEEP_30S:
@@ -270,7 +269,7 @@ public class DataDefine {
             case ACT_ACTIVE_DUAL_CARD:
                 return "ACT_ACTIVE_DUAL_CARD";
             case ACT_2D_LR_FRONT:
-                return "ACT_2D_LR";
+                return "ACT_2D_LR_FRONT";
             case ACT_PREV_VIEW_ANGLE:
                 return "ACT_PREV_VIEW_ANGLE";
             case STS_SENSOR_RADAR_TURN_LAMP:
@@ -327,6 +326,26 @@ public class DataDefine {
                 return "STS_REDUCE_SPEED_RESUME";
             case ACT_REFRESH_TAB_INDEX:
                 return "ACT_REFRESH_TAB_INDEX";
+            case SWITCH_RADAR_ACTIVE:
+                return "SWITCH_RADAR_ACTIVE";
+            case SWITCH_DELAY_30S_EXIT:
+                return "SWITCH_DELAY_30S_EXIT";
+            case SWITCH_TURN_LAMP_ACTIVE:
+                return "SWITCH_TURN_LAMP_ACTIVE";
+            case ACT_CONTINUE:
+                return "ACT_CONTINUE";
+            case ACT_REFRESH_LAND_TRANSPARENCY:
+                return "ACT_REFRESH_LAND_TRANSPARENCY";
+            case ACT_ACTIVE_2_PASSIVE:
+                return "ACT_ACTIVE_2_PASSIVE";
+            case ACT_REFRESH_2D_LEFT_VIEW:
+                return "ACT_REFRESH_2D_LEFT_VIEW";
+            case ACT_REFRESH_2D_RIGHT_VIEW:
+                return "ACT_REFRESH_2D_RIGHT_VIEW";
+            case ACT_REFRESH_2D_TOP_VIEW:
+                return "ACT_REFRESH_2D_TOP_VIEW";
+            case ACT_REFRESH_2D_BOTTOM_VIEW:
+                return "ACT_REFRESH_2D_BOTTOM_VIEW";
         }
 
         return String.valueOf(id);

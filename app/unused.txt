@@ -6162,8 +6162,10 @@ com.autochips.avm.util.DataDefine:
     public static final int ACT_3D_REAR_VIEW
     public static final int ACT_3D_RIGHT_FRONT
     public static final int ACT_3D_RIGHT_REAR
+    public static final int ACT_ACTIVE_2_PASSIVE
     public static final int ACT_ACTIVE_DUAL_CARD
     public static final int ACT_AERIAL_VIEW
+    public static final int ACT_CONTINUE
     public static final int ACT_DISABLE_TIMING
     public static final int ACT_ENABLE_TIMING
     public static final int ACT_EXIT
@@ -6171,10 +6173,12 @@ com.autochips.avm.util.DataDefine:
     public static final int ACT_LEFT_CARD
     public static final int ACT_PASSIVE_DUAL_CARD
     public static final int ACT_PREV_VIEW_ANGLE
+    public static final int ACT_REFRESH_2D_BOTTOM_VIEW
+    public static final int ACT_REFRESH_2D_LEFT_VIEW
+    public static final int ACT_REFRESH_2D_RIGHT_VIEW
+    public static final int ACT_REFRESH_2D_TOP_VIEW
+    public static final int ACT_REFRESH_LAND_TRANSPARENCY
     public static final int ACT_REFRESH_TAB_INDEX
-    public static final int ACT_TO_2D_BOTTOM_VIEW
-    public static final int ACT_TO_2D_LR_VIEW
-    public static final int ACT_TO_2D_TOP_VIEW
     public static final int ACT_WIDE_ANGLE_FRONT
     public static final int ACT_WIDE_ANGLE_REAR
     public static final int EVT_ACTIVE_EXIT
@@ -6195,7 +6199,6 @@ com.autochips.avm.util.DataDefine:
     public static final int EVT_RADAR_RESET
     public static final int EVT_RADAR_TURN_LAMP_ACTIVE
     public static final int EVT_REDUCE_SPEED
-    public static final int EVT_REDUCE_SPEED2
     public static final int EVT_SHIFT_D
     public static final int EVT_SHIFT_D_OVER_SPEED
     public static final int EVT_SHIFT_N
