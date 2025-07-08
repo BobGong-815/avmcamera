@@ -150,6 +150,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static int MSG_DEL_CAMERA = 4;
     public static int MSG_CLOSE_RVC = 5;
     private final int MSG_TURN_LAMP_CHANGE = 22;
+    private final int MSG_END_DOUBLE_BLINK = 23;
     public static int mRvcState = 0x0;
 
     private final String BR_GEAR_STATUS = "com.avm.define.GEAR_STATUS";
@@ -371,6 +372,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_MANUAL_FRONT);
                             break;
                         case DataDefine.ACT_3D_FRONT_VIEW:
+                            BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
                             CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_REAR_3D); //确定FRONT 对应REAR
                             break;
                         case DataDefine.ACT_3D_REAR_VIEW:
@@ -531,6 +533,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0, 0x2);
                 } else if (msg.what == MSG_TURN_LAMP_CHANGE) {
                     AvmRuntime.self().turnLampChange(msg.arg1);
+                } else if (msg.what == MSG_END_DOUBLE_BLINK) {
+                    AvmRuntime.self().endDoubleBlink();
                 }
             }
         };
@@ -636,7 +640,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     //更改显示位置
     private void changeScreenDirection(){
         KLog.i("changeScreenDirection  mIsStartStatus:"+mIsStartStatus +" isLeftScreen:"+isLeftScreen +" mIsScreen:"+mIsScreen);
-        if (AvmApp.getInstance().getCameraView() != null && AvmApp.getInstance().getCameraView().isSmartWin) {
+        if (AvmApp.getInstance().getCameraView() != null
+                && AvmApp.getInstance().getCameraView().isSmartWin
+                && !AvmApp.getInstance().getCameraView().isFirstOpen) {
             //存在左右分屏切换，需要更改吸附位置
             mHandler.post(() -> AvmApp.getInstance().getCameraView().snapToPosition());
         }
@@ -704,6 +710,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (AvmRuntime.self().isDoubleBlink()) {
                 KLog.d("TurnLamp 判断为双闪.");
                 AvmRuntime.self().doubleBlink();
+                endDoubleBlink();
             } else {
                 turnLampChange(0, 800);
                 AvmRuntime.self().updateChangeTime();
@@ -808,6 +815,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         message.arg1 = direction;
         mHandler.sendMessageDelayed(message, delay);
         mDirection = direction;
+    }
+
+    public void endDoubleBlink() {
+        mHandler.removeMessages(MSG_END_DOUBLE_BLINK);
+        mHandler.sendEmptyMessageDelayed(MSG_END_DOUBLE_BLINK, 600);
     }
 
     public void setWheelAngle(Object value) {
@@ -1351,6 +1363,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     KLog.d("AvmRuntime recv speed : " + speedValue);
                     AvmRuntime.self().speedChange(speedValue);
                     CameraViewModelHelper.getInstance().setSpeed(speedValue);
+                } else if (testValue == 12) {
+                    changeScreenDirection();
                 } else if (testValue == 100) {
                     int vehicleId = intent.getIntExtra("vehicleId", -1);
                     int vehicleValue = intent.getIntExtra("vehicleValue", -1);

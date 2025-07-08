@@ -195,7 +195,7 @@ public class CameraView extends View implements LifecycleOwner {
     /**
      * 更新窗口
      */
-    private boolean isFirstOpen = false;
+    public boolean isFirstOpen = false;
     public void updateWind(float alpha,int wh) {
         isFirstOpen = true;
         showSmartWin();
@@ -411,7 +411,7 @@ public class CameraView extends View implements LifecycleOwner {
     @SuppressLint("WrongConstant")
     private void showBottomView(){
 
-      KLog.d("窗口层级 mWindowLpsBottom："+mWindowLps);
+      KLog.d(isShowing + " isShowing 窗口层级 mWindowLpsBottom："+mWindowLps);
       if (isShowing){
         mWindowLps.alpha = 1.0f;
         if (isSmartWin)
@@ -1217,8 +1217,8 @@ public class CameraView extends View implements LifecycleOwner {
      * 显示1/3 屏
      */
     public void showSmartWin() {
-        Log.e("AVM_DEBUG", Log.getStackTraceString(new Throwable()));
-        Log.i(TAG, "valGear showSmartWin: 显示1/3屏幕 mIsStartStatus:"+AvmService.mIsStartStatus +"mIsScreen:"+AvmService.mIsScreen+" isLeftScreen:"+AvmService.isLeftScreen);
+//        Log.e("AVM_DEBUG", Log.getStackTraceString(new Throwable()));
+        Log.i(TAG, "valGear AvmRuntime showSmartWin: 显示1/3屏幕 mIsStartStatus:"+AvmService.mIsStartStatus +"mIsScreen:"+AvmService.mIsScreen+" isLeftScreen:"+AvmService.isLeftScreen);
         if (isSmartWin || isFullWin) {
             Log.i(TAG, "showSmartWin: 已经显示1/3屏幕");
             return;
@@ -1277,7 +1277,7 @@ public class CameraView extends View implements LifecycleOwner {
      * 如果，全屏显示，则不显示小屏
      */
     public void showFullWin() {
-        Log.i(TAG, isSmartWin + " valGear showFullWin: 全屏显示  t底部透明 " + isFullWin +" 第一帧CameraGLSurfaceView："+CameraGLSurfaceView.glStatus );
+        Log.i(TAG, isSmartWin + " valGear AvmRuntime showFullWin: 全屏显示  t底部透明 " + isFullWin +" 第一帧CameraGLSurfaceView："+CameraGLSurfaceView.glStatus );
 //        if(!isFullWin){
 //            showSmartWin();
 //            return;
@@ -1301,6 +1301,7 @@ public class CameraView extends View implements LifecycleOwner {
 
         mWindowLps.x = 0;
         mWindowLps.y = 0;
+        mWindowLps.height = mContext.getResources().getDimensionPixelSize(R.dimen.screen_height);
 //        AvmApp.getInstance().getViewBottom().showInit();
 //        mWindowLps.flags = WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
 //                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
@@ -1368,7 +1369,7 @@ public class CameraView extends View implements LifecycleOwner {
     private  boolean isSmartWinToFull = false;
     public void showComm() {
         showRootView();
-        Log.i(TAG, " 开始 显示AVM showComm t底部透明： " + mWindowLps);
+        Log.i(TAG, isFirstOpen + " isFirstOpen AvmRuntime 开始 显示AVM showComm t底部透明： " + mWindowLps);
         DataManager.writeFault(DataConstant.Code.APK_OPEN);
         DataManager.writeFault(DataConstant.Code.BP_SHOW);
 //        isSmartWin = false;
@@ -1567,7 +1568,7 @@ public class CameraView extends View implements LifecycleOwner {
     public void dismissView(String position) {
 //        Log.e("AvmRuntime", Log.getStackTraceString(new Throwable()));
         tabSelectFromUser = false;
-        KLog.i(position + " position dismissView isShowing = " + isShowing+"turnValue:"+CameraViewModelHelper.getInstance().turnValue);
+        KLog.i(position + " position AvmRuntime dismissView isShowing = " + isShowing+"turnValue:"+CameraViewModelHelper.getInstance().turnValue);
         if(position != null && position.contains("转向延时500ms退出") && (CameraViewModelHelper.getInstance().turnValue == 1
                 || CameraViewModelHelper.getInstance().turnValue == 2) && isSmartWin){
             return;
@@ -1903,6 +1904,7 @@ public class CameraView extends View implements LifecycleOwner {
         } else {
             targetX = AvmService.mIsStartStatus && AvmService.mMapSpeedStatus ? WINDOW_SHOW_RIGHT : AvmService.mIsStartStatus ? WINDOW_SHOW_MIDDLE : WINDOW_SHOW_LEFT; // 正常模式
         }
+
         // 动画过渡到目标位置
         int startX = mWindowLps.x;
         int startY = mWindowLps.y;

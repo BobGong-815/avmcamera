@@ -352,6 +352,8 @@ public class DataDefine {
                 return "ACT_REFRESH_2D_TOP_VIEW";
             case ACT_REFRESH_2D_BOTTOM_VIEW:
                 return "ACT_REFRESH_2D_BOTTOM_VIEW";
+            case ACT_REFRESH_3D_LEFT_REAR:
+                return "ACT_REFRESH_3D_LEFT_REAR";
         }
 
         return String.valueOf(id);

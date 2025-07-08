@@ -344,6 +344,9 @@ public class CameraViewModelHelper {
 //    }
       if (speedValue <= 0.3 && position != 0) {
           return;
+      } else if (speedValue >= 30) {
+          bvavmJNI.bwSetCarBottomStatus((byte) 0);
+          bvavmJNI.bwSetCarTransparency(1f);
       }
 //    if(position == 0 || speedValue < 1){
 //        //表示未激活不透明
@@ -377,6 +380,10 @@ public class CameraViewModelHelper {
   }
 
     public void setTransparentIndexTab2(int evt) {
+        if (!CameraView.isShowing){
+            return;
+        }
+
         KLog.d("AvmRuntime setTransparentIndexTab2 evt is " + evt);
         if (evt == DataDefine.EVT_OVER_SPEED) {
             bvavmJNI.bwSetCarBottomStatus((byte) 0);
@@ -428,7 +435,7 @@ public class CameraViewModelHelper {
         //KLog.d("车速："+val+"   isSpeedModel: "+isSpeedModel+"   speedValue: "+speedValue+"   turnValue: "+turnValue+ "  isClick:  "+isClick+"  版本号： "+ ServiceUtils.getVersionName());
 //        int turn = CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT);
         //KLog.d("车速：判断当前转向turn: "+turn);
-//      setTransparentIndexTab();
+      setTransparentIndexTab();
     }
 
     public float getSpeed() {
@@ -972,7 +979,7 @@ public class CameraViewModelHelper {
 
     //3D车模灯光交互
     public void showLight3DModel(int type, int value) {
-//        KLog.d("3D 灯光showLight3DModel： type:" + type + " value: " + value);
+        KLog.d("3D 灯光showLight3DModel： type:" + type + " value: " + value);
         int highBeamStatus = CanManager.getInstance().getIntStatus(BCM_HIGH_BEAM_STATUS, 0);//远光灯
         int lowBeamStatus = CanManager.getInstance().getIntStatus(BCM_LOW_BEAM_STATUS, 0);//近光灯
         int brakeLight = CanManager.getInstance().getIntStatus(AVM_EL_SIDE_BRKLIGHT_CTRL_CMD, 0);//刹车灯
@@ -1003,7 +1010,9 @@ public class CameraViewModelHelper {
         }*/
         //50毫秒内如果左右转向都有，就视为双闪
         mHandler.postDelayed(() -> {
+            Log.d("3D_LIGHT", "leftFogLamp is " + leftFogLamp + " , rightFogLamp is " + rightFogLamp);
             if (leftFogLamp == 1 && rightFogLamp == 1) {
+                KLog.d("3D_LIGHT", "1111111111111111111");
                 if(AvmApp.VEHICLE_PLATFORM != AvmApp.IS_AY5){
                     int[] lightArray1 = {highBeamStatus, lowBeamStatus, readFog, parkingLamp, 0, 1, brakeLight, reverseLight};
                     bvavmJNI.bwSetLampStatus2(lightArray1);
@@ -1012,6 +1021,7 @@ public class CameraViewModelHelper {
                 }
             } else if (leftFogLamp == 0 && rightFogLamp == 0) {
                 //KLog.d("3D 灯光 leftFogLamp bwSetLampStatus 之前:" + leftFogLamp);
+                Log.d("3D_LIGHT", "222222222222222");
                 if(AvmApp.VEHICLE_PLATFORM != AvmApp.IS_AY5){
                     int[] lightArray0 = {highBeamStatus, lowBeamStatus, readFog, parkingLamp, 0, 0, brakeLight, reverseLight};
                     bvavmJNI.bwSetLampStatus2(lightArray0);
@@ -1021,6 +1031,7 @@ public class CameraViewModelHelper {
 
             } else if (leftFogLamp == 1 && rightFogLamp == 0) {
                 //KLog.d("3D 灯光 leftFogLamp bwSetLampStatus show之前:" + leftFogLamp);
+                Log.d("3D_LIGHT", "3333333333333333");
                 if(AvmApp.VEHICLE_PLATFORM != AvmApp.IS_AY5){
                     int[] lightArray2 = {highBeamStatus, lowBeamStatus, readFog, parkingLamp, 0, 2, brakeLight, reverseLight};
                     bvavmJNI.bwSetLampStatus2(lightArray2);
@@ -1028,6 +1039,7 @@ public class CameraViewModelHelper {
                     bvavmJNI.bwSetLampStatus((byte) highBeamStatus, (byte) lowBeamStatus, (byte) readFog, (byte) parkingLamp, (byte) 0, (byte) 2, (byte) brakeLight);
                 }
             } else if (leftFogLamp == 0 && rightFogLamp == 1) {
+                Log.d("3D_LIGHT", "4444444444444");
                 if(AvmApp.VEHICLE_PLATFORM != AvmApp.IS_AY5){
                     int[] lightArray3 = {highBeamStatus, lowBeamStatus, readFog, parkingLamp, 0, 3, brakeLight, reverseLight};
                     bvavmJNI.bwSetLampStatus2(lightArray3);

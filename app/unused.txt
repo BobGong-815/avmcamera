@@ -6263,7 +6263,6 @@ com.autochips.avm.util.DataDefine:
 com.autochips.avm.util.GlobalSetting
 com.autochips.avm.util.SystemProperties:
     private static final java.lang.String TAG
-com.autochips.avm.util.Utils
 com.autochips.avm.viewmode.CameraViewModel:
     private java.util.Timer testTimer
 com.avm.framwork.BuildConfig
