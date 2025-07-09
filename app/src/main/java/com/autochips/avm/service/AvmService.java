@@ -809,12 +809,16 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
     private int mDirection = -1;
     public void turnLampChange(int direction, long delay) {
-        mHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
-        Message message = Message.obtain();
-        message.what = MSG_TURN_LAMP_CHANGE;
-        message.arg1 = direction;
-        mHandler.sendMessageDelayed(message, delay);
-        mDirection = direction;
+        if (direction != 0) {
+            AvmRuntime.self().turnLampChange(direction);
+        } else {
+            mHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
+            Message message = Message.obtain();
+            message.what = MSG_TURN_LAMP_CHANGE;
+            message.arg1 = direction;
+            mHandler.sendMessageDelayed(message, delay);
+            mDirection = direction;
+        }
     }
 
     public void endDoubleBlink() {

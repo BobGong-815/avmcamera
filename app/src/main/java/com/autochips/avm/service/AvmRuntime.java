@@ -74,20 +74,20 @@ public class AvmRuntime {
 //                new int[]{DataDefine.EVT_OVER_SPEED, DataDefine.EVT_REDUCE_SPEED},
 //                null,
 //                new int[]{DataDefine.ACT_CONTINUE, DataDefine.ACT_REFRESH_LAND_TRANSPARENCY}));
-        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_ACTIVE_DUAL_CARD},// 任何情况下，点x都可以退出AVM
-                new int[] {DataDefine.STS_GEAR_D, DataDefine.STS_GEAR_N},
+        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_ACTIVE_DUAL_CARD},
+                new int[] {DataDefine.STS_GEAR_D, DataDefine.STS_GEAR_N, DataDefine.STS_GEAR_R},
                 null,
                 null,
                 new int[]{DataDefine.EVT_SHIFT_P},
                 null,
                 new int[]{DataDefine.ACT_CONTINUE, DataDefine.ACT_ACTIVE_2_PASSIVE}));
-        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_ACTIVE_DUAL_CARD},// 任何情况下，点x都可以退出AVM
-                new int[] {DataDefine.STS_GEAR_D, DataDefine.STS_GEAR_N, DataDefine.STS_GEAR_P},
-                null,
-                null,
-                new int[]{DataDefine.EVT_SHIFT_R},
-                null,
-                new int[]{DataDefine.ACT_CONTINUE, DataDefine.ACT_ACTIVE_2_PASSIVE}));
+//        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_ACTIVE_DUAL_CARD},// 任何情况下，点x都可以退出AVM
+//                new int[] {DataDefine.STS_GEAR_D, DataDefine.STS_GEAR_N, DataDefine.STS_GEAR_P},
+//                null,
+//                null,
+//                new int[]{DataDefine.EVT_SHIFT_R},
+//                null,
+//                new int[]{DataDefine.ACT_CONTINUE, DataDefine.ACT_ACTIVE_2_PASSIVE}));
         configTable.add(new CfgItem(null,
                 new int[] {DataDefine.STS_GEAR_R},
                 null,
@@ -96,7 +96,7 @@ public class AvmRuntime {
                 null,
                 new int[]{DataDefine.ACT_CONTINUE, DataDefine.ACT_DISABLE_TIMING}));
         configTable.add(new CfgItem(null,
-                new int[] {DataDefine.STS_GEAR_R},
+                null,
                 null,
                 null,
                 new int[] {DataDefine.EVT_SHIFT_P, DataDefine.EVT_SHIFT_D, DataDefine.EVT_SHIFT_N},
@@ -138,7 +138,7 @@ public class AvmRuntime {
                 null,
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_REAR_VIEW}));
 
-        configTable.add(new CfgItem(new int[]{DataDefine.STS_FV_STATE_LEFT_CARD},
+        configTable.add(new CfgItem(null,
                 null,
                 null,
                 null,
@@ -188,13 +188,20 @@ public class AvmRuntime {
                 new int[]{DataDefine.EVT_RADAR_ACTIVE},
                 new int[] {DataDefine.SWITCH_RADAR_ACTIVE},
                 new int[]{DataDefine.ACT_LEFT_CARD, DataDefine.ACT_AERIAL_VIEW}));
-        configTable.add(new CfgItem(null,
+        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_NON, DataDefine.STS_FV_STATE_LEFT_CARD},
                 null,
                 null,
                 null,
                 new int[]{DataDefine.EVT_SHIFT_R,DataDefine.EVT_SHIFT_RVC_D,DataDefine.EVT_SHIFT_RVC_N},
                 null,
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_REAR_VIEW}));
+        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_PASSIVE_DUAL_CARD, DataDefine.STS_FV_STATE_ACTIVE_DUAL_CARD},
+                null,
+                null,
+                null,
+                new int[]{DataDefine.EVT_SHIFT_R,DataDefine.EVT_SHIFT_RVC_D,DataDefine.EVT_SHIFT_RVC_N},
+                null,
+                new int[]{DataDefine.ACT_REFRESH_TAB_INDEX, DataDefine.ACT_2D_REAR_VIEW}));
         configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_NON},// 1
                 new int[] {-1*DataDefine.STS_GEAR_R},
                 new int[] {DataDefine.STS_SENSOR_TURN_LAMP_LEFT},
