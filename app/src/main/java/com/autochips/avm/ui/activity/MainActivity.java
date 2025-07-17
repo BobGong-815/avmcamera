@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         }
         Log.d(TAG, "new onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
         if (AvmApp.getInstance().getCameraView().getRootView() != null) {
-            Log.d(TAG, "123 CameraView.windowSurfaceControl is 123" + CameraView.windowSurfaceControl.toString());
+            Log.d(TAG, "123 CameraView.windowSurfaceControl is 123" + CameraView.windowSurfaceControl);
             if (CameraView.windowSurfaceControl != null && CameraView.windowSurfaceControl.isValid()) {
                 setSCLayer(CameraView.windowSurfaceControl, 0);
             }

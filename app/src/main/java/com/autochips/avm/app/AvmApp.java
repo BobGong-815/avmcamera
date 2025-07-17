@@ -76,7 +76,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         //初始化AVM首页弹窗
         //数据埋点
         //DataManager.init(this);
-        Thread.setDefaultUncaughtExceptionHandler(this);
+//        Thread.setDefaultUncaughtExceptionHandler(this);
         ServiceUtils.startCaptureService(this, AvmService.class);
 //        mHandler.postDelayed(()->{
 //            closeAndShowAvm();
