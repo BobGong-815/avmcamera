@@ -12,6 +12,7 @@ import android.view.SurfaceControl;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     private static boolean isOnResume = false;
     private static final int SEND_AVM_STATE = 1001;
 
+    private TextView textView = null;
     public static MainActivity inStance;
     private static final Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -109,24 +111,26 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         super.onPause();
         AvmApp.getInstance().getCameraView().hideView();
         mHandler.removeCallbacksAndMessages("setRelativeLayer");
-        Log.i(TAG, "MainActivity::onPause()");
+        Log.i(TAG, "MainActivity::onPause() isActivityTransitionRunning() " + isActivityTransitionRunning());
     }
 
     protected void onStop() {
         super.onStop();
+        Log.d("AvmRuntime", "MainActivity onStop() isActivityTransitionRunning() " + isActivityTransitionRunning());
         finish();
     }
 
     protected void onDestroy() {
         super.onDestroy();
         Log.i("AvmRuntime", "onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
+        Log.d("Aa", " textView .text is " + textView.getText());
         mHandler.removeCallbacksAndMessages("setRelativeLayer");
         if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
             AvmRuntime.self().artificialExit(false);
         }
         if (AvmApp.getInstance().getCameraView().getRootView() != null) {
             Log.i("AvmRuntime", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
-            if (CameraView.windowSurfaceControl != null) {
+            if (CameraView.windowSurfaceControl != null && CameraView.windowSurfaceControl.isValid()) {
                 setSCLayer(CameraView.windowSurfaceControl, 0);
             }
         }

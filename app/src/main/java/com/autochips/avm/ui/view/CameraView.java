@@ -824,7 +824,7 @@ public class CameraView extends View implements LifecycleOwner {
             } else if (viewPosition == 1) {
                 status = bvavmJNI.BW_FRONT_3D;
                 chick3DView(CAMERA_3_D);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rback:R.mipmap.ic_camera_card_back));
             } else if (viewPosition == 2) {
 //                status = bvavmJNI.BW_2D_REAR_120;
                 if (AvmRuntime.self().isRearGearSts()) {
@@ -857,7 +857,7 @@ public class CameraView extends View implements LifecycleOwner {
 //            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
             chick3DView(CAMERA_3_D);
 //            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
-            cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+            cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rback:R.mipmap.ic_camera_card_back));
         } else if (outsideTabIndex == 2) {
             //            status = bvavmJNI.BW_2D_REAR_UNDISTORT;
             //            bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
@@ -1419,6 +1419,34 @@ public class CameraView extends View implements LifecycleOwner {
         }, 200);
     }
 
+    public void reloadLanauge(){
+        segmentWideAngle.setTabData(getWideAngleValueArray());
+        segmentTab.setTabData(getDescValueArray());
+
+        rearviewMirrorView.reloadLanauge();
+        settingView.reloadLanauge();
+        Locale current = AvmApp.getInstance().getResources().getConfiguration().locale;
+        String language = current.getLanguage();
+        KLog.d(" 当前language："+language);
+        ViewGroup.LayoutParams layoutParams = infobook.getLayoutParams();
+        layoutParams.height = language.equals("vi") || language.equals("ms") || language.equals("en")
+                || language.equals("th") || language.equals("de") || language.equals("nb")
+                || language.equals("fr") || language.equals("it") || language.equals("es") || language.equals("esrUs") || language.equals("nl")
+                || language.equals("sv") || language.equals("pt") || language.equals("ptrBR") || language.equals("ar") ? 270 : language.equals("ru") ? 300 : 240;
+        infobook.setLayoutParams(layoutParams);
+
+        KLog.d("infobook.getVisibility() : " + infobook.getVisibility());
+        infoOk.setText(R.string.setting_transparent_chassis_infobook_ok);
+        if (infobook.getVisibility() == VISIBLE) {
+            infobook.setVisibility(GONE);
+            infoBg.setVisibility(GONE);
+            liftBg.setVisibility(GONE);
+        }
+        tvBreakdown.setText(R.string.camera_breakdown);
+        settingView.setViewRefresh(language.equals("ar") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+        rearviewMirrorView.setViewRefresh(language.equals("ar") ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+    }
+
     public void showView() {
         if (isShowing) {
             return;
@@ -1764,19 +1792,19 @@ public class CameraView extends View implements LifecycleOwner {
                             KLog.i("滑动车模角度touchPos  " + touchPos);
                             if (touchIndex != touchPos) {
                                 if (touchPos == 1) {
-                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftfront));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rleftfront:R.mipmap.ic_camera_card_leftfront));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_FRONT);
                                 } else if (touchPos == 2) {
-                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftback));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rleftback:R.mipmap.ic_camera_card_leftback));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_LEFT_REAR);
                                 } else if (touchPos == 3) {
-                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rrightfront:R.mipmap.ic_camera_card_rightfront));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_RIGHT_FRONT);
                                 } else if (touchPos == 4) {
-                                    cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightback));
+                                    cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rrightback:R.mipmap.ic_camera_card_rightback));
                                     hidViewButtonTimer.start(1);
                                     chick3DView(ViewSwitchManager.CAMERA_3_D_RIGHT_REAR);
                                 }
@@ -2235,7 +2263,7 @@ public class CameraView extends View implements LifecycleOwner {
                 cameraBottom.setRotation(180);
                 cameraRight.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_default));
                 cameraRight.setRotation(90);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rback:R.mipmap.ic_camera_card_back));
                 cameraImageLayoutLift.setVisibility(GONE);
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_FRONT_CAM_ID == 0) {
@@ -2252,7 +2280,7 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
                 showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_front));
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_front));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rfront:R.mipmap.ic_camera_card_front));
                 cameraImageLayoutLift.setVisibility(GONE);
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_FRONT_CAM_ID == 0) {
@@ -2269,14 +2297,14 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
                 showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left));
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_cameraview_card_left_2:R.mipmap.ic_camera_card_right));
                 if (!isSmartWin) {
                     cameraImageLayoutLift.setVisibility(VISIBLE);
                 } else {
                     cameraImageLayoutLift.setVisibility(GONE);
                 }
 
-                cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
+                cameraIvLift.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_right:R.mipmap.ic_cameraview_card_rleft_2));
                 mMainHandler.postDelayed(() -> {
                     if(BWAVM_RIGHT_CAM_ID==0 || BWAVM_LEFT_CAM_ID ==0){
                         cameraBreakdown.setVisibility(View.GONE);
@@ -2292,7 +2320,7 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
                 showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_rear));
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_back));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rback:R.mipmap.ic_camera_card_back));
                 cameraImageLayoutLift.setVisibility(GONE);
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_REAR_CAM_ID == 0) {
@@ -2309,13 +2337,13 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraLift,270,BWAVM_LEFT_CAM_ID,2,true);
                 showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 // CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_right));
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_cameraview_card_left_2:R.mipmap.ic_camera_card_right));
                 if (!isSmartWin) {
                     cameraImageLayoutLift.setVisibility(VISIBLE);
                 } else {
                     cameraImageLayoutLift.setVisibility(GONE);
                 }
-                cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
+                cameraIvLift.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_right:R.mipmap.ic_cameraview_card_left_2));
                 mMainHandler.postDelayed(() -> {
                     if(BWAVM_RIGHT_CAM_ID==0 || BWAVM_LEFT_CAM_ID ==0){
                         cameraBreakdown.setVisibility(View.GONE);
@@ -2332,13 +2360,13 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRight,90,BWAVM_RIGHT_CAM_ID,3,true);
                 //CustomToast.showToast(AvmApp.getInstance().getString(R.string.translate_left_right));
 
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_right));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_cameraview_card_left_2:R.mipmap.ic_camera_card_right));
                 if (!isSmartWin) {
                     cameraImageLayoutLift.setVisibility(VISIBLE);
                 } else {
                     cameraImageLayoutLift.setVisibility(GONE);
                 }
-                cameraIvLift.setImageDrawable(mContext.getDrawable(R.mipmap.ic_cameraview_card_left_2));
+                cameraIvLift.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_right:R.mipmap.ic_cameraview_card_left_2));
                 mMainHandler.postDelayed(() -> {
                     if (BWAVM_RIGHT_CAM_ID == 0 || BWAVM_LEFT_CAM_ID == 0) {
                         cameraBreakdown.setVisibility(View.GONE);
@@ -2376,8 +2404,11 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(AvmRuntime.self().isRearGearSts() ? R.mipmap.ic_camera_card_back
-                        : R.mipmap.ic_camera_card_front));
+                int drawableId = AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rback:R.mipmap.ic_camera_card_back;
+                if (!AvmRuntime.self().isRearGearSts()) {
+                    drawableId = AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rfront:R.mipmap.ic_camera_card_front;
+                }
+                cameraIv.setImageDrawable(mContext.getDrawable(drawableId));
                 break;
             case CAMERA_3_D_LEFT_FRONT:
                 camera3DShowType = 1;
@@ -2385,7 +2416,7 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftfront));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rleftfront:R.mipmap.ic_camera_card_leftfront));
                 break;
             case CAMERA_3_D_RIGHT_FRONT:
                 camera3DShowType = 2;
@@ -2393,7 +2424,7 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightfront));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rrightfront:R.mipmap.ic_camera_card_rightfront));
                 break;
             case CAMERA_3_D_LEFT_REAR:
                 camera3DShowType = 3;
@@ -2402,7 +2433,7 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_leftback));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rleftback:R.mipmap.ic_camera_card_leftback));
                 break;
             case CAMERA_3_D_RIGHT_REAR:
                 camera3DShowType = 4;
@@ -2410,7 +2441,7 @@ public class CameraView extends View implements LifecycleOwner {
                 showCameraImgStatus(cameraRightFront,225,rightFrontStatus,2,false);
                 showCameraImgStatus(cameraLeftRear,45,leftRearStatus,3,false);
                 showCameraImgStatus(cameraRightRear,315,rightRearStatus,4,false);
-                cameraIv.setImageDrawable(mContext.getDrawable(R.mipmap.ic_camera_card_rightback));
+                cameraIv.setImageDrawable(mContext.getDrawable(AvmApp.getInstance().isRight?R.mipmap.ic_camera_card_rrightback:R.mipmap.ic_camera_card_rightback));
                 break;
         }
     }

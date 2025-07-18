@@ -42,6 +42,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static int OUTSIDE_BACKMIRROR_AUTOFOLD_SWITCH = 1;//0、无配置后视镜折叠 ，1、有配置后视镜折叠
 
     public volatile boolean isRight = false; // 默认右陀,打包时根据修改该配置传入是否传入左右舵车型id
+    public static long BOOT_TIME;
 
     public static AvmApp getInstance() {
         return mAvmApp;
@@ -55,6 +56,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         //数据埋点
         bvavmJNI.bwDataEmbedding("com/autochips/avm/ui/view/CameraView","bAvmFault");
         mAvmApp = this;
+        BOOT_TIME = System.currentTimeMillis();
         //是否开启打印日志
         KLog.init(true);
         BvAvmJNIHelper.getInstance().bwSetProjectID(0x05);
@@ -68,7 +70,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         initCrash();
         //数据埋点
         //DataManager.init(this);
-        Thread.setDefaultUncaughtExceptionHandler(this);
+//        Thread.setDefaultUncaughtExceptionHandler(this);
         ServiceUtils.startCaptureService(this, AvmService.class);
     }
 
@@ -92,8 +94,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                         isRight = true;
                         BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_TR_ID);
                     } else {
-                        isRight = false;
-                        BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
+                        isRight = true;
+                        BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_TR_ID);
                     }
                     Intent intentService =  new Intent(context, AvmService.class);
                     intentService.putExtra("initCam","init");

@@ -904,7 +904,7 @@
             <RelativeLayout
                 android:id="@+id/infobook"
                 android:layout_width="486px"
-                android:layout_height="240px"
+                android:layout_height="260px"
                 android:background="@drawable/shape_bg_nor_day"
                 android:orientation="vertical"
                 android:visibility="gone"
@@ -930,6 +930,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/info_title"
+                    android:layout_above="@+id/info_ok"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10px"
                     android:gravity="center"

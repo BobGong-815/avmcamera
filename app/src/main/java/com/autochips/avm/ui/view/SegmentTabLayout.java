@@ -238,7 +238,6 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
     @SuppressLint("CheckResult")
     private void addTab(final int position, View tabView) {
         View tab_title = tabView.findViewById(R.id.tab_title);
-
         if (tab_title instanceof TextView) {
             TextView tv_tab_title = (TextView) tab_title;
             addTabDrawable(position, tabView.findViewById(R.id.tab_drawable));

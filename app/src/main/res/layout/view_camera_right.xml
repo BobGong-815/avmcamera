@@ -586,7 +586,7 @@
                 android:id="@+id/camera_image_layout_lift"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="42px"
+                android:layout_marginLeft="1302px"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">

@@ -82,6 +82,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -102,6 +103,7 @@ import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.ui.activity.MainActivity;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
+import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
 import com.autochips.avm.util.DataDefine;
 import com.autochips.avm.util.ServiceUtils;
@@ -113,6 +115,7 @@ import com.gxa.lib.car.VehicleVendorProperty;
 import com.gxa.service.camera.AvmManager;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -137,12 +140,14 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static int MSG_CR_CAMERA = 3;
     public static int MSG_DEL_CAMERA = 4;
     public static int MSG_CLOSE_RVC = 5;
+    public static int MSG_RELOAD_LANG = 6;
     public static int mRvcState = 0x0;
 
     private String exit_action = "action.syncore.EOL.mode";
     private String open_act = "action.syncore.OPEN.mode";
     private String close_act = "action.syncore.CLOSE.mode";
     private String first_open_act = "action.syncore.FOPEN.mode";
+    private final String BR_TEST = "com.avm.define.TEST";
     private MyBroadcastReceiver broadcastReceiver = new MyBroadcastReceiver();
     private Handler mHandler;
     public static boolean isCalibration = false;
@@ -190,6 +195,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         IntentFilter filter = new IntentFilter();
         filter.addAction(exit_action);
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        filter.addAction(BR_TEST);
         filter.addAction(open_act);
         filter.addAction(close_act);
         filter.addAction(first_open_act);
@@ -435,6 +441,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 } else if(msg.what == MSG_CLOSE_RVC) {
                     KLog.i("avmService close rvc ");
                     CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0, 0x2);
+                } else if (msg.what == MSG_RELOAD_LANG) {
+                    if(AvmApp.getInstance().getCameraView()!=null) {
+                        AvmApp.getInstance().getCameraView().reloadLanauge();
+                    }
                 }
             }
         };
@@ -497,7 +507,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
             // 设置第二个任务的超时时间为500毫秒
             try {
-                secondTaskFuture.get(200, TimeUnit.MILLISECONDS);
+                secondTaskFuture.get(1500, TimeUnit.MILLISECONDS);
             } catch (TimeoutException ex) {
                 KLog.e(TAG+"第二个任务超时，转为主线程执行操作");
                 isSecondTimeOut = true;
@@ -531,11 +541,16 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         KLog.d(flags + "[onStartCommand]" + startId + ", version is " + ServiceUtils.getVersionName());
         //adb指令模拟启动service带参数调试功能
 
-        //adb shell am start-service -n com.autochips.avm/.service.AvmService --ei avm_onclick 1
+        //adb shell am start-service -n com.autochips.avm/.service.AvmService --ei avm_onclick
         if (intent != null) {
             if(!TextUtils.isEmpty(intent.getStringExtra("initCam"))){
                 KLog.i("init can");
-                startTask();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        startTask();
+                    }
+                }).start();
             }else {
                 if (AvmApp.getInstance().getCameraView() == null) {
                     KLog.d("AvmApp", "avm is null ");
@@ -550,7 +565,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             KLog.i("[onStartCommand] 半功能到全功能范围不启动全景");
                             return START_STICKY;
                         }
-                        AvmRuntime.self().artificialEnter();
+                        /*if (System.currentTimeMillis()-AvmApp.BOOT_TIME < 2000) {
+                            KLog.d("Boot time less than 2s, drop event.");
+                        } else */{
+                            AvmRuntime.self().artificialEnter();
+                        }
                         if (isFirstEnter) { //avm首次被占用摄像头被释放，onCreate bwDele;后 点击进行创建
                             mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                             isFirstEnter = false;
@@ -1147,7 +1166,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                System.exit(0);
             } else if (action.equals(Intent.ACTION_LOCALE_CHANGED)) {
                 KLog.i("语言切换 。。。。。。。。:" + action);
-                System.exit(0);
+                mHandler.sendEmptyMessageDelayed(MSG_RELOAD_LANG, 100);
             } else if(action.equals(open_act)){
                 KLog.i("AvmApp","open avm ");
                 AvmApp.getInstance().getCameraView().showFullWin();
@@ -1172,6 +1191,31 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 if (isFirstEnter) { //avm首次被占用摄像头被释放，onCreate bwDele;后 点击进行创建
                     mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                     isFirstEnter = false;
+                }
+            } else if (action.equals(BR_TEST)) {
+                int testValue = intent.getIntExtra("value", -1);
+                KLog.d("test value is " + testValue);
+                if (testValue == 20) {
+                    int lang = intent.getIntExtra("lang", -1);
+                    if (lang == 1) {
+                        Locale locale = new Locale("en", "US");
+                        Locale.setDefault(locale);
+                        Configuration config = new Configuration();
+                        config.setLocale(locale);
+                        context.getResources().updateConfiguration(config, null);
+                    } else if (lang == 2) {
+                        Locale locale = new Locale("zh", "CN");
+                        Locale.setDefault(locale);
+                        Configuration config = new Configuration();
+                        config.setLocale(locale);
+                        context.getResources().updateConfiguration(config, null);
+                    }
+                    mHandler.sendEmptyMessageDelayed(MSG_RELOAD_LANG, 200);
+                } else if (testValue == 3) {
+                    Log.d("AvmRuntime", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
+                    if (CameraView.windowSurfaceControl != null) {
+                        Log.d("AvmRuntime", "CameraView.windowSurfaceControl.isValid : " + CameraView.windowSurfaceControl.isValid());
+                    }
                 }
             }
         }

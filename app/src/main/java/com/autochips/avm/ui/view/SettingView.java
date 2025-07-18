@@ -403,4 +403,19 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
         }
     }
 
+    public void reloadLanauge(){
+        settingBinding.tvSettingPExit.setText(R.string.setting_p_exit);
+        settingBinding.tvActivatesPanorama.setText(R.string.setting_signal_activates_panorama);
+        settingBinding.activatedPanorama.setText(R.string.setting_radar_activated_panorama);
+        settingBinding.segmentTab.setTabData(getDescValueArray());
+        settingBinding.pathLine.setText(R.string.setting_path_line);
+        settingBinding.transparentChassis.setText(R.string.setting_transparent_chassis);
+        settingBinding.transparentChassisTab.setTabData(getTransparentChassisDescValueArray());
+    }
+
+    public void setViewRefresh(int style){
+        KLog.v("setViewRefresh 当前language："+style);
+        settingBinding.settingView.setLayoutDirection(style);
+    }
+
 }
