@@ -362,19 +362,19 @@ public class CameraViewModelHelper {
       if(position == mLastSetPosition){
           return;
       }
-    //KLog.d("车速： speedValue "+speedValue +" isTransparent:"+isTransparent +" position:"+position);
+    KLog.d("车速： speedValue "+speedValue +" isTransparent:"+isTransparent +" position:"+position);
     if (position == 0) {
       bvavmJNI.bwSetCarBottomStatus((byte) 0);
       bvavmJNI.bwSetCarTransparency(1f);
     } else if (position == 1) {
       bvavmJNI.bwSetCarBottomStatus((byte) 1);
-      bvavmJNI.bwSetCarTransparency(0.3f);
+      bvavmJNI.bwSetCarTransparency(0.05f);
     } else if (position == 2) {
       bvavmJNI.bwSetCarBottomStatus((byte) 1);
       bvavmJNI.bwSetCarTransparency(0.15f);
     } else {
       bvavmJNI.bwSetCarBottomStatus((byte) 1);
-      bvavmJNI.bwSetCarTransparency(0.05f);
+      bvavmJNI.bwSetCarTransparency(0.3f);
     }
     mLastSetPosition = position;
   }

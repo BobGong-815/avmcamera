@@ -45,6 +45,7 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -85,6 +86,9 @@ import com.avm.framwork.constant.CameraContracts;
 import com.avm.framwork.manager.CanManager;
 import com.avm.framwork.manager.ViewSwitchManager;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Set;
 
 import me.goldze.mvvmhabit.utils.KLog;
@@ -296,6 +300,7 @@ public class CameraView extends View implements LifecycleOwner {
                 chick3DView(type);
             }
         });
+
         //mViewCameraBinding.layoutShowFull2d.setOnTouchListener(this::showFull2DByOnTouch);
         mViewCameraBinding.camera3dBg.setOnTouchListener(new OnTouchListener() {// 长按 60s 显示标定图标
             private  long resTime ;
@@ -481,6 +486,16 @@ public class CameraView extends View implements LifecycleOwner {
             @Override
             public void onClick(View view) {
                 setViewDialog();
+            }
+        });
+        mViewCameraBinding.toastInfo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button button = (Button) v;
+                String string = button.getText().toString();
+                if (string.equals("标定失败!")) {
+                    System.exit(0);
+                }
             }
         });
         viewRedChick();
@@ -1337,9 +1352,10 @@ public class CameraView extends View implements LifecycleOwner {
             KLog.d("rvc isShow");
             //此时表示正在显示
             mMainHandler.postDelayed(() -> {
-                int resRvc = bvavmJNI.bwNotifyRVC(0);
                 AvmApp.mAvmRvcState = 0;
-                KLog.d("关闭resRvc  = " + resRvc);
+//                int resRvc = bvavmJNI.bwNotifyRVC(0);
+//                KLog.d("关闭resRvc  = " + resRvc);
+                notifyRvcExit();
                 isCanCloseRvc = false;
             },2000);
         }
@@ -2793,6 +2809,20 @@ public class CameraView extends View implements LifecycleOwner {
         }
 
         return -1;
+    }
+
+    private void notifyRvcExit() {
+        KLog.d("notifyRvcExit()");
+        try {
+            Socket socket = new Socket("127.0.0.1", 10086);
+            PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+            output.println("exit");
+            KLog.d("Connect rvc.");
+            output.close();
+            socket.close();
+        } catch (IOException ioException) {
+            KLog.d(ioException.toString());
+        }
     }
 
 }

@@ -837,7 +837,7 @@ public class AvmRuntime {
     }
 
     public boolean isDoubleBlink() {
-        return turnRecord.isDoubleBlink();
+        return System.currentTimeMillis()-doubleBlinkTime < 800;
     }
 
     public boolean isShift2R() {
@@ -868,15 +868,15 @@ public class AvmRuntime {
         }
     }
 
-    public void endDoubleBlink() {
-        if (dataSts != null) {
-            synchronized (syncObj) {
-                if (dataSts.sensors.contains(DataDefine.STS_DOUBLE_BLINK)) {
-                    syncObj.notify();
-                }
-            }
-        }
-    }
+//    public void endDoubleBlink() {
+//        if (dataSts != null) {
+//            synchronized (syncObj) {
+//                if (dataSts.sensors.contains(DataDefine.STS_DOUBLE_BLINK)) {
+//                    syncObj.notify();
+//                }
+//            }
+//        }
+//    }
 
     public void userClick(int evt) {
 //        Log.d("getOutsideTabIndex", Log.getStackTraceString(new Throwable()));
@@ -1209,7 +1209,7 @@ public class AvmRuntime {
                 dataSts.sensors.add(DataDefine.STS_DOUBLE_BLINK);
             }
         } else {
-            if (System.currentTimeMillis()-doubleBlinkTime > 500) {
+            if (System.currentTimeMillis()-doubleBlinkTime > 800) {
                 if (dataSts.sensors.contains(DataDefine.STS_DOUBLE_BLINK)) {
                     KLog.d("退出双闪");
                     dataSts.sensors.remove(Integer.valueOf(DataDefine.STS_DOUBLE_BLINK));

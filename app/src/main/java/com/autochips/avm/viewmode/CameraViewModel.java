@@ -264,7 +264,7 @@ public class CameraViewModel extends BaseCameraViewModel {
             BvAvmJNIHelper.getInstance().setCalibration(false);
             CameraViewModelHelper.getInstance().setAutomaticCalibration(isCaliStatus);
 
-        }, 0);
+        }, 6000);
         mICameraViewListener.setCalibrationSelect(false);
     }
 

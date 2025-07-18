@@ -6132,6 +6132,8 @@ com.autochips.avm.helper.ViewPageHelper$1
 com.autochips.avm.helper.ViewPageHelper
 com.autochips.avm.service.AvmRuntime$CfgItem:
     boolean fill(int[],int)
+com.autochips.avm.service.AvmRuntime$TurnRecord:
+    boolean isDoubleBlink()
 com.autochips.avm.service.AvmService:
     public com.autochips.avm.data.Monitor sMonitor
 com.autochips.avm.ui.view.CameraGLSurfaceView:

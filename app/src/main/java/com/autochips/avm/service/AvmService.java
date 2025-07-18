@@ -71,7 +71,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DI
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_3806_AVM_CALIBRATION_CHECK_RESP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_380D_AVM_READ_FAIL_REASON_REQ;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DIAG_31_380D_AVM_READ_FAIL_REASON_RESP;
-import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.HAZARD_LIGHTS_STATE;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DESK_HAZARD_LAMP_STATUS;
 
 
 import static com.avm.framwork.manager.ViewSwitchManager.CAMERA_3_D;
@@ -98,6 +98,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -132,6 +133,7 @@ import com.iflytek.autofly.mapsdk.bean.navi.TbtBean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import gxa.car.power.data.CarPowerData;
@@ -254,6 +256,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         registerReceiver(broadcastReceiver, filter);
         isExitAction = false;
         KLog.d("启动----service_123  "+fishTh);
+
+        set("rvc_exit_flag", "1");
+
         // 快速启动
         if(AvmApp.getInstance().getCameraView() !=null)
             AvmApp.getInstance().getCameraView().updateWind(0.0f,2);
@@ -272,6 +277,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             public void received(String result, int aidlBindState) {
                 KLog.d("BlJsonProtocolManager  result:"+result);
                 // 1. 先解析 protocolId
+
+                if (result == null) return;
+
                 try {
                     JSONObject root = new JSONObject(result);
                     int protocolId = root.getInt("protocolId");
@@ -533,8 +541,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0, 0x2);
                 } else if (msg.what == MSG_TURN_LAMP_CHANGE) {
                     AvmRuntime.self().turnLampChange(msg.arg1);
-                } else if (msg.what == MSG_END_DOUBLE_BLINK) {
-                    AvmRuntime.self().endDoubleBlink();
                 }
             }
         };
@@ -706,11 +712,18 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             } else {
                 KLog.d(" TurnLamp 右边转向灯闪 , value = " + value + " , (leftTurnLChangeTime-rightTurnLChangeTime) = " + (leftTurnLChangeTime-rightTurnLChangeTime) + " , turnLampSwSts = " + turnLampSwSts);
             }
-            AvmRuntime.self().inputTurnValue((Integer) value, System.currentTimeMillis());
+//            AvmRuntime.self().inputTurnValue((Integer) value, System.currentTimeMillis());
+//            if (AvmRuntime.self().isDoubleBlink()) {
+//                KLog.d("TurnLamp 判断为双闪.");
+//                AvmRuntime.self().doubleBlink();
+//                endDoubleBlink();
+//            } else {
+//                turnLampChange(0, 800);
+//                AvmRuntime.self().updateChangeTime();
+//            }
+
             if (AvmRuntime.self().isDoubleBlink()) {
-                KLog.d("TurnLamp 判断为双闪.");
-                AvmRuntime.self().doubleBlink();
-                endDoubleBlink();
+                //
             } else {
                 turnLampChange(0, 800);
                 AvmRuntime.self().updateChangeTime();
@@ -749,8 +762,14 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             doubleBlinkStep = 0;
             turnLampChange(0, 800);
             AvmRuntime.self().updateChangeTime();
-        }*/ else if (vehicleId == HAZARD_LIGHTS_STATE) {
+        }*/ else if (vehicleId == DESK_HAZARD_LAMP_STATUS) {
             KLog.d(" 双闪 vehicleId = " + vehicleId + "  ,value = " + value);
+            if (value instanceof Integer) {
+                int intValue = (int) value;
+                if (intValue == 1) {
+                    AvmRuntime.self().doubleBlink();
+                }
+            }
         } else if (vehicleId == VEHICLE_SPEED) {// 车速
             //KLog.d(" 车速 vehicleId = " + vehicleId + "  ,value = " + value);
             if (value instanceof Float) {
@@ -821,10 +840,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         }
     }
 
-    public void endDoubleBlink() {
-        mHandler.removeMessages(MSG_END_DOUBLE_BLINK);
-        mHandler.sendEmptyMessageDelayed(MSG_END_DOUBLE_BLINK, 600);
-    }
+//    public void endDoubleBlink() {
+//        mHandler.removeMessages(MSG_END_DOUBLE_BLINK);
+//        mHandler.sendEmptyMessageDelayed(MSG_END_DOUBLE_BLINK, 600);
+//    }
 
     public void setWheelAngle(Object value) {
         if(value instanceof Float) {
@@ -1369,6 +1388,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     CameraViewModelHelper.getInstance().setSpeed(speedValue);
                 } else if (testValue == 12) {
                     changeScreenDirection();
+                } else if (testValue == 13) {
+                    AvmApp.getInstance().getCameraView().getViewModel().setAutomaticCalibration();
                 } else if (testValue == 100) {
                     int vehicleId = intent.getIntExtra("vehicleId", -1);
                     int vehicleValue = intent.getIntExtra("vehicleValue", -1);
@@ -1388,6 +1409,18 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 }
             }
 
+        }
+    }
+
+    public static void set(String key, String value) {
+        Class<?> SysProp = null;
+        Method method = null;
+        try {
+            SysProp = Class.forName("android.os.SystemProperties");
+            method = SysProp.getMethod("set", String.class, String.class);
+            method.invoke(null, key, value);
+        } catch (Exception e) {
+            Log.e("AVM_DEBUG","read SystemProperties error",e);
         }
     }
 
