@@ -912,7 +912,7 @@
             <RelativeLayout
                 android:id="@+id/infobook"
                 android:layout_width="486px"
-                android:layout_height="260px"
+                android:layout_height="270px"
                 android:background="@drawable/shape_bg_nor_day"
                 android:orientation="vertical"
                 android:visibility="gone"

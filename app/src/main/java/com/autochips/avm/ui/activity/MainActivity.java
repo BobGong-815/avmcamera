@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
                     Log.i(TAG, "MainActivity::handleMessage() avm_state:"+avm_state);
                     if(avm_state != 1) {
                         SystemProperties.setGlobal("avm_state", 1);
+                        SystemProperties.setGlobal("avm_displaymode", 2);
                         //AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
                     }
                 }
@@ -123,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
     protected void onDestroy() {
         super.onDestroy();
         Log.i("AvmRuntime", "onDestroy() start read Surface control. FvSts is " + AvmRuntime.self().getFullSceneSts());
-        Log.d("Aa", " textView .text is " + textView.getText());
         mHandler.removeCallbacksAndMessages("setRelativeLayer");
         if (AvmRuntime.self().getFullSceneSts() != DataDefine.FV_STATE_NON) {
             AvmRuntime.self().artificialExit(false);

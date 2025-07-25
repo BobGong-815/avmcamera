@@ -64,6 +64,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         KLog.d("[onCreate]");
         //连接信号服务
         SystemProperties.setGlobal("avm_state", 0);
+        SystemProperties.setGlobal("avm_displaymode", 0);
         //获取车型
         //initConfig(mAvmApp);
         //初始化全局异常崩溃
@@ -94,8 +95,8 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                         isRight = true;
                         BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_TR_ID);
                     } else {
-                        isRight = true;
-                        BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_TR_ID);
+                        isRight = false;
+                        BvAvmJNIHelper.getInstance().bwSetProjectID(bvavmJNI.PROJ_AY5_T_ID);
                     }
                     Intent intentService =  new Intent(context, AvmService.class);
                     intentService.putExtra("initCam","init");

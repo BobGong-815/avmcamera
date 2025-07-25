@@ -312,6 +312,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             //CameraShowTypeHelper.getInstance().exitActivity();
                             AvmApp.getInstance().getCameraView().dismissView(null);
                             SystemProperties.setGlobal("avm_state", 0);
+                            SystemProperties.setGlobal("avm_displaymode", 0);
                             //mAvmManager.sendAvmState(0);
                             BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                             if (DELETE_CAMERA_FLAG) {
@@ -336,6 +337,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             mCanSendAvmState = true;
                             mCanSendAvmStateIsActivity = false;
                             AvmApp.getInstance().getCameraView().showSmartWin();
+                            SystemProperties.setGlobal("avm_displaymode", 1);
 //                            if (isActAndWindowMode) {
 //                                if (!AvmRuntime.self().isRearGearSts()) {
 //                                    intent = new Intent(AvmService.this, MainActivity.class);
@@ -1171,6 +1173,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.i("AvmApp","open avm ");
                 AvmApp.getInstance().getCameraView().showFullWin();
                 SystemProperties.setGlobal("avm_state", 1);
+                SystemProperties.setGlobal("avm_displaymode", 2);
                 //mAvmManager.sendAvmState(1);
                 if (DELETE_CAMERA_FLAG) {
                     mHandler.removeMessages(MSG_DEL_CAMERA);
@@ -1180,6 +1183,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.i("AvmApp","close avm ");
                 AvmApp.getInstance().getCameraView().dismissView(null);
                 SystemProperties.setGlobal("avm_state", 0);
+                SystemProperties.setGlobal("avm_displaymode", 0);
                 //mAvmManager.sendAvmState(0);
                 if (DELETE_CAMERA_FLAG) {
                     mHandler.removeMessages(MSG_CR_CAMERA);
