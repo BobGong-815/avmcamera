@@ -97,7 +97,8 @@ public class DataDefine {
     public final static int EVT_CLICK_3D_RT = 109;
     public final static int EVT_CLICK_3D_LB = 110;
     public final static int EVT_CLICK_3D_RB = 111;
-    public final static int EVT_DOUBLE_BLINK = 112; // 双闪
+    public final static int EVT_ON_DOUBLE_BLINK = 112; // 开双闪
+    public final static int EVT_OFF_DOUBLE_BLINK = 113; // 开双闪
 
     public final static int SWITCH_RADAR_ACTIVE = 200;
     public final static int SWITCH_TURN_LAMP_ACTIVE = 201;
@@ -324,8 +325,10 @@ public class DataDefine {
                 return "ACT_3D_RIGHT_FRONT";
             case ACT_2D_TOP:
                 return "ACT_2D_TOP";
-            case EVT_DOUBLE_BLINK:
-                return "EVT_DOUBLE_BLINK";
+            case EVT_ON_DOUBLE_BLINK:
+                return "EVT_ON_DOUBLE_BLINK";
+            case EVT_OFF_DOUBLE_BLINK:
+                return "EVT_OFF_DOUBLE_BLINK";
             case STS_DOUBLE_BLINK:
                 return "STS_DOUBLE_BLINK";
             case STS_REDUCE_SPEED_RESUME:

@@ -82,6 +82,7 @@ import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SE
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.SETTINGS_VCU_BRKPEDPST;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RADAR_ALARM_ACOUSTIC_SWITCH;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.POWER_PARKING_LAMP;
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.DESK_HAZARD_LAMP_STATUS;
 import static com.avm.framwork.constant.CameraContracts.ROW_1_LEFT;
 import static com.avm.framwork.constant.CameraContracts.ROW_1_RIGHT;
 
@@ -180,6 +181,7 @@ public class CanManager implements Handler.Callback {
      * */
     public void init(Context context) {
         mContext = context;
+        mRegisterId.add(DESK_HAZARD_LAMP_STATUS); // 双闪
         mRegisterId.add(AVM_SAS_STEERING_ANGLE);// 方向盘转角 EPS_SteeringAngle  、、收到
 //        mRegisterId.add(AVM_PAS_PCSDISPLAYREQ);// 雷达触发全景显示请求
 //        mRegisterId.add(VEHICLE_AT_LEVEL_INSTRUMENT);// 档位

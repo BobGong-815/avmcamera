@@ -1306,6 +1306,8 @@ public class CameraView extends View implements LifecycleOwner {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         AvmApp.getInstance().startActivity(intent);
 
+        if (animator != null) animator.cancel(); // 可能由于snapToPosition触发了动画
+
         isSmartWin = false;
         isFullWin = true;
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
@@ -1353,9 +1355,8 @@ public class CameraView extends View implements LifecycleOwner {
             //此时表示正在显示
             mMainHandler.postDelayed(() -> {
                 AvmApp.mAvmRvcState = 0;
-//                int resRvc = bvavmJNI.bwNotifyRVC(0);
-//                KLog.d("关闭resRvc  = " + resRvc);
-                notifyRvcExit();
+                int resRvc = bvavmJNI.bwNotifyRVC(0);
+                KLog.d("关闭resRvc  = " + resRvc);
                 isCanCloseRvc = false;
             },2000);
         }
@@ -1619,6 +1620,7 @@ public class CameraView extends View implements LifecycleOwner {
         //释放摄像头画面数据
 //            BvAvmJNIHelper.getInstance().avmDeInit();
         SystemProperties.setGlobal("avm_state", 0);
+        SystemProperties.setGlobal("avm_displaymode", 0);
         if (settingView.getVisibility() == View.VISIBLE) {
             settingView.setVisibility(GONE);
             mViewCameraBinding.liftBg.setVisibility(GONE);

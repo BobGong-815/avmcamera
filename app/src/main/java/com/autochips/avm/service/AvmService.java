@@ -133,6 +133,10 @@ import com.iflytek.autofly.mapsdk.bean.navi.TbtBean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -220,12 +224,12 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 if (currentCarPowerMode == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_DEEP_SLEEP.getVal()) {
                     //进⼊STR
                     KLog.i("[onCarPowerServiceConnected]  进⼊STR");
-                    AvmRuntime.self().userClick(DataDefine.EVT_USER_CLICK_EXIT);
+                    AvmRuntime.self().artificialExit(true);
                     BvAvmJNIHelper.getInstance().bwDeleteCamera();
                 } else if (currentCarPowerMode == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.i("[onCarPowerServiceConnected]  半功能  释放资源,释放摄像头");
                     DataManager.writeFault(DataConstant.Code.GET_IN_STR);
-                    AvmRuntime.self().userClick(DataDefine.EVT_USER_CLICK_EXIT);
+                    AvmRuntime.self().artificialExit(true);
                     BvAvmJNIHelper.getInstance().bwDeleteCamera();
                 } else if (currentCarPowerMode == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
@@ -767,7 +771,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (value instanceof Integer) {
                 int intValue = (int) value;
                 if (intValue == 1) {
-                    AvmRuntime.self().doubleBlink();
+                    AvmRuntime.self().doubleBlinkEvt(DataDefine.EVT_ON_DOUBLE_BLINK);
+                } else if (intValue == 0) {
+                    AvmRuntime.self().doubleBlinkEvt(DataDefine.EVT_OFF_DOUBLE_BLINK);
                 }
             }
         } else if (vehicleId == VEHICLE_SPEED) {// 车速
@@ -1390,6 +1396,15 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     changeScreenDirection();
                 } else if (testValue == 13) {
                     AvmApp.getInstance().getCameraView().getViewModel().setAutomaticCalibration();
+                } else if (testValue == 14) {
+                    try {
+                        File file = new File("/avm_config/rvc_bvavm_fifo");
+                        FileOutputStream fileOutputStream = new FileOutputStream(file);
+                        fileOutputStream.write("exit".getBytes());
+                        fileOutputStream.close();
+                    } catch (IOException ioException) {
+                        KLog.e("AVM_DEBUG " + ioException.toString());
+                    }
                 } else if (testValue == 100) {
                     int vehicleId = intent.getIntExtra("vehicleId", -1);
                     int vehicleValue = intent.getIntExtra("vehicleValue", -1);

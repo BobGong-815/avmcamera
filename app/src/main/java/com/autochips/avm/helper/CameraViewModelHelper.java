@@ -368,13 +368,13 @@ public class CameraViewModelHelper {
       bvavmJNI.bwSetCarTransparency(1f);
     } else if (position == 1) {
       bvavmJNI.bwSetCarBottomStatus((byte) 1);
-      bvavmJNI.bwSetCarTransparency(0.05f);
+      bvavmJNI.bwSetCarTransparency(0.3f);
     } else if (position == 2) {
       bvavmJNI.bwSetCarBottomStatus((byte) 1);
       bvavmJNI.bwSetCarTransparency(0.15f);
     } else {
       bvavmJNI.bwSetCarBottomStatus((byte) 1);
-      bvavmJNI.bwSetCarTransparency(0.3f);
+      bvavmJNI.bwSetCarTransparency(0.05f);
     }
     mLastSetPosition = position;
   }

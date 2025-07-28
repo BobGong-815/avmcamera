@@ -6200,8 +6200,9 @@ com.autochips.avm.util.DataDefine:
     public static final int EVT_CLICK_3D_RT
     public static final int EVT_CLICK_CAMERA_ICON
     public static final int EVT_CLICK_LEFT_CARD
-    public static final int EVT_DOUBLE_BLINK
     public static final int EVT_KEEP_30S
+    public static final int EVT_OFF_DOUBLE_BLINK
+    public static final int EVT_ON_DOUBLE_BLINK
     public static final int EVT_OVER_SPEED
     public static final int EVT_RADAR_ACTIVE
     public static final int EVT_RADAR_RESET

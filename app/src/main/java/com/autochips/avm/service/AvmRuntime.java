@@ -295,7 +295,7 @@ public class AvmRuntime {
                 null,
                 null,
                 null,
-                new int[]{DataDefine.EVT_TURN_LAMP_RESET, DataDefine.EVT_DOUBLE_BLINK},
+                new int[]{DataDefine.EVT_TURN_LAMP_RESET, DataDefine.EVT_ON_DOUBLE_BLINK},
                 null,
                 new int[]{DataDefine.ACT_EXIT}));
         configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_NON, DataDefine.STS_FV_STATE_LEFT_CARD},
@@ -837,7 +837,10 @@ public class AvmRuntime {
     }
 
     public boolean isDoubleBlink() {
-        return System.currentTimeMillis()-doubleBlinkTime < 800;
+        if (dataSts != null) {
+            return dataSts.sensors.contains(DataDefine.STS_DOUBLE_BLINK);
+        }
+        return false;
     }
 
     public boolean isShift2R() {
@@ -854,16 +857,11 @@ public class AvmRuntime {
 //        }
 //    }
 
-    private long doubleBlinkTime = 0;
-    public void doubleBlink() {
-        doubleBlinkTime = System.currentTimeMillis();
+    public void doubleBlinkEvt(int evt) {
         if (dataSts != null) {
             synchronized (syncObj) {
-                if (!dataSts.sensors.contains(DataDefine.STS_DOUBLE_BLINK)) {
-                    dataSts.events.add(DataDefine.EVT_DOUBLE_BLINK);
-
-                    syncObj.notify();
-                }
+                dataSts.events.add(evt);
+                syncObj.notify();
             }
         }
     }
@@ -1203,17 +1201,15 @@ public class AvmRuntime {
             dataSts.gears[2] = DataDefine.INVALID;
         }
 
-        if (dataSts.events.contains(DataDefine.EVT_DOUBLE_BLINK)) {
+        if (dataSts.events.contains(DataDefine.EVT_ON_DOUBLE_BLINK)) {
             if (!dataSts.sensors.contains(DataDefine.STS_DOUBLE_BLINK)) {
                 KLog.d("进入双闪");
                 dataSts.sensors.add(DataDefine.STS_DOUBLE_BLINK);
             }
-        } else {
-            if (System.currentTimeMillis()-doubleBlinkTime > 800) {
-                if (dataSts.sensors.contains(DataDefine.STS_DOUBLE_BLINK)) {
-                    KLog.d("退出双闪");
-                    dataSts.sensors.remove(Integer.valueOf(DataDefine.STS_DOUBLE_BLINK));
-                }
+        } else if (dataSts.events.contains(DataDefine.EVT_OFF_DOUBLE_BLINK)) {
+            if (dataSts.sensors.contains(DataDefine.STS_DOUBLE_BLINK)) {
+                KLog.d("退出双闪");
+                dataSts.sensors.remove(Integer.valueOf(DataDefine.STS_DOUBLE_BLINK));
             }
         }
 
