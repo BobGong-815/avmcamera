@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">AVMCamera</string>
-    <string name="setting_p_exit">Exiting When Gear Control in Position P</string>
+    <string name="setting_p_exit">Exiting Gear P</string>
     <string name="setting_p_exit_content">AVM exits immediately or after 30s when in P gear</string>
     <string name="setting_at_once">Immediately</string>
     <string name="setting_30_seconds">After 30s</string>
@@ -14,7 +14,7 @@
     <string name="setting_path_line">Track Line</string>
     <string name="setting_path_line_content">同时开启/关闭B区和C区的车道轨迹线，默认开启轨迹线；</string>
     <string name="setting_signal_activates_panorama">Panoramic View Activated\nWhen Turn Signal Light on</string>
-    <string name="setting_signal_activates_panorama_content">Toggle turn signal for AVM; \nAuto-exit at>30km/h</string>
+    <string name="setting_signal_activates_panorama_content">Toggle turn signal for AVM; \nAuto-exit at > 30km/h</string>
     <string name="setting_transparent_chassis_infobook_title">Transparent Chassis</string>
     <string name="setting_transparent_chassis_infobook_content">Enable to\nobserve the vehicle road condition</string>
     <string name="setting_transparent_chassis_infobook_ok">OK</string>
