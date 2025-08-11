@@ -83,12 +83,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -101,6 +104,8 @@ import com.autochips.avm.data.DataConstant;
 import com.autochips.avm.data.DataManager;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
+import com.autochips.avm.provider.SnapshotAccessor;
+import com.autochips.avm.provider.SnapshotObserver;
 import com.autochips.avm.ui.activity.MainActivity;
 import com.autochips.avm.ui.view.CameraGLSurfaceView;
 import com.autochips.avm.ui.view.CameraView;
@@ -1220,12 +1225,27 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     if (CameraView.windowSurfaceControl != null) {
                         Log.d("AvmRuntime", "CameraView.windowSurfaceControl.isValid : " + CameraView.windowSurfaceControl.isValid());
                     }
+                } else if (testValue == 4) {
+                    SnapshotAccessor snapshotAccessor = new SnapshotAccessor(AvmService.this);
+                    byte[] bmpData = snapshotAccessor.readSnapshotAsFile();
+                    KLog.d("Snapshot bmpData is " + bmpData.length);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bmpData, 0, bmpData.length);
+                    KLog.d("Snapshot bitmap.size is " + bitmap.getWidth() + " x " + bitmap.getHeight());
                 }
             }
         }
     }
 
     public class AvmServiceIBinder extends Binder {
+    }
+
+    private void observeSnapshotChange(boolean observe) {
+        if (observe) {
+            SnapshotObserver snapshotObserver = new SnapshotObserver();
+            getContentResolver().registerContentObserver(Settings.Global.getUriFor("your_key"), true, snapshotObserver);
+        } else {
+            getContentResolver().unregisterContentObserver(null);
+        }
     }
 
 }

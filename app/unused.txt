@@ -5777,6 +5777,13 @@ com.autochips.avm.helper.LongPressGestureListener
 com.autochips.avm.helper.SurfaceTextureHelper
 com.autochips.avm.helper.ViewPageHelper$1
 com.autochips.avm.helper.ViewPageHelper
+com.autochips.avm.provider.SnapshotAccessor:
+    private static final java.lang.String TAG
+com.autochips.avm.provider.SnapshotProvider:
+    public static final java.lang.String AUTHORITY
+    private static final int SNAPSHOT
+    public static final java.lang.String SNAPSHOT_PATH
+    private static final java.lang.String TAG
 com.autochips.avm.service.AvmService:
     public static final boolean DELETE_CAMERA_FLAG
     public static final int ID_POWER_EXIT_BOOT_ANIMATION_REQ

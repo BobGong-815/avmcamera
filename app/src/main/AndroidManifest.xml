@@ -74,6 +74,16 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-    </application>
+
+        <!-- 声明ContentProvider -->
+        <provider
+            android:name=".provider.SnapshotProvider"
+            android:authorities="space.syncore.avm.snapshot.provider"
+            android:exported="true"
+            android:grantUriPermissions="false">
+        </provider>
+
+
+</application>
 
 </manifest>
