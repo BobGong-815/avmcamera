@@ -112,6 +112,11 @@ public class SystemProperties {
         KLog.d(TAG,key +" key系统设置 set ："+value);
     }
 
+    public static void setGlobalString(String key, String value) {
+        Settings.Global.putString(AvmApp.getInstance().getContentResolver(),key,value);
+        KLog.d(TAG,key +" 状态 set ："+value);
+    }
+
     public static void setGlobal(String key, int value) {
 //        Class<?> SysProp = null;
 //        Method method = null;

@@ -87,6 +87,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -131,6 +132,7 @@ import gxa.car.power.data.CarPowerSignalStatus;
 import gxa.car.power.data.CarPowerWorkModeStatus;
 import gxa.car.power.listener.CarPowerEventListener;
 import gxa.car.power.manager.CarPowerManager;
+import gxa.car.utils.Logger;
 import gxa.car.utils.VehicleHelper;
 import me.goldze.mvvmhabit.utils.KLog;
 
@@ -315,6 +317,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 }
                                 AvmApp.getInstance().getCameraView().dismissView(null);
                                 SystemProperties.setGlobal("avm_state", 0);
+                                SystemProperties.setGlobalString("split_screen_full_screen", getPackageName()+":"+2);
                                 mAvmManager.sendAvmState(0);
                                 BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                                 if (DELETE_CAMERA_FLAG) {
@@ -382,6 +385,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                 CanManager.getInstance().setIntProperty(POWER_EXIT_BOOT_ANIMATION_REQ_ID, VehicleHelper.VEHICLE_AREA_TYPE_GLOBAL, 1);
                                 mHandler.sendEmptyMessageDelayed(MSG_CLOSE_RVC,2000);
                             }
+                            SystemProperties.setGlobalString("split_screen_full_screen", getPackageName()+":"+1);
                             break;
                         case DataDefine.ACT_ACTIVE_DUAL_CARD:
                             if(!mIsCanShow){
@@ -404,6 +408,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                                     startActivity(intent);
                                 }
                             }
+                            SystemProperties.setGlobalString("split_screen_full_screen", getPackageName()+":"+1);
                             break;
                         case DataDefine.ACT_KEEP:
                             break;
