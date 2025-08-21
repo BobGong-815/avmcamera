@@ -69,6 +69,16 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             rearviewMirrorBinding.setViewModel(rearviewMirrorModel);
             addView(rearviewMirrorBinding.getRoot());
             rearviewMirrorModel.getLiveDataCloseUI().observe(this, this::closeUI);
+
+            rearviewMirrorBinding.llRearviewMirror.setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    KLog.d("onTouch : " + event.toString());
+                    rearviewMirrorModel.startTimer();
+                    return true;
+                }
+            });
         }
     }
 

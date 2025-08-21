@@ -22,7 +22,6 @@
         android:background="@drawable/shape_bg_nor"
         android:layout_marginTop="84px"
         android:layout_marginLeft="546px"
-        binding:onClickCommand="@{viewModel.pSettingClick}"
         android:orientation="vertical">
 
         <LinearLayout

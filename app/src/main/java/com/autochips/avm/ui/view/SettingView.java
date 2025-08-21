@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -94,6 +95,16 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             initTab();
         }
         checkButton();
+
+        settingBinding.settingView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                KLog.d("onTouch : " + event.toString());
+                viewModel.startTimer();
+                return true;
+            }
+        });
     }
     public void checkButton(){
         int settingPathLine = SystemProperties.getInt("settingPathLine", -1);//引导线开关
