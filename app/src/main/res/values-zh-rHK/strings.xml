@@ -13,12 +13,12 @@
     <string name="setting_radar_activated_panorama_content">當車速&lt;15km/h且前雷達報警時進入全景</string>
     <string name="setting_path_line">軌跡線</string>
     <string name="setting_path_line_content">同時開啟/關閉B區和C區的車道軌跡線，默認開啟軌跡線；</string>
-    <string name="setting_signal_activates_panorama">轉向燈啟用全景</string>
+    <string name="setting_signal_activates_panorama">轉向燈激活全景</string>
     <string name="setting_signal_activates_panorama_content">打轉向燈進入全景，\n車速>30km/h時自動退出</string>
     <string name="setting_transparent_chassis_infobook_title">透明底盤</string>
     <string name="setting_transparent_chassis_infobook_content">開啟可觀察車底路况</string>
     <string name="setting_transparent_chassis_infobook_ok">好的</string>
-    <string name="setting_rearview_mirror">後視鏡調校</string>
+    <string name="setting_rearview_mirror">後視鏡調節</string>
     <string name="setting_fold">摺疊</string>
     <string name="setting_expand">展開</string>
     <string name="setting_rearview_mirror_down">後視鏡下翻</string>
