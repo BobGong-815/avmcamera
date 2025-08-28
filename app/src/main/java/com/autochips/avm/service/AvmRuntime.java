@@ -745,7 +745,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_PASSIVE_DUAL_CARD,// 3-2-18
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_TURN_LAMP_ACTIVE},
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
@@ -982,7 +982,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_FRONT}));
         configTable.add(new CfgItem(DataDefine.FV_STATE_ACTIVE_DUAL_CARD,// 4-2-18
                 new int[]{DataDefine.GEAR_P},
-                new int[]{DataDefine.SENSOR_NONE},
+                new int[]{DataDefine.SENSOR_NONE, DataDefine.SENSOR_TURN_LAMP},
                 new int[]{DataDefine.MEM_MODE_2D},
                 new int[]{DataDefine.EVT_TURN_LAMP_ACTIVE},
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_LR}));
