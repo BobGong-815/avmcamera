@@ -135,8 +135,10 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -261,7 +263,19 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         isExitAction = false;
         KLog.d("启动----service_123  "+fishTh);
 
-        set("rvc_exit_flag", "1");
+//        set("rvc_exit_flag", "1");
+
+        File fifoFile = new File("/avm_config/rvc_bvavm_fifo");
+        RandomAccessFile fifo = null;
+        try {
+            fifo = new RandomAccessFile(fifoFile, "rw");
+            fifo.writeBytes("Hello, FIFO!\n"); // 写入数据到FIFO
+            fifo.close(); // 关闭FIFO以供其他进程读取
+            KLog.d("AVM_DEBUG", "1111111111111111111");
+        } catch (IOException e) {
+            e.printStackTrace();
+            KLog.d("AVM_DEBUG", e.toString());
+        }
 
         // 快速启动
         if(AvmApp.getInstance().getCameraView() !=null)
@@ -378,6 +392,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         case DataDefine.ACT_2D_FRONT_VIEW:
  //                           bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
                             CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+                            AvmApp.getInstance().getCameraView().getViewModel().to2DUpView();
                             break;
                         case DataDefine.ACT_2D_REAR_OUTLINE:
                             bvavmJNI.bwSetUndistortLevel(CameraContracts.UNDISTORTLEVEL, CameraContracts.UNDISTORTLEVEL);
@@ -404,10 +419,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         case DataDefine.ACT_WIDE_ANGLE_FRONT:
                             CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_120);
                             break;
-                        case DataDefine.ACT_2D_FRONT_UNDISTORT:
-                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
-                            AvmApp.getInstance().getCameraView().getViewModel().to2DUpView();
-                            break;
+//                        case DataDefine.ACT_2D_FRONT_UNDISTORT:
+//                            CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+//                            AvmApp.getInstance().getCameraView().getViewModel().to2DUpView();
+//                            break;
                         case DataDefine.ACT_3D_LEFT_FRONT:
                             BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
                             CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_LEFT_FRONT_3D);
@@ -633,18 +648,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 KLog.i("SplitScreenManager  onScenesChanged scene:"+scene +"mIsScreen:"+mIsScreen);
             }
         });
-    }
-
-    private void observer() {
-        turnActiveObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
-            @Override
-            public void onChange(boolean selfChange) {
-                super.onChange(selfChange);
-                KLog.d("AvmRuntime AVM_SETTING_TURN_LIGHT_ACTIVATION changed.");
-            }
-        };
-        // 注册ContentObserver到系统设置中的亮度URI
-        getContentResolver().registerContentObserver(Settings.System.getUriFor(GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION), true, turnActiveObserver);
     }
 
     //更改显示位置
@@ -877,6 +880,11 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
     }
 
+    @Override
+    public void userTap() {
+
+    }
+
     public class AvmServiceIBinder extends Binder {
 
 
@@ -973,6 +981,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         } else {
             KLog.w("[intent == null]");
         }
+
+
 
         return START_STICKY;
     }
@@ -1427,16 +1437,16 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         }
     }
 
-    public static void set(String key, String value) {
-        Class<?> SysProp = null;
-        Method method = null;
-        try {
-            SysProp = Class.forName("android.os.SystemProperties");
-            method = SysProp.getMethod("set", String.class, String.class);
-            method.invoke(null, key, value);
-        } catch (Exception e) {
-            Log.e("AVM_DEBUG","read SystemProperties error",e);
-        }
-    }
+//    public static void set(String key, String value) {
+//        Class<?> SysProp = null;
+//        Method method = null;
+//        try {
+//            SysProp = Class.forName("android.os.SystemProperties");
+//            method = SysProp.getMethod("set", String.class, String.class);
+//            method.invoke(null, key, value);
+//        } catch (Exception e) {
+//            Log.e("AVM_DEBUG","read SystemProperties error",e);
+//        }
+//    }
 
 }

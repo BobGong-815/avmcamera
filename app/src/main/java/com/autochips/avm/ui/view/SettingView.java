@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -94,7 +95,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             viewModel.getLiveDataPUI().observe(this, new Observer<String>() {
                 @Override
                 public void onChanged(String aBoolean) {
-                    if(infoBg.getVisibility()==GONE){
+                    if (infoBg.getVisibility() == GONE) {
                         infoBookView(aBoolean);
                     }
 
@@ -108,13 +109,23 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
 
             @Override
             public void onClick(View v) {
-                if (clickCount ++ >= 10) {
+                if (clickCount++ >= 10) {
                     Intent intent = new Intent(getContext(), DebugActivity.class);
                     getContext().startActivity(intent);
                     clickCount = 0;
                 }
             }
         });
+
+        settingBinding.settingView.setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    viewModel.startTimer();
+                    return true;
+                }
+        });
+
     }
     public void checkButton() {
         try {

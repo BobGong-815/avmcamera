@@ -825,6 +825,12 @@ public class AvmRuntime {
                 dataSts.lastChangeTime = System.currentTimeMillis();
                 syncObj.notify();
             }
+
+            if (actionListeners != null) {
+                for (ActionListener listener : actionListeners) {
+                    listener.userTap();
+                }
+            }
         }
     }
 
@@ -1558,20 +1564,6 @@ public class AvmRuntime {
             updateTime = now;
         }
 
-        boolean isDoubleBlink() {
-            if (values[0] == 1 && values[1] == 1 && values[2] == 0 && values[3] == 0) {
-                return true;
-            } else if (values[0] == 1 && values[1] == 0 && values[2] == 0 && values[3] == 1) {
-                return true;
-            } else if (values[0] == 0 && values[1] == 0 && values[2] == 1 && values[3] == 1) {
-                return true;
-            } else if (values[0] == 0 && values[1] == 1 && values[2] == 1 && values[3] == 0) {
-                return true;
-            }
-
-            return false;
-        }
-
     }
 
     public interface ActionListener {
@@ -1580,6 +1572,8 @@ public class AvmRuntime {
         void onExit(int act);
 
         void onGearNoAct(int gear, boolean handleFlag);
+
+        void userTap();
     }
 
 }

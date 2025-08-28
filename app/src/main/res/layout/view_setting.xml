@@ -21,7 +21,6 @@
         android:background="@drawable/shape_bg_fae1e3e6_24"
         android:layout_marginTop="126px"
         android:layout_marginStart="702px"
-        binding:onClickCommand="@{viewModel.pSettingClick}"
         android:orientation="vertical">
 
         <RelativeLayout

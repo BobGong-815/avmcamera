@@ -336,7 +336,7 @@ public class CameraViewModelHelper {
         }
 //        KLog.d("transparent chassis position is " + position);
     } catch (Settings.SettingNotFoundException settingNotFoundException) {
-        settingNotFoundException.printStackTrace();
+//        settingNotFoundException.printStackTrace();
         return;
     }
 //    if (!isTransparent){

@@ -6132,10 +6132,9 @@ com.autochips.avm.helper.ViewPageHelper$1
 com.autochips.avm.helper.ViewPageHelper
 com.autochips.avm.service.AvmRuntime$CfgItem:
     boolean fill(int[],int)
-com.autochips.avm.service.AvmRuntime$TurnRecord:
-    boolean isDoubleBlink()
 com.autochips.avm.service.AvmService:
     public com.autochips.avm.data.Monitor sMonitor
+    private android.database.ContentObserver turnActiveObserver
 com.autochips.avm.ui.view.CameraGLSurfaceView:
     private static final int SHOW_BOTTOM
 com.autochips.avm.ui.view.CameraView:
@@ -6151,7 +6150,6 @@ com.autochips.avm.ui.view.SegmentTabLayout:
     protected int sp2px(float)
 com.autochips.avm.util.DataDefine:
     public static final int ACT_2D_FRONT_OUTLINE
-    public static final int ACT_2D_FRONT_UNDISTORT
     public static final int ACT_2D_FRONT_VIEW
     public static final int ACT_2D_LR_FRONT
     public static final int ACT_2D_LR_REAR

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -63,6 +64,15 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
             rearviewMirrorBinding.setViewModel(rearviewMirrorModel);
             addView(rearviewMirrorBinding.getRoot());
             rearviewMirrorModel.getLiveDataCloseUI().observe(this, this::closeUI);
+
+            rearviewMirrorBinding.llRearviewMirror.setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    rearviewMirrorModel.startTimer();
+                    return true;
+                }
+            });
         }
     }
 
@@ -258,9 +268,9 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
     }
 
     private void setRearviewMirrorDownViewStatus(int reverseLightSts) {
-        KLog.e("reverseLightSts: " + reverseLightSts);
         //倒车档可以操作
         int status = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
+        KLog.e("reverseLightSts: " + reverseLightSts + " read SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE is " + status);
         setRearMirrorFlipDownStatus(status);
 //        rearviewMirrorBinding.llSettingRearviewMirrorDown.setAlpha(reverseLightSts == 1 ? 1.0f : 0.3f);
 //        rearviewMirrorBinding.llSettingRearviewMirrorDown.setEnabled(reverseLightSts == 1);

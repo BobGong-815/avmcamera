@@ -17,7 +17,6 @@
 
     <LinearLayout
         android:id="@+id/ll_rearviewMirror"
-        binding:onClickCommand="@{viewModel.pRearviewClick}"
         android:layout_width="682px"
         android:layout_height="wrap_content"
         android:layout_marginTop="126px"

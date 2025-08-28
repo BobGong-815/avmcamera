@@ -122,7 +122,7 @@ public class DataDefine {
     public final static int ACT_ACTIVE_DUAL_CARD = 315;
     public final static int ACT_KEEP = 316;
     public final static int ACT_PREV_VIEW_ANGLE = 317;
-    public final static int ACT_2D_FRONT_UNDISTORT = 318;
+//    public final static int ACT_2D_FRONT_UNDISTORT = 318;
     public final static int ACT_2D_LR_REAR = 319;
     public final static int ACT_3D_LEFT_FRONT = 320;
     public final static int ACT_3D_RIGHT_FRONT = 321;
@@ -297,8 +297,8 @@ public class DataDefine {
                 return "ACT_ENABLE_TIMING";
             case ACT_DISABLE_TIMING:
                 return "ACT_DISABLE_TIMING";
-            case ACT_2D_FRONT_UNDISTORT:
-                return "ACT_2D_FRONT_UNDISTORT";
+//            case ACT_2D_FRONT_UNDISTORT:
+//                return "ACT_2D_FRONT_UNDISTORT";
             case EVT_WIDE_ANGLE_FRONT:
                 return "EVT_WIDE_ANGLE_FRONT";
             case EVT_CLICK_2D_TOP:
