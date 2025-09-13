@@ -6252,6 +6252,7 @@ com.autochips.avm.util.DataDefine:
     public static final int STS_MEM_MODE_2D
     public static final int STS_MEM_MODE_3D
     public static final int STS_MEM_MODE_WIDE_ANGLE
+    public static final int STS_OVER_SPEED
     public static final int STS_REDUCE_SPEED_RESUME
     public static final int STS_SENSOR_RADAR
     public static final int STS_SENSOR_RADAR_TURN_LAMP

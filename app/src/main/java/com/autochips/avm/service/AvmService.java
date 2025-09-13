@@ -159,6 +159,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static int MSG_CLOSE_RVC = 5;
     private final int MSG_TURN_LAMP_CHANGE = 22;
     private final int MSG_END_DOUBLE_BLINK = 23;
+    private final int MSG_CALIBRATION_CHECK_RESP = 31;
     public static int mRvcState = 0x0;
 
     private final String BR_GEAR_STATUS = "com.avm.define.GEAR_STATUS";
@@ -265,17 +266,17 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 
 //        set("rvc_exit_flag", "1");
 
-        File fifoFile = new File("/avm_config/rvc_bvavm_fifo");
-        RandomAccessFile fifo = null;
-        try {
-            fifo = new RandomAccessFile(fifoFile, "rw");
-            fifo.writeBytes("Hello, FIFO!\n"); // 写入数据到FIFO
-            fifo.close(); // 关闭FIFO以供其他进程读取
-            KLog.d("AVM_DEBUG", "1111111111111111111");
-        } catch (IOException e) {
-            e.printStackTrace();
-            KLog.d("AVM_DEBUG", e.toString());
-        }
+//        File fifoFile = new File("/avm_config/rvc_bvavm_fifo");
+//        RandomAccessFile fifo = null;
+//        try {
+//            fifo = new RandomAccessFile(fifoFile, "rw");
+//            fifo.writeBytes("Hello, FIFO!\n"); // 写入数据到FIFO
+//            fifo.close(); // 关闭FIFO以供其他进程读取
+//            KLog.d("AVM_DEBUG", "1111111111111111111");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            KLog.d("AVM_DEBUG", e.toString());
+//        }
 
         // 快速启动
         if(AvmApp.getInstance().getCameraView() !=null)
@@ -560,6 +561,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     CanManager.getInstance().setIntProperty(AVM_SELECT_STATE,0, 0x2);
                 } else if (msg.what == MSG_TURN_LAMP_CHANGE) {
                     AvmRuntime.self().turnLampChange(msg.arg1);
+                } else if (msg.what == MSG_CALIBRATION_CHECK_RESP) {
+                    AvmApp.getInstance().getCameraView().calibrationBack();
+                    DataManager.writeFault(DataConstant.Code.BD_START_RESULT);
                 }
             }
         };
@@ -838,6 +842,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     private int mDirection = -1;
     public void turnLampChange(int direction, long delay) {
         if (direction != 0) {
+            mHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
             AvmRuntime.self().turnLampChange(direction);
         } else {
             mHandler.removeMessages(MSG_TURN_LAMP_CHANGE);
@@ -1099,6 +1104,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     if (arr.length != 4) {
                         return;
                     }
+
+                    CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_2D_FRONT_UNDISTORT);
+                    AvmRuntime.self().artificialEnter();
+
                     getCalStatus(vehicleId,"DIAG_31_3801_AVM_ENTER_CALIBRATION_REQ");
                     isInt3801 = true;
 //                    CameraViewModelHelper.getInstance().showView(true);
@@ -1169,8 +1178,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     if (arr.length != 4) {
                         return;
                     }
-                    AvmApp.getInstance().getCameraView().calibrationBack();
-                    DataManager.writeFault(DataConstant.Code.BD_START_RESULT);
+
+                    mHandler.removeMessages(MSG_CALIBRATION_CHECK_RESP);
+                    mHandler.sendEmptyMessageDelayed(MSG_CALIBRATION_CHECK_RESP, 3000);
                     break;
                 case DIAG_31_3806_AVM_CALIBRATION_CHECK_REQ://下线标定检查
 

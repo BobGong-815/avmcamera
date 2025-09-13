@@ -176,14 +176,14 @@ public class AvmRuntime {
                 new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_WIDE_ANGLE_REAR}));
         configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_NON},
                 null,
-                null,
+                new int[] {-1*DataDefine.STS_OVER_SPEED},
                 null,
                 new int[]{DataDefine.EVT_TURN_LAMP_ACTIVE, DataDefine.EVT_TURN_LAMP_RESET_ACTIVE},
                 new int[] {DataDefine.SWITCH_TURN_LAMP_ACTIVE},
                 new int[]{DataDefine.ACT_LEFT_CARD, DataDefine.ACT_AERIAL_VIEW}));
         configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_NON},
                 null,
-                null,
+                new int[] {-1*DataDefine.STS_OVER_SPEED},
                 null,
                 new int[]{DataDefine.EVT_RADAR_ACTIVE},
                 new int[] {DataDefine.SWITCH_RADAR_ACTIVE},
@@ -748,13 +748,13 @@ public class AvmRuntime {
         synchronized (syncObj) {
             dataSts.currSpeed = CameraViewModelHelper.mpsToKmh((Float) value);
             if (dataSts.overSpeedSts) {
-                if (dataSts.currSpeed < 25) {
+                if (dataSts.currSpeed < 1) {
                     dataSts.events.add(DataDefine.EVT_REDUCE_SPEED);
                     dataSts.overSpeedSts = false;
                     flag = true;
                 }
             } else {
-                if (dataSts.currSpeed > 30) {
+                if (dataSts.currSpeed > 2) {
                     dataSts.events.add(DataDefine.EVT_OVER_SPEED);
                     dataSts.overSpeedSts = true;
                     flag = true;
@@ -1264,6 +1264,16 @@ public class AvmRuntime {
             }
         }
 
+        if (dataSts.events.contains(DataDefine.EVT_OVER_SPEED)) {
+            if (!dataSts.sensors.contains(DataDefine.STS_OVER_SPEED)) {
+                dataSts.sensors.add(DataDefine.STS_OVER_SPEED);
+                KLog.d("Insert STS_OVER_SPEED.");
+            }
+        } else if (dataSts.events.contains(DataDefine.EVT_REDUCE_SPEED)) {
+            dataSts.sensors.remove(Integer.valueOf(DataDefine.STS_OVER_SPEED));
+            KLog.d("Remove STS_OVER_SPEED.");
+        }
+
 //        updateTiming30sFlag();
 
         dataSts.events.clear();
@@ -1438,11 +1448,12 @@ public class AvmRuntime {
             return true;
         }
 
-        boolean fill(int[] sub, int[] owner) {//sub只要有一项在owner里面，则满足条件
+        //sub只要有一项在owner里面，则满足条件
+        boolean fill(int[] sts, int[] owner) {
             if (owner == null) return true;
 
             for (int oo : owner) {
-                if (contain(sub, oo)) {
+                if (contain(sts, oo)) {
                     return true;
                 }
             }
@@ -1468,17 +1479,29 @@ public class AvmRuntime {
             return false;
         }
 
-        // owner只要满足subs之一，即为真
-        boolean fill(List<Integer> subs, int[] owner) {
+        //sub只要有一项在owner里面，则满足条件
+        boolean fill(List<Integer> sts, int[] owner) {
             if (owner == null) return true;
 
-            for (int s : subs) {
-                for (int o : owner) {
-                    if (s == o) return true;
+            for (int oo : owner) {
+                if (contain(sts, oo)) {
+                    return true;
                 }
             }
 
             return false;
+        }
+
+        public boolean contain(List<Integer> list, int value) {
+            for (int i : list) {
+                if (value > 0) {
+                    if (i == value) return true;
+                } else {
+                    if (i == -1*value) return false;
+                }
+            }
+
+            return value>0?false:true; // 列表中没有这个负数，视为包含
         }
 
         public boolean contain(int[] list, int value) {
@@ -1490,7 +1513,7 @@ public class AvmRuntime {
                 }
             }
 
-            return value>0?false:true;
+            return value>0?false:true;  // 列表中没有这个负数，视为包含
         }
 
         @Override

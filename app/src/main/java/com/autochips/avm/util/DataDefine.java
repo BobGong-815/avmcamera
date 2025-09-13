@@ -50,6 +50,7 @@ public class DataDefine {
     public final static int STS_SENSOR_RADAR_TURN_LAMP = 35;
     public final static int STS_DOUBLE_BLINK = 36;
     public final static int STS_REDUCE_SPEED_RESUME = 37; // 降速后需要恢复
+    public final static int STS_OVER_SPEED = 38;
 
     public final static int STS_MEM_MODE_2D = 50;
     public final static int STS_MEM_MODE_3D = 51;
@@ -163,6 +164,8 @@ public class DataDefine {
 //                return "GEAR_P_STOP";
             case STS_GEAR_R:
                 return "STS_GEAR_R";
+            case STS_OVER_SPEED:
+                return "STS_OVER_SPEED";
             case STS_GEAR_R_STOP:
                 return "STS_GEAR_R_STOP";
             case STS_GEAR_R_LOW_RATE:

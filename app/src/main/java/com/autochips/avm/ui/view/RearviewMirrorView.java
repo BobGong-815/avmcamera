@@ -119,7 +119,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
 
     private void initData() {
         // 后视镜下翻
-        int reverseLightSts = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
+        int reverseLightSts = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 16777216);
         setRearviewMirrorDownViewStatus(reverseLightSts);
         KLog.d("initData reverseLightSts: "+reverseLightSts);
         rearMirrorFlipDown(reverseLightSts);
@@ -170,11 +170,11 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
 //            }
             rearviewMirrorModel.startTimer();
             rearviewMirrorModel.setRunning(true);
-            int reverseAutoMaticStatus = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
+            int reverseAutoMaticStatus = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 16777216);
             // 外后视镜倒车下翻
             ThreadPoolUtil.getInstance().execute(() -> {
                 KLog.d("后视镜11----当前reverseAutoMaticStatus：" + reverseAutoMaticStatus);
-                CanManager.getInstance().setIntProperty(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0, reverseAutoMaticStatus == 4 ? 1 : 4);
+                CanManager.getInstance().setIntProperty(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 16777216, reverseAutoMaticStatus == 4 ? 1 : 4);
             });
             if(reverseAutoMaticStatus == 4){
                 KLog.d("后视镜11----设置false 1");
@@ -269,7 +269,7 @@ public class RearviewMirrorView extends LinearLayout implements LifecycleOwner, 
 
     private void setRearviewMirrorDownViewStatus(int reverseLightSts) {
         //倒车档可以操作
-        int status = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 0);
+        int status = CanManager.getInstance().getIntStatus(SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE, 16777216);
         KLog.e("reverseLightSts: " + reverseLightSts + " read SETTINGS_OUTER_REARVIEW_MIRROR_RETREATS_AUTOMATIC_VALUE is " + status);
         setRearMirrorFlipDownStatus(status);
 //        rearviewMirrorBinding.llSettingRearviewMirrorDown.setAlpha(reverseLightSts == 1 ? 1.0f : 0.3f);

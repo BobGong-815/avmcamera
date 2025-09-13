@@ -57,6 +57,7 @@ public class CameraViewModel extends BaseCameraViewModel {
     private ViewType mHisModel;
 
     private int isCaliStatus = -1;
+    private int didCalibrateTime = 0;
 
 
     public CameraViewModel() {
@@ -276,6 +277,11 @@ public class CameraViewModel extends BaseCameraViewModel {
        /* if (!BvAvmJNIHelper.getInstance().isActive()){
             return;
         }*/
+        if (didCalibrateTime > 0) {
+            KLog.i("标定 Has already did calibrate.");
+            return;
+        }
+
         if (isDIAGCalibration){
             KLog.i("DIAG_31 正在标定中。。。。。");
             return;
@@ -297,6 +303,7 @@ public class CameraViewModel extends BaseCameraViewModel {
             byte[] arrBack = {0x00, 0x00,0x00,0x00};
             CanManager.getInstance().setByteArray(DIAG_31_3803_AVM_START_CALIBRATION_RESP, 0, arrBack);
             isCaliStatus = bvavmJNI.bwStartCalibrate(1);
+        didCalibrateTime++;
 //        }, 0);
       KLog.i( "标定 DIAG_31 app bwStartCalibrate 结束-标定完成。  "+isCaliStatus);
 
