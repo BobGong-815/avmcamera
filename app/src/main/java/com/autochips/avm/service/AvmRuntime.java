@@ -748,13 +748,13 @@ public class AvmRuntime {
         synchronized (syncObj) {
             dataSts.currSpeed = CameraViewModelHelper.mpsToKmh((Float) value);
             if (dataSts.overSpeedSts) {
-                if (dataSts.currSpeed < 1) {
+                if (dataSts.currSpeed < 25) {
                     dataSts.events.add(DataDefine.EVT_REDUCE_SPEED);
                     dataSts.overSpeedSts = false;
                     flag = true;
                 }
             } else {
-                if (dataSts.currSpeed > 2) {
+                if (dataSts.currSpeed > 30) {
                     dataSts.events.add(DataDefine.EVT_OVER_SPEED);
                     dataSts.overSpeedSts = true;
                     flag = true;
@@ -984,7 +984,7 @@ public class AvmRuntime {
 
     public boolean isActiveExit() {
         if (dataSts == null) return false;
-        return dataSts.extEvents.contains(DataDefine.EVT_ACTIVE_EXIT);
+        return dataSts.extEvents.contains(DataDefine.EVT_USER_CLICK_EXIT);
     }
 
     public boolean isTurnActiveSts() {
@@ -1069,14 +1069,20 @@ public class AvmRuntime {
         }
 
         if (act == DataDefine.ACT_EXIT) {
+            if (dataSts.events.contains(DataDefine.EVT_USER_CLICK_EXIT)) {
+                dataSts.userCloseFlag = true;
+                KLog.d("用户主动退出");
+            }
             if (dataSts.events.contains(DataDefine.EVT_OVER_SPEED) && dataSts.fvSts[0] == DataDefine.STS_FV_STATE_LEFT_CARD) {
-                KLog.d("增加 降速需要恢复");
+                KLog.d("0 增加 降速需要恢复");
                 dataSts.switches.add(DataDefine.STS_REDUCE_SPEED_RESUME);
             }
-        } else {
-            if (dataSts.switches.contains(DataDefine.STS_REDUCE_SPEED_RESUME)) {
-                KLog.d("去掉 降速需要恢复");
-                dataSts.switches.remove(Integer.valueOf(DataDefine.STS_REDUCE_SPEED_RESUME));
+        } else if (act == DataDefine.ACT_LEFT_CARD
+            || act == DataDefine.ACT_ACTIVE_DUAL_CARD
+            || act == DataDefine.ACT_PASSIVE_DUAL_CARD) {
+            if (dataSts.userCloseFlag) {
+                dataSts.userCloseFlag = false;
+                KLog.d("取消用户主动退出标志");
             }
         }
 
@@ -1274,6 +1280,21 @@ public class AvmRuntime {
             KLog.d("Remove STS_OVER_SPEED.");
         }
 
+        if (dataSts.sensors.contains(DataDefine.STS_OVER_SPEED)
+            && dataSts.events.add(DataDefine.EVT_TURN_LAMP_ACTIVE)
+            && dataSts.fvSts[0] == DataDefine.STS_FV_STATE_NON) {
+            if (!dataSts.userCloseFlag) {
+                KLog.d("1 增加 降速需要恢复");
+                dataSts.switches.add(DataDefine.STS_REDUCE_SPEED_RESUME);
+            }
+        } else if (dataSts.switches.contains(DataDefine.STS_REDUCE_SPEED_RESUME)) {
+            if (dataSts.fvSts[0] != DataDefine.STS_FV_STATE_NON // 非显示状态
+                || !dataSts.sensors.contains(DataDefine.STS_SENSOR_TURN_LAMP)) {
+                KLog.d("去掉 降速需要恢复");
+                dataSts.switches.remove(Integer.valueOf(DataDefine.STS_REDUCE_SPEED_RESUME));
+            }
+        }
+
 //        updateTiming30sFlag();
 
         dataSts.events.clear();
@@ -1293,6 +1314,7 @@ public class AvmRuntime {
         int currGear = -1;
         float currSpeed = -1;
         int overExitFlag; // 0 none, 1 left_card exit, 2 full_screen exit
+        boolean userCloseFlag = false;
         boolean sensorBlockPExit = false;
         boolean delayBlockExit = false;
         boolean radarPause;
@@ -1353,6 +1375,7 @@ public class AvmRuntime {
                     .append("\n, timing30sFlag = " + timing30sFlag)
                     .append("\n, overExitFlag = " + overExitFlag)
                     .append("\n, current Speed = " + currSpeed)
+                    .append("\n, userCloseFlag = " + userCloseFlag)
                     .append("\n, radarAlive = " + radarAlive)
                     .append("\n, turnLampAlive = " + turnLampAlive)
                     .append("\n, overSpeedSts = " + overSpeedSts)
@@ -1430,6 +1453,7 @@ public class AvmRuntime {
             return actions;
         }
 
+        // 开关必需全部满足
         boolean switchMatch(List<Integer> switchSts, int[] switchCfg) {
             if (switchCfg == null) return true;
 

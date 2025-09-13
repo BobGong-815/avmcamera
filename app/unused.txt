@@ -6187,7 +6187,6 @@ com.autochips.avm.util.DataDefine:
     public static final int ACT_REFRESH_TAB_INDEX
     public static final int ACT_WIDE_ANGLE_FRONT
     public static final int ACT_WIDE_ANGLE_REAR
-    public static final int EVT_ACTIVE_EXIT
     public static final int EVT_CLICK_2D_BOTTOM
     public static final int EVT_CLICK_2D_LEFT
     public static final int EVT_CLICK_2D_RIGHT
