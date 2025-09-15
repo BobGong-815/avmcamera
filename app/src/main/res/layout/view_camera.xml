@@ -355,6 +355,7 @@
                 android:layout_marginStart="48px"
                 android:minHeight="850px"
                 android:visibility="gone"
+                android:background="@color/transparent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -388,21 +389,17 @@
                     android:id="@+id/red_3drightFront"
                     android:layout_width="240px"
                     android:layout_height="225px"
-                    android:layout_marginStart="2108px"
-                    android:layout_marginTop="20px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <View
                     android:id="@+id/red_3drightFront1"
                     android:layout_width="137px"
                     android:layout_height="220px"
-                    android:layout_marginStart="3108px"
-                    android:layout_marginTop="245px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/red_3drightFront" />
                 <!--左后-->
                 <View
                     android:id="@+id/red_3dleftRear"
@@ -422,27 +419,23 @@
                     android:layout_marginTop="626px"
                     android:background="@color/transparent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent" />
                 <!--右后-->
                 <View
                     android:id="@+id/red_3drightRear"
                     android:layout_width="137px"
                     android:layout_height="200px"
-                    android:layout_marginStart="3108px"
-                    android:layout_marginTop="445px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/red_3drightRear1"/>
 
                 <View
                     android:id="@+id/red_3drightRear1"
                     android:layout_width="240px"
                     android:layout_height="250px"
-                    android:layout_marginStart="2108px"
-                    android:layout_marginTop="626px"
                     android:background="@color/transparent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
 
                 <ImageView

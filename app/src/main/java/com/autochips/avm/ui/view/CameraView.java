@@ -1867,7 +1867,7 @@ public class CameraView extends View implements LifecycleOwner {
                         AvmRuntime.self().userClick(DataDefine.EVT_CLICK_LEFT_CARD);
                     }
                 } else {
-                    if(!isSnapToPosition) {
+                    if(!isSnapToPosition && AvmRuntime.self().isHalfScreenState()) {
                         snapToPosition();
                     }
                 }

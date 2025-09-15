@@ -849,6 +849,13 @@ public class AvmRuntime {
         return false;
     }
 
+    public boolean isHalfScreenState() {
+        if (dataSts != null) {
+            return dataSts.fvSts[0] == DataDefine.STS_FV_STATE_LEFT_CARD;
+        }
+        return false;
+    }
+
     public boolean isShift2R() {
         return dataSts.extEvents.contains(DataDefine.EVT_SHIFT_R);
     }
