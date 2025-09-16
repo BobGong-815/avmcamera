@@ -119,7 +119,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 VEHICLE_PLATFORM = configManager.getVehicleplatform();
                 int outsidebackmirrorbackupdownswitch = configManager.getOutsidebackmirrorbackupdownswitch();
                 int outsidebackmirrorautofoldswitch = configManager.getOutsidebackmirrorautofoldswitch();
-                Log.i("AvmApp","注册完成---- getVehicleplatform:"+VEHICLE_PLATFORM);
+                Log.i("AvmApp","注册完成---- getVehicleplatform:0x"+Integer.toHexString(VEHICLE_PLATFORM));
                 Log.i("AvmApp","注册完成---- outsidebackmirrorbackupdownswitch:"+outsidebackmirrorbackupdownswitch);
                 Log.i("AvmApp","注册完成---- outsidebackmirrorautofoldswitch:"+outsidebackmirrorautofoldswitch);
                 OUTSIDE_BACKMIRROR_BACKDOWN_SWITCH = outsidebackmirrorbackupdownswitch;
@@ -130,6 +130,10 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY3_ID);
                 } else if (VEHICLE_PLATFORM == IS_AY5Y) {
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY5_Y_ID);
+                } else if (VEHICLE_PLATFORM == 0x82) { // T51
+                    BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_T51_ID);
+                } else if (VEHICLE_PLATFORM == 0x81) {
+                    BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_A5R_ID);
                 }
                 mHandler.post(()->{
                     if(mCameraView == null) {

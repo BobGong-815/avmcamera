@@ -1,2 +1,3 @@
 include ':app', ':mvvmhabit'
 include ':avmframwork'
+include ':bimsdk'

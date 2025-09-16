@@ -5830,11 +5830,14 @@ com.android.bvavm.bvavmJNI:
     public static final int CAMERA2_ERR_data_FAIL
     public static final int CAMERA2_ERR_delete_FAIL
     public static final int CAMERA2_ERR_registerAvailabilityCallback_FAIL
+    public static final int PROJ_A5R_ID
     public static final int PROJ_AY3_ID
     public static final int PROJ_AY5_G_ID
     public static final int PROJ_AY5_ID
     public static final int PROJ_AY5_T_ID
     public static final int PROJ_AY5_Y_ID
+    public static final int PROJ_AY7_ID
+    public static final int PROJ_T51_ID
     public static final int SCANCODE_IR_DOWN
     public static final int SCANCODE_IR_EXIT
     public static final int SCANCODE_IR_LEFT
