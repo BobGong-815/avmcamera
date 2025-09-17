@@ -1,5 +1,6 @@
 package com.autochips.avm.helper;
 
+import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_RADAR_ACTIVATION;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.AVM_UINM_TURN_LIGHT_SW_ST;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_FRONT_FOG_LAMP;
 import static android.hardware.automotive.vehicle.V2_0.SyncoreVehicleProperty.CLUSTER_LEFT_TURN_LAMP;
@@ -38,6 +39,7 @@ import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.data.DataConstant;
 import com.autochips.avm.data.DataManager;
 import com.autochips.avm.em.ViewType;
+import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.view.CameraView;
 import com.autochips.avm.util.CustomToast;
@@ -248,7 +250,7 @@ public class CameraViewModelHelper {
         KLog.d(value + " value valGear = " + isRunning);
 
         if (value == 1 || value == 2) {
-            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(0);
+//            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(0);
             KLog.d("valGear rvc  AvmApp.mAvmRvcState："+AvmApp.mAvmRvcState);
             if (AvmApp.mAvmRvcState == 1 && valGear != 4) {
                 //todo
@@ -344,9 +346,10 @@ public class CameraViewModelHelper {
 //    }
       if (speedValue <= 0.3 && position != 0) {
           return;
-      } else if (speedValue >= 30) {
+      } else if (speedValue >= 3) {
           bvavmJNI.bwSetCarBottomStatus((byte) 0);
           bvavmJNI.bwSetCarTransparency(1f);
+          mLastSetPosition = -1;
       }
 //    if(position == 0 || speedValue < 1){
 //        //表示未激活不透明
@@ -379,15 +382,19 @@ public class CameraViewModelHelper {
     mLastSetPosition = position;
   }
 
-    public void setTransparentIndexTab2(int evt) {
+    private int lastTranLevel = -1;
+    public void setTransparentIndexTab2() {
         if (!CameraView.isShowing){
             return;
         }
 
-        KLog.d("AvmRuntime setTransparentIndexTab2 evt is " + evt);
-        if (evt == DataDefine.EVT_OVER_SPEED) {
-            bvavmJNI.bwSetCarBottomStatus((byte) 0);
-            bvavmJNI.bwSetCarTransparency(1f);
+        KLog.d("AvmRuntime setTransparentIndexTab2 lastTranLevel is " + lastTranLevel);
+        if (AvmRuntime.self().isOverSpeedState()) {
+            if (lastTranLevel != -1) {
+                bvavmJNI.bwSetCarBottomStatus((byte) 0);
+                bvavmJNI.bwSetCarTransparency(1f);
+                lastTranLevel = -1;
+            }
         } else {
             int position;
             try {
@@ -403,18 +410,21 @@ public class CameraViewModelHelper {
                 return;
             }
 
-            if (position == 0) {
-                bvavmJNI.bwSetCarBottomStatus((byte) 0);
-                bvavmJNI.bwSetCarTransparency(1f);
-            } else if (position == 1) {
-                bvavmJNI.bwSetCarBottomStatus((byte) 1);
-                bvavmJNI.bwSetCarTransparency(0.3f);
-            } else if (position == 2) {
-                bvavmJNI.bwSetCarBottomStatus((byte) 1);
-                bvavmJNI.bwSetCarTransparency(0.15f);
-            } else {
-                bvavmJNI.bwSetCarBottomStatus((byte) 1);
-                bvavmJNI.bwSetCarTransparency(0.05f);
+            if (position != lastTranLevel) {
+                lastTranLevel = position;
+                if (position == 0) {
+                    bvavmJNI.bwSetCarBottomStatus((byte) 0);
+                    bvavmJNI.bwSetCarTransparency(1f);
+                } else if (position == 1) {
+                    bvavmJNI.bwSetCarBottomStatus((byte) 1);
+                    bvavmJNI.bwSetCarTransparency(0.3f);
+                } else if (position == 2) {
+                    bvavmJNI.bwSetCarBottomStatus((byte) 1);
+                    bvavmJNI.bwSetCarTransparency(0.15f);
+                } else {
+                    bvavmJNI.bwSetCarBottomStatus((byte) 1);
+                    bvavmJNI.bwSetCarTransparency(0.05f);
+                }
             }
         }
     }
@@ -435,7 +445,7 @@ public class CameraViewModelHelper {
         //KLog.d("车速："+val+"   isSpeedModel: "+isSpeedModel+"   speedValue: "+speedValue+"   turnValue: "+turnValue+ "  isClick:  "+isClick+"  版本号： "+ ServiceUtils.getVersionName());
 //        int turn = CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT);
         //KLog.d("车速：判断当前转向turn: "+turn);
-      setTransparentIndexTab();
+      setTransparentIndexTab2();
     }
 
     public float getSpeed() {
@@ -517,7 +527,7 @@ public class CameraViewModelHelper {
             }
 //             AvmApp.getInstance().getViewBottom().updateWind0();
             isReverseInByTurn = true;
-            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(3);
+//            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(3);
             if (isReverse) {
                 KLog.d(" valGear倒车档位： 我进来了啊");
                 setViewModel(ViewType.ReverseIn);

@@ -237,14 +237,14 @@ public class AvmRuntime {
                 new int[]{DataDefine.STS_MEM_MODE_2D},
                 new int[]{DataDefine.EVT_USER_CLICK_ENTER},
                 null,
-                new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
+                new int[]{DataDefine.ACT_REFRESH_2D_TOP_VIEW, DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
         configTable.add(new CfgItem(null,
                 new int[] {-1*DataDefine.STS_GEAR_R},
                 null,
                 new int[]{DataDefine.STS_MEM_MODE_2D},
                 new int[]{DataDefine.EVT_CLICK_LEFT_CARD},
                 null,
-                new int[]{DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
+                new int[]{DataDefine.ACT_REFRESH_2D_TOP_VIEW, DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_2D_FRONT_VIEW}));
 
         configTable.add(new CfgItem(null,
                 new int[] {-1*DataDefine.STS_GEAR_R},
@@ -852,6 +852,13 @@ public class AvmRuntime {
     public boolean isHalfScreenState() {
         if (dataSts != null) {
             return dataSts.fvSts[0] == DataDefine.STS_FV_STATE_LEFT_CARD;
+        }
+        return false;
+    }
+
+    public boolean isOverSpeedState() {
+        if (dataSts != null) {
+            return dataSts.sensors.contains(DataDefine.STS_OVER_SPEED);
         }
         return false;
     }

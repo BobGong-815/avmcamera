@@ -518,9 +518,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         case DataDefine.ACT_REFRESH_2D_BOTTOM_VIEW:
                             AvmApp.getInstance().getCameraView().getViewModel().to2DBottomView();
                             break;
-                        case DataDefine.ACT_REFRESH_LAND_TRANSPARENCY:
-                            CameraViewModelHelper.getInstance().setTransparentIndexTab2(msg.arg2);
-                            break;
+//                        case DataDefine.ACT_REFRESH_LAND_TRANSPARENCY:
+//                            CameraViewModelHelper.getInstance().setTransparentIndexTab2(msg.arg2);
+//                            break;
                         case DataDefine.ACT_REFRESH_3D_LEFT_FRONT:
                             AvmApp.getInstance().getCameraView().getViewModel().to3DLeftFront();
                             break;

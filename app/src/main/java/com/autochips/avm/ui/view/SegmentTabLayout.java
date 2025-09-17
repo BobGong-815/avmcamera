@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -257,7 +258,7 @@ public class SegmentTabLayout extends FrameLayout implements ValueAnimator.Anima
             iv_tab_title.setImageDrawable(mContext.getDrawable(mTitles[position]));
         }
         RxView.clicks(tabView)
-                .throttleFirst(800L, TimeUnit.MILLISECONDS)
+                .throttleFirst(400L, TimeUnit.MILLISECONDS)
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {

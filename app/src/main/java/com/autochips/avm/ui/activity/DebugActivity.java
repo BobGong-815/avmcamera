@@ -2,6 +2,8 @@ package com.autochips.avm.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,13 +13,23 @@ import android.widget.TextView;
 
 import com.autochips.avm.R;
 import com.autochips.avm.ai.SignalQuery;
+import com.bim.sdk.BimCallback;
+import com.bim.sdk.CmdSet;
+
+import org.w3c.dom.Text;
 
 public class DebugActivity extends Activity {
+
+    private TextView textView;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.debug_layout);
+
+        handler = new Handler(Looper.getMainLooper());
+        textView = findViewById(R.id.tv_display_content);
 
         findViewById(R.id.btn_finish).setOnClickListener(new View.OnClickListener() {
             @Override

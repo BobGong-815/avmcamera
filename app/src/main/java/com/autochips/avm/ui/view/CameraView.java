@@ -555,11 +555,11 @@ public class CameraView extends View implements LifecycleOwner {
             KLog.d("  转向3d复位");
             BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
         }
-        if (hisModel == ViewType.ReverseIn) {
-            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(3);
-        } else {
-            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(0);
-        }
+//        if (hisModel == ViewType.ReverseIn) {
+//            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(3);
+//        } else {
+//            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(0);
+//        }
         if (!isShowing) {
             KLog.d(isShowing + "  isShowing viewShowStatus viewPosition ：" + viewPosition);
             return;
@@ -890,7 +890,7 @@ public class CameraView extends View implements LifecycleOwner {
         @Override
         public void onTabSelect(int position, boolean fromUser) {
             tabSelectFromUser = fromUser;
-            KLog.d(viewPosition + "tabSelectListener onTabSelect = " + position + " isChangeGear：" + isChangeGear);
+            KLog.d(viewPosition + " tabSelectListener onTabSelect = " + position + " isChangeGear：" + isChangeGear);
             viewModel.setRunning(true);
             if (!isChangeGear){// 换挡的时候，不给取消高亮
                 mViewCameraBinding.llBackMirror.setSelected(false);
@@ -1449,7 +1449,7 @@ public class CameraView extends View implements LifecycleOwner {
 //          mViewCameraBinding.segmentTab.setSelectTab(hisPosition);
           hisPosition = -1;// R挡的时候需要记忆，广角或3d模式
             BvAvmJNIHelper.getInstance().bwSet3DfreeFlag(0);
-            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(3);
+//            BvAvmJNIHelper.getInstance().bwSetTrajLineStatus(3);
           isDismissView = false;
           return;
         }

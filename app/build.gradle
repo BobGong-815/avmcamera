@@ -126,5 +126,5 @@ dependencies {
     implementation files('libs\\SyncoreVehicleProperty-1.0.67-20250717.025708-1.jar')
     implementation files('libs\\bljsonsdk_v2.0.7-product-release.aar')
     implementation files('libs\\SplitScreenManager.jar')
-//    implementation project(path: ':bimsdk')
+    implementation project(path: ':bimsdk')
 }

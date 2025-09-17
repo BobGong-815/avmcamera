@@ -6138,6 +6138,7 @@ com.autochips.avm.service.AvmRuntime$CfgItem:
 com.autochips.avm.service.AvmService:
     public com.autochips.avm.data.Monitor sMonitor
     private android.database.ContentObserver turnActiveObserver
+com.autochips.avm.service.BimInterface
 com.autochips.avm.ui.view.CameraGLSurfaceView:
     private static final int SHOW_BOTTOM
 com.autochips.avm.ui.view.CameraView:
@@ -6282,6 +6283,26 @@ com.avm.framwork.helper.ThreadPoolUtil:
     private static final int MAX_TASK_SIZE
 com.avm.framwork.manager.EvsManager
 com.avm.framwork.manager.ViewSwitchManager
+com.bim.sdk.BimCallback
+com.bim.sdk.BimManager$RespMsg
+com.bim.sdk.BimManager
+com.bim.sdk.BuildConfig
+com.bim.sdk.Cmd
+com.bim.sdk.CmdSet
+com.bim.sdk.CodeString
+com.bim.sdk.CommuModule$1
+com.bim.sdk.CommuModule$2
+com.bim.sdk.CommuModule
+com.bim.sdk.Emotion
+com.bim.sdk.FileUtils
+com.bim.sdk.ImageUtils
+com.bim.sdk.LlmListener
+com.bim.sdk.Logger
+com.bim.sdk.Project
+com.bim.sdk.ProtocolParser$ParseResult
+com.bim.sdk.ProtocolParser
+com.bim.sdk.R
+com.bim.sdk.Utils
 com.core.lib.CoreSystemListener
 com.core.lib.CoreSystemListenerTransport$1
 com.core.lib.CoreSystemListenerTransport
