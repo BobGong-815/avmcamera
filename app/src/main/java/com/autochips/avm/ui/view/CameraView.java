@@ -1124,7 +1124,7 @@ public class CameraView extends View implements LifecycleOwner {
                 KLog.d("设置车辅线:" + settingPathLine);
                 if (settingPathLine == 1) {
                     bvavmJNI.bwSetTrajLineStatus((byte) 1);
-                    bvavmJNI.bwSetCarIsDgear((byte) 1);//2D前视
+//                    bvavmJNI.bwSetCarIsDgear((byte) 1);//2D前视
                     //bvavmJNI.bwSetCarIsBack((byte) 0);//2D后视
                 }
             } catch (Settings.SettingNotFoundException settingNotFoundException) {

@@ -123,7 +123,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.EVT_USER_CLICK_EXIT},
                 null,
                 new int[]{DataDefine.ACT_EXIT, DataDefine.ACT_DISABLE_TIMING}));
-        configTable.add(new CfgItem(new int[]{DataDefine.STS_FV_STATE_NON},
+        configTable.add(new CfgItem(null,
                 new int[] {DataDefine.STS_GEAR_R},
                 null,
                 new int[] {DataDefine.STS_MEM_MODE_2D},
@@ -146,7 +146,7 @@ public class AvmRuntime {
                 new int[] {-1*DataDefine.SWITCH_DELAY_30S_EXIT},
                 new int[]{DataDefine.ACT_EXIT, DataDefine.ACT_DISABLE_TIMING}));
 
-        configTable.add(new CfgItem(new int[]{DataDefine.STS_FV_STATE_NON},
+        configTable.add(new CfgItem(null,
                 new int[] {DataDefine.STS_GEAR_R},
                 null,
                 new int[] {DataDefine.STS_MEM_MODE_3D},
@@ -160,7 +160,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.EVT_CLICK_LEFT_CARD},
                 null,
                 new int[]{DataDefine.ACT_REFRESH_3D_REAR, DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_REAR_VIEW}));
-        configTable.add(new CfgItem(new int[]{DataDefine.STS_FV_STATE_NON},
+        configTable.add(new CfgItem(null,
                 new int[] {DataDefine.STS_GEAR_R},
                 null,
                 new int[] {DataDefine.STS_MEM_MODE_WIDE_ANGLE},
@@ -202,14 +202,14 @@ public class AvmRuntime {
                 new int[]{DataDefine.EVT_SHIFT_R,DataDefine.EVT_SHIFT_RVC_D,DataDefine.EVT_SHIFT_RVC_N},
                 null,
                 new int[]{DataDefine.ACT_REFRESH_TAB_INDEX, DataDefine.ACT_2D_REAR_VIEW}));
-        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_NON},// 1
+        configTable.add(new CfgItem(null,// 1
                 new int[] {-1*DataDefine.STS_GEAR_R},
                 new int[] {DataDefine.STS_SENSOR_TURN_LAMP_LEFT},
                 new int[]{DataDefine.STS_MEM_MODE_2D},
                 new int[]{DataDefine.EVT_USER_CLICK_ENTER},
                 null,
                 new int[]{DataDefine.ACT_ACTIVE_DUAL_CARD, DataDefine.ACT_2D_LR_FRONT}));
-        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_NON},// 1
+        configTable.add(new CfgItem(null,// 1
                 new int[] {-1*DataDefine.STS_GEAR_R},
                 new int[] {DataDefine.STS_SENSOR_TURN_LAMP_RIGHT},
                 new int[]{DataDefine.STS_MEM_MODE_2D},
@@ -276,7 +276,7 @@ public class AvmRuntime {
                 null,
                 new int[]{DataDefine.ACT_REFRESH_3D_RIGHT_REAR, DataDefine.ACT_PASSIVE_DUAL_CARD, DataDefine.ACT_3D_RIGHT_REAR}));
 
-        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_NON, DataDefine.STS_FV_STATE_LEFT_CARD},
+        configTable.add(new CfgItem(null,
                 new int[] {-1*DataDefine.STS_GEAR_R},
                 null,
                 new int[]{DataDefine.STS_MEM_MODE_3D},
@@ -298,7 +298,7 @@ public class AvmRuntime {
                 new int[]{DataDefine.EVT_TURN_LAMP_RESET, DataDefine.EVT_ON_DOUBLE_BLINK},
                 null,
                 new int[]{DataDefine.ACT_EXIT}));
-        configTable.add(new CfgItem(new int[] {DataDefine.STS_FV_STATE_NON, DataDefine.STS_FV_STATE_LEFT_CARD},
+        configTable.add(new CfgItem(null,
                 null,
                 null,
                 new int[]{DataDefine.STS_MEM_MODE_WIDE_ANGLE},
