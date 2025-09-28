@@ -154,43 +154,43 @@ public class CameraViewModelHelper {
         AvmApp.getInstance().getCameraView().showFullWin();
     }
 
-    public void openAndClose(){
-        mHandler.postDelayed(()->{
-            for (int i = 0 ;i<1000;i++){
-                KLog.d("创建 openAndClose time："+i);
-                long camreaStatus = BvAvmJNIHelper.getInstance().camreaStatus();
-                boolean isOpenCamera = (camreaStatus != 0 && camreaStatus !=-1);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if(isOpenCamera){
-                    //已经开启
-                    BvAvmJNIHelper.getInstance().bwDeleteCamera();
-                }else {
-                    BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView","onBVAVMMessage");
-                }
-            }
-        },2000);
-    }
+//    public void openAndClose(){
+//        mHandler.postDelayed(()->{
+//            for (int i = 0 ;i<1000;i++){
+//                KLog.d("创建 openAndClose time："+i);
+//                long camreaStatus = BvAvmJNIHelper.getInstance().camreaStatus();
+//                boolean isOpenCamera = (camreaStatus != 0 && camreaStatus !=-1);
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                if(isOpenCamera){
+//                    //已经开启
+//                    BvAvmJNIHelper.getInstance().bwDeleteCamera();
+//                }else {
+//                    BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView","onBVAVMMessage");
+//                }
+//            }
+//        },2000);
+//    }
 
     //打开摄像头
-    public void openCamera(){
-        if (mIsFirstOpen) {
-            Log.i(TAG, "showComm mIsFirstOpen");
-            mIsFirstOpen = false;
-        } else {
-            Log.i(TAG, "bwCreateCamera open");
-            //BvAvmJNIHelper.getInstance().bwCreateCameraShow("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
-        }
-    }
+//    public void openCamera(){
+//        if (mIsFirstOpen) {
+//            Log.i(TAG, "showComm mIsFirstOpen");
+//            mIsFirstOpen = false;
+//        } else {
+//            Log.i(TAG, "bwCreateCamera open");
+//            //BvAvmJNIHelper.getInstance().bwCreateCameraShow("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
+//        }
+//    }
 
     //关闭摄像头
-    public void closeCamera(){
-        KLog.d("closeCamera");
-        BvAvmJNIHelper.getInstance().bwDeleteCamera();
-    }
+//    public void closeCamera(){
+//        KLog.d("closeCamera");
+//        BvAvmJNIHelper.getInstance().bwDeleteCamera();
+//    }
 
     /**
      * 根据条件判断是否需要关闭窗口

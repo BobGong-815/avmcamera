@@ -65,6 +65,8 @@ import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.data.DataConstant;
 import com.autochips.avm.data.DataManager;
 import com.autochips.avm.databinding.ViewCameraBinding;
+import com.autochips.avm.databinding.ViewCameraBindingImpl;
+import com.autochips.avm.databinding.ViewCameraSimpleBinding;
 import com.autochips.avm.em.ViewType;
 import com.autochips.avm.helper.BvAvmJNIHelper;
 import com.autochips.avm.helper.CameraViewModelHelper;
@@ -135,6 +137,7 @@ public class CameraView extends View implements LifecycleOwner {
 //    protected WindowManager.LayoutParams mWindowLpsBottom;//window的属性
 //    protected WindowManager.LayoutParams mFullWindowLps;//全面的窗口参数
     protected ViewCameraBinding mViewCameraBinding;//总windowManager界面
+    protected ViewCameraSimpleBinding mViewCameraSimpleBinding;//总windowManager界面
     protected CameraViewModel viewModel;
     private SettingView settingView;
     protected SegmentTabLayout segmentTab;
@@ -1392,7 +1395,7 @@ public class CameraView extends View implements LifecycleOwner {
 //        isSmartWin = false;
         updateWind();
         isShowing = true;
-        CameraViewModelHelper.getInstance().openCamera();
+//        CameraViewModelHelper.getInstance().openCamera();
         hidViewButtonTimer.start(viewPosition);
         mViewCameraBinding.smartGroupId.setVisibility(VISIBLE);
         //mViewCameraBinding.layoutWideAngle.setVisibility(VISIBLE);
@@ -1404,12 +1407,12 @@ public class CameraView extends View implements LifecycleOwner {
 
 //        setTransparentIndexTab();
         if(!isFirstOpen) {
-            if (isFullWin) {
-                SystemProperties.setGlobal("avm_displaymode", 1);
-            } else {
-                SystemProperties.setGlobal("avm_displaymode", 2);
-            }
-            SystemProperties.setGlobal("avm_state", 1);
+//            if (isFullWin) {
+//                SystemProperties.setGlobal("avm_displaymode", 1);
+//            } else {
+//                SystemProperties.setGlobal("avm_displaymode", 2);
+//            }
+//            SystemProperties.setGlobal("avm_state", 1);
         }else {
             isFirstOpen = false;
         }
@@ -1619,8 +1622,8 @@ public class CameraView extends View implements LifecycleOwner {
 
         //释放摄像头画面数据
 //            BvAvmJNIHelper.getInstance().avmDeInit();
-        SystemProperties.setGlobal("avm_state", 0);
-        SystemProperties.setGlobal("avm_displaymode", 0);
+//        SystemProperties.setGlobal("avm_state", 0);
+//        SystemProperties.setGlobal("avm_displaymode", 0);
         if (settingView.getVisibility() == View.VISIBLE) {
             settingView.setVisibility(GONE);
             mViewCameraBinding.liftBg.setVisibility(GONE);

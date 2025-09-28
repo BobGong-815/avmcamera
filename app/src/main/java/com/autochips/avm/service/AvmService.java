@@ -177,8 +177,8 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static boolean mIsScreen = false; // 记录是否为分屏
     public static boolean isLeftScreen = false;//是否为左边的分屏显示全景
     private SplitScreenManager mSplitScreenManager;
-    private ContentObserver turnActiveObserver;
-    private int doubleBlinkStep = 0;
+
+    private final boolean EXIT_CLOSE_CAMERA_FLAG = false;
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -204,13 +204,17 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_DEEP_SLEEP.getVal()) {
                     //进⼊STR
                     KLog.i("[mCarPowerManager]  进⼊STR");
+                    mHandler.removeMessages(MSG_CR_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.i("[mCarPowerManager]  半功能  释放资源,释放摄像头");
-                    BvAvmJNIHelper.getInstance().bwDeleteCamera();
+                    mHandler.removeMessages(MSG_CR_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (carPowerWorkModeStatus.getCarPowerWorkModeStatusEnum().getVal() == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     KLog.i("[mCarPowerManager]  全功能，退出STR 恢复录⾳，恢复录摄像头");
-                    BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
+                    mHandler.removeMessages(MSG_DEL_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                 }
             }
 
@@ -228,17 +232,20 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                     //进⼊STR
                     KLog.i("[onCarPowerServiceConnected]  进⼊STR");
                     AvmRuntime.self().artificialExit(true);
-                    BvAvmJNIHelper.getInstance().bwDeleteCamera();
+                    mHandler.removeMessages(MSG_CR_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (currentCarPowerMode == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_DISPLAY_OFF.getVal()) {
                     KLog.i("[onCarPowerServiceConnected]  半功能  释放资源,释放摄像头");
                     DataManager.writeFault(DataConstant.Code.GET_IN_STR);
                     AvmRuntime.self().artificialExit(true);
-                    BvAvmJNIHelper.getInstance().bwDeleteCamera();
+                    mHandler.removeMessages(MSG_CR_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_DEL_CAMERA);
                 } else if (currentCarPowerMode == CarPowerWorkModeStatus.CarPowerWorkModeStatusEnum.CAR_POWER_WORKMODE_REQUEST_ON_FULL.getVal()) {
                     //全功能，退出STR 恢复录⾳，恢复录摄像头
                     KLog.i("[onCarPowerServiceConnected]  全功能，退出STR 恢复录⾳，恢复录摄像头");
                     DataManager.writeFault(DataConstant.Code.GET_OUT_STR);
-                    BvAvmJNIHelper.getInstance().bwCreateCamera("com/autochips/avm/ui/view/CameraView", "onBVAVMMessage");
+                    mHandler.removeMessages(MSG_DEL_CAMERA);
+                    mHandler.sendEmptyMessage(MSG_CR_CAMERA);
                 }
             }
 
@@ -435,15 +442,28 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                         case DataDefine.ACT_EXIT:
                             KLog.i("avmService____ ACT_EXIT_CARD........0");
                             //CameraShowTypeHelper.getInstance().exitActivity();
-                            AvmApp.getInstance().getCameraView().dismissView(null);
+                            SystemProperties.setGlobal("avm_displaymode", 0);
                             SystemProperties.setGlobal("avm_state", 0);
+                            AvmApp.getInstance().getCameraView().dismissView(null);
+                            if (EXIT_CLOSE_CAMERA_FLAG) {
+                                mHandler.removeMessages(MSG_CR_CAMERA);
+                                mHandler.sendEmptyMessageDelayed(MSG_DEL_CAMERA, 500);
+                            }
                             //mAvmManager.sendAvmState(0);
                             break;
                         case DataDefine.ACT_LEFT_CARD:
+                            if (EXIT_CLOSE_CAMERA_FLAG) {
+                                mHandler.removeMessages(MSG_DEL_CAMERA);
+                                mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            } else {
+                                mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            }
                             if(AvmRuntime.self().isTurnActiveSts()) {
                                 DataManager.writeFault(DataConstant.Code.ACTIVI_LIGHT);
                             }
                             CameraGLSurfaceView.setAngleOfView2(bvavmJNI.BW_BIRD_3D);
+                            SystemProperties.setGlobal("avm_displaymode", 2);
+                            SystemProperties.setGlobal("avm_state", 1);
                             AvmApp.getInstance().getCameraView().showSmartWin();
 //                            if (isActAndWindowMode) {
 //                                if (!AvmRuntime.self().isRearGearSts()) {
@@ -454,10 +474,18 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                            }
                             break;
                         case DataDefine.ACT_PASSIVE_DUAL_CARD:
+                            if (EXIT_CLOSE_CAMERA_FLAG) {
+                                mHandler.removeMessages(MSG_DEL_CAMERA);
+                                mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            } else {
+                                mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            }
                             if(AvmRuntime.self().isRearGearSts()){
                                 DataManager.writeFault(DataConstant.Code.ACTIVI_RGEAR);
                             }
                             AvmRuntime.self().setRadarPauseFlag(false);
+                            SystemProperties.setGlobal("avm_displaymode", 1);
+                            SystemProperties.setGlobal("avm_state", 1);
                             AvmApp.getInstance().getCameraView().showFullWin();
                             if (!AvmRuntime.self().isRearGearSts()) {
                                 intent = new Intent(AvmService.this, MainActivity.class);
@@ -466,7 +494,15 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             }
                             break;
                         case DataDefine.ACT_ACTIVE_DUAL_CARD:
+                            if (EXIT_CLOSE_CAMERA_FLAG) {
+                                mHandler.removeMessages(MSG_DEL_CAMERA);
+                                mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            } else {
+                                mHandler.sendEmptyMessage(MSG_CR_CAMERA);
+                            }
                             AvmRuntime.self().setRadarPauseFlag(false);
+                            SystemProperties.setGlobal("avm_displaymode", 1);
+                            SystemProperties.setGlobal("avm_state", 1);
                             AvmApp.getInstance().getCameraView().showFullWin();
                             if (!AvmRuntime.self().isRearGearSts()) {
                                 intent = new Intent(AvmService.this, MainActivity.class);

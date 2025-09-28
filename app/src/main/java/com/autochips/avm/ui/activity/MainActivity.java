@@ -17,6 +17,7 @@ import com.autochips.avm.app.AvmApp;
 import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.service.AvmRuntime;
 import com.autochips.avm.ui.view.CameraView;
+import com.autochips.avm.util.DataDefine;
 import com.gxa.lib.car.HalPropertyIds;
 
 import java.lang.reflect.InvocationTargetException;
@@ -24,35 +25,35 @@ import java.lang.reflect.Method;
 
 import me.goldze.mvvmhabit.utils.KLog;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements AvmRuntime.ActionListener{
 
     private final Runnable runnable = this::updateLayer;
 
     public static MainActivity inStance;
 
-    private CameraViewModelHelper.ChangeListener changeListener = new CameraViewModelHelper.ChangeListener() {
-        @Override
-        public void gearChange(int gear) {
-            KLog.d("MainActivity", "MainActivity::gearChange():"+gear);
-            if(gear == 3){
-                //r档不需要act,解绑act
-                unBindWindow();
-            }else {
-                if(AvmApp.getInstance().getCameraView().isFullWin){
-                    bindWindow();
-                }
-            }
-        }
-
-        @Override
-        public void viewChange() {
-            KLog.v("MainActivity", "MainActivity::viewChange()");
-            AvmApp.getInstance().getCameraView().hideView();
-//            unBindWindow();
-            //关闭
-            finish();
-        }
-    };
+//    private CameraViewModelHelper.ChangeListener changeListener = new CameraViewModelHelper.ChangeListener() {
+//        @Override
+//        public void gearChange(int gear) {
+//            KLog.d("MainActivity", "MainActivity::gearChange():"+gear);
+//            if(gear == 3){
+//                //r档不需要act,解绑act
+//                unBindWindow();
+//            }else {
+//                if(AvmApp.getInstance().getCameraView().isFullWin){
+//                    bindWindow();
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void viewChange() {
+//            KLog.v("MainActivity", "MainActivity::viewChange()");
+//            AvmApp.getInstance().getCameraView().hideView();
+////            unBindWindow();
+//            //关闭
+//            finish();
+//        }
+//    };
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -71,27 +72,26 @@ public class MainActivity extends AppCompatActivity{
             return true;
         });
 
-        CameraViewModelHelper.getInstance().setChangeListener(changeListener);
-
+        AvmRuntime.self().registerActionListener(MainActivity.this);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        KLog.v("MainActivity", "MainActivity::onRestart()");
+        KLog.d("MainActivity", "MainActivity::onRestart()");
     }
 
     protected void onResume() {
         super.onResume();
         //AvmApp.getInstance().getCameraView().showRootView();
-        KLog.v("MainActivity", "MainActivity::onResume()");
+        KLog.d("MainActivity", "MainActivity::onResume()");
         getWindow().getDecorView().postDelayed(runnable, 0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        KLog.v("MainActivity", "MainActivity::onPause()");
+        KLog.d("MainActivity", "MainActivity::onPause()");
         //AvmApp.getInstance().getCameraView().hideView();
     }
 
@@ -105,14 +105,16 @@ public class MainActivity extends AppCompatActivity{
 
     protected void onStop() {
         super.onStop();
+        KLog.d("MainActivity", "onStop() " );
+        AvmRuntime.self().artificialExit(false);
         //finish();
     }
 
     protected void onDestroy() {
         super.onDestroy();
-        changeListener = null;
-        CameraViewModelHelper.getInstance().setChangeListener(null);
-        KLog.v("MainActivity", "onDestroy() start read Surface control. FvSts is " + CameraView.isShowing);
+//        changeListener = null;
+        AvmRuntime.self().unregisterActionListener(this);
+        KLog.d("MainActivity", "onDestroy() start read Surface control. FvSts is " + CameraView.isShowing);
         if (AvmApp.getInstance().getCameraView().getRootView() != null) {
             KLog.v("MainActivity", "CameraView.windowSurfaceControl is " + CameraView.windowSurfaceControl);
             if (CameraView.windowSurfaceControl != null) {
@@ -121,15 +123,30 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    public void onEnter(int act) {
-        finish();
+    @Override
+    public void onEnter(int act, int parm) {
+        if (act == DataDefine.ACT_EXIT) {
+//            AvmRuntime.self().setFullSceneSts(DataDefine.FV_STATE_NON);
+            KLog.d("AvmRuntime Finish MainActivity.");
+            finish();
+        }
     }
 
     public void onExit(int act) {
     }
 
+    @Override
+    public void onGearNoAct(int gear, boolean handleFlag) {
+
+    }
+
+    @Override
+    public void userTap() {
+
+    }
+
     public boolean updateLayer() {
-        KLog.v("MainActivity", "isRearGearSts : " + CameraViewModelHelper.valGear + " , getFullSceneSts is " + AvmApp.getInstance().getCameraView().isSmartWin);
+        KLog.d("MainActivity", "updateLayer() isRearGearSts : " + CameraViewModelHelper.valGear + " , getFullSceneSts is " + AvmApp.getInstance().getCameraView().isSmartWin);
         if (AvmApp.getInstance().getCameraView().isSmartWin || CameraViewModelHelper.valGear == 3) {
             return unBindWindow();
         } else {
@@ -138,7 +155,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private boolean bindWindow() {
-        KLog.v("MainActivity", "start read Surface control.");
+        KLog.d("MainActivity", "bindWindow() start read Surface control.");
         if (CameraView.windowSurfaceControl == null)
             CameraView.windowSurfaceControl = getSurfaceControl(AvmApp.getInstance().getCameraView().getRootView());
         KLog.v("MainActivity", "widnowSurfaceControl is " + CameraView.windowSurfaceControl);
@@ -154,7 +171,7 @@ public class MainActivity extends AppCompatActivity{
 
     //解绑
     private boolean unBindWindow() {
-        KLog.v("MainActivity", "start read Surface control.");
+        KLog.d("MainActivity", "unBindWindow() start read Surface control.");
         if (CameraView.windowSurfaceControl == null)
             CameraView.windowSurfaceControl = getSurfaceControl(AvmApp.getInstance().getCameraView().getRootView());
         KLog.v("MainActivity", "widnowSurfaceControl is " + CameraView.windowSurfaceControl);
