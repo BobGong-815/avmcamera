@@ -43,6 +43,10 @@ public class CameraGLSurfaceView extends GLSurfaceView {
         renderer = new Renderer();
     }
 
+    private Thread renderWatchDog;
+    private volatile boolean rendering;
+    private long renderStartTime;
+
     private  static  final int SHOW_BOTTOM = 2;
     private  Handler handler = new Handler(Looper.getMainLooper()){
         @Override
@@ -80,6 +84,26 @@ public class CameraGLSurfaceView extends GLSurfaceView {
         setEGLConfigChooser(new MyConfigChooser());
         setRenderer(renderer);
 
+        renderWatchDog = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (rendering) {
+                        if (System.currentTimeMillis() - renderStartTime > 1000) {
+                            KLog.i("Exit avm from watchdog : " + (System.currentTimeMillis() - renderStartTime));
+                            System.exit(0);
+                        }
+                    }
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException exception) {
+                        exception.printStackTrace();
+                    }
+                }
+            }
+        });
+        renderWatchDog.start();
     }
 
     public static void setAngleOfView(int value) {
@@ -145,7 +169,10 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                     KLog.d("sCameraDirection 视图=" + sCameraDirection);
                     nowShowDirection = sCameraDirection;
                 }
+                rendering = true;
+                renderStartTime = System.currentTimeMillis();
                 int renderResult = BvAvmJNIHelper.getInstance().avmRender2(sCameraDirection);
+                rendering = false;
                 if(renderResult == -1){
                     DataManager.writeFault(DataConstant.Code.SF_FAIL);
                     DataManager.writeFault(DataConstant.Code.TX_FAIL);

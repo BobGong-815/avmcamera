@@ -172,84 +172,116 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
     }
 
     private void initTab() {
-//        int position;
-//        try {
-//            position = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P); //SystemProperties.get("pExit");
-//            KLog.d("position: " + position);
-//        } catch (Settings.SettingNotFoundException settingNotFoundException) {
-//            settingNotFoundException.printStackTrace();
-//            return;
-//        }
-        LayoutParams layoutParams = new LayoutParams(settingBinding.segmentTab.getLayoutParams());
-        //layoutParams.width = (304*getDescValueArray().length);
-        layoutParams.leftMargin = 30;
-        layoutParams.rightMargin = 30;
-        settingBinding.segmentTab.setTabWidth(305);
-        settingBinding.segmentTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
-        settingBinding.segmentTab.setLayoutParams(layoutParams);
-        settingBinding.segmentTab.setTabData(getDescValueArray());
-        settingBinding.segmentTab.setSelectTab(1);
+        if (AvmApp.SAMPLE_UI) {
+            LayoutParams layoutParams = new LayoutParams(settingBinding.segmentTab.getLayoutParams());
+            //layoutParams.width = (304*getDescValueArray().length);
+            layoutParams.leftMargin = 30;
+            layoutParams.rightMargin = 30;
+            settingBinding.segmentTab.setTabWidth(305);
+            settingBinding.segmentTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
+            settingBinding.segmentTab.setLayoutParams(layoutParams);
+            settingBinding.segmentTab.setTabData(getDescValueArray());
+            settingBinding.segmentTab.setSelectTab(1);
+            settingBinding.segmentTab.setOnTabSelectListener(new OnTabSelectListener() {
+                @Override
+                public void onTabSelect(int position, boolean fromUser) {
+                    viewModel.startTimer();
+                    viewModel.setRunning(true);
+                    AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_EXIT_P, position == 1);
+                    Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, position); //SystemProperties.set("pExit", position + "");
+                }
+
+                @Override
+                public void onTabSameSelect(int position, boolean fromUser) {
+
+                }
+            });
+
+            LayoutParams transparentChassisParams = new LayoutParams(settingBinding.transparentChassisTab.getLayoutParams());
+            //layoutParams.width = (304*getDescValueArray().length);
+            transparentChassisParams.leftMargin = 30;
+            transparentChassisParams.rightMargin = 30;
+            settingBinding.transparentChassisTab.setTabWidth(150);
+            settingBinding.transparentChassisTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
+            settingBinding.transparentChassisTab.setLayoutParams(transparentChassisParams);
+            settingBinding.transparentChassisTab.setTabData(getTransparentChassisDescValueArray());
+
+            CameraViewModelHelper.getInstance().setTransparentIndexTab();
+//        settingBinding.transparentChassisTab.setSelectTab(settingTabPosition);
+            settingBinding.transparentChassisTab.setOnTabSelectListener(new OnTabSelectListener() {
+                @Override
+                public void onTabSelect(int position, boolean fromUser) {
+                    viewModel.startTimer();
+                    viewModel.setRunning(true);
+                    KLog.e("设置透明底盘: " + position);
+                    Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS, position + 2);
+//                SystemProperties.set("settingRadarActivatedPanorama",  String.valueOf(position));
+                    CameraViewModelHelper.getInstance().setTransparentIndexTab();
+                }
+
+                @Override
+                public void onTabSameSelect(int position, boolean fromUser) {
+
+                }
+            });
+        } else {
+            LayoutParams layoutParams = new LayoutParams(settingBinding.segmentTab.getLayoutParams());
+            //layoutParams.width = (304*getDescValueArray().length);
+            layoutParams.leftMargin = 30;
+            layoutParams.rightMargin = 30;
+            settingBinding.segmentTab.setTabWidth(305);
+            settingBinding.segmentTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
+            settingBinding.segmentTab.setLayoutParams(layoutParams);
+            settingBinding.segmentTab.setTabData(getDescValueArray());
+            settingBinding.segmentTab.setSelectTab(1);
 //        if (position == 1) {
 //            settingBinding.segmentTab.setSelectTab(1);
 //        } else {
 //            settingBinding.segmentTab.setSelectTab(0);
 //        }
-        settingBinding.segmentTab.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position, boolean fromUser) {
+            settingBinding.segmentTab.setOnTabSelectListener(new OnTabSelectListener() {
+                @Override
+                public void onTabSelect(int position, boolean fromUser) {
                     viewModel.startTimer();
                     viewModel.setRunning(true);
-                AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_EXIT_P, position==1);
-                Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, position); //SystemProperties.set("pExit", position + "");
-            }
+                    AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_EXIT_P, position == 1);
+                    Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, position); //SystemProperties.set("pExit", position + "");
+                }
 
-            @Override
-            public void onTabSameSelect(int position, boolean fromUser) {
+                @Override
+                public void onTabSameSelect(int position, boolean fromUser) {
 
-            }
-        });
+                }
+            });
 
-        LayoutParams transparentChassisParams = new LayoutParams(settingBinding.transparentChassisTab.getLayoutParams());
-        //layoutParams.width = (304*getDescValueArray().length);
-        transparentChassisParams.leftMargin = 30;
-        transparentChassisParams.rightMargin = 30;
-        settingBinding.transparentChassisTab.setTabWidth(150);
-        settingBinding.transparentChassisTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
-        settingBinding.transparentChassisTab.setLayoutParams(transparentChassisParams);
-        settingBinding.transparentChassisTab.setTabData(getTransparentChassisDescValueArray());
+            LayoutParams transparentChassisParams = new LayoutParams(settingBinding.transparentChassisTab.getLayoutParams());
+            //layoutParams.width = (304*getDescValueArray().length);
+            transparentChassisParams.leftMargin = 30;
+            transparentChassisParams.rightMargin = 30;
+            settingBinding.transparentChassisTab.setTabWidth(150);
+            settingBinding.transparentChassisTab.setBackground(context.getResources().getDrawable(R.drawable.tab_selector_thumb));
+            settingBinding.transparentChassisTab.setLayoutParams(transparentChassisParams);
+            settingBinding.transparentChassisTab.setTabData(getTransparentChassisDescValueArray());
 
-//        int settingTabPosition;
-//        try {
-//            settingTabPosition = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS); //SystemProperties.getInt("settingRadarActivatedPanorama", 0);
-//            if (settingTabPosition == 3 || settingTabPosition == 4 || settingTabPosition == 5) {
-//                settingTabPosition -= 2;
-//            } else {
-//                settingTabPosition = 0;
-//            }
-//            KLog.d("transparent chassis settingTabPosition is " + settingTabPosition);
-//        } catch (Settings.SettingNotFoundException settingNotFoundException) {
-//            settingNotFoundException.printStackTrace();
-//            return;
-//        }
-
-      CameraViewModelHelper.getInstance().setTransparentIndexTab();
+            CameraViewModelHelper.getInstance().setTransparentIndexTab();
 //        settingBinding.transparentChassisTab.setSelectTab(settingTabPosition);
-        settingBinding.transparentChassisTab.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position, boolean fromUser) {
-                viewModel.startTimer();
-                viewModel.setRunning(true);
-                KLog.e("设置透明底盘: " + position);
-                Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS, position+2);
+            settingBinding.transparentChassisTab.setOnTabSelectListener(new OnTabSelectListener() {
+                @Override
+                public void onTabSelect(int position, boolean fromUser) {
+                    viewModel.startTimer();
+                    viewModel.setRunning(true);
+                    KLog.e("设置透明底盘: " + position);
+                    Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS, position + 2);
 //                SystemProperties.set("settingRadarActivatedPanorama",  String.valueOf(position));
-              CameraViewModelHelper.getInstance().setTransparentIndexTab();
-            }
+                    CameraViewModelHelper.getInstance().setTransparentIndexTab();
+                }
 
-            @Override
-            public void onTabSameSelect(int position, boolean fromUser) {
+                @Override
+                public void onTabSameSelect(int position, boolean fromUser) {
 
-            }
-        });
+                }
+            });
+        }
 
     }
 

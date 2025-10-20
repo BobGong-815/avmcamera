@@ -445,7 +445,11 @@ public class CameraViewModelHelper {
         //KLog.d("车速："+val+"   isSpeedModel: "+isSpeedModel+"   speedValue: "+speedValue+"   turnValue: "+turnValue+ "  isClick:  "+isClick+"  版本号： "+ ServiceUtils.getVersionName());
 //        int turn = CanManager.getInstance().getIntStatus(AVM_UINM_TURN_LIGHT_SW_ST, ROW_1_LEFT);
         //KLog.d("车速：判断当前转向turn: "+turn);
-      setTransparentIndexTab2();
+        if (AvmApp.SAMPLE_UI) {
+
+        } else {
+            setTransparentIndexTab2();
+        }
     }
 
     public float getSpeed() {
@@ -973,9 +977,12 @@ public class CameraViewModelHelper {
      */
     public void angleSteel() {
         float status = CanManager.getInstance().getFloatStatus(AVM_SAS_STEERING_ANGLE, 0); //转角
-        //KLog.d("方向盘转角：" + status);
+        KLog.d("方向盘转角：" + status);
         //文档是780，但是方向盘打死之后是530
 //      KLog.d("轮速方向-status：" + status);
+        if(status > 700 || status < -700){
+            status = 0.0f;
+        }
         if (status > 540) {
             status = 540;
         } else if (status < -540) {

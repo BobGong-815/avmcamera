@@ -924,22 +924,28 @@ public class AvmRuntime {
     public void readGlobalSetting() {
         dataSts.switches.clear();
 
-        try {
-            int value = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION);
-            if (value == 1) {
+        if (AvmApp.SAMPLE_UI) {
+
+        } else {
+            try {
+                int value = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION);
+                if (value == 1) {
+                    dataSts.switches.add(DataDefine.SWITCH_RADAR_ACTIVE);
+                }
+            } catch (Settings.SettingNotFoundException e) {
+                Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION, 1);
                 dataSts.switches.add(DataDefine.SWITCH_RADAR_ACTIVE);
             }
-        } catch (Settings.SettingNotFoundException e) {
-            dataSts.switches.add(DataDefine.SWITCH_RADAR_ACTIVE);
-        }
 
-        try {
-            int value = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION);
-            if (value == 1) {
+            try {
+                int value = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION);
+                if (value == 1) {
+                    dataSts.switches.add(DataDefine.SWITCH_TURN_LAMP_ACTIVE);
+                }
+            } catch (Settings.SettingNotFoundException e) {
+                Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION, 1);
                 dataSts.switches.add(DataDefine.SWITCH_TURN_LAMP_ACTIVE);
             }
-        } catch (Settings.SettingNotFoundException e) {
-            dataSts.switches.add(DataDefine.SWITCH_TURN_LAMP_ACTIVE);
         }
 
         try {
@@ -948,7 +954,20 @@ public class AvmRuntime {
                 dataSts.switches.add(DataDefine.SWITCH_DELAY_30S_EXIT);
             }
         } catch (Settings.SettingNotFoundException e) {
+            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, 1);
             dataSts.switches.add(DataDefine.SWITCH_DELAY_30S_EXIT);
+        }
+
+        try {
+            int value = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY);
+        } catch (Settings.SettingNotFoundException e) {
+            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY, 1);
+        }
+
+        try {
+            int value = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS);
+        } catch (Settings.SettingNotFoundException e) {
+            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS, 3);
         }
 
         KLog.d("dataSts.switches : " + dataSts.switches);

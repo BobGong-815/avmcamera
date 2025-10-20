@@ -24,6 +24,7 @@ import com.autochips.avm.util.SystemProperties;
 import com.avm.framwork.manager.CanManager;
 
 import gxa.car.engineModeSdk.ConfigManager;
+import gxa.car.engineModeSdk.offline.OfflineConfigManager;
 import me.goldze.mvvmhabit.base.BaseApplication;
 import me.goldze.mvvmhabit.crash.CaocConfig;
 import me.goldze.mvvmhabit.utils.KLog;
@@ -45,6 +46,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static final int IS_AY5Y = 0x90;
     public static final int IS_AY3Y = 0x91;
     public static int VEHICLE_PLATFORM;
+    public static boolean SAMPLE_UI = false;
     public static long bootTime;
 
 //    public static boolean ISAY5 = true;
@@ -131,11 +133,17 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                 } else if (VEHICLE_PLATFORM == IS_AY5Y) {
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_AY5_Y_ID);
                 } else if (VEHICLE_PLATFORM == 0x82) { // T51
-                    BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_T51_ID);
+                    int vehicleType = configManager.getConfig(OfflineConfigManager.CONFIG_VEHICLE_TYPE);
+                    KLog.d("CONFIG_VEHICLE_TYPE is " + vehicleType);
+                    if (vehicleType == 1) {
+                        BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_T51_ID);
+                    } else if (vehicleType == 3) {
+                        BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_T51_REV_ID);
+                    }
                 } else if (VEHICLE_PLATFORM == 0x81) {
                     BvAvmJNIHelper.getInstance().bwSetProjID(bvavmJNI.PROJ_A5R_ID);
                 }
-                mHandler.post(()->{
+                mHandler.postDelayed(()->{
                     if(mCameraView == null) {
                         mCameraView = new CameraView(context);
 //                        Intent intent = new Intent(AvmApp.getInstance(), MainActivity.class);
@@ -147,7 +155,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
                             CameraViewModelHelper.getInstance().initActive();
                         }));
                     }
-                });
+                }, 15000);
             }else {
                 Log.i("AvmApp","registerInitListener---- fail");
             }

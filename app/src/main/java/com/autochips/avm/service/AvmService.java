@@ -91,6 +91,7 @@ import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -177,6 +178,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
     public static boolean mIsScreen = false; // 记录是否为分屏
     public static boolean isLeftScreen = false;//是否为左边的分屏显示全景
     private SplitScreenManager mSplitScreenManager;
+    private MContentObserver mMContentObserver;
 
     private final boolean EXIT_CLOSE_CAMERA_FLAG = false;
 
@@ -465,13 +467,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             SystemProperties.setGlobal("avm_displaymode", 2);
                             SystemProperties.setGlobal("avm_state", 1);
                             AvmApp.getInstance().getCameraView().showSmartWin();
-//                            if (isActAndWindowMode) {
-//                                if (!AvmRuntime.self().isRearGearSts()) {
-//                                    intent = new Intent(AvmService.this, MainActivity.class);
-//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                    startActivity(intent);
-//                                }
-//                            }
                             break;
                         case DataDefine.ACT_PASSIVE_DUAL_CARD:
                             if (EXIT_CLOSE_CAMERA_FLAG) {
@@ -487,11 +482,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             SystemProperties.setGlobal("avm_displaymode", 1);
                             SystemProperties.setGlobal("avm_state", 1);
                             AvmApp.getInstance().getCameraView().showFullWin();
-                            if (!AvmRuntime.self().isRearGearSts()) {
-                                intent = new Intent(AvmService.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
+
+                            intent = new Intent(AvmService.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                             break;
                         case DataDefine.ACT_ACTIVE_DUAL_CARD:
                             if (EXIT_CLOSE_CAMERA_FLAG) {
@@ -504,11 +498,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             SystemProperties.setGlobal("avm_displaymode", 1);
                             SystemProperties.setGlobal("avm_state", 1);
                             AvmApp.getInstance().getCameraView().showFullWin();
-                            if (!AvmRuntime.self().isRearGearSts()) {
-                                intent = new Intent(AvmService.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
+
+                            intent = new Intent(AvmService.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
                             break;
                         case DataDefine.ACT_KEEP:
                             break;
@@ -610,7 +603,41 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             fishTh = 1;
         },11*1000);
 
-//        observer();
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        mMContentObserver = new MContentObserver(mainHandler, getContentResolver());
+        mMContentObserver.setOnSettingsChangedListener((setting, newValue) -> {
+            KLog.d("setOnSettingsChangedListener: " + setting + " , " + newValue);
+        });
+        Uri uri0 = Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_EXIT_P);
+        getContentResolver().registerContentObserver(
+                uri0,
+                false, // 是否监听子Uri（通常为false）
+                mMContentObserver
+        );
+        Uri uri1 = Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_TRAJECTORY);
+        getContentResolver().registerContentObserver(
+                uri1,
+                false, // 是否监听子Uri（通常为false）
+                mMContentObserver
+        );
+        Uri uri2 = Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_RADAR_ACTIVATION);
+        getContentResolver().registerContentObserver(
+                uri2,
+                false, // 是否监听子Uri（通常为false）
+                mMContentObserver
+        );
+        Uri uri3 = Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION);
+        getContentResolver().registerContentObserver(
+                uri3,
+                false, // 是否监听子Uri（通常为false）
+                mMContentObserver
+        );
+        Uri uri4 = Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS);
+        getContentResolver().registerContentObserver(
+                uri4,
+                false, // 是否监听子Uri（通常为false）
+                mMContentObserver
+        );
     }
 
     private void registerSplitScreenCallback() {

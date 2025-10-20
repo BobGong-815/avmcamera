@@ -6,8 +6,8 @@ ext {
             applicationId    : "com.autochips.avm",
             minSdkVersion    : 29,
             targetSdkVersion : 30,
-            versionCode      : 161,
-            versionName      : "V2.1.7"
+            versionCode      : 162,
+            versionName      : "V2.1.8"
     ]
     //version配置
     versions = [
