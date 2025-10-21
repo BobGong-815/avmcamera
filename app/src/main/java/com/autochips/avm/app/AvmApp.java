@@ -1,5 +1,6 @@
 package com.autochips.avm.app;
 
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -210,7 +211,14 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         KLog.d("AVMAPP    =    onConfigurationChanged" );
-        if (getCameraView() != null) getCameraView().skinView();
+        if (getCameraView() != null) {
+            UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
+            int uiMode = uiModeManager.getNightMode();
+            if (uiMode == UiModeManager.MODE_NIGHT_AUTO) {
+                uiMode = UiModeManager.MODE_NIGHT_NO;
+            }
+            getCameraView().skinView(uiMode);
+        }
     }
 
 }

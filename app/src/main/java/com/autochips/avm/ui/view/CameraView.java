@@ -1539,7 +1539,12 @@ public class CameraView extends View implements LifecycleOwner {
         hideSystemUI(false);
         //hideDockSystemUI(false);
         tabView();
-        skinView();
+        UiModeManager uiModeManager = (UiModeManager) mContext.getSystemService(Context.UI_MODE_SERVICE);
+        int uiMode = uiModeManager.getNightMode();
+        if (uiMode == UiModeManager.MODE_NIGHT_AUTO) {
+            uiMode = UiModeManager.MODE_NIGHT_NO;
+        }
+        skinView(uiMode);
         //初始化进来也要显示上一次设置的透明度的车模
         int calibrateBtn = Settings.System.getInt(getContext().getContentResolver(), "avm.calibrate", 0);
         if (calibrateBtn > 0) {
@@ -2231,7 +2236,12 @@ public class CameraView extends View implements LifecycleOwner {
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         KLog.e("onConfigurationChanged: = " + newConfig.densityDpi);
-        skinView();
+        UiModeManager uiModeManager = (UiModeManager) mContext.getSystemService(Context.UI_MODE_SERVICE);
+        int uiMode = uiModeManager.getNightMode();
+        if (uiMode == UiModeManager.MODE_NIGHT_AUTO) {
+            uiMode = UiModeManager.MODE_NIGHT_NO;
+        }
+        skinView(uiMode);
     }
 
     //摄像头故障
@@ -2509,10 +2519,8 @@ public class CameraView extends View implements LifecycleOwner {
 
     }
 
-    public void skinView() {
-        UiModeManager uiModeManager = (UiModeManager) mContext.getSystemService(Context.UI_MODE_SERVICE);
-        int uiMode = uiModeManager.getNightMode();
-        KLog.e("skinView: isSmartWin " + isSmartWin);
+    public void skinView(int uiMode) {
+        KLog.e("skinView: isSmartWin is " + isSmartWin + " , uiMode is " + uiMode);
         if (mViewCameraBinding == null) {
             return;
         }
