@@ -1765,7 +1765,6 @@ public class CameraView extends View implements LifecycleOwner {
     private  boolean isDismissView = false;
 
     public void dismissView(String position) {
-        Log.e("AvmRuntime", Log.getStackTraceString(new Throwable()));
         tabSelectFromUser = false;
         KLog.i(position + " position AvmRuntime dismissView isShowing = " + isShowing+"turnValue:"+CameraViewModelHelper.getInstance().turnValue);
         if(position != null && position.contains("转向延时500ms退出") && (CameraViewModelHelper.getInstance().turnValue == 1
@@ -3037,6 +3036,10 @@ public class CameraView extends View implements LifecycleOwner {
     //反馈错误结果
     public void calibrationError() {
         viewModel.calibrationBackError();
+    }
+
+    public void settingChanged(String key, int value) {
+        settingView.settingChanged(key, value);
     }
 
 

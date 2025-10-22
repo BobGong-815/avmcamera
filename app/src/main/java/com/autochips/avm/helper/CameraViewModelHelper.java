@@ -388,7 +388,7 @@ public class CameraViewModelHelper {
             return;
         }
 
-        KLog.d("AvmRuntime setTransparentIndexTab2 lastTranLevel is " + lastTranLevel);
+//        KLog.d("AvmRuntime setTransparentIndexTab2 lastTranLevel is " + lastTranLevel);
         if (AvmRuntime.self().isOverSpeedState()) {
             if (lastTranLevel != -1) {
                 bvavmJNI.bwSetCarBottomStatus((byte) 0);

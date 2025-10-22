@@ -127,6 +127,7 @@ import com.avm.framwork.manager.CanManager;
 import com.google.gson.Gson;
 import com.gxa.car.splitscreenmanager.ServiceConnectCallback;
 import com.gxa.car.splitscreenmanager.SplitScreenManager;
+import com.gxa.lib.car.HalPropertyIds;
 import com.iflytek.autofly.mapsdk.BlJsonProtocolManager;
 import com.iflytek.autofly.mapsdk.IJsonProtocolReceive;
 import com.iflytek.autofly.mapsdk.bean.navi.TbtBean;
@@ -607,6 +608,10 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
         mMContentObserver = new MContentObserver(mainHandler, getContentResolver());
         mMContentObserver.setOnSettingsChangedListener((setting, newValue) -> {
             KLog.d("setOnSettingsChangedListener: " + setting + " , " + newValue);
+            AvmRuntime.self().updateGlobalSetting(setting, newValue);
+            if (AvmApp.getInstance().getCameraView() != null) {
+                AvmApp.getInstance().getCameraView().settingChanged(setting, newValue);
+            }
         });
         Uri uri0 = Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_EXIT_P);
         getContentResolver().registerContentObserver(

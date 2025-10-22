@@ -129,8 +129,8 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
     }
     public void checkButton() {
         try {
-            int settingPathLine = Settings.Global.getInt(context.getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY);// SystemProperties.getInt("settingPathLine", -1);
-            int signalActivates = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION);// SystemProperties.getInt("signalActivates", -1);
+            int settingPathLine = Settings.Global.getInt(context.getContentResolver(), GlobalSetting.AVM_SETTING_TRAJECTORY);
+            int signalActivates = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION);
             settingBinding.swSettingPathLine.setChecked(settingPathLine == 1);
             settingBinding.switchSignalActivates.setChecked(signalActivates == 1);
             if (settingPathLine == 1)
@@ -139,7 +139,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
 
             int position;
             try {
-                position = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P); //SystemProperties.get("pExit");
+                position = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P);
                 KLog.d("position: " + position);
             } catch (Settings.SettingNotFoundException settingNotFoundException) {
                 settingNotFoundException.printStackTrace();
@@ -153,13 +153,9 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
 
             int settingTabPosition;
             try {
-                settingTabPosition = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS); //SystemProperties.getInt("settingRadarActivatedPanorama", 0);
-                if (settingTabPosition == 3 || settingTabPosition == 4 || settingTabPosition == 5) {
-                    settingTabPosition -= 2;
-                } else {
-                    settingTabPosition = 0;
-                }
-                KLog.d("transparent chassis settingTabPosition is " + settingTabPosition);
+                int value = Settings.Global.getInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS);
+                settingTabPosition = value-2;
+                if (settingTabPosition < 0) settingTabPosition = 0;
             } catch (Settings.SettingNotFoundException settingNotFoundException) {
                 settingNotFoundException.printStackTrace();
                 return;
@@ -169,6 +165,28 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             settingNotFoundException.printStackTrace();
         }
 
+    }
+
+    public void settingChanged(String key, int value) {
+        KLog.d("settingChanged() " + key + " , " + value);
+        if (key.equals(GlobalSetting.AVM_SETTING_EXIT_P)) {
+            if (value == 1) {
+                settingBinding.segmentTab.setSelectTab(1);
+            } else {
+                settingBinding.segmentTab.setSelectTab(0);
+            }
+        } else if (key.equals(GlobalSetting.AVM_SETTING_RADAR_ACTIVATION)) {
+
+        } else if (key.equals(GlobalSetting.AVM_SETTING_TRAJECTORY)) {
+            settingBinding.swSettingPathLine.setChecked(value == 1);
+        } else if (key.equals(GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION)) {
+            settingBinding.switchSignalActivates.setChecked(value == 1);
+        } else if (key.equals(GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS)) {
+            int settingTabPosition = value-2;
+            if (settingTabPosition < 0) settingTabPosition = 0;
+            KLog.d("settingTabPosition is " + settingTabPosition);
+            settingBinding.transparentChassisTab.setSelectTab(settingTabPosition);
+        }
     }
 
     private void initTab() {
@@ -187,8 +205,7 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 public void onTabSelect(int position, boolean fromUser) {
                     viewModel.startTimer();
                     viewModel.setRunning(true);
-                    AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_EXIT_P, position == 1);
-                    Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, position); //SystemProperties.set("pExit", position + "");
+                    Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, position);
                 }
 
                 @Override
@@ -242,10 +259,10 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
             settingBinding.segmentTab.setOnTabSelectListener(new OnTabSelectListener() {
                 @Override
                 public void onTabSelect(int position, boolean fromUser) {
+                    KLog.d("onTabSelect: " + position);
                     viewModel.startTimer();
                     viewModel.setRunning(true);
-                    AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_EXIT_P, position == 1);
-                    Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, position); //SystemProperties.set("pExit", position + "");
+                    Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, position);
                 }
 
                 @Override
@@ -272,7 +289,6 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                     viewModel.setRunning(true);
                     KLog.e("设置透明底盘: " + position);
                     Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS, position + 2);
-//                SystemProperties.set("settingRadarActivatedPanorama",  String.valueOf(position));
                     CameraViewModelHelper.getInstance().setTransparentIndexTab();
                 }
 

@@ -32,7 +32,7 @@ public class MContentObserver extends ContentObserver {
         if (uri.equals(Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_EXIT_P))) {
             Log.d(TAG, GlobalSetting.AVM_SETTING_EXIT_P + " 发生变化，Uri: " + uri);
             // 获取最新值（根据实际类型选择getInt/getString等）
-            int newValue = getSettingValue(Settings.Global.AIRPLANE_MODE_ON);
+            int newValue = getSettingValue(GlobalSetting.AVM_SETTING_EXIT_P);
             Log.d(TAG, GlobalSetting.AVM_SETTING_EXIT_P + " 新值: " + newValue);
             // 在这里处理变化逻辑（例如发送广播、更新UI等）
             onSettingChanged(GlobalSetting.AVM_SETTING_EXIT_P, newValue);
@@ -50,13 +50,13 @@ public class MContentObserver extends ContentObserver {
             Log.d(TAG, GlobalSetting.AVM_SETTING_TRAJECTORY + " 新值: " + newValue);
             // 在这里处理变化逻辑（例如发送广播、更新UI等）
             onSettingChanged(GlobalSetting.AVM_SETTING_TRAJECTORY, newValue);
-        } else if (uri.equals(Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_EXIT_P))) {
-            Log.d(TAG, GlobalSetting.AVM_SETTING_EXIT_P + " 发生变化，Uri: " + uri);
+        } else if (uri.equals(Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS))) {
+            Log.d(TAG, GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS + " 发生变化，Uri: " + uri);
             // 获取最新值（根据实际类型选择getInt/getString等）
-            int newValue = getSettingValue(GlobalSetting.AVM_SETTING_EXIT_P);
-            Log.d(TAG, GlobalSetting.AVM_SETTING_EXIT_P + " 新值: " + newValue);
+            int newValue = getSettingValue(GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS);
+            Log.d(TAG, GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS + " 新值: " + newValue);
             // 在这里处理变化逻辑（例如发送广播、更新UI等）
-            onSettingChanged(GlobalSetting.AVM_SETTING_EXIT_P, newValue);
+            onSettingChanged(GlobalSetting.AVM_SETTING_TRANSPARENT_CHASSIS, newValue);
         } else if (uri.equals(Settings.Global.getUriFor(GlobalSetting.AVM_SETTING_RADAR_ACTIVATION))) {
             Log.d(TAG, GlobalSetting.AVM_SETTING_RADAR_ACTIVATION + " 发生变化，Uri: " + uri);
             // 获取最新值（根据实际类型选择getInt/getString等）

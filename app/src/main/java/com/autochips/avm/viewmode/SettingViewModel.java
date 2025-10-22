@@ -154,7 +154,6 @@ public class SettingViewModel extends BaseCameraViewModel {
         KLog.d("雷达激活全景: = "+isChecked);
         setRunning(true);
         startTimer();
-        AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_RADAR_ACTIVATION, isChecked?true:false);
         Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_RADAR_ACTIVATION, isChecked?1:0);
 
     }
@@ -163,7 +162,6 @@ public class SettingViewModel extends BaseCameraViewModel {
         KLog.d("转向灯激活全景开关: = "+isChecked);
         setRunning(true);
         startTimer();
-        AvmRuntime.self().updateGlobalSetting(GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION, isChecked?true:false);
         Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION, isChecked?1:0);
     }
     /**

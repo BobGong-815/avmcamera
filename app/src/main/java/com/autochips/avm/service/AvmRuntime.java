@@ -681,7 +681,7 @@ public class AvmRuntime {
 //                } else {
 //                    dataSts.events.add(DataDefine.EVT_TURN_LAMP_RESET_ACTIVE);
 //                }
-                readGlobalSetting();
+//                readGlobalSetting();
 
                 dataSts.lastSensorSrc = 1;
                 dataSts.events.add(DataDefine.EVT_TURN_LAMP_ACTIVE);
@@ -697,7 +697,7 @@ public class AvmRuntime {
 //                } else {
 //                    dataSts.events.add(DataDefine.EVT_TURN_LAMP_RESET_ACTIVE);
 //                }
-                readGlobalSetting();
+//                readGlobalSetting();
 
                 dataSts.lastSensorSrc = 1;
                 dataSts.events.add(DataDefine.EVT_TURN_LAMP_ACTIVE);
@@ -973,9 +973,9 @@ public class AvmRuntime {
         KLog.d("dataSts.switches : " + dataSts.switches);
     }
 
-    public void updateGlobalSetting(String key, boolean value) {
+    public void updateGlobalSetting(String key, int value) {
         if (key.equals(GlobalSetting.AVM_SETTING_RADAR_ACTIVATION)) {
-            if (value) {
+            if (value == 1) {
                 if (!dataSts.switches.contains(DataDefine.SWITCH_RADAR_ACTIVE)) {
                     dataSts.switches.add(DataDefine.SWITCH_RADAR_ACTIVE);
                 }
@@ -983,7 +983,7 @@ public class AvmRuntime {
                 dataSts.switches.remove(Integer.valueOf(DataDefine.SWITCH_RADAR_ACTIVE));
             }
         } else if (key.equals(GlobalSetting.AVM_SETTING_TURN_LIGHT_ACTIVATION)) {
-            if (value) {
+            if (value == 1) {
                 if (!dataSts.switches.contains(DataDefine.SWITCH_TURN_LAMP_ACTIVE)) {
                     dataSts.switches.add(DataDefine.SWITCH_TURN_LAMP_ACTIVE);
                 }
@@ -991,7 +991,7 @@ public class AvmRuntime {
                 dataSts.switches.remove(Integer.valueOf(DataDefine.SWITCH_TURN_LAMP_ACTIVE));
             }
         } else if (key.equals(GlobalSetting.AVM_SETTING_EXIT_P)) {
-            if (value) {
+            if (value == 1) {
                 if (!dataSts.switches.contains(DataDefine.SWITCH_DELAY_30S_EXIT)) {
                     dataSts.switches.add(DataDefine.SWITCH_DELAY_30S_EXIT);
                 }
@@ -1093,7 +1093,7 @@ public class AvmRuntime {
         if (act == DataDefine.ACT_ACTIVE_DUAL_CARD
                 || act == DataDefine.ACT_PASSIVE_DUAL_CARD
                 || act == DataDefine.ACT_LEFT_CARD) {
-            readGlobalSetting();
+//            readGlobalSetting();
             WAIT_TIMEOUT = SECOND_OF_30;
         } else if (act == DataDefine.ACT_EXIT) {
             WAIT_TIMEOUT = 10*SECOND_OF_30;
