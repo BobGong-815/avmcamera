@@ -20,6 +20,7 @@ import com.autochips.avm.helper.CameraViewModelHelper;
 import com.autochips.avm.service.AvmService;
 import com.autochips.avm.ui.activity.MainActivity;
 import com.autochips.avm.ui.view.CameraView;
+import com.autochips.avm.util.NotCloseToast;
 import com.autochips.avm.util.ServiceUtils;
 import com.autochips.avm.util.SystemProperties;
 import com.avm.framwork.manager.CanManager;
@@ -212,6 +213,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
         super.onConfigurationChanged(newConfig);
         KLog.d("AVMAPP    =    onConfigurationChanged" );
         if (getCameraView() != null) {
+            NotCloseToast.getInstance().cancelToast();
             UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
             int uiMode = uiModeManager.getNightMode();
             if (uiMode == UiModeManager.MODE_NIGHT_AUTO) {
