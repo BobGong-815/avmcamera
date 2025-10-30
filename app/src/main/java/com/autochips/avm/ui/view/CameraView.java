@@ -1357,7 +1357,7 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.alpha = 1.0f;
         mWindowLps.width = 455;
         mWindowLps.height = 623;
-        mWindowLps.setTitle("pilot_main_window");
+        mWindowLps.setTitle("pilot_floating_window");
         isSmartWin = true;
         if (AvmApp.SAMPLE_UI) {
 
@@ -1427,7 +1427,7 @@ public class CameraView extends View implements LifecycleOwner {
         isSmartWin = false;
         isFullWin = true;
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
-        mWindowLps.setTitle("AvmCameraView");
+        mWindowLps.setTitle("pilot_main_window");
         canShowAct = true;
 
         if (mViewCameraBinding != null) mViewCameraBinding.smartGroupId.setVisibility(VISIBLE);

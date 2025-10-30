@@ -954,8 +954,7 @@ public class AvmRuntime {
                 dataSts.switches.add(DataDefine.SWITCH_DELAY_30S_EXIT);
             }
         } catch (Settings.SettingNotFoundException e) {
-            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, 1);
-            dataSts.switches.add(DataDefine.SWITCH_DELAY_30S_EXIT);
+            Settings.Global.putInt(AvmApp.getInstance().getContentResolver(), GlobalSetting.AVM_SETTING_EXIT_P, 0);
         }
 
         try {
