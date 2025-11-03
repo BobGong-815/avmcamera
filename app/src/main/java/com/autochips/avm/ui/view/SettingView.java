@@ -242,6 +242,11 @@ public class SettingView extends LinearLayout implements LifecycleOwner {
                 }
             });
         } else {
+            if (AvmApp.NO_3D_UI) {
+                settingBinding.transparentChassisTitle.setVisibility(View.GONE);
+                settingBinding.transparentChassisTab.setVisibility(View.GONE);
+            }
+
             LayoutParams layoutParams = new LayoutParams(settingBinding.segmentTab.getLayoutParams());
             //layoutParams.width = (304*getDescValueArray().length);
             layoutParams.leftMargin = 30;

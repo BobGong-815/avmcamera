@@ -6063,7 +6063,6 @@ com.autochips.avm.BuildConfig
 com.autochips.avm.DataBinderMapperImpl:
     private static final int LAYOUT_ACTIVITYMOCK
     private static final int LAYOUT_VIEWCAMERA
-    private static final int LAYOUT_VIEWCAMERASIMPLE
     private static final int LAYOUT_VIEWREARVIEWMIRROR
     private static final int LAYOUT_VIEWSETTING
 com.autochips.avm.DataBindingTriggerClass

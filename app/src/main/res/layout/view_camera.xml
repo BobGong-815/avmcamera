@@ -866,7 +866,7 @@
             <com.autochips.avm.ui.view.SegmentTabLayout
                 android:id="@+id/segment_wide_angle"
                 android:layout_width="600px"
-                android:layout_height="72px"
+                android:layout_height="80px"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tl_indicator_anim_enable="true"

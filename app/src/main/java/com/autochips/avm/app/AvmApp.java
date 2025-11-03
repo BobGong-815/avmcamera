@@ -49,6 +49,7 @@ public class AvmApp extends BaseApplication implements Thread.UncaughtExceptionH
     public static final int IS_AY3Y = 0x91;
     public static int VEHICLE_PLATFORM;
     public static boolean SAMPLE_UI = false;
+    public static boolean NO_3D_UI = true;
     public static long bootTime;
 
 //    public static boolean ISAY5 = true;
