@@ -305,6 +305,12 @@ public class BvAvmJNIHelper {
         }
     }
 
+    public void saveImage() {
+        synchronized (syncObj) {
+            bvavmJNI.bwSaveImage();
+        }
+    }
+
 
     public boolean isCamera2Device() {
         CameraManager camMgr = (CameraManager) AvmApp.getInstance().getSystemService(Context.CAMERA_SERVICE);

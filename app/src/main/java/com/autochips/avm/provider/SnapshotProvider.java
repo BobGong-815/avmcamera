@@ -48,7 +48,7 @@ public class SnapshotProvider extends ContentProvider {
     public boolean onCreate() {
         // 初始化快照文件存储位置
         if (getContext() != null) {
-            mSnapshotFile = new File(getContext().getFilesDir(), SNAPSHOT_PATH);
+            mSnapshotFile = new File("/sdcard/rgba.dat");
             KLog.d("mSnapshotFile is " + mSnapshotFile);
             return true;
         }

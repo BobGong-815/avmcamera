@@ -316,7 +316,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             KLog.i("avmService____ ACT_EXIT_CARD........0");
                             //CameraShowTypeHelper.getInstance().exitActivity();
                             AvmApp.getInstance().getCameraView().dismissView(null);
-                            SystemProperties.setGlobal("avm_state", 0);
+                            SystemProperties.setGlobal("avm_state", 3);
                             SystemProperties.setGlobal("avm_displaymode", 0);
                             //mAvmManager.sendAvmState(0);
                             BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
@@ -341,8 +341,9 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             CameraGLSurfaceView.setAngleOfView(bvavmJNI.BW_BIRD_3D);
                             mCanSendAvmState = true;
                             mCanSendAvmStateIsActivity = false;
-                            AvmApp.getInstance().getCameraView().showSmartWin();
                             SystemProperties.setGlobal("avm_displaymode", 1);
+                            SystemProperties.setGlobal("avm_state", 1);
+                            AvmApp.getInstance().getCameraView().showSmartWin();
 //                            if (isActAndWindowMode) {
 //                                if (!AvmRuntime.self().isRearGearSts()) {
 //                                    intent = new Intent(AvmService.this, MainActivity.class);
@@ -367,6 +368,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmRuntime.self().setRadarPauseFlag(false);
                             mCanSendAvmState = true;
                             mCanSendAvmStateIsActivity = isActAndWindowMode && !AvmRuntime.self().isRearGearSts();
+                            SystemProperties.setGlobal("avm_state", 1);
                             AvmApp.getInstance().getCameraView().showFullWin();
                             if (isActAndWindowMode) {
                                 if (!AvmRuntime.self().isRearGearSts()) {
@@ -391,6 +393,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                             AvmRuntime.self().setRadarPauseFlag(false);
                             mCanSendAvmState = true;
                             mCanSendAvmStateIsActivity = isActAndWindowMode && !AvmRuntime.self().isRearGearSts();
+                            SystemProperties.setGlobal("avm_state", 1);
                             AvmApp.getInstance().getCameraView().showFullWin();
                             if (DELETE_CAMERA_FLAG) {
                                 mHandler.removeMessages(MSG_DEL_CAMERA);
@@ -439,6 +442,7 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
 //                        }
 //                    }
                 } else if (msg.what == MSG_DEL_CAMERA) {
+                    SystemProperties.setGlobal("avm_state", 0);
                     BvAvmJNIHelper.getInstance().bwDeleteCamera();
 //                    if (JNI_IN_THREAD_FLAG) {
 //                        AvmApp.getInstance().getCameraView().getViewModel().deleteCamera();
@@ -737,12 +741,14 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (value instanceof Integer) {
                 int gear = (int) value;// 第一次开机后的默认值
                 if (gear == 0) return;
+                if (gear == 4) {
+                    if (!AvmRuntime.self().isParkGearSts()) BvAvmJNIHelper.getInstance().saveImage();
+                }
                 AvmRuntime.self().gearChange(gear);
                 AvmApp.getInstance().getCameraView().getViewModel().updateTrajLineStatus(gear);
                 //BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);
                 if (gear == 4) {
                     AvmApp.getInstance().getCameraView().getViewModel().bwClearCarBottomImage();
-                    //BvAvmJNIHelper.getInstance().bwClearCarBottomImage();
                 }
             }
        }else if(vehicleId == NFS_SYNC_STATUS){
@@ -1228,9 +1234,13 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
                 } else if (testValue == 4) {
                     SnapshotAccessor snapshotAccessor = new SnapshotAccessor(AvmService.this);
                     byte[] bmpData = snapshotAccessor.readSnapshotAsFile();
-                    KLog.d("Snapshot bmpData is " + bmpData.length);
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bmpData, 0, bmpData.length);
-                    KLog.d("Snapshot bitmap.size is " + bitmap.getWidth() + " x " + bitmap.getHeight());
+                    KLog.d("Snapshot bmpData is " + bmpData);
+//                    Bitmap bitmap = BitmapFactory.decodeByteArray(bmpData, 0, bmpData.length);
+//                    KLog.d("Snapshot bitmap.size is " + bitmap.getWidth() + " x " + bitmap.getHeight());
+                } else if (testValue == 100) {
+                    int vehicleId = intent.getIntExtra("vehicleId", -1);
+                    int vehicleValue = intent.getIntExtra("vehicleValue", -1);
+                    mOnSignalValueChangedListener.onValueChangedListener(vehicleId, vehicleValue);
                 }
             }
         }

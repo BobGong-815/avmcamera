@@ -431,14 +431,14 @@ public class CameraView extends View implements LifecycleOwner {
         viewRedChick();
         tabView();
         tabViewInit();
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            if(AvmService.mCanSendAvmState && !AvmService.mCanSendAvmStateIsActivity) {
-                AvmService.mCanSendAvmState = false;
-                KLog.d(" addOnGlobalLayoutListener mWindowLps.height： " + mWindowLps.height);
-                SystemProperties.setGlobal("avm_state", 1);
-                //AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
-            }
-        });
+//        rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+//            if(AvmService.mCanSendAvmState && !AvmService.mCanSendAvmStateIsActivity) {
+//                AvmService.mCanSendAvmState = false;
+//                KLog.d(" addOnGlobalLayoutListener mWindowLps.height： " + mWindowLps.height);
+//                SystemProperties.setGlobal("avm_state", 1);
+//                //AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
+//            }
+//        });
     }
 
     //初始化控件id
@@ -1258,6 +1258,7 @@ public class CameraView extends View implements LifecycleOwner {
         isSmartWin = true;
         mWindowLps.width = 486;
         mWindowLps.height = 870;
+        mWindowLps.setTitle("pilot_floating_window");
         ConstraintLayout.LayoutParams layoutParamsF = (ConstraintLayout.LayoutParams)viewFrame.getLayoutParams();
         layoutParamsF.height = 870;
         layoutParamsF.width = 486;
@@ -1343,6 +1344,7 @@ public class CameraView extends View implements LifecycleOwner {
             return;
         }
         mWindowLps.width = mContext.getResources().getDimensionPixelSize(R.dimen.screen_width);
+        mWindowLps.setTitle("pilot_main_window");
         if (AvmRuntime.self().isRearGearSts()) {
             mWindowLps.height = 1080;
         } else {
@@ -1643,6 +1645,7 @@ public class CameraView extends View implements LifecycleOwner {
         mWindowLps.alpha = 0.0f;
         mWindowLps.width = 1;
         mWindowLps.height = 1;
+        mWindowLps.setTitle("AvmCameraView");
         Log.d("AvmRuntime", "dismissView() rootView.getParent() is " + rootView.getParent());
         if (rootView.getParent() != null) {
             mWindowManager.updateViewLayout(rootView, mWindowLps);

@@ -49,19 +49,19 @@ public class MainActivity extends AppCompatActivity implements AvmRuntime.Action
         @Override
         public void handleMessage(@NonNull Message msg) {
             Log.i(TAG, "MainActivity::handleMessage():"+msg.what);
-            if (msg.what == SEND_AVM_STATE){
-                if (CameraView.isShowing) {
-                    AvmService.mCanSendAvmStateIsActivity = false;
-                    AvmService.mCanSendAvmState = false;
-                    int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
-                    Log.i(TAG, "MainActivity::handleMessage() avm_state:"+avm_state);
-                    if(avm_state != 1) {
-                        SystemProperties.setGlobal("avm_state", 1);
-                        SystemProperties.setGlobal("avm_displaymode", 2);
-                        //AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
-                    }
-                }
-            }
+//            if (msg.what == SEND_AVM_STATE){
+//                if (CameraView.isShowing) {
+//                    AvmService.mCanSendAvmStateIsActivity = false;
+//                    AvmService.mCanSendAvmState = false;
+//                    int avm_state = SystemProperties.getGlobalInt("avm_state", -1);
+//                    Log.i(TAG, "MainActivity::handleMessage() avm_state:"+avm_state);
+//                    if(avm_state != 1) {
+//                        SystemProperties.setGlobal("avm_state", 1);
+//                        SystemProperties.setGlobal("avm_displaymode", 2);
+//                        //AvmManager.getInstance(AvmApp.getInstance()).sendAvmState(1);
+//                    }
+//                }
+//            }
         }
     };
     @Override
