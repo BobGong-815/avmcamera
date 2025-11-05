@@ -307,6 +307,7 @@ public class BvAvmJNIHelper {
 
     public void saveImage() {
         synchronized (syncObj) {
+            KLog.i("saveImage()");
             bvavmJNI.bwSaveImage();
         }
     }

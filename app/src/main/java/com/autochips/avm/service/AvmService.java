@@ -741,9 +741,6 @@ public class AvmService extends Service implements AvmRuntime.ActionListener {
             if (value instanceof Integer) {
                 int gear = (int) value;// 第一次开机后的默认值
                 if (gear == 0) return;
-                if (gear == 4) {
-                    if (!AvmRuntime.self().isParkGearSts()) BvAvmJNIHelper.getInstance().saveImage();
-                }
                 AvmRuntime.self().gearChange(gear);
                 AvmApp.getInstance().getCameraView().getViewModel().updateTrajLineStatus(gear);
                 //BvAvmJNIHelper.getInstance().updateTrajLineStatus(gear);

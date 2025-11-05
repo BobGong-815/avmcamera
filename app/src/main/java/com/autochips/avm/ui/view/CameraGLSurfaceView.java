@@ -133,6 +133,11 @@ public class CameraGLSurfaceView extends GLSurfaceView {
                     DataManager.writeFault(DataConstant.Code.TX_FAIL);
                 }
             }
+
+            if (AvmRuntime.self().isShift2P()) {
+                BvAvmJNIHelper.getInstance().saveImage();
+            }
+
             handler.sendEmptyMessageDelayed(MSG_RENDER, FRAME_INTERVAL_MS); // 继续下一帧
             glStatus = 1;
         }

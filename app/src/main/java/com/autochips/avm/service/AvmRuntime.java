@@ -1551,6 +1551,10 @@ public class AvmRuntime {
         return dataSts.extEvents.contains(DataDefine.EVT_SHIFT_R);
     }
 
+    public boolean isShift2P() {
+        return dataSts.extEvents.contains(DataDefine.EVT_SHIFT_P);
+    }
+
     public void clickLeftCard() {
         synchronized (syncObj) {
             KLog.d(" clickLeftCard(). ");
